@@ -1,0 +1,6 @@
+root -l -b -q trackdT.C+(\"../../HggRazorUpgradeTiming_PU0_NoTiming.root\",\"PU0_NoTiming\")
+root -l -b -q trackdT.C+(\"../../HggRazorUpgradeTiming_PU0_Timing.root\",\"PU0_Timing\")
+root -l -b -q trackdT.C+(\"../../HggRazorUpgradeTiming_PU140_NoTiming.root\",\"PU140_NoTiming\")
+root -l -b -q trackdT.C+(\"../../HggRazorUpgradeTiming_PU140_Timing.root\",\"PU140_Timing\")
+root -l -b -q trackdT.C+(\"../../HggRazorUpgradeTiming_PU200_NoTiming.root\",\"PU200_NoTiming\")
+root -l -b -q trackdT.C+(\"../../HggRazorUpgradeTiming_PU200_Timing.root\",\"PU200_Timing\")

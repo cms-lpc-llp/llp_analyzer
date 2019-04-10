@@ -1,0 +1,2 @@
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.5/PHYS14_25ns/v7/sixie/T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/razorNtuplerV1p5_PHYS14_25ns_v7_v1/150212_174547/0000/razorNtuple_1.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.5/PHYS14_25ns/v7/sixie/T_tW-channel-DR_Tune4C_13TeV-CSA14-powheg-tauola/razorNtuplerV1p5_PHYS14_25ns_v7_v1/150212_174547/0000/razorNtuple_2.root

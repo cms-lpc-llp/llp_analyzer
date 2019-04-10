@@ -1,0 +1,32 @@
+#!/bin/sh
+names=( 'nBunchXing' 'nMuons' 'nElectrons' 'nTaus' 'nPhotons' 'nJets' 'nFatJets' 'nGenJets' 'nGenParticle' 'nIsoPFCandidates' 'nPVAll' )
+maxes=( 20 700 700 700 700 900 40 50 4000 700 200)
+
+cp include/RazorEvents.h RazorEventsNewTemp.h
+for ((i=0;i<${#names[@]};++i)); do
+    name=${names[$i]}
+    sed "s/\([0-9][0-9]*\)\(\];\s*\/\/\[${name}\]\)/${maxes[$i]}\2/" <RazorEventsNewTemp.h >RazorEventsNew.h
+    cp RazorEventsNew.h RazorEventsNewTemp.h
+done
+
+cp RazorEventsNew.h RazorEventsNewTemp.h
+sed "s/muon_passHLTFilter\[.*\]\[700\]/muon_passHLTFilter[700][100]/" < RazorEventsNewTemp.h > RazorEventsNew.h
+cp RazorEventsNew.h RazorEventsNewTemp.h
+sed "s/ele_passHLTFilter\[.*\]\[700\]/ele_passHLTFilter[700][100]/" < RazorEventsNewTemp.h > RazorEventsNew.h
+cp RazorEventsNew.h RazorEventsNewTemp.h
+sed "s/pho_sumChargedHadronPtAllVertices\[.*\]\[700\]/pho_sumChargedHadronPtAllVertices[700][200]/" < RazorEventsNewTemp.h > RazorEventsNew.h
+cp RazorEventsNew.h RazorEventsNewTemp.h
+sed "s/pho_passHLTFilter\[.*\]\[700\]/pho_passHLTFilter[700][100]/" < RazorEventsNewTemp.h > RazorEventsNew.h
+
+cp RazorEventsNew.h RazorEventsNewTemp.h
+sed "s/pho_vtxSumPx\[.*\]\[700\]/pho_vtxSumPx[700][200]/" < RazorEventsNewTemp.h > RazorEventsNew.h
+cp RazorEventsNew.h RazorEventsNewTemp.h
+sed "s/pho_vtxSumPy\[.*\]\[700\]/pho_vtxSumPy[700][200]/" < RazorEventsNewTemp.h > RazorEventsNew.h
+
+cp RazorEventsNew.h RazorEventsNewTemp.h
+sed "s/vector</std::vector</g" < RazorEventsNewTemp.h > RazorEventsNew.h
+
+
+
+rm RazorEventsNewTemp.h
+mv RazorEventsNew.h include/RazorEvents.h

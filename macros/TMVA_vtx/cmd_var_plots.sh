@@ -1,0 +1,6 @@
+root -l -b -q TMVA_var_plots.C+(\"HggRazorUpgradeTiming_PU0_NoTiming_vtx.root\",\"PU0_NoTiming\")
+root -l -b -q TMVA_var_plots.C+(\"HggRazorUpgradeTiming_PU140_NoTiming_vtx.root\",\"PU140_NoTiming\")
+root -l -b -q TMVA_var_plots.C+(\"HggRazorUpgradeTiming_PU200_NoTiming_vtx.root\",\"PU200_NoTiming\")
+root -l -b -q TMVA_var_plots.C+(\"HggRazorUpgradeTiming_PU0_Timing_vtx.root\",\"PU0_Timing\")
+root -l -b -q TMVA_var_plots.C+(\"HggRazorUpgradeTiming_PU140_Timing_vtx.root\",\"PU140_Timing\")
+root -l -b -q TMVA_var_plots.C+(\"HggRazorUpgradeTiming_PU200_Timing_vtx.root\",\"PU200_Timing\")

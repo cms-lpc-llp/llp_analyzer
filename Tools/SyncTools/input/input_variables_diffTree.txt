@@ -1,0 +1,9 @@
+nAK5PFPUcorrJet nJets
+uncorrenergyAK5PFPUcorrJet jetE
+sqrt(uncorrpxAK5PFPUcorrJet*uncorrpxAK5PFPUcorrJet+uncorrpyAK5PFPUcorrJet*uncorrpyAK5PFPUcorrJet) jetPt
+etaAK5PFPUcorrJet jetEta						   
+phiAK5PFPUcorrJet jetPhi
+areaAK5PFPUcorrJet jetJetArea
+combinedSecondaryVertexBJetTagsAK5PFPUcorrJet jetCSV
+combinedSecondaryVertexMVABJetTagsAK5PFPUcorrJet jetCISV
+jetIdMvaFullAK5PFPUcorrJet jetPileupId

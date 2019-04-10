@@ -1,0 +1,12 @@
+#ifndef DEF_%ANALYZER%
+#define DEF_%ANALYZER%
+
+#include "RazorAnalyzerRun1.h"
+
+class %ANALYZER%: public RazorAnalyzerRun1 {
+    public: 
+        %ANALYZER%(TTree *tree=0): RazorAnalyzerRun1(tree) { }
+        void Analyze(bool isData, int option, string outputFileName, string label);
+};
+
+#endif

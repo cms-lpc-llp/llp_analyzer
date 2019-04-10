@@ -1,0 +1,15 @@
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_0.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_1.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_10.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_11.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_12.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_13.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_14.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_2.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_3.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_4.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_5.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_6.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_7.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_8.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.25/MC/RunIISpring15DR74_25ns/v3/sixie/T2tt_175_1_PrivateFullSim/razorNtuple_9.root

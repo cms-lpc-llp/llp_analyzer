@@ -1,0 +1,1 @@
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.12/Data/v1/razorNtuple_Run2015B_HTMHT.root

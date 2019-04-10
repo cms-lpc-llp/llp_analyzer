@@ -1,0 +1,5 @@
+root -l -b -q vtxEff_Table.C+(\"../../maxLogSumPt2Pv/\",\"max LogSumPt2\")
+root -l -b -q vtxEff_Table.C+(\"../../maxLogSumPt2Pv_100psCut/\",\"max LogSumPt2_100psCut\")
+root -l -b -q vtxEff_Table.C+(\"../../maxBDTPv/\",\"max BDT (default)\")
+root -l -b -q vtxEff_Table.C+(\"../../maxBDT_track_vertex_TimingPv/\",\"max BDT (track/vtx timing)\")
+root -l -b -q vtxEff_Table.C+(\"../../maxBDT_track_vertex_TimingPv_100psCut/\",\"max BDT (track/vtx timing)\")

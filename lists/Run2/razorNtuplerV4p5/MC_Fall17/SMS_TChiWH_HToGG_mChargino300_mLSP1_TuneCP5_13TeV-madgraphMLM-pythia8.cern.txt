@@ -1,0 +1,1 @@
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV4.5/MC_Fall17/v1/sixie/SMS_TChiWH_HToGG_mChargino300_mLSP1_TuneCP5_13TeV-madgraphMLM-pythia8/Run2RazorNtuplerV4p5_ToCERN_MC_Fall17_RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1_v1_v1/190313_142421/0000/razorNtuple_2.root

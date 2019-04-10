@@ -1,0 +1,17 @@
+#Format: <dataset name> <root file name>
+DYJetsToLL_M-50_HT-100to200_Tune4C_13TeV-madgraph-tauola controlDYJets100.root
+DYJetsToLL_M-50_HT-200to400_Tune4C_13TeV-madgraph-tauola controlDYJets200.root
+DYJetsToLL_M-50_HT-400to600_Tune4C_13TeV-madgraph-tauola controlDYJets400.root
+DYJetsToLL_M-50_HT-600toInf_Tune4C_13TeV-madgraph-tauola controlDYJets600.root
+ZJetsToNuNu_HT-100to200_Tune4C_13TeV-madgraph-tauola controlZJets100.root
+ZJetsToNuNu_HT-200to400_Tune4C_13TeV-madgraph-tauola controlZJets200.root
+ZJetsToNuNu_HT-400to600_Tune4C_13TeV-madgraph-tauola controlZJets400.root
+ZJetsToNuNu_HT-600toInf_Tune4C_13TeV-madgraph-tauola controlZJets600.root
+WJetsToLNu_HT-100to200_Tune4C_13TeV-madgraph-tauola controlWJets100.root
+WJetsToLNu_HT-200to400_Tune4C_13TeV-madgraph-tauola controlWJets200.root
+WJetsToLNu_HT-400to600_Tune4C_13TeV-madgraph-tauola controlWJets400.root
+WJetsToLNu_HT-600toInf_Tune4C_13TeV-madgraph-tauola controlWJets600.root
+GJets_HT-100to200_Tune4C_13TeV-madgraph-tauola controlGJets100.root
+GJets_HT-200to400_Tune4C_13TeV-madgraph-tauola controlGJets200.root
+GJets_HT-400to600_Tune4C_13TeV-madgraph-tauola controlGJets400.root
+GJets_HT-600toInf_Tune4C_13TeV-madgraph-tauola controlGJets600.root

@@ -1,0 +1,2 @@
+#Format: <dataset name> <root file name>
+TTJets_MSDecaysCKM_central_Tune4C_13TeV-madgraph-tauola RazorInclusiveTTBar.root

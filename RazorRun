@@ -1,0 +1,42 @@
+#!/bin/sh
+
+if [ "$1" == "" ] || [ "$2" == "" ]; then
+    echo "RazorRun <list of input files> <analyzer name> <options>"
+else
+    cp ${CMSSW_BASE}/src/RazorAnalyzer/bin/Run$2 .
+
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/csvv2_13TEV_17_6_3_2019.csv ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/CSVv2_94XSF_V2_B_F.csv ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/CSVv2_Moriond17_B_H.csv ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/CSVv2_Moriond17_G_H.csv ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/CSVv2_ichep.csv ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/fastsim_csvv2_ttbar_26_1_2017.csv ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/CSV_13TEV_Combined_20_11_2015.csv ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/JEC/JEC_Summer16_23Sep2016V3.tgz ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/JEC/JEC_Summer16_23Sep2016V4.tgz ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/JEC/Fall17_17Nov2017_V6_DATA_V8_MC.tgz ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/JEC/Fall17_17Nov2017_V32_DATA_MC.tgz ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/JEC/Fall17_FastsimV1_AK4PFchs.tgz ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/JEC/Spring16_FastSimV1.tgz ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/JEC/JetResolutionInputAK5PF.txt ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/PhotonCorrections/Winter_2016_reReco_v1_ele_smearings.dat ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/PhotonCorrections/Winter_2016_reReco_v1_ele_scales.dat ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/LeptonEfficiencies/2017/efficiency_results_LooseElectronSelectionEffDenominatorGen_2017_17Nov2017Rereco_Golden.root ./
+    #cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/LeptonEfficiencies/2017/efficiency_results_VetoMuonSelectionEffDenominatorGen_2017_17Nov2017Rereco_Golden.root ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/LeptonEfficiencies/2017/efficiency_results_LooseElectronSelectionEffDenominatorGen_2017_31Mar2018_Golden.root ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/LeptonEfficiencies/2017/efficiency_results_VetoMuonSelectionEffDenominatorGen_2017_31Mar2018_Golden.root ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/LeptonEfficiencies/2017/*.root ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/LeptonEfficiencies/2016_23SepRereco/*.root ./
+   cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/FastsimToFullsim/detailed_ele_full_fast_sf_17.root ./
+
+    tar vxzf JEC_Summer16_23Sep2016V3.tgz
+    tar vxzf JEC_Summer16_23Sep2016V4.tgz
+    tar vxzf Spring16_FastSimV1.tgz
+    tar vxzf Fall17_17Nov2017_V6_DATA_V8_MC.tgz 
+    tar vxzf Fall17_17Nov2017_V32_DATA_MC.tgz 
+    tar vxzf Fall17_FastsimV1_AK4PFchs.tgz
+
+    ./Run$2 $1 ${@:3}
+    rm Run$2
+  
+fi

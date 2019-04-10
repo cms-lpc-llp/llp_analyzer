@@ -1,0 +1,7 @@
+/mnt/tier2/store/user/razorgroup/QCD_Pt-1000to1400_Tune4C_13TeV_pythia8/razorNtuplerV1p2-25ns_v1_v1/141111_125050/0000/razorNtupleAna_1.root
+/mnt/tier2/store/user/razorgroup/QCD_Pt-1000to1400_Tune4C_13TeV_pythia8/razorNtuplerV1p2-25ns_v1_v1/141111_125050/0000/razorNtupleAna_2.root
+/mnt/tier2/store/user/razorgroup/QCD_Pt-1000to1400_Tune4C_13TeV_pythia8/razorNtuplerV1p2-25ns_v1_v1/141111_125050/0000/razorNtupleAna_3.root
+/mnt/tier2/store/user/razorgroup/QCD_Pt-1000to1400_Tune4C_13TeV_pythia8/razorNtuplerV1p2-25ns_v1_v1/141111_125050/0000/razorNtupleAna_4.root
+/mnt/tier2/store/user/razorgroup/QCD_Pt-1000to1400_Tune4C_13TeV_pythia8/razorNtuplerV1p2-25ns_v1_v1/141111_125050/0000/razorNtupleAna_5.root
+/mnt/tier2/store/user/razorgroup/QCD_Pt-1000to1400_Tune4C_13TeV_pythia8/razorNtuplerV1p2-25ns_v1_v1/141111_125050/0000/razorNtupleAna_6.root
+/mnt/tier2/store/user/razorgroup/QCD_Pt-1000to1400_Tune4C_13TeV_pythia8/razorNtuplerV1p2-25ns_v1_v1/141111_125050/0000/razorNtupleAna_7.root

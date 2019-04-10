@@ -1,0 +1,2 @@
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.5/PHYS14_25ns/v7/sixie/SMS-T1qqqq_2J_mGl-1000_mLSP-800_Tune4C_13TeV-madgraph-tauola/razorNtuplerV1p5_PHYS14_25ns_Phys14DR-AVE30BX50_tsg_PHYS14_ST_V1-v3_v7_v2/150603_201253/0000/razorNtuple_1.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.5/PHYS14_25ns/v7/sixie/SMS-T1qqqq_2J_mGl-1000_mLSP-800_Tune4C_13TeV-madgraph-tauola/razorNtuplerV1p5_PHYS14_25ns_Phys14DR-AVE30BX50_tsg_PHYS14_ST_V1-v3_v7_v2/150603_201253/0000/razorNtuple_2.root

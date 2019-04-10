@@ -1,0 +1,3 @@
+{
+  gROOT->Macro("CalStyleRemix.cc+");
+}

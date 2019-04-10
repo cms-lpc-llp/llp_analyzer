@@ -1,0 +1,1 @@
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.24/MC/RunIISpring15DR74_Fastsim/PrivateProduction//T5ttttDM20_900_700.root

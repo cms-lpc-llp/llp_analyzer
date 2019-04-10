@@ -1,0 +1,8 @@
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RunOneRazorNtupleV1.6/Run1/MC/v2/sixie/TBZToLL_4F_TuneZ2star_8TeV-madgraph-tauola/runOneRazorNtuplerV1p6_MC_v2_v1/150313_133854/0000/razorNtuple_1.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RunOneRazorNtupleV1.6/Run1/MC/v2/sixie/TBZToLL_4F_TuneZ2star_8TeV-madgraph-tauola/runOneRazorNtuplerV1p6_MC_v2_v1/150313_133854/0000/razorNtuple_2.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RunOneRazorNtupleV1.6/Run1/MC/v2/sixie/TBZToLL_4F_TuneZ2star_8TeV-madgraph-tauola/runOneRazorNtuplerV1p6_MC_v2_v1/150313_133854/0000/razorNtuple_3.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RunOneRazorNtupleV1.6/Run1/MC/v2/sixie/TBZToLL_4F_TuneZ2star_8TeV-madgraph-tauola/runOneRazorNtuplerV1p6_MC_v2_v1/150313_133854/0000/razorNtuple_4.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RunOneRazorNtupleV1.6/Run1/MC/v2/sixie/TBZToLL_4F_TuneZ2star_8TeV-madgraph-tauola/runOneRazorNtuplerV1p6_MC_v2_v1/150313_133854/0000/razorNtuple_5.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RunOneRazorNtupleV1.6/Run1/MC/v2/sixie/TBZToLL_4F_TuneZ2star_8TeV-madgraph-tauola/runOneRazorNtuplerV1p6_MC_v2_v1/150313_133854/0000/razorNtuple_6.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RunOneRazorNtupleV1.6/Run1/MC/v2/sixie/TBZToLL_4F_TuneZ2star_8TeV-madgraph-tauola/runOneRazorNtuplerV1p6_MC_v2_v1/150313_133854/0000/razorNtuple_7.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RunOneRazorNtupleV1.6/Run1/MC/v2/sixie/TBZToLL_4F_TuneZ2star_8TeV-madgraph-tauola/runOneRazorNtuplerV1p6_MC_v2_v1/150313_133854/0000/razorNtuple_8.root

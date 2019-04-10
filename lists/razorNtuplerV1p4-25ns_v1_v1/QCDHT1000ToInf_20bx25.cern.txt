@@ -1,0 +1,13 @@
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041444/0000/razorNtupleAna_1.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041444/0000/razorNtupleAna_2.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041444/0000/razorNtupleAna_3.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041502/0000/razorNtupleAna_1.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041502/0000/razorNtupleAna_10.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041502/0000/razorNtupleAna_2.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041502/0000/razorNtupleAna_3.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041502/0000/razorNtupleAna_4.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041502/0000/razorNtupleAna_5.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041502/0000/razorNtupleAna_6.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041502/0000/razorNtupleAna_7.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041502/0000/razorNtupleAna_8.root
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_HT_1000ToInf_13TeV-madgraph/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_041502/0000/razorNtupleAna_9.root

@@ -1,0 +1,1 @@
+/mnt/tier2/store/user/razorgroup/SMS-T2tt_2J_mStop-650_mLSP-325_Tune4C_13TeV-madgraph-tauola/razorNtuplerV1p2-25ns_v1_v1/141111_023509/0000/razorNtupleAna_1.root

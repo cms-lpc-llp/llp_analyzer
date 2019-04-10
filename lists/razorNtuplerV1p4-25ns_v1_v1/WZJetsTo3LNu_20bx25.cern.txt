@@ -1,0 +1,1 @@
+root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/sixie/WZJetsTo3LNu_Tune4C_13TeV-madgraph-tauola/razorNtuplerV1p4_PHYS14_25ns_v1_v1/150103_163543/0000/razorNtupleAna_1.root
