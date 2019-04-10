@@ -1,1 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.16/MC/RunIISpring15DR74_25ns/v1/sixie/SMSPrivateRereco/razorNtuple_Spring15_T1tttt_mGo1500_mChi100.root

@@ -1,1 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/sixie/TBarToLeptons_s-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/razorNtuplerV1p4_PHYS14_25ns_v1_v1/150103_163811/0000/razorNtupleAna_1.root

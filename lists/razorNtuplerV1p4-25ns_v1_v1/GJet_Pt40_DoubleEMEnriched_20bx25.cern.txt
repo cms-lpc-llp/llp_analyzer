@@ -1,4 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/GJet_Pt40_doubleEMEnriched_TuneZ2star_13TeV-pythia6/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_195427/0000/razorNtupleAna_1.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/GJet_Pt40_doubleEMEnriched_TuneZ2star_13TeV-pythia6/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_195427/0000/razorNtupleAna_2.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/GJet_Pt40_doubleEMEnriched_TuneZ2star_13TeV-pythia6/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_195427/0000/razorNtupleAna_3.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/GJet_Pt40_doubleEMEnriched_TuneZ2star_13TeV-pythia6/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_195427/0000/razorNtupleAna_4.root
