@@ -1,11 +1,11 @@
-//Class for analyzing ntuples produced by the RazorTuplizer framework
+//Class for analyzing ntuples produced by the llp_ntupler framework
 //
-//Author: Caltech Razor team
+//Author: Cristian Pena & Si Xie
 
 #ifndef RazorAnalyzer_h
 #define RazorAnalyzer_h
 
-#include "RazorEvents.h" //This is a MakeClass of the RazorEvents tree in the ntuple to be analyzed
+#include "llp_event.h" //This is a MakeClass of the llp tree in the ntuple to be analyzed
 #include "FactorizedJetCorrector.h"
 #include "SimpleJetResolution.h"
 
@@ -24,7 +24,7 @@
 #include <iostream>
 using namespace std;
 
-class RazorAnalyzer: public RazorEvents {
+class RazorAnalyzer: public llp_event {
     public :
         RazorAnalyzer(TTree *tree=0);
         virtual ~RazorAnalyzer();
@@ -122,7 +122,8 @@ class RazorAnalyzer: public RazorEvents {
 	bool photonPassMediumID(int i, bool use25nsCuts = true);
 	bool photonPassTightID(int i, bool use25nsCuts = true);
 	bool photonPassLooseIso(int i, bool use25nsCuts = true, bool usePrivatePF = false, bool usePFClusterIso = false);
-	bool photonPassMediumIso(int i, bool use25nsCuts = true, bool usePrivatePF = false, bool usePFClusterIso = false);
+	//bool photonPassMediumIso(int i, bool use25nsCuts = true, bool usePrivatePF = false, bool usePFClusterIso = false);
+  bool photonPassMediumIso(int i, bool use25nsCuts = true, bool usePrivatePF = false);
 	bool photonPassTightIso(int i, bool use25nsCuts = true, bool usePrivatePF = false, bool usePFClusterIso = false);
         bool isLoosePhoton(int i, bool use25nsCuts = true);
         bool isMediumPhoton(int i, bool use25nsCuts = true);
@@ -194,7 +195,7 @@ class RazorAnalyzer: public RazorEvents {
 	/* void getPhotonEffAreaRun2( float eta, double& effAreaChHad, double& effAreaNHad, double& effAreaPho ); */
 
 
-        //functions in RazorAuxJet.cc     
+        //functions in RazorAuxJet.cc
         bool isCSVL(int i, string dataset = "80X");
         bool isCSVM(int i, string dataset = "80X");
         bool isCSVT(int i, string dataset = "80X");
@@ -202,22 +203,22 @@ class RazorAnalyzer: public RazorEvents {
 					  double rho, double jetArea,
 					  int run,
 					  std::vector<std::pair<int,int> > JetCorrectionsIOV,
-					  std::vector<FactorizedJetCorrector*> jetcorrector,  
+					  std::vector<FactorizedJetCorrector*> jetcorrector,
 					  int jetCorrectionLevel = -1,
 					  bool printDebug = false);
 	double JetEnergyCorrectionFactor( double jetRawPt, double jetEta, double jetPhi, double jetE,
-					  double rho, double jetArea,					  
-					  FactorizedJetCorrector* jetcorrector,  
+					  double rho, double jetArea,
+					  FactorizedJetCorrector* jetcorrector,
 					  int jetCorrectionLevel = -1,
 					  bool printDebug = false);
-	double JetEnergySmearingFactor( double jetPt, double jetEta, double NPU, 
-  					SimpleJetResolution *JetResolutionCalculator, 
+	double JetEnergySmearingFactor( double jetPt, double jetEta, double NPU,
+  					SimpleJetResolution *JetResolutionCalculator,
                                         TRandom3 *random);
-        double UpDownJetEnergySmearingFactor(double unsmearedPt, double jetEta, double NPU, 
-                                             SimpleJetResolution *JetResolutionCalculator, 
+        double UpDownJetEnergySmearingFactor(double unsmearedPt, double jetEta, double NPU,
+                                             SimpleJetResolution *JetResolutionCalculator,
                                              double smearedPt, string option);
         double BTagScaleFactor( double jetPt, bool CSVM, string option="");
-	
+
         //functions in RazorAuxMisc.cc
 	double deltaPhi(double phi1, double phi2);
 	double deltaR(double eta1, double phi1, double eta2, double phi2);
@@ -225,7 +226,7 @@ class RazorAnalyzer: public RazorEvents {
 	TLorentzVector makeTLorentzVectorPtEtaPhiM(double pt, double eta, double phi, double mass);
 	vector<TLorentzVector> getHemispheres(vector<TLorentzVector> jets);
 	std::vector< std::vector<int> > getHemispheresV2( std::vector<TLorentzVector> jets);
-     
+
     double computeMR(TLorentzVector hem1, TLorentzVector hem2);
         double computeRsq(TLorentzVector hem1, TLorentzVector hem2, TLorentzVector met);
 	double GetMT( TLorentzVector visible, TVector3 met );
@@ -235,21 +236,21 @@ class RazorAnalyzer: public RazorEvents {
 	double GetDphi( TLorentzVector visible, TVector3 met );
 	double GetDphi( TLorentzVector visible, TLorentzVector met );
         bool matchesVetoLepton(float eta, float phi, float dR=0.4);
-	
+
     double GetAlphaT(vector<TLorentzVector> jets) ;
     double GetDPhiMin(vector<TLorentzVector> jets);
 
         bool passesHadronicRazorBaseline(double MR, double Rsq);
         bool passesLeptonicRazorBaseline(double MR, double Rsq);
         int SubtractParticleFromCollection(TLorentzVector ToSubtract, vector<TLorentzVector>& Collection, float deltaRMatch=0.4);
-	
+
 	double calcMT2(float testMass, bool massive, std::vector<TLorentzVector> jets, TLorentzVector MET, int hemi_seed, int hemi_association);
-	
+
 	//functions in src/RazorAuxGenLevel.cc
 	bool matchesGenMuon(double eta, double phi);
 	bool matchesGenElectron(double eta, double phi);
         bool isHadronicDecay(int index, int daughterStatus=23);
-        int getMatchingHardProcessParticleIndex(double eta, double phi, 
+        int getMatchingHardProcessParticleIndex(double eta, double phi,
                 int id, int status=22, double r=0.8);
         int getMatchingGenWIndex(double eta, double phi, double r=0.8);
         int getMatchingGenTopIndex(double eta, double phi, double r=0.8);
@@ -266,13 +267,13 @@ class RazorAnalyzer: public RazorEvents {
 
 	//Added to src/RazorAuxGenLevel.cc
 	int findClosestGenJet(double eta, double phi);
-	
+
 	//conversion between DetId <-> ieta/ix/iphi/iy
-	
+
 	int detID_from_iEtaiPhi(int iEta_or_iX, int iPhi_or_iY, bool isEB, bool isEEMinus);
 	int iEta_or_iX_from_detID(int detID, bool isEB);
 	int iPhi_or_iY_from_detID(int detID, bool isEB);
-		
+
         //enums
 	// OLD Categories without 6jet category
         /* enum RazorBox { //boxes for razor inclusive analysis */
@@ -293,7 +294,7 @@ class RazorAnalyzer: public RazorEvents {
 	/*   NONE = 999 */
         /* }; */
         enum RazorBox { //boxes for razor inclusive analysis
-	  MuEle = 0, 
+	  MuEle = 0,
 	  MuMu = 1,
 	  EleEle = 2,
 	  MuSixJet = 3,
@@ -307,7 +308,7 @@ class RazorAnalyzer: public RazorEvents {
 	  SixJet = 11,
 	  FourJet = 12,
 	  LooseLeptonDiJet = 13,
-	  DiJet = 14,	  
+	  DiJet = 14,
 	  TwoBJet = 15,
 	  OneBJet = 16,
 	  ZeroBJet = 17,

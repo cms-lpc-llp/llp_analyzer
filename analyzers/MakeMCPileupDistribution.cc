@@ -22,22 +22,31 @@ void NormalizeHist(TH1F *hist) {
 }
 
 
-void MakeMCPileupDistribution::Analyze(bool isData, int option, string outFileName, string label)
+void MakeMCPileupDistribution::Analyze(bool isData, int option, string outputFileName, string label)
 {
-  //initialization: create one TTree for each analysis box 
-  cout << "Initializing..." << endl;
-  if (outFileName.empty()){
+  //initialization: create one TTree for each analysis box
+  std::cout << "Initializing..." << std::endl;
+  if (outputFileName.empty()){
     cout << "MakeMCPileupDistribution: Output filename not specified!" << endl << "Using default output name MCPileupDistribution.root" << endl;
-    outFileName = "MCPileupDistribution.root";
+    outputFileName = "MCPileupDistribution.root";
   }
-  TFile outFile(outFileName.c_str(), "UPDATE");
-  
+  //---------------------------
+  if( isData )
+  {
+    std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << std::endl;
+  }
+  else
+  {
+    std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << std::endl;
+  }
+  TFile outFile(outputFileName.c_str(), "UPDATE");
+
   string Label = label;
   if (label != "") Label = "_"+label;
-    
+
   TH1F* histPUMean =  new TH1F( ("PUMean"+Label).c_str(),";nPUMean;Number of Events", 200, -0.5, 199.5);
   TH1F* histPU =  new TH1F( ("PU"+Label).c_str(),";nPU;Number of Events", 200, -0.5, 199.5);
-    
+
   //begin loop
   if (fChain == 0) return;
   Long64_t nentries = fChain->GetEntriesFast();
@@ -62,18 +71,18 @@ void MakeMCPileupDistribution::Analyze(bool isData, int option, string outFileNa
 	intime_PUmean = nPUmean[i];
       }
     }
-    
+
     //fill normalization histogram
     histPUMean->Fill(intime_PUmean);
     histPU->Fill(intime_PU);
 
   }//end of event loop
-  
+
   //Normalize the histograms
   NormalizeHist(histPUMean);
   NormalizeHist(histPU);
 
-  cout << "Writing output ..." << endl;  
+  cout << "Writing output ..." << endl;
   outFile.WriteTObject(histPUMean, ("PUMean"+Label).c_str(), "WriteDelete");
   outFile.WriteTObject(histPU, ("PU"+Label).c_str(), "WriteDelete");
   outFile.Close();

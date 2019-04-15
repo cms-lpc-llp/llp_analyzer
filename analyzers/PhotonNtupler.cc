@@ -6,13 +6,23 @@ using namespace std;
 void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, string label)
 {
     cout << "Initializing..." << endl;
+    //---------------------------
+    if( isData )
+    {
+      std::cout << "[INFO]: running on data with label: " << label << " and option: " << Option << std::endl;
+    }
+    else
+    {
+      std::cout << "[INFO]: running on MC with label: " << label << " and option: " << Option << std::endl;
+    }
+
     string outfilename = outputFilename;
     if (outfilename == "") outfilename = "PhotonNtuple.root";
     TFile *outFile = new TFile(outfilename.c_str(), "RECREATE");
     PhotonTree *phoTree = new PhotonTree;
     phoTree->CreateTree(PhotonTree::kPhotonTreeLight);
     phoTree->tree_->SetAutoFlush(0);
-    
+
     cout << "Run With Option = " << Option << "\n";
     bool use25nsSelection = true;
     UInt_t NPhotonsFilled = 0;
@@ -42,7 +52,7 @@ void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, stri
 	  //try to match photon with a gen photon
 
 	  //cout << "Photon " << i << " : " << phoPt[i] << " " << phoEta[i] << " " << phoPhi[i]<< " : " << phoSigmaIetaIeta[i] << " " << pho_HoverE[i] << " \n";
- 
+
 	  //***********************
 	  //Fill Photon Variables
 	  //***********************
@@ -113,16 +123,16 @@ void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, stri
 	    if(deltaR(phoEta[i], phoPhi[i], gParticleEta[g], gParticlePhi[g]) > 0.2) continue;
 	    float deltaEOverE = fabs(pho_RegressionE[i] - gParticleE[g])/gParticleE[g];
 	    if(deltaEOverE > 1.) continue;
-	    
-	    foundMatch = true;	    
+
+	    foundMatch = true;
 	    if(deltaEOverE < deltaEOverEBest){
 	      deltaEOverEBest = deltaEOverE;
 	      phoMatchingGenPhotonIndex = g;
 	    }
-	   
+
 	  }
 
-	  
+
 	  phoTree->fDRToClosestParton = minDRToParton;
 	  if (foundMatch) {
 	    phoTree->fMotherPdgId = gParticleMotherId[phoMatchingGenPhotonIndex];
@@ -137,7 +147,7 @@ void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, stri
 	    phoTree->fPhoGenEta = 0;
 	    phoTree->fPhoGenPhi = 0;
 	  }
-        
+
 
 	  if (printDecay) {
 	     for(int g = 0; g < nGenParticle; g++){
@@ -147,9 +157,9 @@ void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, stri
 
 	  bool doFillPhoton = false;
 	  bool isPromptPhoton = false;
-	  if (abs(phoTree->fMotherPdgId) == 25 || ( abs(phoTree->fMotherPdgId) >= 1 && abs(phoTree->fMotherPdgId) <= 6) || 
+	  if (abs(phoTree->fMotherPdgId) == 25 || ( abs(phoTree->fMotherPdgId) >= 1 && abs(phoTree->fMotherPdgId) <= 6) ||
 	      ( abs(phoTree->fMotherPdgId) >= 11 && abs(phoTree->fMotherPdgId) <= 16)) isPromptPhoton = true;
-	  
+
 	  if (Option == 0) {
 	    if (!isPromptPhoton) doFillPhoton = true;
 	  }
@@ -163,16 +173,16 @@ void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, stri
 	    // 	 << bool(phoSigmaIetaIeta[i] < 0.01) << " " << bool(pho_HoverE[i] < 0.028) << " " << phoTree->fPhoIsLoose << "\n";
 	    // if (!phoTree->fPhoIsLoose && phoSigmaIetaIeta[i] < 0.01 && pho_HoverE[i] < 0.028) {
 	    //   cout << runNum << " " << eventNum << "\n";
-	      
+
 	    //   cout << "check: " << phoTree->fPhoSigmaIetaIeta << " " << phoTree->fPhoHOverE << "\n";
 	    // }
-	    	    
-	    NPhotonsFilled++;	     	    
+
+	    NPhotonsFilled++;
 	    phoTree->tree_->Fill();
 	  }
 	}
       }
-      
+
       //********************************************
       //Tree entries based on gen-level objects
       //********************************************
@@ -183,8 +193,8 @@ void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, stri
            if(gParticleStatus[g] != 1) continue;
            if(gParticleId[g] != 22) continue;
            if(gParticlePt[g] < 5.) continue;
-           
-	   if( abs(gParticleMotherId[g]) == 25 || abs(gParticleMotherId[g]) == 24 || ( abs(gParticleMotherId[g]) >= 1 && abs(gParticleMotherId[g]) <= 5) 
+
+	   if( abs(gParticleMotherId[g]) == 25 || abs(gParticleMotherId[g]) == 24 || ( abs(gParticleMotherId[g]) >= 1 && abs(gParticleMotherId[g]) <= 5)
 	       || ( abs(gParticleMotherId[g]) >= 11 && abs(gParticleMotherId[g]) <= 16)
 	       ) {
 
@@ -195,7 +205,7 @@ void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, stri
 	     phoTree->fPhoEventNumberParity = (eventNum % 2 == 0);
 	     phoTree->fRho = fixedGridRhoFastjetAll;
 	     phoTree->fNVertices = nPV;
-	     
+
 	     phoTree->fMotherPdgId = gParticleMotherId[g];
 	     phoTree->fPhoGenE = gParticleE[g];
 	     phoTree->fPhoGenPt = gParticlePt[g];
@@ -204,16 +214,16 @@ void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, stri
 
 	     //Find Closest Parton
 	     float minDRToParton = 9999;
-	     for(int j = 0; j < nGenParticle; j++){	      
+	     for(int j = 0; j < nGenParticle; j++){
 	       //only look for outgoing partons
-	       if  (!( ((abs(gParticleId[j]) >= 1 && abs(gParticleId[j]) <= 5) || abs(gParticleId[j]) == 21) 
+	       if  (!( ((abs(gParticleId[j]) >= 1 && abs(gParticleId[j]) <= 5) || abs(gParticleId[j]) == 21)
 		       && gParticleStatus[j] == 23)
-		    ) continue;	       
+		    ) continue;
 	       double tmpDR = deltaR( gParticleEta[j], gParticlePhi[j], gParticleEta[g], gParticlePhi[g]);
 	       if ( tmpDR < minDRToParton ) minDRToParton = tmpDR;
 	     }
 	     phoTree->fDRToClosestParton = minDRToParton;
-	     
+
 	     //Find Associated Reco Photon
 	     int matchedIndex = -1;
 	     double deltaEOverEBest = 999;
@@ -223,12 +233,12 @@ void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, stri
 	       if(deltaEOverE > 1.) continue;
 	       if ( deltaR( phoEta[j], phoPhi[j], gParticleEta[g], gParticlePhi[g]) < 0.1
 		    && deltaEOverE < deltaEOverEBest
-		    ) {		
+		    ) {
 		 matchedIndex = j;
 		 deltaEOverEBest = deltaEOverE;
 	       }
-	     } 
-	     
+	     }
+
 	     if (matchedIndex > -1) {
 	       phoTree->fPhoPt = phoPt[matchedIndex];
 	       phoTree->fPhoEta = phoEta[matchedIndex];
@@ -260,24 +270,24 @@ void PhotonNtupler::Analyze(bool isData, int Option, string outputFilename, stri
 
 	     bool doFillPhoton = false;
 	     bool isPromptPhoton = false;
-	     if (abs(phoTree->fMotherPdgId) == 25 || ( abs(phoTree->fMotherPdgId) >= 1 && abs(phoTree->fMotherPdgId) <= 6) || 
+	     if (abs(phoTree->fMotherPdgId) == 25 || ( abs(phoTree->fMotherPdgId) >= 1 && abs(phoTree->fMotherPdgId) <= 6) ||
 		 ( abs(phoTree->fMotherPdgId) >= 11 && abs(phoTree->fMotherPdgId) <= 16)) isPromptPhoton = true;
-	     
+
 	     if (isPromptPhoton) doFillPhoton = true;
-	     
+
 	     if (doFillPhoton) {
-	       NPhotonsFilled++;	     	    
+	       NPhotonsFilled++;
 	       phoTree->tree_->Fill();
 	     }
-	   }        
+	   }
         }
-      } 
+      }
 
-    } // loop over events 
-    
+    } // loop over events
+
     cout << "Filled Total of " << NPhotonsFilled << " Photons\n";
     cout << "Writing output trees..." << endl;
     outFile->Write();
     outFile->Close();
-    
+
 }

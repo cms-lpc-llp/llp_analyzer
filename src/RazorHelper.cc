@@ -26,7 +26,7 @@ RazorHelper::RazorHelper(std::string tag_, bool isData_, bool isFastsim_):
     else if (tag == "Razor2015_76X") {
         loadTag_Razor2015_76X();
     }
-    
+
     // tag for 2016 17Aug2017 Rereco
     else if (tag == "Razor2016_07Aug2017Rereco"){
         loadTag_Razor2016_07Aug2017Rereco();
@@ -714,11 +714,11 @@ void RazorHelper::loadJECs_Razor2016_07Aug2017Rereco() {
                   Form("%s/Summer16_23Sep2016V6_MC/Summer16_23Sep2016V6_MC_L3Absolute_AK4PFchs.txt", jecPathname.c_str())));
 
       JetCorrectorParameters *JetResolutionParametersMC = new JetCorrectorParameters(Form("%s/JetResolutionInputAK5PF.txt",jecPathname.c_str()));
-      FactorizedJetCorrector *JetCorrectorMC = new FactorizedJetCorrector(correctionParametersMC);     
+      FactorizedJetCorrector *JetCorrectorMC = new FactorizedJetCorrector(correctionParametersMC);
       std::string jecUncPath = jecPathname+"/Summer16_23Sep2016V6_MC/Summer16_23Sep2016V6_MC_Uncertainty_AK4PFchs.txt";
       JetCorrectionUncertainty *jecUncMC = new JetCorrectionUncertainty(jecUncPath);
       SimpleJetResolution* JetResolutionCalculatorMC = new SimpleJetResolution(*JetResolutionParametersMC);
-      
+
       correctionParameters.push_back(correctionParametersMC);
       JetResolutionParameters.push_back(JetResolutionParametersMC);
       JetCorrector.push_back( JetCorrectorMC );
@@ -750,7 +750,7 @@ void RazorHelper::loadPileup_Razor2016_MoriondRereco() {
     // LAST UPDATED: 18 October 2016
     std::cout << "RazorHelper: loading pileup weight histograms" << std::endl;
 
-    
+
     if (!isFastsim) {
       pileupWeightFile = TFile::Open("PileupReweight_Summer16_2016_36p2ifb.root");
       pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
@@ -1095,11 +1095,11 @@ void RazorHelper::loadJECs_Razor2016_MoriondRereco() {
                   Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt", jecPathname.c_str())));
 
       JetCorrectorParameters *JetResolutionParametersMC = new JetCorrectorParameters(Form("%s/JetResolutionInputAK5PF.txt",jecPathname.c_str()));
-      FactorizedJetCorrector *JetCorrectorMC = new FactorizedJetCorrector(correctionParametersMC);     
+      FactorizedJetCorrector *JetCorrectorMC = new FactorizedJetCorrector(correctionParametersMC);
       std::string jecUncPath = jecPathname+"/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_Uncertainty_AK4PFchs.txt";
       JetCorrectionUncertainty *jecUncMC = new JetCorrectionUncertainty(jecUncPath);
       SimpleJetResolution* JetResolutionCalculatorMC = new SimpleJetResolution(*JetResolutionParametersMC);
-      
+
       correctionParameters.push_back(correctionParametersMC);
       JetResolutionParameters.push_back(JetResolutionParametersMC);
       JetCorrector.push_back( JetCorrectorMC );
@@ -1331,11 +1331,11 @@ void RazorHelper::loadJECs_Razor2016_03Feb2017Rereco() {
                   Form("%s/Summer16_23Sep2016V4_MC/Summer16_23Sep2016V4_MC_L3Absolute_AK4PFchs.txt", jecPathname.c_str())));
 
       JetCorrectorParameters *JetResolutionParametersMC = new JetCorrectorParameters(Form("%s/JetResolutionInputAK5PF.txt",jecPathname.c_str()));
-      FactorizedJetCorrector *JetCorrectorMC = new FactorizedJetCorrector(correctionParametersMC);     
+      FactorizedJetCorrector *JetCorrectorMC = new FactorizedJetCorrector(correctionParametersMC);
       std::string jecUncPath = jecPathname+"/Summer16_23Sep2016V4_MC/Summer16_23Sep2016V4_MC_Uncertainty_AK4PFchs.txt";
       JetCorrectionUncertainty *jecUncMC = new JetCorrectionUncertainty(jecUncPath);
       SimpleJetResolution* JetResolutionCalculatorMC = new SimpleJetResolution(*JetResolutionParametersMC);
-      
+
       correctionParameters.push_back(correctionParametersMC);
       JetResolutionParameters.push_back(JetResolutionParametersMC);
       JetCorrector.push_back( JetCorrectorMC );
@@ -2256,11 +2256,11 @@ void RazorHelper::loadJECs_Razor2017_17Nov2017Rereco() {
                   Form("%s/Fall17_17Nov2017_V8_MC/Fall17_17Nov2017_V8_MC_L3Absolute_AK4PFchs.txt", jecPathname.c_str())));
 
       JetCorrectorParameters *JetResolutionParametersMC = new JetCorrectorParameters(Form("%s/JetResolutionInputAK5PF.txt",jecPathname.c_str()));
-      FactorizedJetCorrector *JetCorrectorMC = new FactorizedJetCorrector(correctionParametersMC);     
+      FactorizedJetCorrector *JetCorrectorMC = new FactorizedJetCorrector(correctionParametersMC);
       std::string jecUncPath = jecPathname+"/Fall17_17Nov2017_V8_MC/Fall17_17Nov2017_V8_MC_Uncertainty_AK4PFchs.txt";
       JetCorrectionUncertainty *jecUncMC = new JetCorrectionUncertainty(jecUncPath);
       SimpleJetResolution* JetResolutionCalculatorMC = new SimpleJetResolution(*JetResolutionParametersMC);
-      
+
       correctionParameters.push_back(correctionParametersMC);
       JetResolutionParameters.push_back(JetResolutionParametersMC);
       JetCorrector.push_back( JetCorrectorMC );
@@ -2506,11 +2506,11 @@ void RazorHelper::loadJECs_Razor2017_31Mar2018Rereco() {
                   Form("%s/Fall17_17Nov2017_V32_MC/Fall17_17Nov2017_V32_MC_L3Absolute_AK4PFchs.txt", jecPathname.c_str())));
 
       JetCorrectorParameters *JetResolutionParametersMC = new JetCorrectorParameters(Form("%s/JetResolutionInputAK5PF.txt",jecPathname.c_str()));
-      FactorizedJetCorrector *JetCorrectorMC = new FactorizedJetCorrector(correctionParametersMC);     
+      FactorizedJetCorrector *JetCorrectorMC = new FactorizedJetCorrector(correctionParametersMC);
       std::string jecUncPath = jecPathname+"/Fall17_17Nov2017_V32_MC/Fall17_17Nov2017_V32_MC_Uncertainty_AK4PFchs.txt";
       JetCorrectionUncertainty *jecUncMC = new JetCorrectionUncertainty(jecUncPath);
       SimpleJetResolution* JetResolutionCalculatorMC = new SimpleJetResolution(*JetResolutionParametersMC);
-      
+
       correctionParameters.push_back(correctionParametersMC);
       JetResolutionParameters.push_back(JetResolutionParametersMC);
       JetCorrector.push_back( JetCorrectorMC );
@@ -2764,7 +2764,9 @@ double RazorHelper::getLeptonScaleFactor(TH2D *effHist, TH2D *sfHist, TH2D *fast
 }
 
 double RazorHelper::getLeptonScaleFactorError(TH2D *effHist, TH2D *sfHist, TH2D *fastsimHist,
-        double pt, double eta, bool passes) {
+       double pt, double eta, bool passes) {
+    if( effHist == NULL ) return -999;
+    if( !passes ) return -999;
     double unc = lookupPtEtaScaleFactorError( sfHist, pt, eta );
     if (isFastsim) { //correct efficiency for Fastsim
         unc = lookupPtEtaScaleFactorError( fastsimHist, pt, eta );

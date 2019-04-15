@@ -3,7 +3,7 @@
 if [ "$1" == "" ] || [ "$2" == "" ]; then
     echo "RazorRun <list of input files> <analyzer name> <options>"
 else
-    cp ${CMSSW_BASE}/src/RazorAnalyzer/bin/Run$2 .
+    cp ${CMSSW_BASE}/src/llp_analyzer/bin/Run$2 .
 
     cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/csvv2_13TEV_17_6_3_2019.csv ./
     cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/CSVv2_94XSF_V2_B_F.csv ./
@@ -27,7 +27,7 @@ else
     cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/LeptonEfficiencies/2017/efficiency_results_VetoMuonSelectionEffDenominatorGen_2017_31Mar2018_Golden.root ./
     cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/LeptonEfficiencies/2017/*.root ./
     cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/LeptonEfficiencies/2016_23SepRereco/*.root ./
-   cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/FastsimToFullsim/detailed_ele_full_fast_sf_17.root ./
+    cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/FastsimToFullsim/detailed_ele_full_fast_sf_17.root ./
 
     tar vxzf JEC_Summer16_23Sep2016V3.tgz
     tar vxzf JEC_Summer16_23Sep2016V4.tgz

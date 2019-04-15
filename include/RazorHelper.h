@@ -171,7 +171,8 @@ class RazorHelper {
         double getLeptonScaleFactor(TH2D *effHist, TH2D *sfHist, TH2D *fastsimHist,
                 double pt, double eta, bool passes);
         double getLeptonScaleFactorError(TH2D *effHist, TH2D *sfHist, TH2D *fastsimHist,
-                double pt, double eta, bool passes);
+              double pt, double eta, bool passes);
+        //double getLeptonScaleFactorError(TH2D *sfHist, TH2D *fastsimHist, double pt, double eta);
         void updateScaleFactors(TH2D *effHist, TH2D *sfHist, TH2D *fastsimHist, float pt,
                 float eta, bool passes, float &sf, float &sfUp, float &sfDown,
                 float &sfFastsimUp, float &sfFastsimDown, float smear=0.0);
