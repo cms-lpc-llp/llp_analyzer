@@ -83,7 +83,7 @@ public:
   float jetEta[N_MAX_JETS];
   float jetPhi[N_MAX_JETS];
   float jetTime[N_MAX_JETS];
-  float HLTDecision[NTriggersMAX];
+  bool HLTDecision[NTriggersMAX];
 
   TTree *tree_;
   TFile *f_;
@@ -130,7 +130,7 @@ public:
     }
 
     for(int i = 0; i <NTriggersMAX; i++){
-      HLTDecision[i] = 0;
+      HLTDecision[i] = false;
     }
 
   };
@@ -182,7 +182,7 @@ public:
     tree_->Branch("jetEta",    jetEta,    "jetEta[nJets]/F");
     tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
     tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
-    tree_->Branch("HLTDecision", &HLTDecision, "HLTDecision[NTriggersMAX]/O");
+    tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[NTriggersMAX]/O");
   };
 
   void InitTree()
@@ -224,7 +224,7 @@ public:
     tree_->SetBranchAddress("jetPhi",    jetPhi);
     tree_->SetBranchAddress("jetTime",   jetTime);
     // triggers
-    tree_->SetBranchAddress("HLTDecision",   &HLTDecision);
+    tree_->SetBranchAddress("HLTDecision",   HLTDecision);
 
   };
 
