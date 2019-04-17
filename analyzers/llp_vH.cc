@@ -13,7 +13,7 @@
 
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
-
+#define NTriggersMAX 601
 using namespace std;
 
 struct greater_than_pt
@@ -83,7 +83,7 @@ public:
   float jetEta[N_MAX_JETS];
   float jetPhi[N_MAX_JETS];
   float jetTime[N_MAX_JETS];
-
+  float HLTDecision[NTriggersMAX];
 
   TTree *tree_;
   TFile *f_;
@@ -128,6 +128,11 @@ public:
       jetPhi[i]    = -999.;
       jetTime[i]   = -999.;
     }
+
+    for(int i = 0; i <NTriggersMAX; i++){
+      HLTDecision[i] = 0;
+    }
+
   };
 
   void LoadTree(const char* file)
@@ -177,6 +182,7 @@ public:
     tree_->Branch("jetEta",    jetEta,    "jetEta[nJets]/F");
     tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
     tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
+    tree_->Branch("HLTDecision", &HLTDecision, "HLTDecision[NTriggersMAX]/O");
   };
 
   void InitTree()
@@ -217,6 +223,9 @@ public:
     tree_->SetBranchAddress("jetEta",    jetEta);
     tree_->SetBranchAddress("jetPhi",    jetPhi);
     tree_->SetBranchAddress("jetTime",   jetTime);
+    // triggers
+    tree_->SetBranchAddress("HLTDecision",   &HLTDecision);
+
   };
 
 };
@@ -257,7 +266,7 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
   char* cmsswPath;
   cmsswPath = getenv("CMSSW_BASE");
   string pathname;
-  if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/RazorAnalyzer/data/JEC/";
+  if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/cms_lpc_llp/llp_analyzer/data/JEC/";
   cout << "Getting JEC parameters from " << pathname << endl;
 
   std::vector<JetCorrectorParameters> correctionParameters;
@@ -338,7 +347,10 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
     vH->rho = fixedGridRhoFastjetAll;
     vH->met = metType1Pt;
     vH->metPhi = metType1Phi;
-    //std::cout << "deb5 " << jentry << std::endl;
+    //Triggers
+    for(int i = 0; i < NTriggersMAX; i++){
+      vH->HLTDecision[i] = HLTDecision[i];
+    }
     //*************************************************************************
     //Start Object Selection
     //*************************************************************************
