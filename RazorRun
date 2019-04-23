@@ -3,8 +3,7 @@
 if [ "$1" == "" ] || [ "$2" == "" ]; then
     echo "RazorRun <list of input files> <analyzer name> <options>"
 else
-    cp ${CMSSW_BASE}/src/llp_analyzer/bin/Run$2 .
-
+    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/bin/Run$2 .
     cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/csvv2_13TEV_17_6_3_2019.csv ./
     cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/CSVv2_94XSF_V2_B_F.csv ./
     cp -v /eos/cms/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/BTagEfficiencies/CSVv2_Moriond17_B_H.csv ./

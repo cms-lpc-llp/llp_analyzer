@@ -13,7 +13,7 @@
 
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
-#define NTriggersMAX 601
+#define NTriggersMAX 601 //Number of trigger in the .dat file
 using namespace std;
 
 struct greater_than_pt
@@ -85,6 +85,10 @@ public:
   float jetTime[N_MAX_JETS];
   bool HLTDecision[NTriggersMAX];
 
+  UInt_t wzevtNum,trig, trig_lepId, trig_lepId_dijet; //number of events that pass each criteria
+
+
+
   TTree *tree_;
   TFile *f_;
 
@@ -103,6 +107,7 @@ public:
     runNum=0; lumiSec=0; evtNum=0; category=0;
     npv=0; npu=0; rho=-1; weight=-1;
     met=-1; metPhi=-1;
+
     //leptons
     nLeptons = 0;
     for( int i = 0; i < N_MAX_LEPTONS; i++ )
@@ -182,7 +187,10 @@ public:
     tree_->Branch("jetEta",    jetEta,    "jetEta[nJets]/F");
     tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
     tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
-    tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[NTriggersMAX]/O");
+    tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[601]/O"); //hardcoded
+
+
+
   };
 
   void InitTree()
@@ -244,11 +252,36 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
   {
     std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << std::endl;
   }
+
   const float ELE_MASS = 0.000511;
   const float MU_MASS  = 0.105658;
   const float Z_MASS   = 91.2;
   std::string analysisTag = "Razor2016_80X";
+  int wzId;
+  int NTrigger;;//Number of trigger in trigger paths
+  if (label == "zH"){
+    NTrigger = 4;
+    }
+  else{
+    NTrigger = 2;
+  }
+  int trigger_paths[NTrigger];
 
+  int trigger_paths[NTrigger];
+  if (label == "wH" || label == "bkg"){
+    wzId = 24;
+    trigger_paths[0] = 87;
+    trigger_paths[1] = 135;
+    // trigger_paths[2] = 310;
+  }
+  else if (label == "zH"){
+    wzId = 23;
+    trigger_paths[0] = 177;
+    trigger_paths[1] = 362;
+    // trigger_paths[2] = 310;
+    trigger_paths[2] = 87;
+    trigger_paths[3] = 135;
+  }
   //-----------------------------------------------
   //Set up Output File
   //-----------------------------------------------
@@ -261,12 +294,18 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
   vH->InitTree();
   //histogram containing total number of processed events (for normalization)
   TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
+  TH1F *wzNEvents = new TH1F("wzNEvents", "wzNEvents", 1, 1, 2);
+  TH1F *trig = new TH1F("trig", "trig", 1, 1, 2);
+  TH1F *trig_lepId = new TH1F("trig_lepId", "trig_lepId", 1, 1, 2);
+  TH1F *trig_lepId_dijet = new TH1F("trig_lepId_dijet", "trig_lepId_dijet", 1, 1, 2);
 
 
   char* cmsswPath;
   cmsswPath = getenv("CMSSW_BASE");
   string pathname;
   if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/cms_lpc_llp/llp_analyzer/data/JEC/";
+  if(cmsswPath != NULL and option == 1) pathname = "JEC/"; //run on condor if option == 1
+
   cout << "Getting JEC parameters from " << pathname << endl;
 
   std::vector<JetCorrectorParameters> correctionParameters;
@@ -307,7 +346,7 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
   for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++) {
 
     //begin event
-    if(jentry % 1000 == 0) cout << "Processing entry " << jentry << endl;
+    if(jentry % 10000 == 0) cout << "Processing entry " << jentry << endl;
 
     Long64_t ientry = LoadTree(jentry);
     if (ientry < 0) break;
@@ -325,8 +364,10 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
     }
     else
     {
-      NEvents->Fill(genWeight);
-      vH->weight = genWeight;
+      //NEvents->Fill(genWeight);
+      //vH->weight = genWeight;
+      NEvents->Fill(1);
+      vH->weight = 1;
     }
     //std::cout << "deb2 " << jentry << std::endl;
     //event info
@@ -334,7 +375,21 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
     vH->lumiSec = lumiNum;
     vH->evtNum = eventNum;
     //std::cout << "deb3 " << jentry << std::endl;
-    //get NPU
+    if (label == "zH" || label == "wH"){
+      bool wzFlag = false;
+      for (int i=0; i < nGenParticle; ++i)
+      {
+        if ((abs(gParticleId[i]) == 13 && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
+            ||(abs(gParticleId[i]) == 11 && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId))
+        {
+          wzFlag = true;
+        }
+
+      }
+      if ( wzFlag == false ) continue;
+      wzNEvents->Fill(1);
+    }
+
     for (int i=0; i < nBunchXing; ++i)
     {
       if (BunchXing[i] == 0)
@@ -342,15 +397,25 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
         vH->npu = nPUmean[i];
       }
     }
-    //std::cout << "deb4" << jentry << std::endl;
+    //get NPU
     vH->npv = nPV;
     vH->rho = fixedGridRhoFastjetAll;
     vH->met = metType1Pt;
     vH->metPhi = metType1Phi;
+
     //Triggers
     for(int i = 0; i < NTriggersMAX; i++){
       vH->HLTDecision[i] = HLTDecision[i];
     }
+    bool triggered = false;
+    for(int i = 0; i < NTrigger; i++)
+    {
+      int trigger_temp = trigger_paths[i];
+
+      triggered = triggered || HLTDecision[trigger_temp];
+
+    }
+    if (triggered) trig->Fill(1);
     //*************************************************************************
     //Start Object Selection
     //*************************************************************************
@@ -408,10 +473,6 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
       tmpElectron.passId = passMVALooseElectronID(i) && passEGammaPOGLooseElectronIso(i);
       Leptons.push_back(tmpElectron);
     }
-    //------------------------
-    //require 1 lepton
-    //------------------------
-    if ( Leptons.size() < 1 ) continue;
 
     sort(Leptons.begin(), Leptons.end(), my_largest_pt);
     //std::cout << "deb7 " << jentry << std::endl;
@@ -426,7 +487,7 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
       vH->lepPassId[vH->nLeptons] = tmp.passId;
       vH->nLeptons++;
     }
-    
+
     //----------------
     //Find Z Candidate
     //----------------
@@ -478,6 +539,15 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
       //if (abs(lep2Id) == 11) lep2IsPrompt = matchesGenElectron(lep2Eta,lep2Phi);
       //else lep2IsPrompt = matchesGenMuon(lep2Eta,lep2Phi);
     } // endif foundZ
+    //------------------------
+    //require 1 lepton
+    //------------------------
+    if ( Leptons.size() < 1 ) continue;
+    // else{
+    //   if ( Leptons.size() < 2 ) continue;
+    //   if (!(foundZ && fabs(ZMass-Z_MASS) < 15.0 )) continue;
+    // }
+    if (triggered) trig_lepId->Fill(1);
 
 
   //-----------------------------------------------
@@ -529,6 +599,7 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
     //Require at least 2 jets
     //-----------------------------
     if( Jets.size() < 2 ) continue;
+    if (triggered) trig_lepId_dijet->Fill(1);
     sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
     for ( auto &tmp : Jets )

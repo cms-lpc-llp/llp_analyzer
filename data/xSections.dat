@@ -219,21 +219,6 @@ QCD_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8       541
 WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                                     405.271
 WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8                                             0.2147
 
-#SUSY SMSs (PHYS14)
-SMS-T1bbbb_mGluino-1000_mLSP-900_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.325388
-SMS-T1bbbb_mGluino-1500_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.0141903
-SMS-T1qqqq_mGluino-1000_mLSP-800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.325388
-SMS-T1qqqq_mGluino-1400_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.0252977
-SMS-T1tttt_mGluino-1200_mLSP-800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.0856418
-SMS-T1tttt_mGluino-1500_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.0141903
-SMS-T2bb_2J_mStop-600_mLSP-580_Tune4C_13TeV-madgraph-tauola                         0.174599
-SMS-T2bb_2J_mStop-900_mLSP-100_Tune4C_13TeV-madgraph-tauola                         0.0128895
-SMS-T2qq_2J_mStop-1200_mLSP-100_Tune4C_13TeV-madgraph-tauola                        0.00159844
-SMS-T2qq_2J_mStop-600_mLSP-550_Tune4C_13TeV-madgraph-tauola                         0.174599
-SMS-T2tt_2J_mStop-425_mLSP-325_Tune4C_13TeV-madgraph-tauola                         1.31169
-SMS-T2tt_2J_mStop-500_mLSP-325_Tune4C_13TeV-madgraph-tauola                         0.51848
-SMS-T2tt_2J_mStop-650_mLSP-325_Tune4C_13TeV-madgraph-tauola                         0.107045
-SMS-T2tt_2J_mStop-850_mLSP-100_Tune4C_13TeV-madgraph-tauola                         0.0189612
 
 #DM Signal Models
 TTbarDMJets_EFT_M-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                        5.415e-06

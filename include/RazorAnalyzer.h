@@ -44,7 +44,6 @@ class RazorAnalyzer: public llp_event {
         void EnableGenParticles();
         void EnableRazor();
         void EnableEcalRechits();
-	void EnableTrigger();
         void EnableAll();
         void EnableAllWithEcalRechits();
 

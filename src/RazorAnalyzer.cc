@@ -456,10 +456,7 @@ void RazorAnalyzer::EnableEcalRechits(){
     fChain->SetBranchStatus("ecalRechit_transpCorr", 1);
 }
 
-void RazorAnalyzer::EnableTrigger(){
-    fChain->SetBranchStatus("HLTDecision", 1);
 
-}
 //////////////////////////////
 //ELECTRON
 //////////////////////////////
