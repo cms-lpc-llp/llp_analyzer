@@ -265,7 +265,6 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
   else{
     NTrigger = 2;
   }
-  int trigger_paths[NTrigger];
 
   int trigger_paths[NTrigger];
   if (label == "wH" || label == "bkg"){
