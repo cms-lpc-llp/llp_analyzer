@@ -6,9 +6,9 @@ Class for analyzing the 2015 razor ntuples
 Setup
 -------------
 
-    cmsrel CMSSW_7_1_5
-    cd CMSSW_7_1_5/src
-    git clone https://github.com/RazorCMS/RazorAnalyzer.git
+    cmsrel CMSSW_9_4_4
+    cd CMSSW_9_4_4/src
+    git clone git@github.com:cms-lpc-llp/llp_analyzer.git cms_lpc_llp/llp_analyzer
     cd RazorAnalyzer
     make
   
@@ -28,13 +28,34 @@ Example: to execute a dummy analysis that does nothing,
 
     ./RazorRun lists/TTJets_List_Test.txt DummyAnalyzer
 
+## Run the llp_analyzer
+    ./RazorRun_T2 <list of input files> llp_vH -d=${isData} -n=${option} -f=${outputfile} -l=${label}
+
+* ```label``` can be ```wH```, ```zH```, or ```bkg```. (The purpose of this label is to separate the wH and zH signals from the vH ntupler samples)
+* ```option``` is 1 if run on condor, else ```option`` can be any other number, if run interactively. (It just sets the directory of JEC parameters differently)
+* list of input files are stored in ```lists/llpntuple/V1p0/MC_Summer16/v1/``` , same format as the llpntuple storage space in ```hadoop```
+
+
+
+## Submit condor jobs on tier2
+
+execute the following script to submit jobs to condor, which runs RunRazor_T2 for wH in this case:
+
+	scripts_condor/submit_llp_wH.sh
+
+
+Output llp_analyzers are stored here: ```/mnt/hadoop/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1```
+
+
 Normalizing the processed ntuples
 ------------
-The NormalizeNtuple macro opens a specified set of files and adds a 'weight' branch to each TTree in each file.  The value of 'weight' is the same for all events in a tree and is equal to CrossSection/NEvents, where NEvents is the total number of events processed for the given dataset.  The cross sections can be found in the file data/xSections.dat.  To run NormalizeNtuple:
+The NormalizeNtuple macro opens a specified set of files and adds a 'weight' branch to each TTree in each file.  The value of 'weight' is the same for all events in a tree and is equal to lumi * CrossSection/NEvents, where NEvents is the total number of events processed for the given dataset, and lumi is the luminosity normalized to.  The cross sections can be found in the file data/xSections.dat.  To run NormalizeNtuple:
 
-    ./NormalizeNtuple <input file>
+    ./NormalizeNtuple <input file> [lumi]
 
 See lists/filestonormalize/testTTJets.txt for an example input file to be used with NormalizeNtuple.
+
+The script ```hadd_llp_bkg.sh``` automatically hadd and normalize the llp_analyzer ROOT files for the background samples.
 
 Fitting samples and setting limits
 -----------
