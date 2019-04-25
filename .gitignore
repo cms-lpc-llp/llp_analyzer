@@ -31,6 +31,10 @@
 *.out
 *.app
 
-
+# directories
+normalized/*
+scripts_condor/log/*
+scripts_condor/submit/*
+bin/*
 *.*~
 #*#

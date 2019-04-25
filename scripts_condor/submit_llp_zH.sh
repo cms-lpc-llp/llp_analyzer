@@ -10,7 +10,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=50
+filesPerJob=1
 
 for sample in \
 ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl10000_ev100000 \
@@ -49,7 +49,12 @@ do
 	inputfilelist=/src/cms_lpc_llp/llp_analyzer/lists/llpntuple/V1p0/MC_Summer16/v1/christiw/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
 	maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
-	#lastjobfile=`python -c "print int($nfiles.0%$filesPerJob)"`
+
+        mod=`python -c "print int($nfiles.0%$filesPerJob)"`
+        if [ ${mod} -eq 0 ]
+        then
+                maxjob=`python -c "print int($nfiles.0/$filesPerJob)-1"`
+        fi
 	analyzer=llp_vH
 	analyzerTag=Razor2016_80X
 	rm -f submit/${analyzer}_${sample}_Job*.jdl
@@ -61,7 +66,7 @@ do
 		jdl_file=submit/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}.jdl
 		echo "Universe = vanilla" > ${jdl_file}
 		echo "Executable = ${job_script}" >> ${jdl_file}
-		echo "Arguments = ${analyzer} ${inputfilelist} no 1 wH ${filesPerJob} ${jobnumber} ${sample}_Job${jobnumber}_Of_${maxjob}.root /store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signal/${sample} ${analyzerTag} " >> ${jdl_file}
+		echo "Arguments = ${analyzer} ${inputfilelist} no 1 zH ${filesPerJob} ${jobnumber} ${sample}_Job${jobnumber}_Of_${maxjob}.root /store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signals/zH/${sample} ${analyzerTag} " >> ${jdl_file}
 
 		# option should always be 1, when running condor
 		echo "Log = log/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}_PC.log" >> ${jdl_file}

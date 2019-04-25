@@ -55,7 +55,7 @@ do
 		jdl_file=submit/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}.jdl
 		echo "Universe = vanilla" > ${jdl_file}
 		echo "Executable = ${job_script}" >> ${jdl_file}
-		echo "Arguments = ${analyzer} ${inputfilelist} no 1 bkg ${filesPerJob} ${jobnumber} ${sample}_Job${jobnumber}_Of_${maxjob}.root /store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/bkg/${sample} ${analyzerTag} " >> ${jdl_file}
+		echo "Arguments = ${analyzer} ${inputfilelist} no 1 ${filesPerJob} ${jobnumber} ${sample}_Job${jobnumber}_Of_${maxjob}.root /store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/${sample} ${analyzerTag} " >> ${jdl_file}
 
 		# option should always be 1, when running condor
 		echo "Log = log/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}_PC.log" >> ${jdl_file}
@@ -72,7 +72,7 @@ do
 		echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
 		echo '+SingularityBindCVMFS = True' >> ${jdl_file}
 		echo "run_as_owner = True" >> ${jdl_file}
-		echo "x509userproxy = /data/christiw/x509_proxy" >> ${jdl_file}
+		echo "x509userproxy = /data/christiw/x509_proxy" >> ${jdl_file}		
 		echo "should_transfer_files = YES" >> ${jdl_file}
 		echo "when_to_transfer_output = ON_EXIT" >> ${jdl_file}
 		echo "Queue 1" >> ${jdl_file}
@@ -80,3 +80,4 @@ do
 		condor_submit submit/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}.jdl
 	done
 done
+
