@@ -1,6 +1,0 @@
-DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 /afs/cern.ch/work/c/cpena/public/CMSSW_7_6_3/src/RazorAnalyzer/submission/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_750.root
-#GluGluToHToGG_M-125_13TeV-powheg_pythia8 /afs/cern.ch/work/c/cpena/public/CMSSW_7_6_3/src/RazorAnalyzer/submission/GluGluHToGG_M-125_13TeV_powheg_pythia8_SystematicFixed_bTag.root
-#TTbarH_HToGG_M-125_13TeV-powheg_pythia8	 /afs/cern.ch/work/c/cpena/public/CMSSW_7_6_3/src/RazorAnalyzer/submission/ttHToGG_M125_13TeV_powheg_pythia8_v2_SystematicFixed_bTag.root
-#WH_HToGG_M-125_13TeV-powheg_pythia8	 /afs/cern.ch/work/c/cpena/public/CMSSW_7_6_3/src/RazorAnalyzer/submission/WH_HToGG_WToAll_M125_13TeV_powheg_pythia8_SystematicFixed_bTag.root
-#ZH_HToGG_M-125_13TeV-powheg_pythia8	 /afs/cern.ch/work/c/cpena/public/CMSSW_7_6_3/src/RazorAnalyzer/submission/VBFHToGG_M-125_13TeV_powheg_pythia8_SystematicFixed_bTag.root
-#VBF_HToGG_M-125_13TeV-powheg_pythia8	 /afs/cern.ch/work/c/cpena/public/CMSSW_7_6_3/src/RazorAnalyzer/submission/ZH_HToGG_ZToAll_M125_13TeV_powheg_pythia8_SystematicFixed_bTag.root

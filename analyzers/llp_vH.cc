@@ -70,6 +70,7 @@ public:
   float lepDZ[N_MAX_LEPTONS];
   bool lepPassId[N_MAX_LEPTONS];
   //Z-candidate
+  float MT;
   float ZMass;
   float ZPt;
   float ZEta;
@@ -122,6 +123,7 @@ public:
     }
     //Z-candidate
     ZMass = -999.; ZPt = -999.; ZEta = -999.; ZPhi = -999.;
+    MT = -999.;
     ZleptonIndex1 = -999; ZleptonIndex2 = -999;
     //jets
     nJets = 0;
@@ -174,6 +176,7 @@ public:
     tree_->Branch("lepDZ",     lepDZ,     "lepDZ[nLeptons]/F");
     tree_->Branch("lepPassId", lepPassId, "lepPassId[nLeptons]/O");
     //Z-candidate
+    tree_->Branch("MT",      &MT,  "MT/F");
     tree_->Branch("ZMass",      &ZMass,  "ZMass/F");
     tree_->Branch("ZPt",        &ZPt,    "ZPt/F");
     tree_->Branch("ZEta",       &ZEta,   "ZEta/F");
@@ -224,6 +227,8 @@ public:
     tree_->SetBranchAddress("ZPhi",        &ZPhi);
     tree_->SetBranchAddress("ZleptonIndex1", &ZleptonIndex1);
     tree_->SetBranchAddress("ZleptonIndex2", &ZleptonIndex2);
+    tree_->SetBranchAddress("MT", &MT);
+
     //jets
     tree_->SetBranchAddress("nJets",     &nJets);
     tree_->SetBranchAddress("jetE",      jetE);
@@ -356,18 +361,22 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
     //std::cout << "deb0 " << jentry << std::endl;
     vH->InitVariables();
     //std::cout << "deb1 " << jentry << std::endl;
-    if (isData)
-    {
-      NEvents->Fill(1);
-      vH->weight = 1;
+    if (label =="bkg"){
+      if (isData)
+      {
+        NEvents->Fill(1);
+        vH->weight = 1;
+      }
+      else
+      {
+        //NEvents->Fill(genWeight);
+        //vH->weight = genWeight;
+        NEvents->Fill(1);
+        vH->weight = 1;
+      }
+
     }
-    else
-    {
-      //NEvents->Fill(genWeight);
-      //vH->weight = genWeight;
-      NEvents->Fill(1);
-      vH->weight = 1;
-    }
+
     //std::cout << "deb2 " << jentry << std::endl;
     //event info
     vH->runNum = runNum;
@@ -378,15 +387,14 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
       bool wzFlag = false;
       for (int i=0; i < nGenParticle; ++i)
       {
-        if ((abs(gParticleId[i]) == 13 && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
-            ||(abs(gParticleId[i]) == 11 && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId))
+        if (abs(gParticleId[i]) == wzId && gParticleStatus[i] == 22)
         {
           wzFlag = true;
         }
 
       }
       if ( wzFlag == false ) continue;
-      wzNEvents->Fill(1);
+      NEvents->Fill(1);
     }
 
     for (int i=0; i < nBunchXing; ++i)
@@ -426,7 +434,7 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
     for( int i = 0; i < nMuons; i++ )
     {
       if(!isMuonPOGLooseMuon(i)) continue;
-      if(muonPt[i] < 10) continue;
+      if(muonPt[i] < 25) continue;
       if(fabs(muonEta[i]) > 2.4) continue;
 
       //remove overlaps
@@ -450,11 +458,19 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
     //-------------------------------
     for( int i = 0; i < nElectrons; i++ )
     {
-      if(!(passMVAVetoElectronID(i) &&
-      ( (fabs(eleEta[i]) < 1.5 && fabs(ele_d0[i]) < 0.0564) ||
-      (fabs(eleEta[i]) >= 1.5 && fabs(ele_d0[i]) < 0.222))
-      && passEGammaPOGVetoElectronIso(i))) continue;
-      if(elePt[i] < 10) continue;
+
+
+      // if(!(passMVAVetoElectronID(i) &&
+      // ( (fabs(eleEta[i]) < 1.5 && fabs(ele_d0[i]) < 0.0564) ||
+      // (fabs(eleEta[i]) >= 1.5 && fabs(ele_d0[i]) < 0.222))
+      // && passEGammaPOGVetoElectronIso(i))) continue;
+      if (!isEGammaPOGVetoElectron(i, true, true, true, "Summer16")) continue;
+
+      if (!( (fabs(eleEta[i]) < 1.5 && fabs(ele_d0[i]) < 0.0564) ||
+      (fabs(eleEta[i]) >= 1.5 && fabs(ele_d0[i]) < 0.222))) continue;
+
+      if(elePt[i] < 30) continue;
+
       if(fabs(eleEta[i]) > 2.4) continue;
 
       //remove overlaps
@@ -464,7 +480,7 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
         if (RazorAnalyzer::deltaR(eleEta[i],elePhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
       }
       if(overlap) continue;
-
+      std::cout << "here" << std::endl;
       leptons tmpElectron;
       tmpElectron.lepton.SetPtEtaPhiM(elePt[i],eleEta[i], elePhi[i], ELE_MASS);
       tmpElectron.pdgId = 11 * -1 * eleCharge[i];
@@ -484,12 +500,18 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
       vH->lepPdgId[vH->nLeptons]  = tmp.pdgId;
       vH->lepDZ[vH->nLeptons]     = tmp.dZ;
       vH->lepPassId[vH->nLeptons] = tmp.passId;
+      // std::cout << "lepton pdg " << vH->lepPdgId[vH->nLeptons] << std::endl;
       vH->nLeptons++;
     }
 
     //----------------
     //Find Z Candidate
     //----------------
+    // TLorentzVector visible, met;
+    // visible = Leptons[0].lepton;
+    // met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
+    // vH->MT = GetMT(visible,met);
+    // std::cout <<nMuons << "," << nElectrons <<  "," << vH->nLeptons <<  "," << vH->met << std::endl;
     double ZMass = -999;
     double ZPt = -999;
     double tmpDistToZPole = 9999;
@@ -500,7 +522,7 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
     {
       for( uint j = 0; j < Leptons.size(); j++ )
       {
-        if (!( Leptons[i].pdgId == -1*Leptons[j].pdgId )) continue;
+        if (!( Leptons[i].pdgId == -1*Leptons[j].pdgId )) continue;// same flavor opposite charge
         double tmpMass = (Leptons[i].lepton+Leptons[j].lepton).M();
 
         //select the pair closest to Z pole mass
@@ -541,6 +563,10 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
     //------------------------
     //require 1 lepton
     //------------------------
+    // if (nMuons == 0 && !(nElectrons == 0)){
+    //   std::cout <<nMuons << "," << nElectrons <<  "," << vH->nLeptons <<  "," << vH->met << std::endl;
+    // }
+
     if ( Leptons.size() < 1 ) continue;
     // else{
     //   if ( Leptons.size() < 2 ) continue;
@@ -576,6 +602,7 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
     double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
        fixedGridRhoFastjetAll, jetJetArea[i] , JetCorrector);
 
+       // std::cout << "JEC" << JEC<< std::endl;
 
       TLorentzVector thisJet = makeTLorentzVector( jetPt[i]*JEC, jetEta[i], jetPhi[i], jetE[i]*JEC );
 
