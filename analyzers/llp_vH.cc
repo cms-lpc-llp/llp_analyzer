@@ -254,10 +254,10 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
   int option;
   std::string label;
   if (options < 20){
-    option = 1;
+    option = 1; // used when running condor
   }
   else{
-    option = 0;
+    option = 0;// used when running locally
   }
   if (options%10 == 1){
     label = "wH";
