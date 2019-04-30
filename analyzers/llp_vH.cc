@@ -243,12 +243,31 @@ public:
 
 };
 
-void llp_vH::Analyze(bool isData, int option, string outputfilename, string label)
+void llp_vH::Analyze(bool isData, int options, string outputfilename, string analysisTag)
 {
   //initialization: create one TTree for each analysis box
   cout << "Initializing..." << endl;
   cout << "IsData = " << isData << "\n";
+  cout << "options = " << options << "\n";
+
   //---------------------------
+  int option;
+  std::string label;
+  if (options < 20){
+    option = 1;
+  }
+  else{
+    option = 0;
+  }
+  if (options%10 == 1){
+    label = "wH";
+  }
+  else if (options % 10 == 2){
+    label = "zH";
+  }
+  else{
+    label = "bkg";
+  }
   if( isData )
   {
     std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << std::endl;
@@ -261,9 +280,18 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
   const float ELE_MASS = 0.000511;
   const float MU_MASS  = 0.105658;
   const float Z_MASS   = 91.2;
-  std::string analysisTag = "Razor2016_80X";
+
+  if (analysisTag == ""){
+    analysisTag = "Razor2016_80X";
+
+  }
   int wzId;
   int NTrigger;;//Number of trigger in trigger paths
+
+
+
+
+
   if (label == "zH"){
     NTrigger = 4;
     }
