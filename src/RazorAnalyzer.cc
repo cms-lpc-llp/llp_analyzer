@@ -1191,8 +1191,10 @@ bool RazorAnalyzer::passMVAVetoElectronID(int i, string EraName){
 
   double mvaVar = ele_IDMVAGeneralPurpose[i];
   if (ptBin == 0) mvaVar = ele_IDMVAHZZ[i];
+  if (! (mvaVar == -99)){
+    cout << ptBin << " " << subdet << " : " << ele_IDMVAGeneralPurpose[i] << " " << ele_IDMVAHZZ[i] << " --> " << mvaVar << " : cut = " <<  MVACut << " | pass = ";
 
-  //cout << ptBin << " " << subdet << " : " << ele_IDMVAGeneralPurpose[i] << " " << ele_IDMVAHZZ[i] << " --> " << mvaVar << " : cut = " <<  MVACut << " | pass = ";
+  }
 
   bool pass = false;
   if (mvaVar > MVACut ) {

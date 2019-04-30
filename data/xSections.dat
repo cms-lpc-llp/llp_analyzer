@@ -3,10 +3,18 @@
 ##
 
 # 13 TeV signals
+#https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBSMAt13TeV
+wH_withISR_mh125								1.475E+00
+wH_withISR_mh300								6.724E-02 
+wH_withISR_mh500								8.621E-03 
+wH_withISR_mh1000								 3.585E-04 
+wH_withISR_mh2000								 5.706E-06 
 
-
-
-
+zH_withISR_mh125								 9.095E-01 
+zH_withISR_mh300								 4.132E-02 
+zH_withISR_mh500								 5.256E-03 
+zH_withISR_mh1000								 2.977E-04 
+zH_withISR_mh2000								 7.639E-06 
 
 
 #13 TeV Spring 15 MC
