@@ -298,7 +298,7 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
   vH->InitTree();
   //histogram containing total number of processed events (for normalization)
   TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
-  TH1F *wzNEvents = new TH1F("wzNEvents", "wzNEvents", 1, 1, 2);
+  TH1F *generatedEvents = new TH1F("generatedEvents", "generatedEvents", 1, 1, 2);
   TH1F *trig = new TH1F("trig", "trig", 1, 1, 2);
   TH1F *trig_lepId = new TH1F("trig_lepId", "trig_lepId", 1, 1, 2);
   TH1F *trig_lepId_dijet = new TH1F("trig_lepId_dijet", "trig_lepId_dijet", 1, 1, 2);
@@ -376,7 +376,10 @@ void llp_vH::Analyze(bool isData, int option, string outputfilename, string labe
       }
 
     }
-
+    else{
+      generatedEvents->Fill(1);
+      vH->weight = 1;
+    }
     //std::cout << "deb2 " << jentry << std::endl;
     //event info
     vH->runNum = runNum;
