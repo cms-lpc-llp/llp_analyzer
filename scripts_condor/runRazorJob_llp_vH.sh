@@ -8,12 +8,11 @@ analysisType=$1
 inputfilelist=$2
 isData=$3
 option=$4
-label=$5
-filePerJob=$6
-jobnumber=$7
-outputfile=$8
-outputDirectory=$9
-code_dir_suffix=$10
+filePerJob=$5
+jobnumber=$6
+outputfile=$7
+outputDirectory=$8
+code_dir_suffix=$9
 
 currentDir=`pwd`
 homeDir=/data/christiw/

@@ -85,10 +85,10 @@ then
 	
 	# copy normalized file back to hadoop
 	eval `scram unsetenv -sh`
-	gfal-copy -f ${runDir}/${sample}_1pb_weighted.root gsiftp://transfer.ultralight.org//${root_dir}${sample}_1pb_weighted.root
+	gfal-copy -f ${runDir}/${sample}_1pb_weighted.root gsiftp://transfer.ultralight.org//${root_dir}/${sample}_1pb_weighted.root
 	
 
-	if [ -f /mnt/hadoop/${root_dir}${sample}_1pb_weighted.root ]
+	if [ -f /mnt/hadoop/${root_dir}/${sample}_1pb_weighted.root ]
 	then
 	        echo "copied succeed"
 	else

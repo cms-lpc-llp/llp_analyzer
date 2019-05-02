@@ -26,6 +26,9 @@ struct leptons
   TLorentzVector lepton;
   int pdgId;
   float dZ;
+  // bool passLooseId;
+  // bool passMediumId;
+  // bool passTightId;
   bool passId;
 };
 
@@ -35,6 +38,9 @@ struct jets
   TLorentzVector jet;
   float time;
   bool passId;
+  // bool passLooseId;
+  // bool passMediumId;
+  // bool passTightId;
   bool isCSVL;
 };
 
@@ -68,7 +74,11 @@ public:
   float lepPhi[N_MAX_LEPTONS];
   int  lepPdgId[N_MAX_LEPTONS];
   float lepDZ[N_MAX_LEPTONS];
+  // bool lepLoosePassId[N_MAX_LEPTONS];
+  // bool lepMediumPassId[N_MAX_LEPTONS];
+  // bool lepTightPassId[N_MAX_LEPTONS];
   bool lepPassId[N_MAX_LEPTONS];
+
   //Z-candidate
   float MT;
   float ZMass;
@@ -84,6 +94,9 @@ public:
   float jetEta[N_MAX_JETS];
   float jetPhi[N_MAX_JETS];
   float jetTime[N_MAX_JETS];
+  // bool jetLoosePassId[N_MAX_JETS];
+  bool jetPassId[N_MAX_JETS];
+  // bool jetTightPassId[N_MAX_JETS];
   bool HLTDecision[NTriggersMAX];
 
   UInt_t wzevtNum,trig, trig_lepId, trig_lepId_dijet; //number of events that pass each criteria
@@ -119,6 +132,9 @@ public:
       lepPhi[i]    = -999.;
       lepPdgId[i]  = -999;
       lepDZ[i]     = -999.;
+      // lepLoosePassId[i] = false;
+      // lepMediumPassId[i] = false;
+      // lepTightPassId[i] = false;
       lepPassId[i] = false;
     }
     //Z-candidate
@@ -134,6 +150,9 @@ public:
       jetEta[i]    = -999.;
       jetPhi[i]    = -999.;
       jetTime[i]   = -999.;
+      // jetLoosePassId[i] = false;
+      jetPassId[i] = false;
+      // jetTightPassId[i] = false;
     }
 
     for(int i = 0; i <NTriggersMAX; i++){
@@ -175,6 +194,10 @@ public:
     tree_->Branch("lepPdgId",  lepPdgId,  "lepPdgId[nLeptons]/I");
     tree_->Branch("lepDZ",     lepDZ,     "lepDZ[nLeptons]/F");
     tree_->Branch("lepPassId", lepPassId, "lepPassId[nLeptons]/O");
+    // tree_->Branch("lepLoosePassId", lepLoosePassId, "lepLoosePassId[nLeptons]/O");
+    // tree_->Branch("lepMediumPassId", lepMediumPassId, "lepMediumPassId[nLeptons]/O");
+    // tree_->Branch("lepTightPassId", lepTightPassId, "lepTightPassId[nLeptons]/O");
+
     //Z-candidate
     tree_->Branch("MT",      &MT,  "MT/F");
     tree_->Branch("ZMass",      &ZMass,  "ZMass/F");
@@ -190,6 +213,9 @@ public:
     tree_->Branch("jetEta",    jetEta,    "jetEta[nJets]/F");
     tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
     tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
+    tree_->Branch("jetPassId", jetPassId, "jetPassId[nJets]/O");
+    // tree_->Branch("jetLoosePassId", jetLoosePassId, "jetLoosePassId[nJets]/O");
+    // tree_->Branch("jetTightPassId", jetTightPassId, "jetTightPassId[nJets]/O");
     tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[601]/O"); //hardcoded
 
 
@@ -219,7 +245,11 @@ public:
     tree_->SetBranchAddress("lepPhi",      lepPhi);
     tree_->SetBranchAddress("lepPdgId",  lepPdgId);
     tree_->SetBranchAddress("lepDZ",     lepDZ);
+    // tree_->SetBranchAddress("lepLoosePassId", lepLoosePassId);
+    // tree_->SetBranchAddress("lepMediumPassId", lepMediumPassId);
+    // tree_->SetBranchAddress("lepTightPassId", lepTightPassId);
     tree_->SetBranchAddress("lepPassId", lepPassId);
+
     //Z-candidate
     tree_->SetBranchAddress("ZMass",       &ZMass);
     tree_->SetBranchAddress("ZPt",         &ZPt);
@@ -236,6 +266,9 @@ public:
     tree_->SetBranchAddress("jetEta",    jetEta);
     tree_->SetBranchAddress("jetPhi",    jetPhi);
     tree_->SetBranchAddress("jetTime",   jetTime);
+    tree_->SetBranchAddress("jetPassId", jetPassId);
+    // tree_->SetBranchAddress("jetLoosePassId", jetLoosePassId);
+    // tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
     // triggers
     tree_->SetBranchAddress("HLTDecision",   HLTDecision);
 
@@ -418,8 +451,10 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       bool wzFlag = false;
       for (int i=0; i < nGenParticle; ++i)
       {
-        if (abs(gParticleId[i]) == wzId && gParticleStatus[i] == 22)
-        {
+        // if (abs(gParticleId[i]) == wzId && gParticleStatus[i] == 22)
+        // {
+        if (abs(gParticleId[i]) == 13 && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
+        { // choosing only the W->munu events
           wzFlag = true;
         }
 
@@ -458,14 +493,13 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
     //Start Object Selection
     //*************************************************************************
     std::vector<leptons> Leptons;
-
     //-------------------------------
     //Muons
     //-------------------------------
     for( int i = 0; i < nMuons; i++ )
     {
       if(!isMuonPOGLooseMuon(i)) continue;
-      if(muonPt[i] < 25) continue;
+      if(muonPt[i] < 15) continue;
       if(fabs(muonEta[i]) > 2.4) continue;
 
       //remove overlaps
@@ -481,6 +515,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       tmpMuon.pdgId = 13 * -1 * muonCharge[i];
       tmpMuon.dZ = muon_dZ[i];
       tmpMuon.passId = isMuonPOGTightMuon(i);
+
       Leptons.push_back(tmpMuon);
     }
     //std::cout << "deb6 " << jentry << std::endl;
@@ -500,7 +535,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       if (!( (fabs(eleEta[i]) < 1.5 && fabs(ele_d0[i]) < 0.0564) ||
       (fabs(eleEta[i]) >= 1.5 && fabs(ele_d0[i]) < 0.222))) continue;
 
-      if(elePt[i] < 30) continue;
+      if(elePt[i] < 15) continue;
 
       if(fabs(eleEta[i]) > 2.4) continue;
 
@@ -516,7 +551,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       tmpElectron.lepton.SetPtEtaPhiM(elePt[i],eleEta[i], elePhi[i], ELE_MASS);
       tmpElectron.pdgId = 11 * -1 * eleCharge[i];
       tmpElectron.dZ = ele_dZ[i];
-      tmpElectron.passId = passMVALooseElectronID(i) && passEGammaPOGLooseElectronIso(i);
+      // tmpElectron.passId = passMVALooseElectronID(i) && passEGammaPOGLooseElectronIso(i);
       Leptons.push_back(tmpElectron);
     }
 
@@ -531,6 +566,8 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       vH->lepPdgId[vH->nLeptons]  = tmp.pdgId;
       vH->lepDZ[vH->nLeptons]     = tmp.dZ;
       vH->lepPassId[vH->nLeptons] = tmp.passId;
+
+
       // std::cout << "lepton pdg " << vH->lepPdgId[vH->nLeptons] << std::endl;
       vH->nLeptons++;
     }
@@ -538,11 +575,8 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
     //----------------
     //Find Z Candidate
     //----------------
-    // TLorentzVector visible, met;
-    // visible = Leptons[0].lepton;
-    // met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
-    // vH->MT = GetMT(visible,met);
-    // std::cout <<nMuons << "," << nElectrons <<  "," << vH->nLeptons <<  "," << vH->met << std::endl;
+
+
     double ZMass = -999;
     double ZPt = -999;
     double tmpDistToZPole = 9999;
@@ -576,7 +610,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       }
     }
 
-    if (foundZ && fabs(ZMass-Z_MASS) < 15.0 )
+    if (foundZ && fabs(ZMass-Z_MASS) < 30.0)
     {
       vH->ZMass = ZMass;
       vH->ZPt   = ZPt;
@@ -599,6 +633,11 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
     // }
 
     if ( Leptons.size() < 1 ) continue;
+    TLorentzVector met;
+    TLorentzVector visible = Leptons[0].lepton;
+    met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
+    vH->MT = GetMT(visible,met);
+
     // else{
     //   if ( Leptons.size() < 2 ) continue;
     //   if (!(foundZ && fabs(ZMass-Z_MASS) < 15.0 )) continue;
@@ -633,8 +672,6 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
     double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
        fixedGridRhoFastjetAll, jetJetArea[i] , JetCorrector);
 
-       // std::cout << "JEC" << JEC<< std::endl;
-
       TLorentzVector thisJet = makeTLorentzVector( jetPt[i]*JEC, jetEta[i], jetPhi[i], jetE[i]*JEC );
 
       if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
@@ -655,7 +692,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
     //-----------------------------
     //Require at least 2 jets
     //-----------------------------
-    if( Jets.size() < 2 ) continue;
+    // if( Jets.size() < 2 ) continue;
     if (triggered) trig_lepId_dijet->Fill(1);
     sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
@@ -666,6 +703,8 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       vH->jetEta[vH->nJets] = tmp.jet.Eta();
       vH->jetPhi[vH->nJets] = tmp.jet.Phi();
       vH->jetTime[vH->nJets] = tmp.time;
+      vH->jetPassId[vH->nJets] = tmp.passId;
+
       vH->nJets++;
     }
     //std::cout << "deb fill: " << vH->nLeptons << " " << jentry << endl;
