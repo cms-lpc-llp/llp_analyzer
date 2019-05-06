@@ -6,11 +6,8 @@ date
 
 mode=$1
 sample=$2
-root_dir=$3/${mode}/${sample}
-#sample=ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl500_ev100000
-#root_dir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signals/${mode}/${sample}/
-root_file=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signals/${mode}/${sample}/${sample}.root
-
+inputDir=$3/${sample}/
+outputDir=$4
 currentDir=`pwd`
 homeDir=/data/christiw/
 runDir=${currentDir}/christiw_${mode}_${sample}/
@@ -34,19 +31,9 @@ then
 	cd ${runDir}
         echo "entering directory: ${runDir}"
 
+	echo "/mnt/hadoop/${inputDir}/${sample}*_Job*.root"
+	hadd ${sample}.root /mnt/hadoop/${inputDir}/${sample}*_Job*.root
 
-	hadd ${sample}.root /mnt/hadoop/${root_dir}/*_Job*.root
-
-	#copy file over
-#	eval `scram unsetenv -sh`
-#	echo "$root_file"
-#	echo "gfal-copy gsiftp://transfer.ultralight.org//$root_file ."
-#	if [ -f /mnt/hadoop/$root_file ]
-#	then
-#        	gfal-copy gsiftp://transfer.ultralight.org//$root_file .
-#	else
-#        	echo "input ROOT file doesn't exist"
-#	fi
 
 	eval `scramv1 runtime -sh`
 	if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/xSections.dat ]
@@ -60,11 +47,18 @@ then
 	
 	#create normalization file
 	rm -f $normalize_file
-	dataset=${sample/*_vh_/}
-	dataset=${dataset/_mx*/}
-	dataset=${mode}_${dataset}
+	if [ "$mode" == "bkg" ]
+	then
+		dataset=${sample}
+	else
+		dataset=${sample/*_vh_/}
+        	dataset=${dataset/_mx*/}
+        	dataset=${mode}_${dataset}
+	fi
+
 	echo "$dataset"
 	echo "${dataset} ${runDir}/${sample}.root" > $normalize_file
+
 	if [ -f $normalize_file ]
 	then
 		echo "normalization file created"
@@ -85,10 +79,11 @@ then
 	
 	# copy normalized file back to hadoop
 	eval `scram unsetenv -sh`
-	gfal-copy -f ${runDir}/${sample}_1pb_weighted.root gsiftp://transfer.ultralight.org//${root_dir}/${sample}_1pb_weighted.root
+        gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDir}
+	gfal-copy -f ${runDir}/${sample}_1pb_weighted.root gsiftp://transfer.ultralight.org//${outputDir}/${sample}_1pb_weighted.root
 	
 
-	if [ -f /mnt/hadoop/${root_dir}/${sample}_1pb_weighted.root ]
+	if [ -f /mnt/hadoop/${outputDir}/${sample}_1pb_weighted.root ]
 	then
 	        echo "copied succeed"
 	else

@@ -13,36 +13,36 @@ job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
 filesPerJob=1
 
 for sample in \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl500_ev100000
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl500_ev100000
 
 do
 	echo "Sample " ${sample}
@@ -66,7 +66,7 @@ do
 		jdl_file=submit/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}.jdl
 		echo "Universe = vanilla" > ${jdl_file}
 		echo "Executable = ${job_script}" >> ${jdl_file}
-		echo "Arguments = ${analyzer} ${inputfilelist} no 1 wH ${filesPerJob} ${jobnumber} ${sample}_Job${jobnumber}_Of_${maxjob}.root /store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signals/wH/${sample} ${analyzerTag} " >> ${jdl_file}
+		echo "Arguments = ${analyzer} ${inputfilelist} no 11 ${filesPerJob} ${jobnumber} ${sample}_Job${jobnumber}_Of_${maxjob}.root /store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signals/wH/${sample} ${analyzerTag} " >> ${jdl_file}
 
 		# option should always be 1, when running condor
 		echo "Log = log/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}_PC.log" >> ${jdl_file}

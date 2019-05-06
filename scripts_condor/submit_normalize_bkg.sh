@@ -10,10 +10,15 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 mode=bkg
+outputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/bkg/normalized/
 inputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/bkg/
-job_script=${RazorAnalyzerDir}/scripts_condor/normalize_bkg.sh
+job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 
 for sample in \
+WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
+WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
+WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
+WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
 DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
 QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
@@ -39,7 +44,7 @@ do
 	jdl_file=submit/${analyzer}_normalize_${mode}_${sample}.jdl
 	echo "Universe = vanilla" > ${jdl_file}
 	echo "Executable = ${job_script}" >> ${jdl_file}
-	echo "Arguments =${mode} ${sample} ${inputDir}"  >> ${jdl_file}
+	echo "Arguments =${mode} ${sample} ${inputDir} ${outputDir}"  >> ${jdl_file}
 
 	echo "Log = log/${analyzer}_normalize_${mode}_${sample}_PC.log" >> ${jdl_file}
 	echo "Output = log/${analyzer}_normalize_${mode}_${sample}_\$(Cluster).\$(Process).out" >> ${jdl_file}

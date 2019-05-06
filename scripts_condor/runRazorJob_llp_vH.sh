@@ -22,7 +22,6 @@ mkdir -p ${runDir}
 
 if [ -f /cvmfs/cms.cern.ch/cmsset_default.sh ]
 then
-
 	#setup cmssw
 	cd ${homeDir}LLP/CMSSW_9_4_4/src/
 	workDir=`pwd`

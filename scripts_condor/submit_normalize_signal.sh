@@ -1,5 +1,6 @@
 #!/bin/sh
 
+
 mkdir -p log
 mkdir -p submit
 
@@ -9,41 +10,43 @@ cd ../
 RazorAnalyzerDir=`pwd`
 cd -
 
-mode=wH
-inputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signals/
-job_script=${RazorAnalyzerDir}/scripts_condor/normalize_signal.sh
+mode=zH
+inputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signals/${mode}/
+outputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signals/${mode}/normalized
+
+job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 
 for sample in \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl10000_ev100000 \
 ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl500_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl10000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl1000_ev100000 \
-#ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl500_ev100000
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh1000_mx475_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh125_mx50_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh2000_mx975_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh300_mx125_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR_mh500_mx225_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh1000_mx475_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh125_mx50_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh2000_mx975_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh300_mx125_pl500_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl10000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl1000_ev100000 \
+ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl500_ev100000
 
 do
 	echo "Sample " ${sample}
@@ -55,7 +58,7 @@ do
 	jdl_file=submit/${analyzer}_normalize_${mode}_${sample}.jdl
 	echo "Universe = vanilla" > ${jdl_file}
 	echo "Executable = ${job_script}" >> ${jdl_file}
-	echo "Arguments = wH ${sample} ${inputDir}"  >> ${jdl_file}
+	echo "Arguments = wH ${sample} ${inputDir} ${outputDir}"  >> ${jdl_file}
 
 	echo "Log = log/${analyzer}_normalize_${mode}_${sample}_PC.log" >> ${jdl_file}
 	echo "Output = log/${analyzer}_normalize_${mode}_${sample}_\$(Cluster).\$(Process).out" >> ${jdl_file}
