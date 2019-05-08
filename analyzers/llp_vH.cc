@@ -42,6 +42,12 @@ struct jets
   // bool passMediumId;
   // bool passTightId;
   bool isCSVL;
+  int ecalNRechits;
+  float ecalRechitE;
+  float jetChargedEMEnergyFraction;
+  float jetNeutralEMEnergyFraction;
+  float jetChargedHadronEnergyFraction;
+  float jetNeutralHadronEnergyFraction;
 };
 
 //lepton highest pt comparator
@@ -94,6 +100,14 @@ public:
   float jetEta[N_MAX_JETS];
   float jetPhi[N_MAX_JETS];
   float jetTime[N_MAX_JETS];
+  float ecalNRechits[N_MAX_JETS];
+  float ecalRechitE[N_MAX_JETS];
+  float jetChargedEMEnergyFraction[N_MAX_JETS];
+  float jetNeutralEMEnergyFraction[N_MAX_JETS];
+  float jetChargedHadronEnergyFraction[N_MAX_JETS];
+  float jetNeutralHadronEnergyFraction[N_MAX_JETS];
+
+
   // bool jetLoosePassId[N_MAX_JETS];
   bool jetPassId[N_MAX_JETS];
   // bool jetTightPassId[N_MAX_JETS];
@@ -152,6 +166,12 @@ public:
       jetTime[i]   = -999.;
       // jetLoosePassId[i] = false;
       jetPassId[i] = false;
+      ecalNRechits[i] = -999.;
+      ecalRechitE[i] = -999.;
+      jetChargedEMEnergyFraction[i] = -999.;
+      jetNeutralEMEnergyFraction[i] = -999.;
+      jetChargedHadronEnergyFraction[i] = -999.;
+      jetNeutralHadronEnergyFraction[i] = -999.;
       // jetTightPassId[i] = false;
     }
 
@@ -214,9 +234,15 @@ public:
     tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
     tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
     tree_->Branch("jetPassId", jetPassId, "jetPassId[nJets]/O");
+    tree_->Branch("ecalNRechits",   ecalNRechits,   "ecalNRechits[nJets]/F");
+    tree_->Branch("ecalRechitE", ecalRechitE, "ecalRechitE[nJets]/F");
     // tree_->Branch("jetLoosePassId", jetLoosePassId, "jetLoosePassId[nJets]/O");
     // tree_->Branch("jetTightPassId", jetTightPassId, "jetTightPassId[nJets]/O");
     tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[601]/O"); //hardcoded
+    tree_->Branch("jetChargedEMEnergyFraction",   jetChargedEMEnergyFraction,   "jetChargedEMEnergyFraction[nJets]/F");
+    tree_->Branch("jetNeutralEMEnergyFraction",   jetNeutralEMEnergyFraction,   "jetNeutralEMEnergyFraction[nJets]/F");
+    tree_->Branch("jetChargedHadronEnergyFraction",   jetChargedHadronEnergyFraction,   "jetChargedHadronEnergyFraction[nJets]/F");
+    tree_->Branch("jetNeutralHadronEnergyFraction",   jetNeutralHadronEnergyFraction,   "jetNeutralHadronEnergyFraction[nJets]/F");
 
 
 
@@ -267,6 +293,13 @@ public:
     tree_->SetBranchAddress("jetPhi",    jetPhi);
     tree_->SetBranchAddress("jetTime",   jetTime);
     tree_->SetBranchAddress("jetPassId", jetPassId);
+    tree_->SetBranchAddress("ecalNRechits",   ecalNRechits);
+    tree_->SetBranchAddress("ecalRechitE", ecalRechitE);
+    tree_->SetBranchAddress("jetChargedEMEnergyFraction", jetChargedEMEnergyFraction);
+    tree_->SetBranchAddress("jetNeutralEMEnergyFraction", jetNeutralEMEnergyFraction);
+    tree_->SetBranchAddress("jetChargedHadronEnergyFraction", jetChargedHadronEnergyFraction);
+    tree_->SetBranchAddress("jetNeutralHadronEnergyFraction", jetNeutralHadronEnergyFraction);
+
     // tree_->SetBranchAddress("jetLoosePassId", jetLoosePassId);
     // tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
     // triggers
@@ -298,8 +331,11 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
   else if (options % 10 == 2){
     label = "zH";
   }
+  else if (options % 10 == 3){
+    label = "bkg_wH";
+  }
   else{
-    label = "bkg";
+    label = "bkg_zH";
   }
   if( isData )
   {
@@ -319,27 +355,34 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
 
   }
   int wzId;
-  int NTrigger;;//Number of trigger in trigger paths
+  int NTrigger;//Number of trigger in trigger paths
+  int elePt_cut = 0;
+  int muonPt_cut = 0;
+  uint nLepton_cut = 0;
 
 
 
-
-
-  if (label == "zH"){
+  if (label == "zH" || label == "bkg_zH" ){
     NTrigger = 4;
+    muonPt_cut = 15;
+    elePt_cut = 15;
+    nLepton_cut = 2;
     }
   else{
     NTrigger = 2;
+    muonPt_cut = 27;
+    elePt_cut = 32;
+    nLepton_cut = 1;
   }
 
   int trigger_paths[NTrigger];
-  if (label == "wH" || label == "bkg"){
+  if (label == "wH" || label == "bkg_wH"){
     wzId = 24;
     trigger_paths[0] = 87;
     trigger_paths[1] = 135;
     // trigger_paths[2] = 310;
   }
-  else if (label == "zH"){
+  else if (label == "zH" || label == "bkg_zH"){
     wzId = 23;
     trigger_paths[0] = 177;
     trigger_paths[1] = 362;
@@ -422,7 +465,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
     //std::cout << "deb0 " << jentry << std::endl;
     vH->InitVariables();
     //std::cout << "deb1 " << jentry << std::endl;
-    if (label =="bkg"){
+    if (label =="bkg_wH"|| label == "bkg_zH"){
       if (isData)
       {
         NEvents->Fill(1);
@@ -499,7 +542,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
     for( int i = 0; i < nMuons; i++ )
     {
       if(!isMuonPOGLooseMuon(i)) continue;
-      if(muonPt[i] < 15) continue;
+      if(muonPt[i] < muonPt_cut) continue;
       if(fabs(muonEta[i]) > 2.4) continue;
 
       //remove overlaps
@@ -535,7 +578,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       if (!( (fabs(eleEta[i]) < 1.5 && fabs(ele_d0[i]) < 0.0564) ||
       (fabs(eleEta[i]) >= 1.5 && fabs(ele_d0[i]) < 0.222))) continue;
 
-      if(elePt[i] < 15) continue;
+      if(elePt[i] < elePt_cut) continue;
 
       if(fabs(eleEta[i]) > 2.4) continue;
 
@@ -632,7 +675,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
     //   std::cout <<nMuons << "," << nElectrons <<  "," << vH->nLeptons <<  "," << vH->met << std::endl;
     // }
 
-    if ( Leptons.size() < 1 ) continue;
+    if ( Leptons.size() < nLepton_cut ) continue;
     TLorentzVector met;
     TLorentzVector visible = Leptons[0].lepton;
     met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
@@ -677,22 +720,32 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
       if( fabs( thisJet.Eta() ) >= 3.0 ) continue;
       if ( !jetPassIDLoose[i] ) continue;
+      if (!(jetRechitE[i] > 0.0)) continue;
+
+      // std::cout <<jetRechitT[i] << "," << jetRechitE[i] <<  "," << jetNRechits[i] << std::endl;
+
 
       jets tmpJet;
       tmpJet.jet    = thisJet;
       tmpJet.time   = jetRechitT[i];
       tmpJet.passId = jetPassIDTight[i];
       tmpJet.isCSVL = isCSVL(i);
-      Jets.push_back(tmpJet);
       //if (isCSVL(i)) NBJet20++;
       //if (isCSVL(i) && thisJet.Pt() > 30) NBJet30++;
+      tmpJet.ecalNRechits = jetNRechits[i];
+      tmpJet.ecalRechitE = jetRechitE[i];
+      tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
+      tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
+      tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
+      tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
+      Jets.push_back(tmpJet);
 
     }
 
     //-----------------------------
     //Require at least 2 jets
     //-----------------------------
-    // if( Jets.size() < 2 ) continue;
+    if( Jets.size() < 2 ) continue;
     if (triggered) trig_lepId_dijet->Fill(1);
     sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
@@ -704,6 +757,13 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       vH->jetPhi[vH->nJets] = tmp.jet.Phi();
       vH->jetTime[vH->nJets] = tmp.time;
       vH->jetPassId[vH->nJets] = tmp.passId;
+      vH->ecalNRechits[vH->nJets] = tmp.ecalNRechits;
+      vH->ecalNRechits[vH->nJets] = tmp.ecalRechitE;
+      vH->jetChargedEMEnergyFraction[vH->nJets] = tmp.jetChargedEMEnergyFraction;
+      vH->jetNeutralEMEnergyFraction[vH->nJets] = tmp.jetNeutralEMEnergyFraction;
+      vH->jetChargedHadronEnergyFraction[vH->nJets] = tmp.jetChargedHadronEnergyFraction;
+      vH->jetNeutralHadronEnergyFraction[vH->nJets] = tmp.jetNeutralHadronEnergyFraction;
+      // std::cout <<tmp.time << "," <<tmp.ecalRechitE <<  "," << tmp.ecalNRechits << vH->nJets<<std::endl;
 
       vH->nJets++;
     }

@@ -10,9 +10,9 @@ cd ../
 RazorAnalyzerDir=`pwd`
 cd -
 
-mode=zH
-inputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signals/${mode}/
-outputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/signals/${mode}/normalized
+mode=wH
+inputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v3/signals/${mode}/
+outputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v3/signals/${mode}/normalized
 
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 

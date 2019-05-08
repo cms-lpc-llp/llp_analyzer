@@ -10,8 +10,8 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 mode=bkg
-outputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/bkg/normalized/
-inputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1/bkg/
+outputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v3/bkg/wH/normalized/
+inputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v3/bkg/wH/
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 
 for sample in \
