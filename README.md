@@ -8,7 +8,7 @@ Setup
 
     cmsrel CMSSW_9_4_4
     cd CMSSW_9_4_4/src
-    git clone git@github.com:cms-lpc-llp/llp_analyzer.git cms_lpc_llp/llp_analyzer
+    git clone git@github.com:cms-lpc-llp/llp_analyzer.git
     cd RazorAnalyzer
     make
   
