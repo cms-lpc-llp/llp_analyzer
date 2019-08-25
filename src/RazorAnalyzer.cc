@@ -5,7 +5,7 @@
 
 using namespace std;
 
-RazorAnalyzer::RazorAnalyzer(TTree *tree) : RazorEvents(tree)
+RazorAnalyzer::RazorAnalyzer(TTree *tree) : llp_event(tree)
 {
     //turn off all branches
     fChain->SetBranchStatus("*", 0);
@@ -73,8 +73,6 @@ void RazorAnalyzer::EnableEventInfo(){
     fChain->SetBranchStatus("fixedGridRhoFastjetCentralNeutral", 1);
     fChain->SetBranchStatus("HLTDecision", 1);
     fChain->SetBranchStatus("HLTPrescale", 1);
-    fChain->SetBranchStatus("HLTMR", 1);
-    fChain->SetBranchStatus("HLTRSQ", 1);   
 }
 
 void RazorAnalyzer::EnablePVAll() {
@@ -164,15 +162,12 @@ void RazorAnalyzer::EnableElectrons(){
     fChain->SetBranchStatus("ele_photonAndNeutralHadronMiniIso", 1);
     fChain->SetBranchStatus("ele_chargedPileupMiniIso", 1);
     fChain->SetBranchStatus("ele_activityMiniIsoAnnulus", 1);
-    fChain->SetBranchStatus("ele_passSingleEleTagFilter", 1); 
-    fChain->SetBranchStatus("ele_passTPOneTagFilter", 1); 
-    fChain->SetBranchStatus("ele_passTPTwoTagFilter", 1); 
-    fChain->SetBranchStatus("ele_passTPOneProbeFilter", 1); 
-    fChain->SetBranchStatus("ele_passTPTwoProbeFilter", 1); 
-    fChain->SetBranchStatus("ele_passHLTFilter", 1); 
-    fChain->SetBranchStatus("ele_EcalRechitIndex", 1); 
-    fChain->SetBranchStatus("ele_SeedRechitIndex", 1); 
-
+    fChain->SetBranchStatus("ele_passSingleEleTagFilter", 1);
+    fChain->SetBranchStatus("ele_passTPOneTagFilter", 1);
+    fChain->SetBranchStatus("ele_passTPTwoTagFilter", 1);
+    fChain->SetBranchStatus("ele_passTPOneProbeFilter", 1);
+    fChain->SetBranchStatus("ele_passTPTwoProbeFilter", 1);
+    fChain->SetBranchStatus("ele_passHLTFilter", 1);
 }
 
 void RazorAnalyzer::EnableTaus(){
@@ -213,7 +208,7 @@ void RazorAnalyzer::EnableIsoPFCandidates(){
     // fChain->SetBranchStatus("isoPFCandidatePhi", 1);
     // fChain->SetBranchStatus("isoPFCandidateIso04", 1);
     // fChain->SetBranchStatus("isoPFCandidateD0", 1);
-    // fChain->SetBranchStatus("isoPFCandidatePdgId", 1);  
+    // fChain->SetBranchStatus("isoPFCandidatePdgId", 1);
 }
 
 void RazorAnalyzer::EnablePhotons(){
@@ -238,7 +233,7 @@ void RazorAnalyzer::EnablePhotons(){
     fChain->SetBranchStatus("pho_pfIsoNeutralHadronIso", 1);
     fChain->SetBranchStatus("pho_pfIsoPhotonIso", 1);
     fChain->SetBranchStatus("pho_pfIsoModFrixione", 1);
-    fChain->SetBranchStatus("pho_pfIsoSumPUPt", 1);    
+    fChain->SetBranchStatus("pho_pfIsoSumPUPt", 1);
     fChain->SetBranchStatus("pho_isConversion", 1);
     fChain->SetBranchStatus("pho_passEleVeto", 1);
     fChain->SetBranchStatus("pho_RegressionE", 1);
@@ -263,10 +258,7 @@ void RazorAnalyzer::EnablePhotons(){
     fChain->SetBranchStatus("pho_seedRecHitSwitchToGain1", 1);
     fChain->SetBranchStatus("pho_anyRecHitSwitchToGain6", 1);
     fChain->SetBranchStatus("pho_anyRecHitSwitchToGain1", 1);
-    fChain->SetBranchStatus("pho_EcalRechitIndex", 1);
-    fChain->SetBranchStatus("pho_SeedRechitIndex", 1);
-
-}
+};
 
 void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("nJets", 1);
@@ -300,7 +292,10 @@ void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("jetAllMuonPhi", 1);
     fChain->SetBranchStatus("jetAllMuonM", 1);
     fChain->SetBranchStatus("jetPtWeightedDZ", 1);
-}
+    fChain->SetBranchStatus("jetNRechits", 1);
+    fChain->SetBranchStatus("jetRechitE", 1);
+    fChain->SetBranchStatus("jetRechitT", 1);
+};
 
 void RazorAnalyzer::EnableFatJets(){
     fChain->SetBranchStatus("nFatJets", 1);
@@ -332,14 +327,14 @@ void RazorAnalyzer::EnableMet(){
     fChain->SetBranchStatus("metType0Phi", 1);
     fChain->SetBranchStatus("metType1Pt", 1);
     fChain->SetBranchStatus("metType1Phi", 1);
-    fChain->SetBranchStatus("metEGCleanPt", 1);
-    fChain->SetBranchStatus("metEGCleanPhi", 1);
-    fChain->SetBranchStatus("metMuEGCleanPt", 1);
-    fChain->SetBranchStatus("metMuEGCleanPhi", 1);
-    fChain->SetBranchStatus("metMuEGCleanCorrPt", 1);
-    fChain->SetBranchStatus("metMuEGCleanCorrPhi", 1);
-    fChain->SetBranchStatus("metUncorrectedPt", 1);
-    fChain->SetBranchStatus("metUncorrectedPhi", 1);
+    //fChain->SetBranchStatus("metEGCleanPt", 1);
+    //fChain->SetBranchStatus("metEGCleanPhi", 1);
+    //fChain->SetBranchStatus("metMuEGCleanPt", 1);
+    //fChain->SetBranchStatus("metMuEGCleanPhi", 1);
+    //fChain->SetBranchStatus("metMuEGCleanCorrPt", 1);
+    //fChain->SetBranchStatus("metMuEGCleanCorrPhi", 1);
+    //fChain->SetBranchStatus("metUncorrectedPt", 1);
+    //fChain->SetBranchStatus("metUncorrectedPhi", 1);
     fChain->SetBranchStatus("metType0Plus1Pt", 1);
     fChain->SetBranchStatus("metType0Plus1Phi", 1);
     fChain->SetBranchStatus("metPuppiPt", 1);
@@ -368,7 +363,7 @@ void RazorAnalyzer::EnableMet(){
     fChain->SetBranchStatus("Flag_trkPOG_manystripclus53X", 1);
     fChain->SetBranchStatus("Flag_trkPOG_toomanystripclus53X", 1);
     fChain->SetBranchStatus("Flag_trkPOG_logErrorTooManyClusters", 1);
-    fChain->SetBranchStatus("Flag_METFilters", 1);    
+    fChain->SetBranchStatus("Flag_METFilters", 1);
     fChain->SetBranchStatus("Flag_ecalBadCalibFilter", 1);
 
     // fChain->SetBranchStatus("metType1PtJetResUp", 1);
@@ -401,10 +396,10 @@ void RazorAnalyzer::EnableMet(){
     // fChain->SetBranchStatus("metType1PhiPhotonEnDown", 1);
 }
 
-void RazorAnalyzer::EnableRazor(){
-    fChain->SetBranchStatus("MR", 1);
-    fChain->SetBranchStatus("Rsq", 1);
-}
+void RazorAnalyzer::EnableRazor()
+{
+
+};
 
 void RazorAnalyzer::EnableMC(){
     fChain->SetBranchStatus("nGenJets", 1);
@@ -412,8 +407,10 @@ void RazorAnalyzer::EnableMC(){
     fChain->SetBranchStatus("genJetPt", 1);
     fChain->SetBranchStatus("genJetEta", 1);
     fChain->SetBranchStatus("genJetPhi", 1);
-    fChain->SetBranchStatus("genMetPt", 1);
-    fChain->SetBranchStatus("genMetPhi", 1);
+    fChain->SetBranchStatus("genMetPtCalo", 1);
+    fChain->SetBranchStatus("genMetPhiCalo", 1);
+    fChain->SetBranchStatus("genMetPtTrue", 1);
+    fChain->SetBranchStatus("genMetPhiTrue", 1);
     fChain->SetBranchStatus("genVertexX", 1);
     fChain->SetBranchStatus("genVertexY", 1);
     fChain->SetBranchStatus("genVertexZ", 1);
@@ -423,7 +420,7 @@ void RazorAnalyzer::EnableMC(){
     fChain->SetBranchStatus("genQScale", 1);
     fChain->SetBranchStatus("genAlphaQCD", 1);
     fChain->SetBranchStatus("genAlphaQED", 1);
-    fChain->SetBranchStatus("lheComments", 1);
+    //fChain->SetBranchStatus("lheComments", 1);
     fChain->SetBranchStatus("scaleWeights", 1);
     fChain->SetBranchStatus("pdfWeights", 1);
     fChain->SetBranchStatus("alphasWeights", 1);
@@ -437,14 +434,11 @@ void RazorAnalyzer::EnableGenParticles(){
     fChain->SetBranchStatus("gParticleStatus", 1);
     fChain->SetBranchStatus("gParticleE", 1);
     fChain->SetBranchStatus("gParticlePt", 1);
-    fChain->SetBranchStatus("gParticlePx", 1);
-    fChain->SetBranchStatus("gParticlePy", 1);
-    fChain->SetBranchStatus("gParticlePz", 1);
     fChain->SetBranchStatus("gParticleEta", 1);
     fChain->SetBranchStatus("gParticlePhi", 1);
-    fChain->SetBranchStatus("gParticleDecayVertexX", 1);
-    fChain->SetBranchStatus("gParticleDecayVertexY", 1);
-    fChain->SetBranchStatus("gParticleDecayVertexZ", 1);
+    //fChain->SetBranchStatus("gParticleDecayVertexX", 1);
+    //fChain->SetBranchStatus("gParticleDecayVertexY", 1);
+    //fChain->SetBranchStatus("gParticleDecayVertexZ", 1);
 }
 
 void RazorAnalyzer::EnableEcalRechits(){
@@ -467,7 +461,7 @@ void RazorAnalyzer::EnableEcalRechits(){
 //ELECTRON
 //////////////////////////////
 
-float RazorAnalyzer::GetElectronScaleCorrection( double pt, double eta ) {  
+float RazorAnalyzer::GetElectronScaleCorrection( double pt, double eta ) {
   double scaleCorr = 1.0;
   // if ( pt > 0 && fabs(eta) < 1.5) {
   //   scaleCorr = 1.015;
@@ -481,7 +475,7 @@ float RazorAnalyzer::GetElectronScaleCorrection( double pt, double eta ) {
   return scaleCorr;
 }
 
-float RazorAnalyzer::GetElectronEffectiveAreaMean(int i, bool use25nsCuts ){ 
+float RazorAnalyzer::GetElectronEffectiveAreaMean(int i, bool use25nsCuts ){
 
     double effArea = 0.0;
     //Effective areas below are for the sum of Neutral Hadrons + Photons
@@ -491,17 +485,17 @@ float RazorAnalyzer::GetElectronEffectiveAreaMean(int i, bool use25nsCuts ){
         if (fabs(eleEta_SC[i]) < 1.0) {
             effArea = 0.1752;
         } else if (fabs(eleEta_SC[i]) < 1.479) {
-            effArea = 0.1862;	
+            effArea = 0.1862;
         } else if (fabs(eleEta_SC[i]) < 2.0) {
-            effArea = 0.1411;	
+            effArea = 0.1411;
         } else if (fabs(eleEta_SC[i]) < 2.2) {
-            effArea = 0.1534;	
+            effArea = 0.1534;
         } else if (fabs(eleEta_SC[i]) < 2.3) {
-            effArea = 0.1903;	
+            effArea = 0.1903;
         } else if (fabs(eleEta_SC[i]) < 2.4) {
-            effArea = 0.2243;	
+            effArea = 0.2243;
         } else if (fabs(eleEta_SC[i]) < 2.5) {
-            effArea = 0.2687;	
+            effArea = 0.2687;
         }
         return effArea;
     }
@@ -513,17 +507,17 @@ float RazorAnalyzer::GetElectronEffectiveAreaMean(int i, bool use25nsCuts ){
         } else if (fabs(eleEta_SC[i]) < 1.3) {
             effArea = 0.0954;
         } else if (fabs(eleEta_SC[i]) < 2.0) {
-            effArea = 0.0632;	
+            effArea = 0.0632;
         } else if (fabs(eleEta_SC[i]) < 2.2) {
-            effArea = 0.0727;	
+            effArea = 0.0727;
         } else {
-            effArea = 0.1337;	
-        } 
+            effArea = 0.1337;
+        }
     }
     return effArea;
 }
 
-float RazorAnalyzer::GetElectronEffectiveArea90(int i, string EraName){ 
+float RazorAnalyzer::GetElectronEffectiveArea90(int i, string EraName){
 
   double effArea = 0.0;
   //Effective areas derived on Spring15 MC
@@ -533,15 +527,15 @@ float RazorAnalyzer::GetElectronEffectiveArea90(int i, string EraName){
     if (fabs(eleEta_SC[i]) < 1.0) {
       effArea = 0.1752;
     } else if (fabs(eleEta_SC[i]) < 1.479) {
-      effArea = 0.1862;	
+      effArea = 0.1862;
     } else if (fabs(eleEta_SC[i]) < 2.0) {
-      effArea = 0.1411;	
+      effArea = 0.1411;
     } else if (fabs(eleEta_SC[i]) < 2.2) {
-      effArea = 0.1534;	
+      effArea = 0.1534;
     } else if (fabs(eleEta_SC[i]) < 2.3) {
-      effArea = 0.1903;	
+      effArea = 0.1903;
     } else if (fabs(eleEta_SC[i]) < 2.4) {
-      effArea = 0.2243;	
+      effArea = 0.2243;
     } else if (fabs(eleEta_SC[i]) < 2.5) {
       effArea = 0.2687;
     }
@@ -553,19 +547,19 @@ float RazorAnalyzer::GetElectronEffectiveArea90(int i, string EraName){
     if (fabs(eleEta_SC[i]) < 1.0) {
       effArea = 0.1703;
     } else if (fabs(eleEta_SC[i]) < 1.479) {
-      effArea = 0.1715;	
+      effArea = 0.1715;
     } else if (fabs(eleEta_SC[i]) < 2.0) {
-      effArea = 0.1213;	
+      effArea = 0.1213;
     } else if (fabs(eleEta_SC[i]) < 2.2) {
-      effArea = 0.1230;	
+      effArea = 0.1230;
     } else if (fabs(eleEta_SC[i]) < 2.3) {
-      effArea = 0.1635;	
+      effArea = 0.1635;
     } else if (fabs(eleEta_SC[i]) < 2.4) {
-      effArea = 0.1937;	
+      effArea = 0.1937;
     } else if (fabs(eleEta_SC[i]) < 2.5) {
       effArea = 0.2393;
     }
-  }   
+  }
   else if (EraName == "2017_94X") {
     //Effective areas derived from 94X samples
     //Reference numbers: https://github.com/cms-sw/cmssw/blob/CMSSW_10_2_X/RecoEgamma/ElectronIdentification/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt
@@ -573,15 +567,15 @@ float RazorAnalyzer::GetElectronEffectiveArea90(int i, string EraName){
     if (fabs(eleEta_SC[i]) < 1.0) {
       effArea = 0.1440;
     } else if (fabs(eleEta_SC[i]) < 1.479) {
-      effArea = 0.1562;	
+      effArea = 0.1562;
     } else if (fabs(eleEta_SC[i]) < 2.0) {
-      effArea = 0.1032;	
+      effArea = 0.1032;
     } else if (fabs(eleEta_SC[i]) < 2.2) {
-      effArea = 0.0859;	
+      effArea = 0.0859;
     } else if (fabs(eleEta_SC[i]) < 2.3) {
-      effArea = 0.1116;	
+      effArea = 0.1116;
     } else if (fabs(eleEta_SC[i]) < 2.4) {
-      effArea = 0.1321;	
+      effArea = 0.1321;
     } else if (fabs(eleEta_SC[i]) < 2.5) {
       effArea = 0.1654;
     }
@@ -597,7 +591,7 @@ bool RazorAnalyzer::isEGammaPOGVetoElectron(int i, bool applyID, bool applyIso, 
   }
   if (applyIso) {
     if (!passEGammaPOGVetoElectronIso(i,use25nsCuts)) pass = false;
-  } 
+  }
   return pass;
 }
 
@@ -608,7 +602,7 @@ bool RazorAnalyzer::isEGammaPOGLooseElectron(int i, bool applyID, bool applyIso,
   }
   if (applyIso) {
     if (!passEGammaPOGLooseElectronIso(i,use25nsCuts)) pass = false;
-  } 
+  }
   return pass;
 }
 
@@ -619,7 +613,7 @@ bool RazorAnalyzer::isEGammaPOGMediumElectron(int i, bool applyID, bool applyIso
   }
   if (applyIso) {
     if (!passEGammaPOGMediumElectronIso(i,use25nsCuts)) pass = false;
-  } 
+  }
   return pass;
 }
 
@@ -630,7 +624,7 @@ bool RazorAnalyzer::isEGammaPOGTightElectron(int i, bool applyID, bool applyIso,
   }
   if (applyIso) {
     if (!passEGammaPOGTightElectronIso(i,use25nsCuts)) pass = false;
-  } 
+  }
   return pass;
 }
 
@@ -721,7 +715,7 @@ bool RazorAnalyzer::passEGammaPOGVetoElectronID(int i, bool use25nsCuts, string 
 	    ) {
 	  pass = true;
 	}
-      } 
+      }
     }
 
     else if (EraName == "Summer16") {
@@ -756,14 +750,14 @@ bool RazorAnalyzer::passEGammaPOGVetoElectronID(int i, bool use25nsCuts, string 
 	    ) {
 	  pass = true;
         }
-      } 
+      }
     }
     else if (EraName == "2017_94X") {
 
       // Veto ID recommended for analyses performed on 2017 data using 94X releases.
       // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2
       // Based on these slides: https://indico.cern.ch/event/732971/contributions/3022843/attachments/1658685/2656462/eleIdTuning.pdf
-      
+
       if(fabs(eleEta_SC[i]) < 1.479) {
 	if ( fabs(ele_dEta[i]) < 0.00463
 	     && fabs(ele_dPhi[i]) < 0.148
@@ -830,7 +824,7 @@ bool RazorAnalyzer::passEGammaPOGLooseElectronID(int i, bool use25nsCuts, string
 	    ) {
 	  pass = true;
 	}
-      } 
+      }
     }
     else if (EraName == "Summer16") {
 
@@ -863,7 +857,7 @@ bool RazorAnalyzer::passEGammaPOGLooseElectronID(int i, bool use25nsCuts, string
 	    ) {
 	  pass = true;
 	}
-      } 
+      }
     }
     else if (EraName == "2017_94X") {
 
@@ -897,7 +891,7 @@ bool RazorAnalyzer::passEGammaPOGLooseElectronID(int i, bool use25nsCuts, string
 	    ) {
 	  pass = true;
 	}
-      } 
+      }
     }
 
     return pass;
@@ -944,7 +938,7 @@ bool RazorAnalyzer::passEGammaPOGMediumElectronID(int i, bool use25nsCuts, strin
     // Medium ID recommended for analyses performed on 2016 data using 8XX releases.
     // https://twiki.cern.ch/twiki/bin/view/CMS/CutBasedElectronIdentificationRun2
     // Based on these slides: https://indico.cern.ch/event/482677/contributions/2259342/attachments/1316731/1972911/talk_electron_ID_spring16_update.pdf
-    
+
     if(fabs(eleEta_SC[i]) < 1.479) {
       if ( fabs(ele_dEta[i]) < 0.00311
     	   && fabs(ele_dPhi[i]) < 0.103
@@ -971,7 +965,7 @@ bool RazorAnalyzer::passEGammaPOGMediumElectronID(int i, bool use25nsCuts, strin
     	  ) {
     	pass = true;
       }
-    } 
+    }
   }
   else if (EraName == "2017_94X") {
 
@@ -1005,7 +999,7 @@ bool RazorAnalyzer::passEGammaPOGMediumElectronID(int i, bool use25nsCuts, strin
 	  ) {
 	pass = true;
       }
-    } 
+    }
   }
   return pass;
 }
@@ -1024,7 +1018,7 @@ bool RazorAnalyzer::passEGammaPOGTightElectronID(int i, bool use25nsCuts, string
 	   && fabs(ele_dPhi[i]) < 0.0336
 	   && eleFull5x5SigmaIetaIeta[i] < 0.0101
 	   && ele_HoverE[i] < 0.0597
-	   && fabs(ele_d0[i]) < 0.0111	   
+	   && fabs(ele_d0[i]) < 0.0111
 	   && fabs(ele_dZ[i]) < 0.0466
 	   && fabs(ele_OneOverEminusOneOverP[i]) < 0.012
 	   && ele_PassConvVeto[i]
@@ -1045,7 +1039,7 @@ bool RazorAnalyzer::passEGammaPOGTightElectronID(int i, bool use25nsCuts, string
 	  ) {
 	pass = true;
       }
-    } 
+    }
   }
   else if (EraName == "Summer16") {
     // Tight ID recommended for analyses performed on 2016 data using 8XX releases.
@@ -1078,7 +1072,7 @@ bool RazorAnalyzer::passEGammaPOGTightElectronID(int i, bool use25nsCuts, string
 	  ) {
 	pass = true;
       }
-    } 
+    }
   }
   else if (EraName == "2017_94X") {
 
@@ -1112,7 +1106,7 @@ bool RazorAnalyzer::passEGammaPOGTightElectronID(int i, bool use25nsCuts, string
 	  ) {
 	pass = true;
       }
-    } 
+    }
   }
 
   return pass;
@@ -1176,7 +1170,7 @@ bool RazorAnalyzer::passMVAVetoElectronID(int i, string EraName){
     //pT < 10 bin should use "HZZ" MVA
     //pT > 10 bin should use "GeneralPurpose" MVA
     //https://indico.cern.ch/event/590228/contributions/2380031/attachments/1375541/2088587/EGMSUS_newIDs_17Nov16.pdf
-    
+
     //pt 5-10
     if (subdet == 0 && ptBin == 0) MVACut = 0.46;
     if (subdet == 1 && ptBin == 0) MVACut = -0.03;
@@ -1197,8 +1191,10 @@ bool RazorAnalyzer::passMVAVetoElectronID(int i, string EraName){
 
   double mvaVar = ele_IDMVAGeneralPurpose[i];
   if (ptBin == 0) mvaVar = ele_IDMVAHZZ[i];
+  if (! (mvaVar == -99)){
+    cout << ptBin << " " << subdet << " : " << ele_IDMVAGeneralPurpose[i] << " " << ele_IDMVAHZZ[i] << " --> " << mvaVar << " : cut = " <<  MVACut << " | pass = ";
 
-  //cout << ptBin << " " << subdet << " : " << ele_IDMVAGeneralPurpose[i] << " " << ele_IDMVAHZZ[i] << " --> " << mvaVar << " : cut = " <<  MVACut << " | pass = ";
+  }
 
   bool pass = false;
   if (mvaVar > MVACut ) {
@@ -1266,7 +1262,7 @@ bool RazorAnalyzer::passMVALooseElectronID(int i, string EraName){
     if (subdet == 1 && ptBin == 3) MVACut = -0.13;
     if (subdet == 2 && ptBin == 3) MVACut = 0.19;
   }
-  
+
   double mvaVar = ele_IDMVAGeneralPurpose[i];
   if (ptBin == 0) mvaVar = ele_IDMVAHZZ[i];
 
@@ -1371,7 +1367,7 @@ bool RazorAnalyzer::passEGammaPOGTightElectronIso(int i, bool use25nsCuts){
 }
 
 bool RazorAnalyzer::passMVANonTrigVetoElectronIso(int i){
- 
+
   bool pass = false;
   double dr = fmax(0.05,fmin(0.2, 10/elePt[i]));
   if (  ( (elePt[i] > 20 && (ele_chargedMiniIso[i] + fmax(0.0, ele_photonAndNeutralHadronMiniIso[i] - fixedGridRhoFastjetAll*GetElectronEffectiveAreaMean(i)*pow(dr/0.3,2)))/elePt[i] < 0.2 )
@@ -1392,7 +1388,7 @@ bool RazorAnalyzer::passHZZElectronPreselection(int i){
   else subdet = 2;
   Int_t ptBin = 0;
   if (elePt[i] > 10.0) ptBin = 1;
-  
+
   Double_t MVACut = -999;
   if (subdet == 0 && ptBin == 0) MVACut = 0.47;
   if (subdet == 1 && ptBin == 0) MVACut = 0.004;
@@ -1402,7 +1398,7 @@ bool RazorAnalyzer::passHZZElectronPreselection(int i){
   if (subdet == 2 && ptBin == 1) MVACut = 0.6;
 
   bool pass = false;
-  if (ele_IDMVAHZZ[i] > MVACut   
+  if (ele_IDMVAHZZ[i] > MVACut
       && fabs(ele_d0[i]) < 0.5
       && fabs(ele_dZ[i]) < 1.0
       ) {
@@ -1421,7 +1417,7 @@ bool RazorAnalyzer::isHZZElectron(int i){
   else subdet = 2;
   Int_t ptBin = 0;
   if (elePt[i] > 10.0) ptBin = 1;
-  
+
   Double_t MVACut = -999;
   if (subdet == 0 && ptBin == 0) MVACut = 0.47;
   if (subdet == 1 && ptBin == 0) MVACut = 0.004;
@@ -1431,11 +1427,11 @@ bool RazorAnalyzer::isHZZElectron(int i){
   if (subdet == 2 && ptBin == 1) MVACut = 0.6;
 
   bool pass = false;
-  if (ele_IDMVAHZZ[i] > MVACut   
+  if (ele_IDMVAHZZ[i] > MVACut
       && fabs(ele_d0[i]) < 0.5
       && fabs(ele_dZ[i]) < 1.0
       && fabs(ele_d0[i]) < 0.05
-      && ( (ele_chargedIso[i] + fmax(0.0,  ele_photonIso[i] + ele_neutralHadIso[i] - 0.5*ele_pileupIso[i])) / elePt[i] < 0.4)      
+      && ( (ele_chargedIso[i] + fmax(0.0,  ele_photonIso[i] + ele_neutralHadIso[i] - 0.5*ele_pileupIso[i])) / elePt[i] < 0.4)
       ) {
     pass = true;
   }
@@ -1448,13 +1444,13 @@ bool RazorAnalyzer::isHZZElectron(int i){
 
 bool RazorAnalyzer::matchTagElectronHLTFilters(int i){
   bool match = false;
-  if ( 
+  if (
       //Data filters
-      ele_passHLTFilter[i][1] 
-      || ele_passHLTFilter[i][5] || ele_passHLTFilter[i][6] || ele_passHLTFilter[i][12] || ele_passHLTFilter[i][13] 
-      || ele_passHLTFilter[i][49] || ele_passHLTFilter[i][53] || ele_passHLTFilter[i][57] || ele_passHLTFilter[i][60]      
+      ele_passHLTFilter[i][1]
+      || ele_passHLTFilter[i][5] || ele_passHLTFilter[i][6] || ele_passHLTFilter[i][12] || ele_passHLTFilter[i][13]
+      || ele_passHLTFilter[i][49] || ele_passHLTFilter[i][53] || ele_passHLTFilter[i][57] || ele_passHLTFilter[i][60]
       //MC filters
-      || ele_passHLTFilter[i][64] 
+      || ele_passHLTFilter[i][64]
       || ele_passHLTFilter[i][3] || ele_passHLTFilter[i][8] || ele_passHLTFilter[i][10] || ele_passHLTFilter[i][15]
        ) {
     match = true;
@@ -1465,25 +1461,25 @@ bool RazorAnalyzer::matchTagElectronHLTFilters(int i){
 
 bool RazorAnalyzer::matchProbeElectronHLTFilters(int i){
   bool match = false;
-  if ( 
-      ele_passHLTFilter[i][50] || ele_passHLTFilter[i][51]     
-      || ele_passHLTFilter[i][61]     || ele_passHLTFilter[i][62]     
+  if (
+      ele_passHLTFilter[i][50] || ele_passHLTFilter[i][51]
+      || ele_passHLTFilter[i][61]     || ele_passHLTFilter[i][62]
        ) {
     match = true;
   }
-  
+
   return match;
 }
 
 bool RazorAnalyzer::matchProbeSCHLTFilters(int i){
   bool match = false;
-  if ( 
-      ele_passHLTFilter[i][54] || ele_passHLTFilter[i][55] 
-      || ele_passHLTFilter[i][58]    || ele_passHLTFilter[i][59]    
+  if (
+      ele_passHLTFilter[i][54] || ele_passHLTFilter[i][55]
+      || ele_passHLTFilter[i][58]    || ele_passHLTFilter[i][59]
        ) {
     match = true;
   }
-  
+
   return match;
 }
 
@@ -1501,69 +1497,69 @@ bool RazorAnalyzer::matchElectronHLTFilters2016(int i, string HLTFilter){
   bool match = false;
 
   if (HLTFilter == "SingleElectron") {
-    if ( 
+    if (
 	//Data filters
-	ele_passHLTFilter[i][1] || ele_passHLTFilter[i][5] || ele_passHLTFilter[i][6] || ele_passHLTFilter[i][12] || ele_passHLTFilter[i][13] 
+	ele_passHLTFilter[i][1] || ele_passHLTFilter[i][5] || ele_passHLTFilter[i][6] || ele_passHLTFilter[i][12] || ele_passHLTFilter[i][13]
 	//MC filters
 	|| ele_passHLTFilter[i][3] || ele_passHLTFilter[i][8] || ele_passHLTFilter[i][10] || ele_passHLTFilter[i][15]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "Ele23Loose") {
-    if ( 
+    if (
 	//Data filters
-	ele_passHLTFilter[i][1] 	
+	ele_passHLTFilter[i][1]
 	 ) {
       match = true;
     }
   }
   if (HLTFilter == "Ele27Loose") {
-    if ( 
+    if (
 	//Data filters
 	ele_passHLTFilter[i][5] || ele_passHLTFilter[i][7]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "Ele27Tight") {
-    if ( 
+    if (
 	//Data filters
 	ele_passHLTFilter[i][6]  || ele_passHLTFilter[i][8]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "Ele32Loose") {
-    if ( 
+    if (
 	//Data filters
-	ele_passHLTFilter[i][12] 
+	ele_passHLTFilter[i][12]
 	 ) {
       match = true;
     }
   }
 
   if (HLTFilter == "Ele32Tight") {
-    if ( 
+    if (
 	//Data filters
-	ele_passHLTFilter[i][13] 
+	ele_passHLTFilter[i][13]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "Ele105") {
     if ( ele_passHLTFilter[i][17] ) match = true;
   }
   if (HLTFilter == "Ele115") {
     if ( ele_passHLTFilter[i][19] ) match = true;
   }
-   
+
   if (HLTFilter == "DoubleElectronLeg1") {
-    if ( 
+    if (
 	//Data filters
 	ele_passHLTFilter[i][24] || ele_passHLTFilter[i][28]
 	 ) {
@@ -1572,23 +1568,23 @@ bool RazorAnalyzer::matchElectronHLTFilters2016(int i, string HLTFilter){
   }
 
   if (HLTFilter == "DoubleElectronLeg2") {
-    if ( 
+    if (
 	//Data filters
 	ele_passHLTFilter[i][25] || ele_passHLTFilter[i][29]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "DoubleElectronLeg2DZ") {
-    if ( 
+    if (
 	//Data filters
 	ele_passHLTFilter[i][26] || ele_passHLTFilter[i][30]
 	 ) {
       match = true;
     }
   }
-   
+
   return match;
 }
 
@@ -1596,20 +1592,20 @@ bool RazorAnalyzer::matchElectronHLTFilters2015(int i, string HLTFilter){
   bool match = false;
 
   if (HLTFilter == "SingleElectron") {
-    if ( 
+    if (
 	//Data filters
-	ele_passHLTFilter[i][1] || ele_passHLTFilter[i][5] || ele_passHLTFilter[i][6] || ele_passHLTFilter[i][12] || ele_passHLTFilter[i][13] 
+	ele_passHLTFilter[i][1] || ele_passHLTFilter[i][5] || ele_passHLTFilter[i][6] || ele_passHLTFilter[i][12] || ele_passHLTFilter[i][13]
 	//MC filters
 	|| ele_passHLTFilter[i][3] || ele_passHLTFilter[i][8] || ele_passHLTFilter[i][10] || ele_passHLTFilter[i][15]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "Ele23Loose") {
-    if ( 
+    if (
 	//Data filters
-	ele_passHLTFilter[i][1] 
+	ele_passHLTFilter[i][1]
 	//MC filters
 	|| ele_passHLTFilter[i][3] || ele_passHLTFilter[i][64]
 	 ) {
@@ -1617,47 +1613,47 @@ bool RazorAnalyzer::matchElectronHLTFilters2015(int i, string HLTFilter){
     }
   }
   if (HLTFilter == "Ele27Loose") {
-    if ( 
+    if (
 	//Data filters
-	ele_passHLTFilter[i][5] 
+	ele_passHLTFilter[i][5]
 	//MC filters
 	|| ele_passHLTFilter[i][8]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "Ele27Tight") {
-    if ( 
+    if (
 	//Data filters
-	ele_passHLTFilter[i][6] 
+	ele_passHLTFilter[i][6]
 	//MC filters
 	|| ele_passHLTFilter[i][10]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "Ele32Tight") {
-    if ( 
+    if (
 	//Data filters
-	ele_passHLTFilter[i][13] 
+	ele_passHLTFilter[i][13]
 	//MC filters
 	|| ele_passHLTFilter[i][15]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "Ele105") {
     if ( ele_passHLTFilter[i][17] ) match = true;
   }
   if (HLTFilter == "Ele115") {
     if ( ele_passHLTFilter[i][19] ) match = true;
   }
-   
+
   if (HLTFilter == "DoubleElectronLeg1") {
-    if ( 
+    if (
 	//Data filters
 	ele_passHLTFilter[i][24] || ele_passHLTFilter[i][28]
 	 ) {
@@ -1666,23 +1662,23 @@ bool RazorAnalyzer::matchElectronHLTFilters2015(int i, string HLTFilter){
   }
 
   if (HLTFilter == "DoubleElectronLeg2") {
-    if ( 
+    if (
 	//Data filters
 	ele_passHLTFilter[i][25] || ele_passHLTFilter[i][29]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "DoubleElectronLeg2DZ") {
-    if ( 
+    if (
 	//Data filters
 	ele_passHLTFilter[i][26] || ele_passHLTFilter[i][30]
 	 ) {
       match = true;
     }
   }
-   
+
   return match;
 }
 
@@ -1690,7 +1686,7 @@ bool RazorAnalyzer::matchElectronHLTFilters2015(int i, string HLTFilter){
 // MUON
 //////////////////////////////
 
-float RazorAnalyzer::GetMuonEffectiveAreaMean(int i, string type ){ 
+float RazorAnalyzer::GetMuonEffectiveAreaMean(int i, string type ){
 
   double effArea = 0.0;
   //Effective areas below are for the sum of Neutral Hadrons + Photons
@@ -1698,33 +1694,33 @@ float RazorAnalyzer::GetMuonEffectiveAreaMean(int i, string type ){
     if (fabs(muonEta[i]) < 0.8) {
       effArea = 0.0735;
     } else if (fabs(muonEta[i]) < 1.3) {
-      effArea = 0.0619;	
+      effArea = 0.0619;
     } else if (fabs(muonEta[i]) < 2.0) {
-      effArea = 0.0465;	
+      effArea = 0.0465;
     } else if (fabs(muonEta[i]) < 2.2) {
-      effArea = 0.0433;	
+      effArea = 0.0433;
     } else {
-      effArea = 0.0577;	
-    } 
-  } 
+      effArea = 0.0577;
+    }
+  }
   if (type == "charged") {
     if (fabs(muonEta[i]) < 0.8) {
       effArea = 0.0106;
     } else if (fabs(muonEta[i]) < 1.3) {
-      effArea = 0.0096;	
+      effArea = 0.0096;
     } else if (fabs(muonEta[i]) < 2.0) {
-      effArea = 0.0079;	
+      effArea = 0.0079;
     } else if (fabs(muonEta[i]) < 2.2) {
-      effArea = 0.0058;	
+      effArea = 0.0058;
     } else {
-      effArea = 0.0053;	
-    } 
-  } 
+      effArea = 0.0053;
+    }
+  }
   return effArea;
 }
 
 
-float RazorAnalyzer::GetMuonEffectiveArea90(int i, string EraName ){ 
+float RazorAnalyzer::GetMuonEffectiveArea90(int i, string EraName ){
 
   double effArea = 0.0;
   //Effective areas below are for the sum of Neutral Hadrons + Photons
@@ -1733,29 +1729,29 @@ float RazorAnalyzer::GetMuonEffectiveArea90(int i, string EraName ){
     if (fabs(muonEta[i]) < 0.8) {
       effArea = 0.0735;
     } else if (fabs(muonEta[i]) < 1.3) {
-      effArea = 0.0619;	
+      effArea = 0.0619;
     } else if (fabs(muonEta[i]) < 2.0) {
-      effArea = 0.0465;	
+      effArea = 0.0465;
     } else if (fabs(muonEta[i]) < 2.2) {
-      effArea = 0.0433;	
+      effArea = 0.0433;
     } else {
-      effArea = 0.0577;	
-    } 
-  } 
+      effArea = 0.0577;
+    }
+  }
   else if ( EraName == "2017_94X") {
   //values from https://github.com/cms-data/PhysicsTools-NanoAOD/blob/10e7935ba38c2172ebb75979dcc1d8174b0566cd/effAreaMuons_cone03_pfNeuHadronsAndPhotons_94X.txt
     if (fabs(muonEta[i]) < 0.8) {
       effArea = 0.0566;
     } else if (fabs(muonEta[i]) < 1.3) {
-      effArea = 0.0562;	
+      effArea = 0.0562;
     } else if (fabs(muonEta[i]) < 2.0) {
-      effArea = 0.0363;	
+      effArea = 0.0363;
     } else if (fabs(muonEta[i]) < 2.2) {
-      effArea = 0.019;	
+      effArea = 0.019;
     } else {
-      effArea = 0.0064;	
-    } 
-  } 
+      effArea = 0.0064;
+    }
+  }
   return effArea;
 }
 
@@ -1792,7 +1788,7 @@ bool RazorAnalyzer::isMuonPOGTightMuon(int i, bool applyID, bool applyIso){
     if (!((muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i] < 0.12)) pass = false;
   }
   return pass;
-}   
+}
 
 bool RazorAnalyzer::isVetoMuon(int i, bool applyID, bool applyIso){
   bool pass = true;
@@ -1832,14 +1828,14 @@ bool RazorAnalyzer::isTightMuon(int i, bool applyID, bool applyIso){
     if (!( (muon_chargedMiniIso[i] + fmax(0.0, muon_photonAndNeutralHadronMiniIso[i] - fixedGridRhoFastjetAll*GetMuonEffectiveAreaMean(i,"neutral")*pow(dr/0.3,2)) )/muonPt[i] < 0.2)) pass = false;
   }
   return pass;
-}   
+}
 
 
 
 
 bool RazorAnalyzer::passHZZMuonPreselection(int i){
   bool pass = false;
-  if (muonIsLoose[i] 
+  if (muonIsLoose[i]
       && fabs(muon_d0[i]) < 0.5
       && fabs(muon_dZ[i]) < 1.0
       ) {
@@ -1851,7 +1847,7 @@ bool RazorAnalyzer::passHZZMuonPreselection(int i){
 
 bool RazorAnalyzer::isHZZMuon(int i){
   bool pass = false;
-  if (muonIsLoose[i] 
+  if (muonIsLoose[i]
       && fabs(muon_d0[i]) < 0.5
       && fabs(muon_dZ[i]) < 1.0
       && fabs(muon_ip3dSignificance[i]) < 4
@@ -1873,7 +1869,7 @@ bool RazorAnalyzer::matchMuonHLTFilters(int i, string HLTFilter){
   bool match = false;
 
   if (HLTFilter == "SingleMuon") {
-    if ( 
+    if (
 	//Data filters
 	muon_passHLTFilter[i][1]      // IsoMu17_eta2p1
 	|| muon_passHLTFilter[i][3]   // IsoMu20
@@ -1881,79 +1877,79 @@ bool RazorAnalyzer::matchMuonHLTFilters(int i, string HLTFilter){
 	|| muon_passHLTFilter[i][6]   // HLT_IsoMu24_eta2p1
 	|| muon_passHLTFilter[i][8]   // IsoMu27
 	|| muon_passHLTFilter[i][9]   // IsoTkMu20
-	|| muon_passHLTFilter[i][10]  // IsoTkMu20_eta2p1 
+	|| muon_passHLTFilter[i][10]  // IsoTkMu20_eta2p1
 	|| muon_passHLTFilter[i][11]  // IsoTkMu24_eta2p1
 	|| muon_passHLTFilter[i][12]  // IsoTkMu27
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "IsoMu20") {
-    if ( muon_passHLTFilter[i][3] ) match = true;    
+    if ( muon_passHLTFilter[i][3] ) match = true;
   }
   if (HLTFilter == "IsoMu22") {
-    if ( muon_passHLTFilter[i][7] || muon_passHLTFilter[i][9] ) match = true;    
+    if ( muon_passHLTFilter[i][7] || muon_passHLTFilter[i][9] ) match = true;
   }
   if (HLTFilter == "IsoMu24") {
-    if ( muon_passHLTFilter[i][11] || muon_passHLTFilter[i][12] ) match = true;    
+    if ( muon_passHLTFilter[i][11] || muon_passHLTFilter[i][12] ) match = true;
   }
   if (HLTFilter == "IsoTkMu20") {
-    if ( muon_passHLTFilter[i][16] ) match = true;    
+    if ( muon_passHLTFilter[i][16] ) match = true;
   }
   if (HLTFilter == "IsoTkMu22") {
-    if ( muon_passHLTFilter[i][17] || muon_passHLTFilter[i][18] ) match = true;    
+    if ( muon_passHLTFilter[i][17] || muon_passHLTFilter[i][18] ) match = true;
   }
   if (HLTFilter == "IsoTkMu24") {
-    if ( muon_passHLTFilter[i][19] ) match = true;    
+    if ( muon_passHLTFilter[i][19] ) match = true;
   }
   if (HLTFilter == "IsoMu27") {
-    if ( muon_passHLTFilter[i][14] ) match = true;    
+    if ( muon_passHLTFilter[i][14] ) match = true;
   }
   if (HLTFilter == "IsoTkMu27") {
-    if ( muon_passHLTFilter[i][21] ) match = true;    
+    if ( muon_passHLTFilter[i][21] ) match = true;
   }
   if (HLTFilter == "Mu50") {
-    if ( muon_passHLTFilter[i][22] ) match = true;    
+    if ( muon_passHLTFilter[i][22] ) match = true;
   }
   if (HLTFilter == "Mu55") {
-    if ( muon_passHLTFilter[i][25] ) match = true;    
+    if ( muon_passHLTFilter[i][25] ) match = true;
   }
   if (HLTFilter == "Mu45_eta2p1") {
-    if ( muon_passHLTFilter[i][26] ) match = true;    
+    if ( muon_passHLTFilter[i][26] ) match = true;
   }
   if (HLTFilter == "TkMu50") {
-    if ( muon_passHLTFilter[i][23] ) match = true;    
+    if ( muon_passHLTFilter[i][23] ) match = true;
   }
-   
+
 
   if (HLTFilter == "DoubleMuonLeg1") {
-    if ( 
+    if (
 	//Data filters : 17_8 Triggers
-	muon_passHLTFilter[i][19] || muon_passHLTFilter[i][27] 
+	muon_passHLTFilter[i][19] || muon_passHLTFilter[i][27]
 	 ) {
       match = true;
     }
   }
 
   if (HLTFilter == "DoubleMuonLeg2") {
-    if ( 
+    if (
 	//Data filters : 17_8 triggers
 	muon_passHLTFilter[i][25] || muon_passHLTFilter[i][28]
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "DoubleMuonLeg2DZ") {
-    if ( 
+    if (
 	//Data filters : 17_8 triggers
 	muon_passHLTFilter[i][26] || muon_passHLTFilter[i][29]
 	 ) {
       match = true;
     }
   }
-   
+
   return match;
 }
 
@@ -1989,41 +1985,73 @@ bool RazorAnalyzer::isTightTau(int i){
 }
 
 //////////////////////////////
-// JET 
+// JET
 //////////////////////////////
 
 //From https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation80X
-bool RazorAnalyzer::isCSVL(int i, string dataset){
-  if (dataset == "74X") {
-    return jetCISV[i] > 0.605;
-  } else if (dataset == "80X" ) {
-    return jetCISV[i] > 0.5426;
-  } else if (dataset == "94X" ) {
-    return jetCISV[i] > 0.5803;
+bool RazorAnalyzer::isCSVL(int i, string dataset)
+{
+  if (dataset == "74X")
+  {
+    return (jetCISV[i] > 0.605);
   }
-}
+  else if (dataset == "80X" )
+  {
+    return (jetCISV[i] > 0.5426);
+  }
+  else if (dataset == "94X" )
+  {
+    return (jetCISV[i] > 0.5803);
+  }
+  else
+  {
+    std::cerr << "reached end of comparison and found not compatible tag in isCSVL" << std::endl;
+    return false;
+  }
+};
 
-bool RazorAnalyzer::isCSVM(int i, string dataset){
-  if (dataset == "74X") {
+bool RazorAnalyzer::isCSVM(int i, string dataset)
+{
+  if (dataset == "74X")
+  {
     return jetCISV[i] > 0.890;
-  } else if (dataset == "80X" ) {
+  }
+  else if (dataset == "80X" )
+  {
     return jetCISV[i] > 0.8484;
-  } else if (dataset == "94X" ) {
+  }
+  else if (dataset == "94X" )
+  {
     return jetCISV[i] > 0.8838;
   }
-}
+  else
+  {
+    std::cerr << "reached end of comparison and found not compatible tag in isCSVL" << std::endl;
+    return false;
+  }
+};
 
-bool RazorAnalyzer::isCSVT(int i, string dataset){
-  if (dataset == "74X") {
+bool RazorAnalyzer::isCSVT(int i, string dataset)
+{
+  if (dataset == "74X")
+  {
     return jetCISV[i] > 0.970;
-  } else if (dataset == "80X" ) {
+  }
+  else if (dataset == "80X" )
+  {
     return jetCISV[i] > 0.9535;
-  } else if (dataset == "94X" ) {
+  }
+  else if (dataset == "94X" )
+  {
     return jetCISV[i] > 0.9693;
   }
-}
+  else
+  {
+    std::cerr << "reached end of comparison and found not compatible tag in isCSVL" << std::endl;
+    return false;
+  }
 
-
+};
 
 //Jet Energy Corrections
 double RazorAnalyzer::JetEnergyCorrectionFactor( double jetRawPt, double jetEta, double jetPhi, double jetE,
@@ -2035,7 +2063,7 @@ double RazorAnalyzer::JetEnergyCorrectionFactor( double jetRawPt, double jetEta,
 						 bool printDebug) {
 
   int foundIndex = -1;
-  for (int i=0; i<JetCorrectionsIOV.size(); i++) {
+  for (unsigned int i=0; i<JetCorrectionsIOV.size(); i++) {
     if (run >= JetCorrectionsIOV[i].first && run <= JetCorrectionsIOV[i].second) {
       foundIndex = i;
     }
@@ -2073,7 +2101,7 @@ double RazorAnalyzer::JetEnergyCorrectionFactor( double jetRawPt, double jetEta,
     if (printDebug) cout << "Correction Level " << j << " : current correction = " << currentCorrection << " , cumulative correction = " << cumulativeCorrection << "\n";
   }
   if (printDebug) cout << "Final Cumulative Correction: " << cumulativeCorrection << "\n";
-  
+
   return cumulativeCorrection;
 
 }
@@ -2112,22 +2140,22 @@ double RazorAnalyzer::JetEnergyCorrectionFactor( double jetRawPt, double jetEta,
     if (printDebug) cout << "Correction Level " << j << " : current correction = " << currentCorrection << " , cumulative correction = " << cumulativeCorrection << "\n";
   }
   if (printDebug) cout << "Final Cumulative Correction: " << cumulativeCorrection << "\n";
-  
+
   return cumulativeCorrection;
 
 }
 
 
 //compute the smeared jet pt (if option = "up" or "down", will change the smear factor by +/- 1 sigma )
-//NOTE: these are Run 1 recommendations and should be replaced as soon as a Run 2 prescription is available.  
+//NOTE: these are Run 1 recommendations and should be replaced as soon as a Run 2 prescription is available.
 double RazorAnalyzer::JetEnergySmearingFactor( double jetPt, double jetEta, double NPU, SimpleJetResolution *JetResolutionCalculator, TRandom3 *random ) {
 
   std::vector<float> fJetEta, fJetPtNPU;
-  fJetEta.push_back(jetEta);  
-  fJetPtNPU.push_back(jetPt); 
-  fJetPtNPU.push_back(NPU); 
+  fJetEta.push_back(jetEta);
+  fJetPtNPU.push_back(jetPt);
+  fJetPtNPU.push_back(NPU);
   double MCJetResolution = JetResolutionCalculator->resolution(fJetEta,fJetPtNPU);
-  
+
   double c = 1;
   if (fabs(jetEta) < 0.5) c = 1.079;
   else if(fabs(jetEta) < 1.1) c = 1.099;
@@ -2143,13 +2171,13 @@ double RazorAnalyzer::JetEnergySmearingFactor( double jetPt, double jetEta, doub
 
 }
 
-//return smearing factor for up/down shift in JER 
+//return smearing factor for up/down shift in JER
 double RazorAnalyzer::UpDownJetEnergySmearingFactor(double unsmearedPt, double jetEta, double NPU, SimpleJetResolution *JetResolutionCalculator, double smearedPt, string option){
     //get jet resolution
     std::vector<float> fJetEta, fJetPtNPU;
-    fJetEta.push_back(jetEta);  
-    fJetPtNPU.push_back(unsmearedPt); 
-    fJetPtNPU.push_back(NPU); 
+    fJetEta.push_back(jetEta);
+    fJetPtNPU.push_back(unsmearedPt);
+    fJetPtNPU.push_back(NPU);
     double MCJetResolution = JetResolutionCalculator->resolution(fJetEta,fJetPtNPU);
 
     //get sigma used to smear the jet
@@ -2189,7 +2217,7 @@ double RazorAnalyzer::UpDownJetEnergySmearingFactor(double unsmearedPt, double j
         double sigmaDown = sqrt( cDown*cDown - 1) * MCJetResolution;
         return 1.0 + z*sigmaDown;
     }
-    else{ 
+    else{
         std::cout << "Error in UpDownJetEnergySmear: please specify option='up' or 'down'.  Returning 1.0" << std::endl;
     }
     return 1.0;
@@ -2254,7 +2282,7 @@ bool RazorAnalyzer::photonPassesElectronVeto(int i){
     //use presence of a pixel seed as proxy for an electron veto
     return (pho_passEleVeto[i]);
 }
-
+/*
 double RazorAnalyzer::getPhotonSminorSmajor(int ind_pho, bool isSminor){
 	double etaAverage = 0.0;
         double phiAverage = 0.0;
@@ -2265,21 +2293,21 @@ double RazorAnalyzer::getPhotonSminorSmajor(int ind_pho, bool isSminor){
         double phoSetaphi = 0.0;
         double phoSminor = 0.0;
         double phoSmajor = 0.0;
-	
+
 
 	if(ecalRechit_ID->empty()) return 0.0;
 
 
 	uint seedhitIndex =  (*pho_SeedRechitIndex)[ind_pho];
 	bool isFromEB = bool( (*ecalRechit_ID)[seedhitIndex] < 840000000 );
-	
-		
+
+
 	for (uint k=0; k<(*pho_EcalRechitIndex)[ind_pho].size(); ++k)
         {
 		uint rechitIndex = (*pho_EcalRechitIndex)[ind_pho][k];
 		if((*ecalRechit_E)[rechitIndex] < 1.0) continue;
 		tmpSumE += (*ecalRechit_E)[rechitIndex];
-	}	
+	}
 	for (uint k=0; k<(*pho_EcalRechitIndex)[ind_pho].size(); ++k)
         {
                 uint rechitIndex = (*pho_EcalRechitIndex)[ind_pho][k];
@@ -2295,7 +2323,7 @@ double RazorAnalyzer::getPhotonSminorSmajor(int ind_pho, bool isSminor){
 
 	etaAverage = etaAverage / mTotalWeight;
         phiAverage = phiAverage / mTotalWeight;
-	
+
 	for (uint k=0; k<(*pho_EcalRechitIndex)[ind_pho].size(); ++k)
         {
                 uint rechitIndex = (*pho_EcalRechitIndex)[ind_pho][k];
@@ -2315,10 +2343,11 @@ double RazorAnalyzer::getPhotonSminorSmajor(int ind_pho, bool isSminor){
                 phoSminor = 0.5 * (phoSetaeta + phoSphiphi - pow(pow(phoSetaeta - phoSphiphi,2.0) + 4.0*pow(phoSetaphi,2.0),0.5));
                 phoSmajor = 0.5 * (phoSetaeta + phoSphiphi + pow(pow(phoSetaeta - phoSphiphi,2.0) + 4.0*pow(phoSetaphi,2.0),0.5));
         }
-		
+
 	if (isSminor) return phoSminor;
-	else return phoSmajor;	
+	else return phoSmajor;
 }
+*/
 
 //Spring 15 values
 void RazorAnalyzer::getPhotonEffAreaRun2( float eta, double& effAreaChHad, double& effAreaNHad, double& effAreaPho )
@@ -2426,7 +2455,7 @@ void RazorAnalyzer::getPhotonEffAreaPFClusterIso( float eta, double& effAreaChHa
       else {
 		effAreaChHad = 0.031;
                 effAreaNHad = 0.15;
-                effAreaPho = 0.19;		
+                effAreaPho = 0.19;
 	}
  };
 
@@ -2446,11 +2475,11 @@ bool RazorAnalyzer::photonPassesIsolation(int i, double PFChHadIsoCut, double PF
       {
         getPhotonEffAreaPFClusterIso( pho_superClusterEta[i] , effAreaChargedHadrons_ClusterIso, effAreaNeutralHadrons_ClusterIso, effAreaPhotons_ClusterIso);
       }
-    if (useEffectiveArea90) 
+    if (useEffectiveArea90)
       {
 	getPhotonEffArea90( pho_superClusterEta[i] , effAreaChargedHadrons, effAreaNeutralHadrons, effAreaPhotons);
       }
-    else 
+    else
       {
 	getPhotonEffAreaRun2( pho_superClusterEta[i] , effAreaChargedHadrons, effAreaNeutralHadrons, effAreaPhotons);
       }
@@ -2460,13 +2489,13 @@ bool RazorAnalyzer::photonPassesIsolation(int i, double PFChHadIsoCut, double PF
     if(usePrivatePF) PFIsoCorrected_ChHad = fmax(pho_sumChargedHadronPt[i] - fixedGridRhoFastjetAll*effAreaChargedHadrons, 0.);
     if(usePFClusterIso) PFIsoCorrected_ChHad = fmax(pho_trkSumPtHollowConeDR03[i] - fixedGridRhoFastjetAll*effAreaChargedHadrons_ClusterIso, 0.);
     if(PFIsoCorrected_ChHad > PFChHadIsoCut) return false;
-    
+
     //Rho corrected PF neutral hadron isolation
     double PFIsoCorrected_NeuHad = fmax(pho_pfIsoNeutralHadronIso[i] - fixedGridRhoFastjetAll*effAreaNeutralHadrons, 0.);
     if(usePrivatePF) PFIsoCorrected_NeuHad = fmax(pho_sumNeutralHadronEt[i] - fixedGridRhoFastjetAll*effAreaNeutralHadrons, 0.);
     if(usePFClusterIso) PFIsoCorrected_NeuHad = fmax(pho_sumNeutralHadronEt[i] - fixedGridRhoFastjetAll*effAreaNeutralHadrons, 0.);
     if(PFIsoCorrected_NeuHad > PFNeuHadIsoCut) return false;
-    
+
     //Rho corrected PF photon isolation
     double PFIsoCorrected_Photons = fmax(pho_pfIsoPhotonIso[i] - fixedGridRhoFastjetAll*effAreaPhotons, 0.);
     if(usePrivatePF) PFIsoCorrected_Photons = fmax(pho_sumPhotonEt[i] - fixedGridRhoFastjetAll*effAreaPhotons, 0.);
@@ -2485,12 +2514,12 @@ bool RazorAnalyzer::photonPassLooseIDWithoutEleVeto(int i, bool use25nsCuts ){
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
       if(pho_HoverE[i] > 0.0597) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.01031) pass = false;   
-    } else { 
+      if(phoFull5x5SigmaIetaIeta[i] > 0.01031) pass = false;
+    } else {
       if(pho_HoverE[i] > 0.0481) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.03013) pass = false;    
+      if(phoFull5x5SigmaIetaIeta[i] > 0.03013) pass = false;
     }
   }  else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
@@ -2506,12 +2535,12 @@ bool RazorAnalyzer::photonPassMediumIDWithoutEleVeto(int i, bool use25nsCuts){
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
       if(pho_HoverE[i] > 0.0396) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.01022) pass = false;   
-    } else { 
+      if(phoFull5x5SigmaIetaIeta[i] > 0.01022) pass = false;
+    } else {
       if(pho_HoverE[i] > 0.0219) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.03001) pass = false;    
+      if(phoFull5x5SigmaIetaIeta[i] > 0.03001) pass = false;
     }
   } else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
@@ -2527,12 +2556,12 @@ bool RazorAnalyzer::photonPassTightIDWithoutEleVeto(int i, bool use25nsCuts){
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
       if(pho_HoverE[i] > 0.0269) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.00994) pass = false;   
-    } else { 
+      if(phoFull5x5SigmaIetaIeta[i] > 0.00994) pass = false;
+    } else {
       if(pho_HoverE[i] > 0.0213) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.03000) pass = false;    
+      if(phoFull5x5SigmaIetaIeta[i] > 0.03000) pass = false;
     }
   } else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
@@ -2550,19 +2579,19 @@ bool RazorAnalyzer::photonPassLooseDelayedIDWithoutEleVeto(int i, bool use25nsCu
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
-      if(phoFull5x5SigmaIetaIeta[i] > 0.01031) pass = false;   
-    } else { 
-      if(phoFull5x5SigmaIetaIeta[i] > 0.03013) pass = false;    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
+      if(phoFull5x5SigmaIetaIeta[i] > 0.01031) pass = false;
+    } else {
+      if(phoFull5x5SigmaIetaIeta[i] > 0.03013) pass = false;
     }
   }  else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
     pass = false;
   }
 
-  double phoSminor = getPhotonSminorSmajor(i, true);
-  if(phoSminor < 0.15 || phoSminor > 0.7) pass = false;
-  
+  //double phoSminor = getPhotonSminorSmajor(i, true);
+  //if(phoSminor < 0.15 || phoSminor > 0.7) pass = false;
+
   return pass;
 }
 
@@ -2572,19 +2601,19 @@ bool RazorAnalyzer::photonPassMediumDelayedIDWithoutEleVeto(int i, bool use25nsC
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
-      if(phoFull5x5SigmaIetaIeta[i] > 0.01022) pass = false;   
-    } else { 
-      if(phoFull5x5SigmaIetaIeta[i] > 0.03001) pass = false;    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
+      if(phoFull5x5SigmaIetaIeta[i] > 0.01022) pass = false;
+    } else {
+      if(phoFull5x5SigmaIetaIeta[i] > 0.03001) pass = false;
     }
   } else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
     pass = false;
   }
 
-  double phoSminor = getPhotonSminorSmajor(i, true);
-  if(phoSminor < 0.15 || phoSminor > 0.5) pass = false;
-  
+  //double phoSminor = getPhotonSminorSmajor(i, true);
+  //if(phoSminor < 0.15 || phoSminor > 0.5) pass = false;
+
   return pass;
 }
 
@@ -2594,18 +2623,18 @@ bool RazorAnalyzer::photonPassTightDelayedIDWithoutEleVeto(int i, bool use25nsCu
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
-      if(phoFull5x5SigmaIetaIeta[i] > 0.00994) pass = false;   
-    } else { 
-      if(phoFull5x5SigmaIetaIeta[i] > 0.03000) pass = false;    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
+      if(phoFull5x5SigmaIetaIeta[i] > 0.00994) pass = false;
+    } else {
+      if(phoFull5x5SigmaIetaIeta[i] > 0.03000) pass = false;
     }
   } else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
     pass = false;
   }
 
-  double phoSminor = getPhotonSminorSmajor(i, true);
-  if(phoSminor < 0.15 || phoSminor > 0.3) pass = false;
+  //double phoSminor = getPhotonSminorSmajor(i, true);
+  //if(phoSminor < 0.15 || phoSminor > 0.3) pass = false;
 
   return pass;
 }
@@ -2659,7 +2688,8 @@ bool RazorAnalyzer::photonPassLooseIso(int i, bool use25nsCuts, bool usePrivateP
 
 // 80X-v2.2 Cuts from EGamma Presentation
 // https://indico.cern.ch/event/491548/contributions/2384977/attachments/1377936/2093213/CutBasedPhotonID_25-11-2016.pdf
-bool RazorAnalyzer::photonPassMediumIso(int i, bool use25nsCuts, bool usePrivatePF, bool usePFClusterIso){
+//bool RazorAnalyzer::photonPassMediumIso(int i, bool use25nsCuts, bool usePrivatePF, bool usePFClusterIso){
+bool RazorAnalyzer::photonPassMediumIso(int i, bool use25nsCuts, bool usePrivatePF){
 
   if (use25nsCuts) {
     if(fabs(pho_superClusterEta[i]) < 1.479){
@@ -2763,7 +2793,7 @@ bool RazorAnalyzer::isMediumDelayedPhotonWithoutEleVeto(int i, bool use25nsCuts)
   bool pass = true;
 
   if (!photonPassMediumDelayedIDWithoutEleVeto(i,use25nsCuts)) pass = false;
-  if(!photonPassMediumIso(i,use25nsCuts,false,true)) pass = false;
+  if(!photonPassMediumIso(i,use25nsCuts,false)) pass = false;
 
   return pass;
 }
@@ -2782,20 +2812,20 @@ bool RazorAnalyzer::matchPhotonHLTFilters(int i, string HLTFilter){
   bool match = false;
 
   if (HLTFilter == "DiPhoton30_18_WithPixMatch_Leg1") {
-    if ( 
+    if (
 	//Data filters
-	pho_passHLTFilter[i][8] 
+	pho_passHLTFilter[i][8]
 	//MC filters
 
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "DiPhoton30_18_WithPixMatch_Leg2") {
-    if ( 
+    if (
 	//Data filters
-	pho_passHLTFilter[i][9] 
+	pho_passHLTFilter[i][9]
 	 ) {
       match = true;
     }
@@ -2803,26 +2833,26 @@ bool RazorAnalyzer::matchPhotonHLTFilters(int i, string HLTFilter){
 
 
   if (HLTFilter == "Photon42_Photon25_Mass15_Leg1") {
-    if ( 
+    if (
 	//Data filters
-	pho_passHLTFilter[i][4] 
+	pho_passHLTFilter[i][4]
 	//MC filters
 
 	 ) {
       match = true;
     }
   }
-   
+
   if (HLTFilter == "Photon42_Photon25_Mass15_Leg2") {
-    if ( 
+    if (
 	//Data filters
-	pho_passHLTFilter[i][5] 
+	pho_passHLTFilter[i][5]
 	 ) {
       match = true;
     }
   }
-   
-   
+
+
   return match;
 }
 
@@ -2848,23 +2878,23 @@ bool RazorAnalyzer::photonPassLooseIDWithoutEleVetoExo15004( int i )
     }
   return pass;
 };
- 
+
 bool RazorAnalyzer::photonPassesIsolationExo15004(int i, double PFChHadIsoCut, double PFPhotIsoCut )
 {
   double effAreaPhotons = 0.0;
   double eta = pho_superClusterEta[i];
   getPhotonEffAreaExo15004( eta, effAreaPhotons );
-  
+
   //Rho corrected PF charged hadron isolation
   //double PFIsoCorrected_ChHad = pho_sumChargedHadronPt[i];//No PU correction (Caltech Original)
   double PFIsoCorrected_ChHad = pho_pfIsoChargedHadronIso[i];//(Exo15004 default pfIso)
   if(PFIsoCorrected_ChHad > PFChHadIsoCut) return false;
-    
+
   //Rho corrected PF photon isolation
   //double PFIsoCorrected_Photons = pho_sumPhotonEt[i] - fixedGridRhoFastjetAll*effAreaPhotons;//PU corr can go neg!(Caltech Original)
   double PFIsoCorrected_Photons = pho_pfIsoPhotonIso[i] - fixedGridRhoAll*effAreaPhotons;//PU corr can go neg!(Exo15004 default pfIso)
   if(PFIsoCorrected_Photons > PFPhotIsoCut) return false;
-  
+
   //photon passed all cuts
   return true;
 };
@@ -2899,7 +2929,7 @@ bool RazorAnalyzer::photonPassLooseIsoExo15004(int i)
   if( fabs(pho_superClusterEta[i]) < 1.4442 )
     {
       return photonPassesIsolationExo15004(i, 5, (2.75 - 2.5) + 0.0045*phoPt[i] );
-    } 
+    }
   else if ( fabs(pho_superClusterEta[i]) < 2.0 )
     {
       return photonPassesIsolationExo15004(i, 5, (2.0 - 2.5) + 0.003*phoPt[i] );
@@ -3018,11 +3048,11 @@ bool RazorAnalyzer::photonPassesIsolation_2017(int i, double PFChHadIsoCut, doub
     double effAreaPhotons = 0.0;
 
     //get the effective areas. results are passed to variables by reference
-    if (useEffectiveArea90) 
+    if (useEffectiveArea90)
       {
 	getPhotonEffArea90_2017( pho_superClusterEta[i] , effAreaChargedHadrons, effAreaNeutralHadrons, effAreaPhotons);
       }
-    else 
+    else
       {
 	getPhotonEffAreaRun2_2017( pho_superClusterEta[i] , effAreaChargedHadrons, effAreaNeutralHadrons, effAreaPhotons);
       }
@@ -3031,12 +3061,12 @@ bool RazorAnalyzer::photonPassesIsolation_2017(int i, double PFChHadIsoCut, doub
     double PFIsoCorrected_ChHad = fmax(pho_pfIsoChargedHadronIso[i] - fixedGridRhoFastjetAll*effAreaChargedHadrons, 0.);
     if(usePrivatePF) PFIsoCorrected_ChHad = fmax(pho_sumChargedHadronPt[i] - fixedGridRhoFastjetAll*effAreaChargedHadrons, 0.);
     if(PFIsoCorrected_ChHad > PFChHadIsoCut) return false;
-    
+
     //Rho corrected PF neutral hadron isolation
     double PFIsoCorrected_NeuHad = fmax(pho_pfIsoNeutralHadronIso[i] - fixedGridRhoFastjetAll*effAreaNeutralHadrons, 0.);
     if(usePrivatePF) PFIsoCorrected_NeuHad = fmax(pho_sumNeutralHadronEt[i] - fixedGridRhoFastjetAll*effAreaNeutralHadrons, 0.);
     if(PFIsoCorrected_NeuHad > PFNeuHadIsoCut) return false;
-    
+
     //Rho corrected PF photon isolation
     double PFIsoCorrected_Photons = fmax(pho_pfIsoPhotonIso[i] - fixedGridRhoFastjetAll*effAreaPhotons, 0.);
     if(usePrivatePF) PFIsoCorrected_Photons = fmax(pho_sumPhotonEt[i] - fixedGridRhoFastjetAll*effAreaPhotons, 0.);
@@ -3054,12 +3084,12 @@ bool RazorAnalyzer::photonPassLooseIDWithoutEleVeto_2017(int i, bool use25nsCuts
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
       if(pho_HoverE[i] > 0.105) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.0103) pass = false;   
-    } else { 
+      if(phoFull5x5SigmaIetaIeta[i] > 0.0103) pass = false;
+    } else {
       if(pho_HoverE[i] > 0.029) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.0276) pass = false;    
+      if(phoFull5x5SigmaIetaIeta[i] > 0.0276) pass = false;
     }
   }  else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
@@ -3075,12 +3105,12 @@ bool RazorAnalyzer::photonPassMediumIDWithoutEleVeto_2017(int i, bool use25nsCut
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
       if(pho_HoverE[i] > 0.035) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.0103) pass = false;   
-    } else { 
+      if(phoFull5x5SigmaIetaIeta[i] > 0.0103) pass = false;
+    } else {
       if(pho_HoverE[i] > 0.027) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.0271) pass = false;    
+      if(phoFull5x5SigmaIetaIeta[i] > 0.0271) pass = false;
     }
   } else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
@@ -3096,12 +3126,12 @@ bool RazorAnalyzer::photonPassTightIDWithoutEleVeto_2017(int i, bool use25nsCuts
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
       if(pho_HoverE[i] > 0.020) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.0103) pass = false;   
-    } else { 
+      if(phoFull5x5SigmaIetaIeta[i] > 0.0103) pass = false;
+    } else {
       if(pho_HoverE[i] > 0.025) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.0271) pass = false;    
+      if(phoFull5x5SigmaIetaIeta[i] > 0.0271) pass = false;
     }
   } else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
@@ -3355,11 +3385,11 @@ bool RazorAnalyzer::photonPassesIsolation_94X(int i, double PFChHadIsoCut, doubl
     double effAreaPhotons = 0.0;
 
     //get the effective areas. results are passed to variables by reference
-    if (useEffectiveArea90) 
+    if (useEffectiveArea90)
       {
 	getPhotonEffArea90_94X( pho_superClusterEta[i] , effAreaChargedHadrons, effAreaNeutralHadrons, effAreaPhotons);
       }
-    else 
+    else
       {
 	getPhotonEffAreaRun2_94X( pho_superClusterEta[i] , effAreaChargedHadrons, effAreaNeutralHadrons, effAreaPhotons);
       }
@@ -3368,12 +3398,12 @@ bool RazorAnalyzer::photonPassesIsolation_94X(int i, double PFChHadIsoCut, doubl
     double PFIsoCorrected_ChHad = fmax(pho_pfIsoChargedHadronIso[i] - fixedGridRhoFastjetAll*effAreaChargedHadrons, 0.);
     if(usePrivatePF) PFIsoCorrected_ChHad = fmax(pho_sumChargedHadronPt[i] - fixedGridRhoFastjetAll*effAreaChargedHadrons, 0.);
     if(PFIsoCorrected_ChHad > PFChHadIsoCut) return false;
-    
+
     //Rho corrected PF neutral hadron isolation
     double PFIsoCorrected_NeuHad = fmax(pho_pfIsoNeutralHadronIso[i] - fixedGridRhoFastjetAll*effAreaNeutralHadrons, 0.);
     if(usePrivatePF) PFIsoCorrected_NeuHad = fmax(pho_sumNeutralHadronEt[i] - fixedGridRhoFastjetAll*effAreaNeutralHadrons, 0.);
     if(PFIsoCorrected_NeuHad > PFNeuHadIsoCut) return false;
-    
+
     //Rho corrected PF photon isolation
     double PFIsoCorrected_Photons = fmax(pho_pfIsoPhotonIso[i] - fixedGridRhoFastjetAll*effAreaPhotons, 0.);
     if(usePrivatePF) PFIsoCorrected_Photons = fmax(pho_sumPhotonEt[i] - fixedGridRhoFastjetAll*effAreaPhotons, 0.);
@@ -3391,12 +3421,12 @@ bool RazorAnalyzer::photonPassLooseIDWithoutEleVeto_94X(int i, bool use25nsCuts 
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
       if(pho_HoverE[i] > 0.04596 ) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.0106 ) pass = false;   
-    } else { 
+      if(phoFull5x5SigmaIetaIeta[i] > 0.0106 ) pass = false;
+    } else {
       if(pho_HoverE[i] > 0.0590 ) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.0272) pass = false;    
+      if(phoFull5x5SigmaIetaIeta[i] > 0.0272) pass = false;
     }
   }  else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
@@ -3412,12 +3442,12 @@ bool RazorAnalyzer::photonPassMediumIDWithoutEleVeto_94X(int i, bool use25nsCuts
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
       if(pho_HoverE[i] > 0.02197 ) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.01015 ) pass = false;   
-    } else { 
+      if(phoFull5x5SigmaIetaIeta[i] > 0.01015 ) pass = false;
+    } else {
       if(pho_HoverE[i] > 0.0326 ) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.0272) pass = false;    
+      if(phoFull5x5SigmaIetaIeta[i] > 0.0272) pass = false;
     }
   } else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
@@ -3433,12 +3463,12 @@ bool RazorAnalyzer::photonPassTightIDWithoutEleVeto_94X(int i, bool use25nsCuts)
   bool pass = true;
 
   if (use25nsCuts) {
-    if(fabs(pho_superClusterEta[i]) < 1.479){    
+    if(fabs(pho_superClusterEta[i]) < 1.479){
       if(pho_HoverE[i] > 0.02148 ) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.00996 ) pass = false;   
-    } else { 
+      if(phoFull5x5SigmaIetaIeta[i] > 0.00996 ) pass = false;
+    } else {
       if(pho_HoverE[i] > 0.0321 ) pass = false;
-      if(phoFull5x5SigmaIetaIeta[i] > 0.0271 ) pass = false;    
+      if(phoFull5x5SigmaIetaIeta[i] > 0.0271 ) pass = false;
     }
   } else {
     cout << "Warning: you are not using 25nsCuts. return false.\n";
@@ -3629,7 +3659,7 @@ int RazorAnalyzer::findClosestGenElectron(double eta, double phi) {
   float minDR = 999.0;
   for(int j = 0; j < nGenParticle; j++){
     if (gParticleStatus[j] != 1) continue;
-    if (abs(gParticleId[j]) != 11) continue; 
+    if (abs(gParticleId[j]) != 11) continue;
     if ( deltaR(eta, phi, gParticleEta[j], gParticlePhi[j]) < 0.1
 	 && deltaR(eta, phi, gParticleEta[j], gParticlePhi[j]) < minDR
 	 ) {
@@ -3637,7 +3667,7 @@ int RazorAnalyzer::findClosestGenElectron(double eta, double phi) {
       minDR = deltaR( eta, phi, gParticleEta[j], gParticlePhi[j]);
     }
   }
-  
+
   return matchedIndex;
 };
 
@@ -3656,7 +3686,7 @@ int RazorAnalyzer::findClosestGenMuon(double eta, double phi) {
       minDR = deltaR( eta, phi, gParticleEta[j], gParticlePhi[j]);
     }
   }
-  
+
   return matchedIndex;
 };
 
@@ -3685,16 +3715,16 @@ int RazorAnalyzer::findClosestGenJet(double eta, double phi) {
 //Checks if the gParticle is a tau and that comes from a W or a Z
 bool RazorAnalyzer::isGenTau(int index){
   return ( abs(gParticleId[index]) == 15 && gParticleStatus[index] == 2 &&
-	   (abs(gParticleMotherId[index]) == 23 ||abs(gParticleMotherId[index]) == 24) 
+	   (abs(gParticleMotherId[index]) == 23 ||abs(gParticleMotherId[index]) == 24)
 	   );
 };
 
 
 //Checks if the gParticle is a tau and that comes from a W or a Z
 bool RazorAnalyzer::isGenLeptonicTau(int index){
-  if (abs(gParticleId[index]) == 15 && gParticleStatus[index] == 2 
+  if (abs(gParticleId[index]) == 15 && gParticleStatus[index] == 2
       && (abs(gParticleMotherId[index]) == 24 || abs(gParticleMotherId[index]) == 23)
-      ) {    
+      ) {
 
     for(int k = 0; k < nGenParticle; k++){
       if ( (abs(gParticleId[k]) == 11 || abs(gParticleId[k]) == 13) && gParticleMotherIndex[k] == index) {
@@ -3704,7 +3734,7 @@ bool RazorAnalyzer::isGenLeptonicTau(int index){
   }
   return false;
 };
- 
+
 //Finds closes gen tau and returns index to gParticle
 int RazorAnalyzer::findClosestGenTau(double eta, double phi) {
   int matchedIndex = -1;
@@ -3718,7 +3748,7 @@ int RazorAnalyzer::findClosestGenTau(double eta, double phi) {
       minDR = deltaR( eta, phi, gParticleEta[j], gParticlePhi[j]);
     }
   }
-  
+
   return matchedIndex;
 };
 
@@ -3758,11 +3788,11 @@ int RazorAnalyzer::GetTauMatchedID(double eta, double phi){
   if(matchedIndex < 0) return 0;//No Match -> ID == 0
   if (gParticleMotherId[matchedIndex] > 50) {
     matchedID = gParticleMotherId[matchedIndex];
-  } else if (abs(gParticleMotherId[matchedIndex]) == 23 || 
+  } else if (abs(gParticleMotherId[matchedIndex]) == 23 ||
 	     abs(gParticleMotherId[matchedIndex]) == 24) {
     matchedID = gParticleId[matchedIndex];
   }
-  
+
   return matchedID;
 };
 
@@ -3771,7 +3801,7 @@ int RazorAnalyzer::findClosestParton(float eta, float phi){
   float minDRToParton = 9999;
   int partonIndex = -1;
   for(int j = 0; j < nGenParticle; j++){
-    //only look for outgoing partons                                                                    
+    //only look for outgoing partons
     if  (!( ( (abs(gParticleId[j]) >= 1 && abs(gParticleId[j]) <= 5) || abs(gParticleId[j]) == 21)
 	    && gParticleStatus[j] == 23)
 	 ) continue;
@@ -3781,7 +3811,7 @@ int RazorAnalyzer::findClosestParton(float eta, float phi){
       partonIndex = j;
     }
   }
-  
+
   return partonIndex;
 };
 
@@ -3790,13 +3820,13 @@ int RazorAnalyzer::findClosestParton(float eta, float phi){
 bool RazorAnalyzer::matchesGenMuon(double eta, double phi){
   bool result = false;
   for(int j = 0; j < nGenParticle; j++){
-    if ( deltaR(eta, phi, gParticleEta[j], gParticlePhi[j]) < 0.1 && 
+    if ( deltaR(eta, phi, gParticleEta[j], gParticlePhi[j]) < 0.1 &&
 	 abs(gParticleId[j]) == 13 && gParticleStatus[j] == 1 &&
-	 (abs(gParticleMotherId[j]) == 23 ||abs(gParticleMotherId[j]) == 24 || abs(gParticleMotherId[j]) == 15) 
+	 (abs(gParticleMotherId[j]) == 23 ||abs(gParticleMotherId[j]) == 24 || abs(gParticleMotherId[j]) == 15)
 	 ) {
       result = true;
       break;
-    }    
+    }
   }
   return result;
 };
@@ -3805,13 +3835,13 @@ bool RazorAnalyzer::matchesGenMuon(double eta, double phi){
 bool RazorAnalyzer::matchesGenElectron(double eta, double phi){
   bool result = false;
   for(int j = 0; j < nGenParticle; j++){
-    if ( deltaR(eta, phi, gParticleEta[j], gParticlePhi[j]) < 0.1 && 
+    if ( deltaR(eta, phi, gParticleEta[j], gParticlePhi[j]) < 0.1 &&
 	 abs(gParticleId[j]) == 11 && gParticleStatus[j] == 1 &&
-	 (abs(gParticleMotherId[j]) == 23 ||abs(gParticleMotherId[j]) == 24 || abs(gParticleMotherId[j]) == 15) 
+	 (abs(gParticleMotherId[j]) == 23 ||abs(gParticleMotherId[j]) == 24 || abs(gParticleMotherId[j]) == 15)
 	 ) {
       result = true;
       break;
-    }    
+    }
   }
   return result;
 };
@@ -3832,7 +3862,7 @@ bool RazorAnalyzer::isHadronicDecay(int index, int status) {
 // id: MC ID of the gen-level particle to match
 // status: pythia status code of the gen-level particle (default 22)
 // r: maximum deltaR needed for match
-// returns the index of the matched particle in the gen particles collection, 
+// returns the index of the matched particle in the gen particles collection,
 // or -1 if no match
 int RazorAnalyzer::getMatchingHardProcessParticleIndex(double eta, double phi,
         int id, int status, double r) {
@@ -3884,10 +3914,10 @@ int RazorAnalyzer::getNISR( std::vector<FactorizedJetCorrector*> &JetCorrector, 
     int NISRJets = 0;
     for(int i = 0; i < nJets; i++) {
 
-        //Jet Corrections                                                                      
+        //Jet Corrections
         double JEC = JetEnergyCorrectionFactor( jetPt[i], jetEta[i], jetPhi[i], jetE[i],
                 fixedGridRhoAll, jetJetArea[i], runNum,
-                JetCorrectorIOV, JetCorrector );       
+                JetCorrectorIOV, JetCorrector );
         TLorentzVector thisJet = makeTLorentzVector( jetPt[i]*JEC, jetEta[i], jetPhi[i], jetE[i]*JEC );
 
         //these are the cuts Ana/Manuel told me to use
@@ -3917,11 +3947,11 @@ int RazorAnalyzer::getNISR( std::vector<FactorizedJetCorrector*> &JetCorrector, 
 
                 //match to quarks
                 if (gParticleStatus[g] == 23 && abs(gParticleId[g]) <= 5 &&
-                        ( abs(gParticleMotherId[g]) == 6 ||  abs(gParticleMotherId[g]) == 23 ||  abs(gParticleMotherId[g]) == 24 
+                        ( abs(gParticleMotherId[g]) == 6 ||  abs(gParticleMotherId[g]) == 23 ||  abs(gParticleMotherId[g]) == 24
                           ||  abs(gParticleMotherId[g]) == 25 ||  abs(gParticleMotherId[g]) > 1e6)) {
                     match = true;
-                }                 
-            }         
+                }
+            }
             if (!match) NISRJets++;
         }
     }
@@ -3930,7 +3960,7 @@ int RazorAnalyzer::getNISR( std::vector<FactorizedJetCorrector*> &JetCorrector, 
 
 
 //////////////////////////////
-// MISC 
+// MISC
 //////////////////////////////
 
 double RazorAnalyzer::deltaPhi(double phi1, double phi2) {
@@ -3978,17 +4008,17 @@ bool RazorAnalyzer::matchesVetoLepton(float eta, float phi, float dR) {
     return false;
 }
 
-double RazorAnalyzer::GetAlphaT(vector<TLorentzVector> jets) 
-{   
+double RazorAnalyzer::GetAlphaT(vector<TLorentzVector> jets)
+{
     int nJets = jets.size();
     vector<TLorentzVector> possibleHem1s; //holds possible hemisphere combinations
     vector<TLorentzVector> possibleHem2s;
     double alphaT = 0;
-    
+
     if(nJets < 2) return alphaT;
-    
+
     int nComb = pow(2, nJets); // # possible combinations
-    
+
     // steal from the getHemispheres method
 
     //step 1: store all possible partitions of the input jets
@@ -3998,7 +4028,7 @@ double RazorAnalyzer::GetAlphaT(vector<TLorentzVector> jets)
         int itemp = i;
         j_count = nComb/2;
         int count = 0;
-        
+
         while(j_count > 0){ //decompose i into binary '1's and '0's ; put the '1' jets into j_temp1 and the '0' jets into j_temp2
             if(itemp/j_count == 1){
                 j_temp1 += jets[count];
@@ -4012,7 +4042,7 @@ double RazorAnalyzer::GetAlphaT(vector<TLorentzVector> jets)
         possibleHem1s.push_back(j_temp1);
         possibleHem2s.push_back(j_temp2);
     }
-    
+
     //step 2: Select combination that mininize |ET1 - ET2|
     double eMin = -1;
     TLorentzVector myHem1;
@@ -4028,9 +4058,9 @@ double RazorAnalyzer::GetAlphaT(vector<TLorentzVector> jets)
             myHem2 = possibleHem2s[i];
         }
     }
-    
+
     float MhtX = 0., MhtY = 0.;
-    float HT = 0.; 
+    float HT = 0.;
     for (auto& obj : jets) { HT += obj.Pt(); MhtX += obj.Px(); MhtY += obj.Py(); }
 
       TLorentzVector MyMHT;
@@ -4041,13 +4071,12 @@ double RazorAnalyzer::GetAlphaT(vector<TLorentzVector> jets)
     // Calculate alphaT
     alphaT = 0.5 * (1-eMin/HT)/sqrt(1-pow(MHT/HT,2));
 
-    return alphaT;  
+    return alphaT;
 }
 
 double RazorAnalyzer::GetDPhiMin(vector<TLorentzVector> jets)
     // This variable is used in the alphaT analysis
 {
-    int nJets = jets.size();
     double dPhiMin = -1.;
     float HT = 0.;
     float MhtX = 0.;
@@ -4059,7 +4088,7 @@ double RazorAnalyzer::GetDPhiMin(vector<TLorentzVector> jets)
 
     for (auto& obj : jets)
     {
-    // Recompute MHT by ignoring a test jet 
+    // Recompute MHT by ignoring a test jet
         float recomputedMHTX = MhtX - obj.Px();
         float recomputedMHTY = MhtY - obj.Py();
         TLorentzVector recomputedMHT;
@@ -4138,33 +4167,33 @@ std::vector< std::vector<int> > RazorAnalyzer::getHemispheresV2( std::vector<TLo
 {
   //returns vector with original indices to jets
   int nJets = jets.size();
-  vector<TLorentzVector> possibleHem1s; //holds possible hemisphere combinations                                                              
+  vector<TLorentzVector> possibleHem1s; //holds possible hemisphere combinations
   std::vector< std::vector<int> > index1;
   vector<TLorentzVector> possibleHem2s;
   std::vector< std::vector<int> > index2;
 
-  if(nJets < 2){ //return empty hemispheres if there are fewer than 2 jets provided                                                           
+  if(nJets < 2){ //return empty hemispheres if there are fewer than 2 jets provided
     std::vector<int> emptyIndex1, emptyIndex2;
     std::vector< std::vector<int> > void_return;
     void_return.push_back( emptyIndex1 );
     void_return.push_back( emptyIndex2 );
     return void_return;
   }
-  
-  //stolen from https://github.com/pierinim/BSMatLHC/blob/master/BSMApp/src/CMS/CMSHemisphere.cc                                              
+
+  //stolen from https://github.com/pierinim/BSMatLHC/blob/master/BSMApp/src/CMS/CMSHemisphere.cc
   int nComb = pow(2, nJets);
   //std::cout << "njets: " << nJets << " ncomb: " << nComb << std::endl;
-  //step 1: store all possible partitions of the input jets                                                                                   
+  //step 1: store all possible partitions of the input jets
   int j_count;
   for(int i = 1; i < nComb-1; i++){ //note we omit the trivial hemisphere combinations (0 and nComb-1)
-    //std::cout << "=iter: " << i << std::endl; 
+    //std::cout << "=iter: " << i << std::endl;
     TLorentzVector j_temp1, j_temp2;
     std::vector<int> tmp_index1, tmp_index2;
     int itemp = i;
     j_count = nComb/2;
     int count = 0;
-    while(j_count > 0){ //decompose i into binary '1's and '0's ; put the '1' jets into j_temp1 and the '0' jets into j_temp2               
-      //std::cout << "j_count: " << j_count << " itemp: " << itemp << " count: " << count << std::endl; 
+    while(j_count > 0){ //decompose i into binary '1's and '0's ; put the '1' jets into j_temp1 and the '0' jets into j_temp2
+      //std::cout << "j_count: " << j_count << " itemp: " << itemp << " count: " << count << std::endl;
       if(itemp/j_count == 1){
 	j_temp1 += jets[count];
 	tmp_index1.push_back( count );
@@ -4172,7 +4201,7 @@ std::vector< std::vector<int> > RazorAnalyzer::getHemispheresV2( std::vector<TLo
 	j_temp2 += jets[count];
 	tmp_index2.push_back( count );
       }
-      itemp -= j_count*(itemp/j_count); //note this is always (0 or 1)*j_count                                                            
+      itemp -= j_count*(itemp/j_count); //note this is always (0 or 1)*j_count
       j_count /= 2;
       count++;
     }
@@ -4181,8 +4210,8 @@ std::vector< std::vector<int> > RazorAnalyzer::getHemispheresV2( std::vector<TLo
     possibleHem2s.push_back(j_temp2);
     index2.push_back( tmp_index2 );
   }
-  
-  //step 2: choose the partition that minimizes m1^2 + m2^2                                                                                   
+
+  //step 2: choose the partition that minimizes m1^2 + m2^2
   double mMin = -1;
   TLorentzVector myHem1;
   TLorentzVector myHem2;
@@ -4197,7 +4226,7 @@ std::vector< std::vector<int> > RazorAnalyzer::getHemispheresV2( std::vector<TLo
     }
   }
 
-  //return the hemispheres in decreasing order of pt                                                                                          
+  //return the hemispheres in decreasing order of pt
   vector<TLorentzVector> hemsOut;
   std::vector< std::vector<int> > index_out;
   if(myHem1.Pt() > myHem2.Pt()){
@@ -4211,7 +4240,7 @@ std::vector< std::vector<int> > RazorAnalyzer::getHemispheresV2( std::vector<TLo
     index_out.push_back( index2[partition_index] );
     index_out.push_back( index1[partition_index] );
   }
-  
+
   return index_out;
 };
 
@@ -4304,11 +4333,11 @@ int RazorAnalyzer::SubtractParticleFromCollection(TLorentzVector ToSubtract, vec
     if(closestDR < 0 || closestDR > deltaRMatch){ //if we didn't look at any objects or we didn't get one within 0.4, return -1
         return -1;
     }
-    
+
     //subtract the momentum (magnitude) of ToSubtract from that of the closest vector in Collection
 
     //if we're subtracting away everything, just set the vector to 0 and return the index of the changed vector
-    if(ToSubtract.P() >= Collection[closestDRIndex].P()){ 
+    if(ToSubtract.P() >= Collection[closestDRIndex].P()){
         Collection[closestDRIndex].SetPtEtaPhiE(0.0, 0.0, 0.0, 0.0);
         return closestDRIndex;
     }
@@ -4322,7 +4351,7 @@ double RazorAnalyzer::calcMT2(float testMass, bool massive, vector<TLorentzVecto
 {
   //computes MT2 using a test mass of testMass, with hemispheres made massless if massive is set to false
   //hemispheres are clustered by finding the grouping of input jets that minimizes the Lund distance
-  
+
   if(jets.size() < 2) return -9999; //need at least two jets for the calculation
   vector<float> px, py, pz, E;
   for(uint i = 0; i < jets.size(); i++){
@@ -4332,20 +4361,20 @@ double RazorAnalyzer::calcMT2(float testMass, bool massive, vector<TLorentzVecto
     pz.push_back(jets[i].Pz());
     E.push_back(jets[i].E());
   }
-  
+
   //form the hemispheres using the provided Hemisphere class
   Hemisphere* hemis = new Hemisphere(px, py, pz, E, hemi_seed, hemi_association);
   vector<int> grouping = hemis->getGrouping();
   TLorentzVector pseudojet1(0.,0.,0.,0.);
   TLorentzVector pseudojet2(0.,0.,0.,0.);
-        
+
   //make the hemisphere vectors
   for(uint i=0; i<px.size(); ++i){
     if(grouping[i]==1){
       pseudojet1.SetPx(pseudojet1.Px() + px[i]);
       pseudojet1.SetPy(pseudojet1.Py() + py[i]);
       pseudojet1.SetPz(pseudojet1.Pz() + pz[i]);
-      pseudojet1.SetE( pseudojet1.E()  + E[i]);   
+      pseudojet1.SetE( pseudojet1.E()  + E[i]);
     }else if(grouping[i] == 2){
       pseudojet2.SetPx(pseudojet2.Px() + px[i]);
       pseudojet2.SetPy(pseudojet2.Py() + py[i]);
@@ -4354,26 +4383,26 @@ double RazorAnalyzer::calcMT2(float testMass, bool massive, vector<TLorentzVecto
     }
   }
   delete hemis;
-  
+
   //now compute MT2 using the Davismt2 class
-  
+
   //these arrays contain (mass, px, py) for the pseudojets and the MET
   double pa[3];
   double pb[3];
   double pmiss[3];
-  
+
   pmiss[0] = 0;
   pmiss[1] = static_cast<double> (MET.Px());
   pmiss[2] = static_cast<double> (MET.Py());
-  
+
   pa[0] = static_cast<double> (massive ? pseudojet1.M() : 0);
   pa[1] = static_cast<double> (pseudojet1.Px());
   pa[2] = static_cast<double> (pseudojet1.Py());
-  
+
   pb[0] = static_cast<double> (massive ? pseudojet2.M() : 0);
   pb[1] = static_cast<double> (pseudojet2.Px());
   pb[2] = static_cast<double> (pseudojet2.Py());
-  
+
   Davismt2 *mt2 = new Davismt2();
   mt2->set_momenta(pa, pb, pmiss);
   mt2->set_mn(testMass);
@@ -4392,7 +4421,7 @@ int RazorAnalyzer::detID_from_iEtaiPhi(int iEta_or_iX=1, int iPhi_or_iY=1, bool 
 	int EcalEndcap=2;
 	int iz = isEEMinus?-1:1;
 
-	if(isEB) 
+	if(isEB)
 	{
 		detID = ((Ecal&0xF)<<28)|((EcalBarrel&0x7)<<25);
 		detID |= ((iEta_or_iX>0)?(0x10000|(iEta_or_iX<<9)):((-iEta_or_iX)<<9))|(iPhi_or_iY&0x1FF);
@@ -4400,11 +4429,11 @@ int RazorAnalyzer::detID_from_iEtaiPhi(int iEta_or_iX=1, int iPhi_or_iY=1, bool 
 	else
 	{
 		detID = ((Ecal&0xF)<<28)|((EcalEndcap&0x7)<<25);
-		
+
 		detID |=(iPhi_or_iY&0x7f)|((iEta_or_iX&0x7f)<<7)|((iz>0)?(0x4000):(0));
 	}
 
-	return int(detID);	
+	return int(detID);
 };
 
 
@@ -4423,7 +4452,7 @@ int RazorAnalyzer::iEta_or_iX_from_detID(int detID=1, bool isEB = true)
 		iEta_or_iX = (id_>>7)&0x7F;
 	}
 	return iEta_or_iX;
-	
+
 };
 
 int RazorAnalyzer::iPhi_or_iY_from_detID(int detID=1, bool isEB = true)
@@ -4440,7 +4469,3 @@ int RazorAnalyzer::iPhi_or_iY_from_detID(int detID=1, bool isEB = true)
 	}
 	return iPhi_or_iY;
 };
-
-
-
-

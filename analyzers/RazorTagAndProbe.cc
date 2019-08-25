@@ -15,16 +15,26 @@ struct greater_than_pt{
         return p1.Pt() > p2.Pt();
     }
 };
- 
+
 void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, string label)
 {
-    //initialization: create one TTree for each analysis box 
-    cout << "Initializing..." << endl;    
+    //initialization: create one TTree for each analysis box
+    cout << "Initializing..." << endl;
     cout << "IsData = " << isData << "\n";
     cout << "Option = " << option << "\n";
 
+    //---------------------------
+    if( isData )
+    {
+      std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << std::endl;
+    }
+    else
+    {
+      std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << std::endl;
+    }
+
     //***************************************************
-    //ten thousands digit refers to object type. 
+    //ten thousands digit refers to object type.
     //***************************************************
     //1: electrons
     //2: muons
@@ -74,7 +84,7 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 
     //Define 25ns for photons
     bool _is25ns = true;
-    
+
     int objectTypeOption = floor(float(option) / 10000);
     int denominatorType = floor( float(option - objectTypeOption*10000) / 100);
     int numeratorType = option - objectTypeOption*10000 - denominatorType*100;
@@ -82,7 +92,7 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
     else if (objectTypeOption == 2) cout << "Object Type : Muons\n";
     else if (objectTypeOption == 3) cout << "Object Type : Photons\n";
     else if (objectTypeOption == 4) cout << "Object Type : Taus\n";
-    
+
     if (denominatorType == 0) cout << "Denominator Type : Basic Object (Track or Supercluster)\n";
     else if (denominatorType == 1) cout << "Denominator Type : Reco Object\n";
     else if (denominatorType == 2) cout << "Denominator Type : ID+Iso Veto\n";
@@ -129,7 +139,7 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
     //TRandom3 *random = new TRandom3(33333); //Artur wants this number 33333
 
     bool printSyncDebug = false;
- 
+
     //*************************************************************************
     //Set up Output File
     //*************************************************************************
@@ -137,12 +147,12 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
     if (outfilename == "") outfilename = "RazorControlRegions.root";
     TFile *outFile = new TFile(outfilename.c_str(), "RECREATE");
     TagAndProbePair *TPPair = new TagAndProbePair;
-    TPPair->CreateTree();  
+    TPPair->CreateTree();
     TPPair->tree_->SetAutoFlush(0);
 
     //histogram containing total number of processed events (for normalization)
     TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
-  
+
     //*************************************************************************
     //Look over Input File Events
     //*************************************************************************
@@ -151,14 +161,14 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
     Long64_t nbytes = 0, nb = 0;
 
     for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++) {
-      
+
       //begin event
       if(jentry % 100000 == 0) cout << "Processing entry " << jentry << endl;
-      
+
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
-      
+
       printSyncDebug = false;
       if (printSyncDebug) {
 	cout << "\n****************************************************************\n";
@@ -173,13 +183,13 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
       }
       else {
 	NEvents->Fill(genWeight);
-	TPPair->weight = genWeight;     
+	TPPair->weight = genWeight;
       }
       //event info
       TPPair->run = runNum;
       TPPair->lumi = lumiNum;
       TPPair->event = eventNum;
-	
+
       //get NPU
       for (int i=0; i < nBunchXing; ++i) {
 	if (BunchXing[i] == 0) {
@@ -190,7 +200,7 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	}
 	if (BunchXing[i] == 1) {
 	  TPPair->NPU_Plus1 = nPUmean[i];
-	}	  
+	}
       }
       TPPair->NPV = nPV;
       TPPair->Rho = fixedGridRhoFastjetAll;
@@ -199,13 +209,13 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
       //******************************************
       //Find Generated leptons
       //******************************************
-      vector<int> genLeptonIndex;      
+      vector<int> genLeptonIndex;
       //find gen electrons
       if (objectTypeOption == 1 || objectTypeOption == 3 ) {
 	for(int j = 0; j < nGenParticle; j++){
 
 	  //look for electrons
-	  if (abs(gParticleId[j]) == 11 && gParticleStatus[j] == 1 	      
+	  if (abs(gParticleId[j]) == 11 && gParticleStatus[j] == 1
 	      && abs(gParticleEta[j]) < 3.0 && gParticlePt[j] > 3
 	      ) {
 	    if ( abs(gParticleMotherId[j]) == 23 )  {
@@ -214,20 +224,20 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	  }
 	} //loop over gen particles
       }
-      
+
       //look for muons
       if (objectTypeOption == 2) {
 	for(int j = 0; j < nGenParticle; j++){
-	  if (abs(gParticleId[j]) == 13 && gParticleStatus[j] == 1  
+	  if (abs(gParticleId[j]) == 13 && gParticleStatus[j] == 1
 	      && abs(gParticleEta[j]) < 3.0 && gParticlePt[j] > 3
 	      ) {
-	    if ( abs(gParticleMotherId[j]) == 23 ) {	     
+	    if ( abs(gParticleMotherId[j]) == 23 ) {
 	      genLeptonIndex.push_back(j);
-	    }	    
+	    }
 	  }
-	} //loop over gen particles		
+	} //loop over gen particles
       }
-	
+
 
       //*********************************************************
       //Electrons
@@ -241,14 +251,14 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 
 	  if(elePt[indexTag] < 30) continue;
 	  if(fabs(eleEta[indexTag]) > 2.5) continue;
-	  
+
 
 	  //For MC, Match to Gen level electron
 	  if (!isData) {
 	    bool genmatch = false;
 	    for (int q=0;q<int(genLeptonIndex.size()); q++) {
 	      if ( deltaR(eleEta[indexTag],elePhi[indexTag],
-			  gParticleEta[genLeptonIndex[q]], 
+			  gParticleEta[genLeptonIndex[q]],
 			  gParticlePhi[genLeptonIndex[q]]) < 0.1) {
 		genmatch = true;
 	      }
@@ -259,10 +269,10 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 
 	  //tag must pass tight cuts
 	  if ( !isEGammaPOGTightElectron(indexTag) ) continue;
-	  
+
 	  //Tag must match single electron HLT Filters OR tag leg filter of the dedicated T&P trigger
 	  if ( !matchTagElectronHLTFilters(indexTag)) continue;
-	  	 
+
 	  TLorentzVector vtag;
 	  vtag.SetPtEtaPhiM(elePt[indexTag], eleEta[indexTag], elePhi[indexTag], ELE_MASS);
 
@@ -278,26 +288,26 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	  //Loop over Probe electrons
 	  //*******************************************************
 	  for(int indexProbe = 0; indexProbe < nElectrons; indexProbe++){
-	    
+
 	    if(elePt[indexProbe] < 5) continue;
 	    if(fabs(eleEta[indexProbe]) > 2.5) continue;
-	  
+
 	    //skip the tag
 	    if (indexTag == indexProbe) continue;
-	  
+
 	    //For MC, Match to Gen level electron
 	    if (!isData) {
 	      bool genmatch = false;
 	      for (int q=0;q<int(genLeptonIndex.size()); q++) {
 		if ( deltaR(eleEta[indexProbe],elePhi[indexProbe],
-			    gParticleEta[genLeptonIndex[q]], 
+			    gParticleEta[genLeptonIndex[q]],
 			    gParticlePhi[genLeptonIndex[q]]) < 0.1) {
 		  genmatch = true;
 		}
 	      }
 	      if (!genmatch) continue;
 	    }
-	    
+
 	    // //Probe must match probe leg filter of the dedicated T&P trigger
 	    // if ( !matchProbeElectronHLTFilters(indexTag)) continue;
 	    // if ( !matchProbeSCHLTFilters(indexTag)) continue;
@@ -379,35 +389,35 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	    if (numeratorType == 25) {
 	      pass = isEGammaPOGTightElectron(indexProbe);
 	    }
-	    if (numeratorType == 50) {	    
+	    if (numeratorType == 50) {
 	      pass = matchElectronHLTFilters(indexProbe, "SingleElectron", "2016");
 	    }
-	    if (numeratorType == 51) {	     
+	    if (numeratorType == 51) {
 	      pass = matchElectronHLTFilters(indexProbe, "Ele23Loose", "2016");
 	    }
-	    if (numeratorType == 52) {	     
+	    if (numeratorType == 52) {
 	      pass = matchElectronHLTFilters(indexProbe, "Ele27Loose", "2016");
 	    }
-	    if (numeratorType == 53) {	     
+	    if (numeratorType == 53) {
 	      pass = matchElectronHLTFilters(indexProbe, "Ele27Tight", "2016");
 	    }
-	    if (numeratorType == 54) {	     
+	    if (numeratorType == 54) {
 	      pass = matchElectronHLTFilters(indexProbe, "Ele32Tight", "2016");
 	    }
-	    if (numeratorType == 60) {	     
+	    if (numeratorType == 60) {
 	      pass = bool( matchElectronHLTFilters(indexProbe, "Ele23Loose", "2016") ||
 			   matchElectronHLTFilters(indexProbe, "Ele27Loose", "2016") ||
 			   matchElectronHLTFilters(indexProbe, "Ele27Tight", "2016") ||
 			   matchElectronHLTFilters(indexProbe, "Ele32Tight", "2016"));
 	    }
-	    if (numeratorType == 61) {	     
+	    if (numeratorType == 61) {
 	      pass = bool( matchElectronHLTFilters(indexProbe, "Ele23Loose", "2016") ||
 			   matchElectronHLTFilters(indexProbe, "Ele27Loose", "2016") ||
 			   matchElectronHLTFilters(indexProbe, "Ele27Tight", "2016") ||
-			   matchElectronHLTFilters(indexProbe, "Ele32Loose", "2016") || 
-			   matchElectronHLTFilters(indexProbe, "Ele32Tight", "2016") || 
+			   matchElectronHLTFilters(indexProbe, "Ele32Loose", "2016") ||
+			   matchElectronHLTFilters(indexProbe, "Ele32Tight", "2016") ||
 			   matchElectronHLTFilters(indexProbe, "Ele105", "2016") ||
-			   matchElectronHLTFilters(indexProbe, "Ele115", "2016") 
+			   matchElectronHLTFilters(indexProbe, "Ele115", "2016")
 			   );
 	    }
 	    TPPair->pass = pass;
@@ -417,7 +427,7 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	    //Fill Output Tree
 	    //****************************************
 	    TPPair->tree_->Fill();
-	    
+
 	  } //loop over probe electrons
 
 	} // loop over tag electrons
@@ -442,7 +452,7 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	    bool genmatch = false;
 	    for (int q=0;q<int(genLeptonIndex.size()); q++) {
 	      if ( deltaR(muonEta[indexTag],muonPhi[indexTag],
-			  gParticleEta[genLeptonIndex[q]], 
+			  gParticleEta[genLeptonIndex[q]],
 			  gParticlePhi[genLeptonIndex[q]]) < 0.1) {
 		genmatch = true;
 	      }
@@ -452,10 +462,10 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 
 	  //tag must pass tight cuts
 	  if ( !isMuonPOGTightMuon(indexTag) ) continue;
-	  
+
 	  //Tag must match single electron HLT Filters OR tag leg filter of the dedicated T&P trigger
 	  if ( !matchTagMuonHLTFilters(indexTag)) continue;
-	  	 
+
 	  TLorentzVector vtag;
 	  vtag.SetPtEtaPhiM(muonPt[indexTag], muonEta[indexTag], muonPhi[indexTag], MU_MASS);
 
@@ -472,26 +482,26 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	  //Loop over Probe muons
 	  //*******************************************************
 	  for(int indexProbe = 0; indexProbe < nMuons; indexProbe++){
-	    
+
 	    if(muonPt[indexProbe] < 5) continue;
 	    if(fabs(muonEta[indexProbe]) > 2.4) continue;
-	  
+
 	    //skip the tag
 	    if (indexTag == indexProbe) continue;
-	  
+
 	    //For MC, Match to Gen level electron
 	    if (!isData) {
 	      bool genmatch = false;
 	      for (int q=0;q<int(genLeptonIndex.size()); q++) {
 		if ( deltaR(muonEta[indexProbe],muonPhi[indexProbe],
-			    gParticleEta[genLeptonIndex[q]], 
+			    gParticleEta[genLeptonIndex[q]],
 			    gParticlePhi[genLeptonIndex[q]]) < 0.1) {
 		  genmatch = true;
 		}
 	      }
 	      if (!genmatch) continue;
 	    }
-	    
+
 	    //*******************************************************
 	    //denominator selection
 	    //*******************************************************
@@ -574,21 +584,21 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	      pass = matchMuonHLTFilters(indexProbe, "Mu50");
 	    }
 	    if (numeratorType == 60) {
-	      pass = bool(matchMuonHLTFilters(indexProbe, "IsoMu20") 
-			  || matchMuonHLTFilters(indexProbe, "IsoTkMu20") 
-			  || matchMuonHLTFilters(indexProbe, "IsoMu22") 
-			  || matchMuonHLTFilters(indexProbe, "IsoTkMu22") 
-			  || matchMuonHLTFilters(indexProbe, "IsoMu24") 
-			  || matchMuonHLTFilters(indexProbe, "IsoTkMu24") 
-			  || matchMuonHLTFilters(indexProbe, "IsoMu27") 
-			  || matchMuonHLTFilters(indexProbe, "IsoTkMu27") 
+	      pass = bool(matchMuonHLTFilters(indexProbe, "IsoMu20")
+			  || matchMuonHLTFilters(indexProbe, "IsoTkMu20")
+			  || matchMuonHLTFilters(indexProbe, "IsoMu22")
+			  || matchMuonHLTFilters(indexProbe, "IsoTkMu22")
+			  || matchMuonHLTFilters(indexProbe, "IsoMu24")
+			  || matchMuonHLTFilters(indexProbe, "IsoTkMu24")
+			  || matchMuonHLTFilters(indexProbe, "IsoMu27")
+			  || matchMuonHLTFilters(indexProbe, "IsoTkMu27")
 			  || matchMuonHLTFilters(indexProbe, "Mu50")
 			  || matchMuonHLTFilters(indexProbe, "TkMu50")
 			  );
 	    }
 	    if (numeratorType == 61) {
-	      pass = bool(matchMuonHLTFilters(indexProbe, "IsoMu20") 
-			  || matchMuonHLTFilters(indexProbe, "IsoTkMu20") 
+	      pass = bool(matchMuonHLTFilters(indexProbe, "IsoMu20")
+			  || matchMuonHLTFilters(indexProbe, "IsoTkMu20")
 			  || matchMuonHLTFilters(indexProbe, "Mu50"));
 	    }
 	    TPPair->pass = pass;
@@ -598,9 +608,9 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	    //Fill Output Tree
 	    //****************************************
 	    TPPair->tree_->Fill();
-	    
+
 	  } //loop over probe muons
-	  
+
 	} // loop over tag muons
 
       } //if objects are muons
@@ -617,13 +627,13 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	  //std::cout << "Tag : " << elePt[indexTag] << " " << eleEta[indexTag] << "\n";
 	  if(elePt[indexTag] < 30) continue;
 	  if(fabs(eleEta[indexTag]) > 2.5) continue;
-	  
+
 	  //For MC, Match to Gen level electron
 	  if (!isData) {
 	    bool genmatch = false;
-	    for (int q=0;q<int(genLeptonIndex.size()); q++) {	      
+	    for (int q=0;q<int(genLeptonIndex.size()); q++) {
 	      if ( deltaR(eleEta[indexTag],elePhi[indexTag],
-			  gParticleEta[genLeptonIndex[q]], 
+			  gParticleEta[genLeptonIndex[q]],
 			  gParticlePhi[genLeptonIndex[q]]) < 0.1) {
 		genmatch = true;
 	      }
@@ -646,10 +656,10 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	  //*******************************************************
 
 	  for(int indexProbe = 0; indexProbe < nPhotons; indexProbe++){
-	    
+
 	    if(phoPt[indexProbe] < 5) continue;
 	    if(fabs(phoEta[indexProbe]) > 2.5) continue;
-	  
+
 	    //don't overlap with tag
 	    if ( deltaR(eleEta[indexTag],elePhi[indexTag], phoEta[indexProbe], phoPhi[indexProbe]) < 0.4 ) continue;
 
@@ -658,14 +668,14 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	      bool genmatch = false;
 	      for (int q=0;q<int(genLeptonIndex.size()); q++) {
 		if ( deltaR(phoEta[indexProbe],elePhi[indexProbe],
-			    gParticleEta[genLeptonIndex[q]], 
+			    gParticleEta[genLeptonIndex[q]],
 			    gParticlePhi[genLeptonIndex[q]]) < 0.1) {
 		  genmatch = true;
 		}
 	      }
 	      if (!genmatch) continue;
 	    }
-	    
+
 	    // //Probe must match probe leg filter of the dedicated T&P trigger
 	    // if ( !matchProbeElectronHLTFilters(indexTag)) continue;
 	    // if ( !matchProbeSCHLTFilters(indexTag)) continue;
@@ -729,16 +739,16 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	    if (numeratorType == 16) {
 	      pass = isTightDelayedPhotonWithoutEleVeto(indexProbe, _is25ns);
 	    }
-	    if (numeratorType == 50) {	     
+	    if (numeratorType == 50) {
 	      pass = matchPhotonHLTFilters(indexProbe, "DiPhoton30_18_WithPixMatch_Leg1");
 	    }
-	    if (numeratorType == 51) {	     
+	    if (numeratorType == 51) {
 	      pass = matchPhotonHLTFilters(indexProbe, "DiPhoton30_18_WithPixMatch_Leg2");
 	    }
-	    if (numeratorType == 52) {	     
+	    if (numeratorType == 52) {
 	      pass = matchPhotonHLTFilters(indexProbe, "Photon42_Photon25_Mass15_Leg1");
 	    }
-	    if (numeratorType == 53) {	     
+	    if (numeratorType == 53) {
 	      pass = matchPhotonHLTFilters(indexProbe, "Photon42_Photon25_Mass15_Leg2");
 	    }
 
@@ -750,14 +760,14 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
 	    //Fill Output Tree
 	    //****************************************
 	    TPPair->tree_->Fill();
-	    
+
 	  } //loop over probe electrons
 
 	} // loop over tag electrons
 
       } //end if photon object
 
-                                                                                                 
+
     }//end of event loop
 
 
@@ -767,4 +777,3 @@ void RazorTagAndProbe::Analyze(bool isData, int option, string outputfilename, s
     outFile->Close();
 
 }
-

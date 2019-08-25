@@ -1,2 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/DiphotonSkim/Run2RazorNtupleV2.3/DiphotonSkim_razorNtuple_DoubleEG_2015C.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/DiphotonSkim/Run2RazorNtupleV2.3/DiphotonSkim_razorNtuple_DoubleEG_2015D.root

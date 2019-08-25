@@ -1,7 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/sixie/TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/razorNtuplerV1p4_PHYS14_25ns_v1_v1/150103_163744/0000/razorNtupleAna_1.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/sixie/TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/razorNtuplerV1p4_PHYS14_25ns_v1_v1/150103_163744/0000/razorNtupleAna_2.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/sixie/TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/razorNtuplerV1p4_PHYS14_25ns_v1_v1/150103_163744/0000/razorNtupleAna_4.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/sixie/TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/razorNtuplerV1p4_PHYS14_25ns_v1_v1/150103_163744/0000/razorNtupleAna_5.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/sixie/TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/razorNtuplerV1p4_PHYS14_25ns_v1_v1/150103_163744/0000/razorNtupleAna_6.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/sixie/TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/razorNtuplerV1p4_PHYS14_25ns_v1_v1/150103_163744/0000/razorNtupleAna_7.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/sixie/TToLeptons_t-channel-CSA14_Tune4C_13TeV-aMCatNLO-tauola/razorNtuplerV1p4_PHYS14_25ns_v1_v1/150103_163744/0000/razorNtupleAna_8.root

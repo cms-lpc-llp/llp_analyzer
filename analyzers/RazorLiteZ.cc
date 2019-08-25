@@ -16,7 +16,7 @@ struct greater_than_pt{
 };
 
 class RazorLiteTree {
-  
+
 public:
   UInt_t  runNum, lumiSec, evtNum;
   UInt_t  matchGen;
@@ -39,7 +39,7 @@ public:
   ///// electron specific /////
   Float_t sigieie1, hovere1, eoverp1, sigieie2, hovere2, eoverp2;
   Float_t dphi1, deta1, dphi2, deta2;
-  UInt_t  isConv1, nexphits1, isConv2, nexphits2; 
+  UInt_t  isConv1, nexphits1, isConv2, nexphits2;
   //TLorentzVector *sc1=0, *sc2=0;
 
   ///// muon specific /////
@@ -81,7 +81,7 @@ public:
     muontype1=0; muontype2=0; muonquality1=0; muonquality2=0;
     muon_ip3d1=0; muon_ip3dSignificance1=0;
     muon_ip3d2=0; muon_ip3dSignificance2=0;
-    
+
   };
 
   void LoadTree(const char* file) {
@@ -96,7 +96,7 @@ public:
   void CreateTree() {
     tree_ = new TTree("TP","TP");
     f_ = 0;
-    
+
     tree_->Branch("runNum",      &runNum,     "runNum/i");      // event run number
     tree_->Branch("lumiSec",     &lumiSec,    "lumiSec/i");     // event lumi section
     tree_->Branch("evtNum",      &evtNum,     "evtNum/i");      // event number
@@ -122,7 +122,7 @@ public:
     tree_->Branch("pfNeuIso1",   &pfNeuIso1,   "pfNeuIso1/F");     // PF neutral hadron isolation of tag lepton
     tree_->Branch("pfNeuIso2",   &pfNeuIso2,   "pfNeuIso2/F");     // PF neutral hadron isolation of probe lepton
     tree_->Branch("pfCombIso1",  &pfCombIso1,  "pfCombIso1/F");    // PF combined isolation of tag lepton
-    tree_->Branch("pfCombIso2",  &pfCombIso2,  "pfCombIso2/F");    // PF combined isolation of probe lepton    
+    tree_->Branch("pfCombIso2",  &pfCombIso2,  "pfCombIso2/F");    // PF combined isolation of probe lepton
     tree_->Branch("chMiniIso1",  &chMiniIso1,  "chMiniIso1/F");
     tree_->Branch("chMiniIso2",  &chMiniIso2,  "chMiniIso2/F");
     tree_->Branch("neuMiniIso1",  &neuMiniIso1,  "neuMiniIso1/F");
@@ -135,28 +135,28 @@ public:
     tree_->Branch("isLoose2",         &isLoose2,         "isLoose2/i");
     tree_->Branch("isVeto2",         &isVeto2,         "isVeto2/i");
     tree_->Branch("d01",         &d01,         "d01/F");           // transverse impact parameter of tag lepton
-    tree_->Branch("d02",         &d02,         "d02/F");           // transverse impact parameter of probe lepton 
+    tree_->Branch("d02",         &d02,         "d02/F");           // transverse impact parameter of probe lepton
     tree_->Branch("dz1",         &dz1,         "dz1/F");           // longitudinal impact parameter of tag lepton
-    tree_->Branch("dz2",         &dz2,         "dz2/F");           // longitudinal impact parameter of probe lepton 
+    tree_->Branch("dz2",         &dz2,         "dz2/F");           // longitudinal impact parameter of probe lepton
 
     tree_->Branch("muontype1",         &muontype1,         "muontype1/i");
     tree_->Branch("muontype2",         &muontype2,         "muontype2/i");
     tree_->Branch("muonquality1",         &muonquality1,         "muonquality1/i");
     tree_->Branch("muonquality2",         &muonquality2,         "muonquality2/i");
 
-    tree_->Branch("muon_ip3d1", &muon_ip3d1, "muon_ip3d1/F");   
-    tree_->Branch("muon_ip3d2", &muon_ip3d2, "muon_ip3d2/F");   
-    tree_->Branch("muon_ip3dSignificance1", &muon_ip3dSignificance1, "muon_ip3dSignificance1/F");   
-    tree_->Branch("muon_ip3dSignificance2", &muon_ip3dSignificance2, "muon_ip3dSignificance2/F");   
+    tree_->Branch("muon_ip3d1", &muon_ip3d1, "muon_ip3d1/F");
+    tree_->Branch("muon_ip3d2", &muon_ip3d2, "muon_ip3d2/F");
+    tree_->Branch("muon_ip3dSignificance1", &muon_ip3dSignificance1, "muon_ip3dSignificance1/F");
+    tree_->Branch("muon_ip3dSignificance2", &muon_ip3dSignificance2, "muon_ip3dSignificance2/F");
 
     tree_->Branch("sigieie1",   &sigieie1,   "sigieie1/F");    // sigma-ieta-ieta of tag
     tree_->Branch("sigieie2",   &sigieie2,   "sigieie2/F");    // sigma-ieta-ieta of probe
     tree_->Branch("hovere1",    &hovere1,    "hovere1/F");     // H/E of tag
     tree_->Branch("hovere2",    &hovere2,    "hovere2/F");     // H/E of probe
     tree_->Branch("eoverp1",    &eoverp1,    "eoverp1/F");     // E/p of tag
-    tree_->Branch("eoverp2",    &eoverp2,    "eoverp2/F");     // E/p of probe 
+    tree_->Branch("eoverp2",    &eoverp2,    "eoverp2/F");     // E/p of probe
     tree_->Branch("dphi1",      &dphi1,      "dphi1/F");       // GSF track - ECAL dphi of tag
-    tree_->Branch("dphi2",      &dphi2,      "dphi2/F");       // GSF track - ECAL dphi of probe 
+    tree_->Branch("dphi2",      &dphi2,      "dphi2/F");       // GSF track - ECAL dphi of probe
     tree_->Branch("deta1",      &deta1,      "deta1/F");       // GSF track - ECAL deta of tag
     tree_->Branch("deta2",      &deta2,      "deta2/F");       // GSF track - ECAL deta of probe
     tree_->Branch("isConv1",    &isConv1,    "isConv1/i");     // conversion filter flag of tag lepton
@@ -165,7 +165,7 @@ public:
     tree_->Branch("nexphits2",  &nexphits2,  "nexphits2/i");   // number of missing expected inner hits of probe lepton
 
   };
-  
+
   void InitTree() {
 
     assert(tree_);
@@ -236,16 +236,24 @@ public:
     tree_->SetBranchAddress("isConv2",    &isConv2);
     tree_->SetBranchAddress("nexphits1",  &nexphits1);
     tree_->SetBranchAddress("nexphits2",  &nexphits2);
-    
+
   };
 };
 
 void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string label)
 {
-    //initialization: create one TTree for each analysis box 
-    cout << "Initializing..." << endl;    
+    //initialization: create one TTree for each analysis box
+    cout << "Initializing..." << endl;
     cout << "IsData = " << isData << "\n";
-
+    //---------------------------
+    if( isData )
+    {
+      std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << std::endl;
+    }
+    else
+    {
+      std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << std::endl;
+    }
     Float_t ELE_MASS = 0.000511;
     Float_t MU_MASS  = 0.105658;
 
@@ -258,12 +266,12 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
     if (outfilename == "") outfilename = "RazorLite.root";
     TFile *outFile = new TFile(outfilename.c_str(), "RECREATE");
     RazorLiteTree *TPPair = new RazorLiteTree;
-    TPPair->CreateTree();  
+    TPPair->CreateTree();
     TPPair->tree_->SetAutoFlush(0);
 
     //histogram containing total number of processed events (for normalization)
     TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
-  
+
     //*************************************************************************
     //Look over Input File Events
     //*************************************************************************
@@ -272,14 +280,14 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
     Long64_t nbytes = 0, nb = 0;
 
     for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++) {
-      
+
       //begin event
       if(jentry % 1000 == 0) cout << "Processing entry " << jentry << endl;
-      
+
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
-      
+
       //fill normalization histogram
 
       if (isData) {
@@ -288,13 +296,13 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
       }
       else {
 	NEvents->Fill(genWeight);
-	TPPair->weight = genWeight;     
+	TPPair->weight = genWeight;
       }
       //event info
       TPPair->runNum = runNum;
       TPPair->lumiSec = lumiNum;
       TPPair->evtNum = eventNum;
-	
+
       //get NPU
       for (int i=0; i < nBunchXing; ++i) {
 	if (BunchXing[i] == 0) {
@@ -309,13 +317,13 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
       //******************************************
       //Find Generated leptons
       //******************************************
-      vector<int> genLeptonIndex;      
+      vector<int> genLeptonIndex;
       //find gen electrons
       if ( option == 1 ) {
 	for(int j = 0; j < nGenParticle; j++){
 
 	  //look for electrons
-	  if (abs(gParticleId[j]) == 11 && gParticleStatus[j] == 1 	      
+	  if (abs(gParticleId[j]) == 11 && gParticleStatus[j] == 1
 	      && abs(gParticleEta[j]) < 3.0 && gParticlePt[j] > 3
 	      ) {
 	    if ( abs(gParticleMotherId[j]) == 23 )  {
@@ -324,20 +332,20 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
 	  }
 	} //loop over gen particles
       }
-      
+
       //look for muons
       if (option == 2) {
 	for(int j = 0; j < nGenParticle; j++){
-	  if (abs(gParticleId[j]) == 13 && gParticleStatus[j] == 1  
+	  if (abs(gParticleId[j]) == 13 && gParticleStatus[j] == 1
 	      && abs(gParticleEta[j]) < 3.0 && gParticlePt[j] > 3
 	      ) {
-	    if ( abs(gParticleMotherId[j]) == 23 ) {	     
+	    if ( abs(gParticleMotherId[j]) == 23 ) {
 	      genLeptonIndex.push_back(j);
-	    }	    
+	    }
 	  }
-	} //loop over gen particles		
+	} //loop over gen particles
       }
-	
+
 
       //*********************************************************
       //Electrons
@@ -347,7 +355,7 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
 	//Loop over Tag electrons
 	//*******************************************************
 	for(int indexTag = 0; indexTag < nElectrons; indexTag++){
-	
+
 	  if(elePt[indexTag] < 30) continue;
 	  if(fabs(eleEta[indexTag]) > 2.5) continue;
 
@@ -356,7 +364,7 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
 	    bool genmatch = false;
 	    for (int q=0;q<int(genLeptonIndex.size()); q++) {
 	      if ( deltaR(eleEta[indexTag],elePhi[indexTag],
-			  gParticleEta[genLeptonIndex[q]], 
+			  gParticleEta[genLeptonIndex[q]],
 			  gParticlePhi[genLeptonIndex[q]]) < 0.1) {
 		genmatch = true;
 	      }
@@ -377,24 +385,24 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
 	  //Loop over Probe electrons
 	  //*******************************************************
 	  for(int indexProbe = 0; indexProbe < nElectrons; indexProbe++){
-	    
+
 	    if(elePt[indexProbe] < 5) continue;
 	    if(fabs(eleEta[indexProbe]) > 2.5) continue;
-	  
+
 	    //skip the tag
 	    if (indexTag == indexProbe) continue;
-	  
+
 	    //For MC, Match to Gen level electron
 	    if (!isData) {
 	      for (int q=0;q<int(genLeptonIndex.size()); q++) {
 		if ( deltaR(eleEta[indexProbe],elePhi[indexProbe],
-			    gParticleEta[genLeptonIndex[q]], 
+			    gParticleEta[genLeptonIndex[q]],
 			    gParticlePhi[genLeptonIndex[q]]) < 0.1) {
 		  TPPair->matchGen = 1;
 		}
 	      }
 	    }
-	    
+
 	    TLorentzVector vprobe;
 	    vprobe.SetPtEtaPhiM(elePt[indexProbe], eleEta[indexProbe], elePhi[indexProbe], ELE_MASS);
 	    TLorentzVector vdilep = vtag+vprobe;
@@ -449,13 +457,13 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
 	    TPPair->puChMiniIso2 = ele_chargedPileupMiniIso[indexProbe];
 
 	    TPPair->tree_->Fill();
-	    
+
 	  } //loop over probe electrons
-	  
+
 	} // loop over tag electrons
-	
+
       } //if objects are electrons
-      
+
       //*********************************************************
       //Muons
       //*********************************************************
@@ -474,7 +482,7 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
 	    bool genmatch = false;
 	    for (int q=0;q<int(genLeptonIndex.size()); q++) {
 	      if ( deltaR(muonEta[indexTag],muonPhi[indexTag],
-			  gParticleEta[genLeptonIndex[q]], 
+			  gParticleEta[genLeptonIndex[q]],
 			  gParticlePhi[genLeptonIndex[q]]) < 0.1) {
 		genmatch = true;
 	      }
@@ -484,7 +492,7 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
 
 	  //tag must pass tight cuts
 	  if ( !isMuonPOGTightMuon(indexTag) ) continue;
-	  
+
 	  //Tag must match single electron HLT Filters OR tag leg filter of the dedicated T&P trigger
 	  if ( !(muon_passHLTFilter[indexTag][11] && HLTDecision[16]) ) continue;
 
@@ -495,24 +503,24 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
 	  //Loop over Probe muons
 	  //*******************************************************
 	  for(int indexProbe = 0; indexProbe < nMuons; indexProbe++){
-	    
+
 	    if(muonPt[indexProbe] < 5) continue;
 	    if(fabs(muonEta[indexProbe]) > 2.4) continue;
-	  
+
 	    //skip the tag
 	    if (indexTag == indexProbe) continue;
-	  
+
 	    //For MC, Match to Gen level electron
 	    if (!isData) {
 	      for (int q=0;q<int(genLeptonIndex.size()); q++) {
 		if ( deltaR(muonEta[indexProbe],muonPhi[indexProbe],
-			    gParticleEta[genLeptonIndex[q]], 
+			    gParticleEta[genLeptonIndex[q]],
 			    gParticlePhi[genLeptonIndex[q]]) < 0.1) {
 		  TPPair->matchGen = true;
 		}
 	      }
 	    }
-	    
+
 	    TLorentzVector vprobe;
 	    vprobe.SetPtEtaPhiM(muonPt[indexProbe], muonEta[indexProbe], muonPhi[indexProbe], MU_MASS);
 
@@ -558,9 +566,9 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
             TPPair->puChMiniIso2 = muon_chargedPileupMiniIso[indexProbe];
 
 	    TPPair->tree_->Fill();
-	    
+
 	  } //loop over probe muons
-	  
+
 	} // loop over tag muons
 
       } //if objects are muons
@@ -574,4 +582,3 @@ void RazorLiteZ::Analyze(bool isData, int option, string outputfilename, string 
     outFile->Close();
 
 }
-

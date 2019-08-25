@@ -1,1 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV2.1/MC/RunIIFall15_25ns_76X/v1/sixie/GluGluSpin0ToGG_W-1p4_M-1500_TuneCUEP8M1_13TeV-pythia8/Run2RazorNtuplerV2p1_ToCERN_MC_25ns_RunIIFall15MiniAODv2-PU25nsData2015v1_76X_mcRun2_asymptotic_v12-v1_v1_v1/160430_025746/0000/razorNtuple_1.root

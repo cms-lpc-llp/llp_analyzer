@@ -144,12 +144,12 @@ int main(int argc, char* argv[]){
 	    TFile* f_0 = TFile::Open( curFileName.c_str() );
 	    if( f_0->GetDirectory("ntuples") )
 	      {
-		theChain->SetName("ntuples/RazorEvents");
+		theChain->SetName("ntuples/llp");
 		std::cout << "[INFO]: default configuration for tchain" << std::endl;
 	      }
 	    else
 	      {
-		theChain->SetName("RazorEvents");
+		theChain->SetName("llp");
 		std::cout << "[INFO]: alternative configuration for tchain"<< std::endl;
 	      }
 	    theChain->Add( curFileName.c_str() );

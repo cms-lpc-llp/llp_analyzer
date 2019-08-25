@@ -1,2 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RunOneRazorNtupleV1.9/Run1/MC/v1/sixie/WH_ZH_HToGG_M-125_7TeV-pythia6/runOneRazorNtuplerV1p9_ToCERN_MC_Summer11dr53X-PU_S13_START53_LV3-v1_v1_v1/150520_205345/0000/razorNtuple_1.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RunOneRazorNtupleV1.9/Run1/MC/v1/sixie/WH_ZH_HToGG_M-125_7TeV-pythia6/runOneRazorNtuplerV1p9_ToCERN_MC_Summer11dr53X-PU_S13_START53_LV3-v1_v1_v1/150520_205345/0000/razorNtuple_3.root

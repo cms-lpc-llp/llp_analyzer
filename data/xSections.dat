@@ -2,6 +2,67 @@
 ## Cross section in pb for datasets
 ##
 
+# 13 TeV signals
+#https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBSMAt13TeV
+wH_withISR_mh125								1.475E+00
+wH_withISR_mh300								6.724E-02 
+wH_withISR_mh500								8.621E-03 
+wH_withISR_mh1000								 3.585E-04 
+wH_withISR_mh2000								 5.706E-06 
+
+zH_withISR_mh125								 9.095E-01 
+zH_withISR_mh300								 4.132E-02 
+zH_withISR_mh500								 5.256E-03 
+zH_withISR_mh1000								 2.977E-04 
+zH_withISR_mh2000								 7.639E-06 
+
+#13 TeV signals from displaced analysis
+5.328E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8     8.4E-01*0.324
+
+
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324  
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8 	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
+
 #13 TeV Spring 15 MC
 QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8                            2022100000.0
 QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                        2.486e+08
@@ -101,6 +162,10 @@ ZJetsToNuNu_HT-600To800_13TeV-madgraph                                          
 ZJetsToNuNu_HT-800To1200_13TeV-madgraph                                             1.1796*1.23 
 ZJetsToNuNu_HT-1200To2500_13TeV-madgraph                                            0.28833*1.23
 ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph                                             0.006945*1.23
+ZJetsToNuNu_Zpt-200toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8			     4.28
+
+
+
 DYJetsToNuNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8                             3811.0*3
 DYJetsToNuNu_Zpt-0To50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8                   3483.0*3
 DYJetsToNuNu_PtZ-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8                  237.2*3
@@ -219,21 +284,6 @@ QCD_Pt-40toInf_DoubleEMEnriched_MGG-80toInf_TuneCUETP8M1_13TeV_Pythia8       541
 WGToLNuG_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                                     405.271
 WWG_TuneCUETP8M1_13TeV-amcatnlo-pythia8                                             0.2147
 
-#SUSY SMSs (PHYS14)
-SMS-T1bbbb_mGluino-1000_mLSP-900_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.325388
-SMS-T1bbbb_mGluino-1500_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.0141903
-SMS-T1qqqq_mGluino-1000_mLSP-800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.325388
-SMS-T1qqqq_mGluino-1400_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.0252977
-SMS-T1tttt_mGluino-1200_mLSP-800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.0856418
-SMS-T1tttt_mGluino-1500_mLSP-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8             0.0141903
-SMS-T2bb_2J_mStop-600_mLSP-580_Tune4C_13TeV-madgraph-tauola                         0.174599
-SMS-T2bb_2J_mStop-900_mLSP-100_Tune4C_13TeV-madgraph-tauola                         0.0128895
-SMS-T2qq_2J_mStop-1200_mLSP-100_Tune4C_13TeV-madgraph-tauola                        0.00159844
-SMS-T2qq_2J_mStop-600_mLSP-550_Tune4C_13TeV-madgraph-tauola                         0.174599
-SMS-T2tt_2J_mStop-425_mLSP-325_Tune4C_13TeV-madgraph-tauola                         1.31169
-SMS-T2tt_2J_mStop-500_mLSP-325_Tune4C_13TeV-madgraph-tauola                         0.51848
-SMS-T2tt_2J_mStop-650_mLSP-325_Tune4C_13TeV-madgraph-tauola                         0.107045
-SMS-T2tt_2J_mStop-850_mLSP-100_Tune4C_13TeV-madgraph-tauola                         0.0189612
 
 #DM Signal Models
 TTbarDMJets_EFT_M-100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                        5.415e-06

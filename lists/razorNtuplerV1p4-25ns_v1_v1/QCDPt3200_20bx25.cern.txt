@@ -1,2 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_Pt-3200_Tune4C_13TeV_pythia8/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_195808/0000/razorNtupleAna_1.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/QCD_Pt-3200_Tune4C_13TeV_pythia8/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_195808/0000/razorNtupleAna_2.root

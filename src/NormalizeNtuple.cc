@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
         TFile *outputFile = new TFile(Form("%s_%.0fpb_weighted.root", (fileName.substr(0, fileName.find_last_of("."))).c_str(), intLumi), "RECREATE");
 
         //loop over all TTrees in the file and add the weight branch to each of them
-        TFile *inputFile = TFile::Open(fileName.c_str(), "READ");
+       TFile *inputFile = TFile::Open(fileName.c_str(), "READ");
 	cout << "input: " << fileName << "\n";
         assert(inputFile);
         inputFile->cd();

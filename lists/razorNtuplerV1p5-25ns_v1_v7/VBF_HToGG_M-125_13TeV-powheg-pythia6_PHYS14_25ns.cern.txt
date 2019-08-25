@@ -1,2 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.5/PHYS14_25ns/v7/sixie/VBF_HToGG_M-125_13TeV-powheg-pythia6/razorNtuplerV1p5_PHYS14_25ns_Phys14DR-PU20bx25_PHYS14_25_V1-v1_v7_v1/150610_214336/0000/razorNtuple_1.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.5/PHYS14_25ns/v7/sixie/VBF_HToGG_M-125_13TeV-powheg-pythia6/razorNtuplerV1p5_PHYS14_25ns_Phys14DR-PU20bx25_PHYS14_25_V1-v1_v7_v1/150610_214336/0000/razorNtuple_2.root

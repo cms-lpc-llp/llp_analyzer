@@ -1,2 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV3.1/MC/RunIISpring16/v1/sixie/GG_M-200To500_Pt-70_13TeV-sherpa/Run2RazorNtuplerV3p1_ToCERN_MC_25ns_RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1_v1_v1/160514_035936/0000/razorNtuple_1.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV3.1/MC/RunIISpring16/v1/sixie/GG_M-200To500_Pt-70_13TeV-sherpa/Run2RazorNtuplerV3p1_ToCERN_MC_25ns_RunIISpring16MiniAODv1-PUSpring16_80X_mcRun2_asymptotic_2016_v3-v1_v1_v1/160514_035936/0000/razorNtuple_2.root

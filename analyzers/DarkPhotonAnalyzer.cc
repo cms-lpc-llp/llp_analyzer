@@ -10,7 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <assert.h> 
+#include <assert.h>
 //ROOT INCLUDES
 #include <TH1F.h>
 #include <TMath.h>
@@ -59,7 +59,7 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
   TH1F *SumWeights = new TH1F("SumWeights", "SumWeights", 1, 0.5, 1.5);
   TH1F *SumScaleWeights = new TH1F("SumScaleWeights", "SumScaleWeights", 6, -0.5, 5.5);
   TH1F *SumPdfWeights = new TH1F("SumPdfWeights", "SumPdfWeights", NUM_PDF_WEIGHTS, -0.5, NUM_PDF_WEIGHTS-0.5);
-    
+
   //--------------
   //tree variables
   //--------------
@@ -81,7 +81,7 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
   int lep1PassSelection = 0;
   float lep1Pt = -999;
   float lep1Eta = -999;
-  float lep1Phi = -999;  
+  float lep1Phi = -999;
   int lep2Type = 0;
   int lep2PassSelection = 0;
   float lep2Pt = -999;
@@ -95,9 +95,9 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
   int Iso_lepton2;
   // working variables:
   float Copy_Jet_PT[900];
-  
+
   HggRazorLeptonsBox razorbox = None;
-  
+
   TTree *outputTree = new TTree("BkgTree", "Info on selected razor inclusive events");
 
   outputTree->Branch("weight", &weight, "weight/F");
@@ -150,13 +150,13 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
 
-    double leadingPhotonPt = -999;
-    double leadingPhotonEta = -999;
-    double leadingPhotonPhi = -999;
+    //double leadingPhotonPt = -999;
+    //double leadingPhotonEta = -999;
+    //double leadingPhotonPhi = -999;
 
     // define variables for finding the highest PT photon
     int i_best=0;
-    
+
     //Select highest pT photon
     for(int i = 0; i < nPhotons; i++){
 
@@ -177,15 +177,15 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
     PhotonPt = phoPt[i_best];
     PhotonEta = phoEta[i_best];
     PhotonPhi = phoPhi[i_best];
-    
+
     MT = sqrt(2*MET*PhotonPt*(1 - cos(PhotonPhi - METPhi)));
-    
+
     //Fill j1, j2 eta values here
-    
+
     // ## Find two jets with highest pT: j1, j2 with j1_pT > j2_pT
 	// make array copy of Jet
 	for(int i=0; i<900; i++) {
-		Copy_Jet_PT[i] = jetPt[i];	
+		Copy_Jet_PT[i] = jetPt[i];
 	}
 	// find indices
 	int j1_index = TMath::LocMax(900,jetPt);	// find j1 index
@@ -194,9 +194,9 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
 	// assign variables
 	j1_Eta = jetEta[j1_index];
 	j2_Eta = jetEta[j2_index];
-	
+
 	//Fill & select lepton PT, Eta and Phi for the best Z->2lepton leptons
-	
+
 	float Mz = 91.188;
 	razorbox = None;
 	//-------------------------------
@@ -205,23 +205,23 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
 	double bestDimuonPt = -1;
 	TLorentzVector ZCandidate;
 	for( int i = 0; i < nMuons; i++ )	{
-		//if(!isVetoMuon(i)) continue;  
+		//if(!isVetoMuon(i)) continue;
 		if(muonPt[i] < 20) continue;
 		if(abs(muonEta[i]) > 2.4) continue;
 		for( int j = i+1; j < nMuons; j++ )	{
-			//if(!isVetoMuon(j)) continue;  
+			//if(!isVetoMuon(j)) continue;
 			if(muonPt[j] < 20) continue;
 			if(abs(muonEta[j]) > 2.4) continue;
-		
+
 			TLorentzVector tmpMuon1;
 			tmpMuon1.SetPtEtaPhiM(muonPt[i],muonEta[i], muonPhi[i],0.1057);
 			TLorentzVector tmpMuon2;
 			tmpMuon2.SetPtEtaPhiM(muonPt[j],muonEta[j], muonPhi[j],0.1057);
-			double tmpMass = (tmpMuon1+tmpMuon2).M();	    
+			double tmpMass = (tmpMuon1+tmpMuon2).M();
 			double tmpDileptonPt = (tmpMuon1+tmpMuon2).Pt();
-			
+
 			//if ( _debug ) cout << "Zmm candidate: " << tmpMass << " " << tmpDileptonPt << "\n";
-			
+
 			if ( tmpMass > (Mz-15) && tmpMass < (Mz+15) && tmpDileptonPt > bestDimuonPt)  {
 				bestDimuonPt = tmpDileptonPt;
 				razorbox = Zmm;
@@ -237,11 +237,11 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
 				//lep2PassSelection = 1 + 2 * isTightMuon(j);
 				dileptonMass = tmpMass;
 				ZCandidate = tmpMuon1 + tmpMuon2;
-			
+
 				//for MC apply lepton eff scale factor
 				/*if (!isData ) {
-					if ( matchesGenMuon(lep1Eta,lep1Phi)) leptonEffSF *=  helper->getVetoMuonScaleFactor( lep1Pt, lep1Eta, true);		
-					if ( matchesGenMuon(lep2Eta,lep2Phi)) leptonEffSF *=  helper->getVetoMuonScaleFactor( lep2Pt, lep2Eta, true);			
+					if ( matchesGenMuon(lep1Eta,lep1Phi)) leptonEffSF *=  helper->getVetoMuonScaleFactor( lep1Pt, lep1Eta, true);
+					if ( matchesGenMuon(lep2Eta,lep2Phi)) leptonEffSF *=  helper->getVetoMuonScaleFactor( lep2Pt, lep2Eta, true);
 				}*/
 			}
 		}
@@ -254,23 +254,23 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
 	if (razorbox == None) {
 		double bestDielectronPt = -1;
 		for( int i = 0; i < nElectrons; i++ )	{
-			//if(!isVetoElectron(i)) continue;  
+			//if(!isVetoElectron(i)) continue;
 			if(elePt[i] < 20) continue;
 			if(abs(eleEta[i]) > 2.4) continue;
 			for( int j = i+1; j < nElectrons; j++ )	{
-				//if(!isVetoElectron(j)) continue;  
+				//if(!isVetoElectron(j)) continue;
 				if(elePt[j] < 20) continue;
 				if(abs(eleEta[j]) > 2.4) continue;
-			
+
 				TLorentzVector tmpElectron1;
 				tmpElectron1.SetPtEtaPhiM(elePt[i],eleEta[i], elePhi[i],0.000511);
 				TLorentzVector tmpElectron2;
 				tmpElectron2.SetPtEtaPhiM(elePt[j],eleEta[j], elePhi[j],0.000511);
-				double tmpMass = (tmpElectron1+tmpElectron2).M();	    
+				double tmpMass = (tmpElectron1+tmpElectron2).M();
 				double tmpDileptonPt = (tmpElectron1+tmpElectron2).Pt();
-		
+
 				//if ( _debug ) cout << "Zee candidate: " << tmpMass << " " << tmpDileptonPt << "\n";
-		
+
 				if ( tmpMass > (Mz-15) && tmpMass < (Mz+15) && tmpDileptonPt > bestDielectronPt)  {
 					bestDielectronPt = tmpDileptonPt;
 					razorbox = Zee;
@@ -286,17 +286,17 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
 					//lep2PassSelection = 1 + 2 * isTightElectron(j);
 					dileptonMass = tmpMass;
 					ZCandidate = tmpElectron1 + tmpElectron2;
-		
+
 					//for MC apply lepton eff scale factor
 					/*if (!isData ) {
-						if ( matchesGenElectron(lep1Eta,lep1Phi)) leptonEffSF *=  helper->getVetoElectronScaleFactor( lep1Pt, lep1Eta, true);		
-						if ( matchesGenElectron(lep2Eta,lep2Phi)) leptonEffSF *=  helper->getVetoElectronScaleFactor( lep2Pt, lep2Eta, true);			
+						if ( matchesGenElectron(lep1Eta,lep1Phi)) leptonEffSF *=  helper->getVetoElectronScaleFactor( lep1Pt, lep1Eta, true);
+						if ( matchesGenElectron(lep2Eta,lep2Phi)) leptonEffSF *=  helper->getVetoElectronScaleFactor( lep2Pt, lep2Eta, true);
 					}*/
 				}
 			}
 		}
 	}
-    
+
 	// Isolated lepton criterion
 	Iso_lepton1 = 0;
 	Iso_lepton2 = 0;
@@ -305,7 +305,7 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
 	Float_t DR;
 	Float_t e_Eta;
 	Float_t Pi = TMath::Pi();
-	for (Int_t j=0; j<700; j++) {	
+	for (Int_t j=0; j<700; j++) {
 		Phi_l = TMath::Abs(elePhi[j] - PhotonPhi);
 		if (Phi_l > Pi) {
 			Phi_l = 2*Pi - Phi_l;
@@ -320,7 +320,7 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
 			}
 		}
 	}
-	for (Int_t j=0; j<700; j++) {	
+	for (Int_t j=0; j<700; j++) {
 		Phi_l = TMath::Abs(muonPhi[j] - PhotonPhi);
 		if (Phi_l > Pi) {
 			Phi_l = 2*Pi - Phi_l;
@@ -334,14 +334,14 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
 			}
 		}
 	}
-	
-    //fill normalization histogram    
+
+    //fill normalization histogram
     NEvents->SetBinContent( 1, NEvents->GetBinContent(1) + genWeight);
     weight = genWeight;
-    SumWeights->Fill(1.0, weight);    
+    SumWeights->Fill(1.0, weight);
     run = runNum;
-    lumi = lumiNum; 
-    event = eventNum; 
+    lumi = lumiNum;
+    event = eventNum;
 
     //------------------
     //Pileup reweighting
@@ -356,14 +356,14 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
       }
       pileupWeight = helper->getPileupWeight(NPU);
       pileupWeightUp = helper->getPileupWeightUp(NPU) / pileupWeight;
-      pileupWeightDown = helper->getPileupWeightDown(NPU) / pileupWeight;	
+      pileupWeightDown = helper->getPileupWeightDown(NPU) / pileupWeight;
     }
-    
+
     /////////////////////////////////
     //Scale and PDF variations
     /////////////////////////////////
     if( !isData ) {
-      if ( (*scaleWeights).size() >= 9 ) 
+      if ( (*scaleWeights).size() >= 9 )
 	{
 	  // sf_facScaleUp      = (*scaleWeights)[1]/genWeight;
 	  // sf_facScaleDown    = (*scaleWeights)[2]/genWeight;
@@ -371,8 +371,8 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
 	  // sf_renScaleDown    = (*scaleWeights)[6]/genWeight;
 	  // sf_facRenScaleUp   = (*scaleWeights)[4]/genWeight;
 	  // sf_facRenScaleDown = (*scaleWeights)[8]/genWeight;
-	    
-	    
+
+
 	  SumScaleWeights->Fill(0.0, (*scaleWeights)[1]);
 	  SumScaleWeights->Fill(1.0, (*scaleWeights)[2]);
 	  SumScaleWeights->Fill(2.0, (*scaleWeights)[3]);
@@ -380,22 +380,22 @@ void DarkPhotonAnalyzer::Analyze(bool isData, int Option, string outputFilename,
 	  SumScaleWeights->Fill(4.0, (*scaleWeights)[4]);
 	  SumScaleWeights->Fill(5.0, (*scaleWeights)[8]);
 	}
-	
+
       // sf_pdf.erase( sf_pdf.begin(), sf_pdf.end() );
       for ( unsigned int iwgt = 0; iwgt < pdfWeights->size(); ++iwgt ) {
       // 	  sf_pdf.push_back( pdfWeights->at(iwgt)/genWeight );
 	SumPdfWeights->Fill(double(iwgt),(*pdfWeights)[iwgt]);
       }
     }
-    
+
     // Put Trigger stuff here ?
-      
+
     outputTree->Fill();
 
-  } // loop over events 
-    
+  } // loop over events
+
   cout << "Writing output trees..." << endl;
   outFile->Write();
   outFile->Close();
-    
+
 }

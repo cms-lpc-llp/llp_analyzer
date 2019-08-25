@@ -1,6 +1,0 @@
-#Format: <dataset name> <file name>
-GluGluToHToGG_M-125_13TeV-powheg-pythia6            output/razorNtuplerV1p4-25ns_v1_v1/GGHToGammaGamma_M125_20bx25.cern.root
-VBF_HToGG_M-125_13TeV-powheg-pythia6                output/razorNtuplerV1p4-25ns_v1_v1/VBFHToGammaGamma_M125_20bx25.cern.root 
-WH_ZH_HToGG_M-125_13TeV_pythia6                     output/razorNtuplerV1p4-25ns_v1_v1/VHToGammaGamma_M125_20bx25.cern.root 
-TTbarH_HToGG_M-125_13TeV_amcatnlo-pythia8-tauola    output/razorNtuplerV1p4-25ns_v1_v1/TTHToGammaGamma_M125_20bx25.cern.root
-GJet_Pt40_doubleEMEnriched_TuneZ2star_13TeV-pythia6 output/razorNtuplerV1p4-25ns_v1_v1/GJet_Pt40_DoubleEMEnriched_20bx25.cern.root

@@ -1,3 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.15/Data/50ns/v3/sixie/Jet/Run2RazorNtuplerV1p15_ToCERN_Data_50ns_Run2015B-PromptReco-v1_v3_v1/150729_191510/0000/razorNtuple_1.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.15/Data/50ns/v3/sixie/Jet/Run2RazorNtuplerV1p15_ToCERN_Data_50ns_Run2015B-PromptReco-v1_v3_v1/150729_191510/0000/razorNtuple_2.root
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/Run2RazorNtupleV1.15/Data/50ns/v3/sixie/Jet/Run2RazorNtuplerV1p15_ToCERN_Data_50ns_Run2015B-PromptReco-v1_v3_v1/150729_191510/0000/razorNtuple_3.root

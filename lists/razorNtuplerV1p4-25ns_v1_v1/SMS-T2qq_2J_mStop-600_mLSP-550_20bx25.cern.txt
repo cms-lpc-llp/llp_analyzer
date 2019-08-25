@@ -1,1 +1,0 @@
-root://eoscms//eos/cms//store/group/phys_susy/razor/run2/RazorNtupleV1.4/PHYS14_25ns/SMS-T2qq_2J_mStop-600_mLSP-550_Tune4C_13TeV-madgraph-tauola/razorNtuplerV1p4_PHYS14_25ns_v1_v1/141208_172344/0000/razorNtupleAna_1.root
