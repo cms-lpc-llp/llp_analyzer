@@ -28,7 +28,7 @@ Example: to execute a dummy analysis that does nothing,
 
     ./RazorRun lists/TTJets_List_Test.txt DummyAnalyzer
 
-The <options> are the following:
+The "<options>" are the following:
     
     -d   --isData
     -f=  --outputFile=<output filename> (optional)
