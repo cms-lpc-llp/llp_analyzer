@@ -411,7 +411,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
   char* cmsswPath;
   cmsswPath = getenv("CMSSW_BASE");
   string pathname;
-  if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/cms_lpc_llp/llp_analyzer/data/JEC/";
+  if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/llp_analyzer/data/JEC/";
   if(cmsswPath != NULL and option == 1) pathname = "JEC/"; //run on condor if option == 1
 
   cout << "Getting JEC parameters from " << pathname << endl;

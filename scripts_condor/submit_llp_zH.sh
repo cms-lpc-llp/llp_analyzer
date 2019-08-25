@@ -46,8 +46,8 @@ ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl500_ev100000
 
 do
 	echo "Sample " ${sample}
-	#inputfilelist=/src/cms_lpc_llp/llp_analyzer/lists/v1p0/WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_test.txt
-	inputfilelist=/src/cms_lpc_llp/llp_analyzer/lists/llpntuple/V1p0/MC_Summer16/v1/christiw/${sample}.txt
+	#inputfilelist=/src/llp_analyzer/lists/v1p0/WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_test.txt
+	inputfilelist=/src/llp_analyzer/lists/llpntuple/V1p0/MC_Summer16/v1/christiw/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
 	maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 

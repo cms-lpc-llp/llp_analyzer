@@ -34,11 +34,11 @@ then
 
 	cd ${runDir}
 	echo "entering directory: ${runDir}"
-	if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/RazorRun_T2 ]
+	if [ -f $CMSSW_BASE/src/llp_analyzer/RazorRun_T2 ]
 	then
-		cp $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/RazorRun_T2 ./
+		cp $CMSSW_BASE/src/llp_analyzer/RazorRun_T2 ./
 		mkdir -p JEC
-		cp -r $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/JEC/Summer16_23Sep2016V3_MC/ JEC/Summer16_23Sep2016V3_MC
+		cp -r $CMSSW_BASE/src/llp_analyzer/data/JEC/Summer16_23Sep2016V3_MC/ JEC/Summer16_23Sep2016V3_MC
 		if [ -d JEC/Summer16_23Sep2016V3_MC ]
 		then
 			echo "copied JEC parameters"

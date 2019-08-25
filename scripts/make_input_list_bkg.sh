@@ -1,6 +1,6 @@
 #!/bin/bash
 dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/MC_Summer16/v1/sixie/
-list_dir=/data/christiw/LLP/CMSSW_9_4_4/src/cms_lpc_llp/llp_analyzer/lists/llpntuple/V1p0/MC_Summer16/v1/sixie/
+list_dir=/data/christiw/LLP/CMSSW_9_4_4/src/llp_analyzer/lists/llpntuple/V1p0/MC_Summer16/v1/sixie/
 
 for sample in \
 DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \

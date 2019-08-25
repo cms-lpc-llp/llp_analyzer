@@ -28,6 +28,13 @@ Example: to execute a dummy analysis that does nothing,
 
     ./RazorRun lists/TTJets_List_Test.txt DummyAnalyzer
 
+The <options> are the following:
+     -d   --isData
+     -f=  --outputFile=<output filename> (optional)
+     -n=  --optionNumber=<option number> (optional)
+     -l=  --optionLabel=<option Label> (optional)
+     -h   --help
+
 ## Run the llp_analyzer
     ./RazorRun_T2 <list of input files> llp_vH -d=${isData} -n=${option} -f=${outputfile} -l=${label}
 
