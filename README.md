@@ -14,7 +14,9 @@ Setup
   
 Defining a new analysis
 -------------
-1) Copy analyzers/DummyAnalyzer.cc and replace each instance of "DummyAnalyzer" with the name of your desired analyzer.  Modify the body of the Analyze function to define your analyzer's behavior.  You do NOT need to write a header file for the analyzer class; the Makefile will generate one for you automatically.  
+1) Copy analyzers/DummyAnalyzer.cc and replace each instance of "DummyAnalyzer" with the name of your desired analyzer.
+   Modify the body of the Analyze function to define your analyzer's behavior.
+   DO NOT need to write a header file for the analyzer class; the Makefile will generate one for you automatically.  
 
 2) Do `make`.  This will create an executable `bin/Run<name of your analyzer>`. You can execute your analysis using this program directly or by calling it via the `RazorRun` script. 
 
