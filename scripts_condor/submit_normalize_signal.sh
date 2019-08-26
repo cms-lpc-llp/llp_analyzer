@@ -11,8 +11,8 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 mode=wH
-inputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v3/signals/${mode}/
-outputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v3/signals/${mode}/normalized
+inputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v7/signals/${mode}/
+outputDir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v7/signals/${mode}/normalized
 
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 
@@ -52,13 +52,13 @@ do
 	echo "Sample " ${sample}
 	analyzer=llp_vH
 	analyzerTag=Razor2016_80X
-	rm -f submit/${analyzer}_normalize_${mode}_${sample}_Job*.jdl
-	rm -f log/${analyzer}_${sample}_Job*
+	rm -f submit/${analyzer}_normalize_${mode}_${sample}*.jdl
+	rm -f log/${analyzer}_${sample}*
 
 	jdl_file=submit/${analyzer}_normalize_${mode}_${sample}.jdl
 	echo "Universe = vanilla" > ${jdl_file}
 	echo "Executable = ${job_script}" >> ${jdl_file}
-	echo "Arguments = wH ${sample} ${inputDir} ${outputDir}"  >> ${jdl_file}
+	echo "Arguments = ${mode} ${sample} ${inputDir} ${outputDir}"  >> ${jdl_file}
 
 	echo "Log = log/${analyzer}_normalize_${mode}_${sample}_PC.log" >> ${jdl_file}
 	echo "Output = log/${analyzer}_normalize_${mode}_${sample}_\$(Cluster).\$(Process).out" >> ${jdl_file}

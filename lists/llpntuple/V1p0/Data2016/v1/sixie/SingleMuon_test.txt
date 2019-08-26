@@ -1,0 +1,9 @@
+/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/Data2016/v1/sixie/SingleMuon/Run2_LLPNtupler_V1p0_Data2016_Run2016B-07Aug17_ver1-v1_v1_v1/190405_023018/0000/llp_ntupler_52.root
+/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/Data2016/v1/sixie/SingleMuon/Run2_LLPNtupler_V1p0_Data2016_Run2016B-07Aug17_ver1-v1_v1_v1/190405_023018/0000/llp_ntupler_53.root
+/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/Data2016/v1/sixie/SingleMuon/Run2_LLPNtupler_V1p0_Data2016_Run2016B-07Aug17_ver1-v1_v1_v1/190405_023018/0000/llp_ntupler_54.root
+/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/Data2016/v1/sixie/SingleMuon/Run2_LLPNtupler_V1p0_Data2016_Run2016B-07Aug17_ver1-v1_v1_v1/190405_023018/0000/llp_ntupler_55.root
+/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/Data2016/v1/sixie/SingleMuon/Run2_LLPNtupler_V1p0_Data2016_Run2016B-07Aug17_ver1-v1_v1_v1/190405_023018/0000/llp_ntupler_56.root
+/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/Data2016/v1/sixie/SingleMuon/Run2_LLPNtupler_V1p0_Data2016_Run2016B-07Aug17_ver1-v1_v1_v1/190405_023018/0000/llp_ntupler_57.root
+/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/Data2016/v1/sixie/SingleMuon/Run2_LLPNtupler_V1p0_Data2016_Run2016B-07Aug17_ver1-v1_v1_v1/190405_023018/0000/llp_ntupler_58.root
+/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/Data2016/v1/sixie/SingleMuon/Run2_LLPNtupler_V1p0_Data2016_Run2016B-07Aug17_ver1-v1_v1_v1/190405_023018/0000/llp_ntupler_59.root
+
