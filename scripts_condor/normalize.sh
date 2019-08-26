@@ -9,8 +9,11 @@ sample=$2
 inputDir=$3/${sample}/
 outputDir=$4
 currentDir=`pwd`
-homeDir=/data/christiw/
-runDir=${currentDir}/christiw_${mode}_${sample}/
+CMSSW_BASE=$5
+homeDir=$6
+user=${homeDir#*/data/}
+runDir=${currentDir}/${user}_${code_dir_suffix}/
+
 normalize_file=llp_${mode}_${sample}.txt
 rm -rf ${runDir}
 mkdir -p ${runDir}
@@ -19,7 +22,7 @@ if [ -f /cvmfs/cms.cern.ch/cmsset_default.sh ]
 then
 
 	#setup cmssw
-	cd ${homeDir}LLP/CMSSW_9_4_4/src/
+	cd ${CMSSW_BASE}/src/
 	workDir=`pwd`
 	echo "entering directory: ${workDir}"
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -30,7 +33,8 @@ then
 
 	cd ${runDir}
         echo "entering directory: ${runDir}"
-
+	
+	#hadd all the jobs for this sample
 	echo "/mnt/hadoop/${inputDir}/${sample}*_Job*.root"
 	hadd ${sample}.root /mnt/hadoop/${inputDir}/${sample}*_Job*.root
 
