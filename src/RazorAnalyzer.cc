@@ -29,6 +29,7 @@ void RazorAnalyzer::EnableAll(){
     EnableElectrons();
     EnableTaus();
     EnablePhotons();
+    EnableCSC();
     EnableJets();
     EnableFatJets();
     EnableMet();
@@ -45,6 +46,7 @@ void RazorAnalyzer::EnableAllWithEcalRechits(){
     EnableElectrons();
     EnableTaus();
     EnablePhotons();
+    EnableCSC();
     EnableJets();
     EnableFatJets();
     EnableMet();
@@ -399,6 +401,20 @@ void RazorAnalyzer::EnableMet(){
 void RazorAnalyzer::EnableRazor()
 {
 
+};
+
+void RazorAnalyzer::EnableCSC()
+{
+    fChain->SetBranchStatus("nCsc", 1);
+    fChain->SetBranchStatus("cscPhi", 1);
+    fChain->SetBranchStatus("cscEta", 1);
+    fChain->SetBranchStatus("cscX", 1);
+    fChain->SetBranchStatus("cscY", 1);
+    fChain->SetBranchStatus("cscZ", 1);
+    fChain->SetBranchStatus("cscNRecHits", 1);
+    fChain->SetBranchStatus("cscNRecHits_flag", 1);
+    fChain->SetBranchStatus("cscT", 1);
+    fChain->SetBranchStatus("cscChi2", 1);
 };
 
 void RazorAnalyzer::EnableMC(){
