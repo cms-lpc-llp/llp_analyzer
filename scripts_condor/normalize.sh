@@ -36,10 +36,10 @@ then
 
 
 	eval `scramv1 runtime -sh`
-	if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/xSections.dat ]
+	if [ -f $CMSSW_BASE/src/llp_analyzer/data/xSections.dat ]
 	then
 		mkdir -p data
-		cp $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/xSections.dat data/xSections.dat 
+		cp $CMSSW_BASE/src/llp_analyzer/data/xSections.dat data/xSections.dat 
 	else
 		echo "data/xSections.dat doesn't exist"
 
@@ -65,9 +65,9 @@ then
 	fi
 
 	#normalize
-	if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/NormalizeNtuple ]
+	if [ -f $CMSSW_BASE/src/llp_analyzer/NormalizeNtuple ]
         then
-                cp $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/NormalizeNtuple ./
+                cp $CMSSW_BASE/src/llp_analyzer/NormalizeNtuple ./
 	        ./NormalizeNtuple ${normalize_file} 1
 	else
 		echo "NormalizeNtuple not found"

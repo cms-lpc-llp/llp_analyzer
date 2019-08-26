@@ -34,9 +34,9 @@ void usage()
 {
   std::cerr << "Usage: Run%ANALYZER%  <input list>  [options]\n[options]:\n"
 	    << "-d  --isData\n"
-	    << "-f  --outputFile=<output filename> (optional)\n"
-	    << "-n  --optionNumber=<option number> (optional)\n"
-	    << "-l  --optionLabel=<option Label> (optional)\n" 
+	    << "-f=  --outputFile=<output filename> (optional)\n"
+	    << "-n=  --optionNumber=<option number> (optional)\n"
+	    << "-l=  --optionLabel=<option Label> (optional)\n" 
 	    << "-h  --help"
 	    << std::endl;
 };

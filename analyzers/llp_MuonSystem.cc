@@ -1,4 +1,4 @@
-#include "llp_vH.h"
+#include "llp_MuonSystem.h"
 #include "RazorHelper.h"
 #include "JetCorrectorParameters.h"
 #include "JetCorrectionUncertainty.h"
@@ -309,7 +309,7 @@ public:
 
 };
 
-void llp_vH::Analyze(bool isData, int options, string outputfilename, string analysisTag)
+void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, string analysisTag)
 {
   //initialization: create one TTree for each analysis box
   cout << "Initializing..." << endl;

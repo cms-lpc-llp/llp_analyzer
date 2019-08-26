@@ -1,6 +1,6 @@
 #!/bin/bash
 dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/MC_Summer16/v1/christiw/
-list_dir=/data/christiw/LLP/CMSSW_9_4_4/src/cms_lpc_llp/llp_analyzer/lists/llpntuple/V1p0/MC_Summer16/v1/christiw/
+list_dir=/data/christiw/LLP/CMSSW_9_4_4/src/llp_analyzer/lists/llpntuple/V1p0/MC_Summer16/v1/christiw/
 ev=100000
 
 for model in ppTohToSS1SS2_SS1Tobb_SS2Tobb_vh_withISR ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR
