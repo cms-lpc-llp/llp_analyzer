@@ -15,15 +15,16 @@ outputDirectory=$8
 code_dir_suffix=$9
 
 currentDir=`pwd`
-homeDir=/data/christiw/
-runDir=${currentDir}/christiw_${code_dir_suffix}/
+homeDir=$HOME/
+user=${HOME#*/data/}
+runDir=${currentDir}/${user}_${code_dir_suffix}/
 rm -rf ${runDir}
 mkdir -p ${runDir}
 
 if [ -f /cvmfs/cms.cern.ch/cmsset_default.sh ]
 then
 	#setup cmssw
-	cd ${homeDir}LLP/CMSSW_9_4_4/src/
+	cd $CMSSW_BASE/src/
 	workDir=`pwd`
 	echo "entering directory: ${workDir}"
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
