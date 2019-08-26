@@ -86,7 +86,8 @@ then
 		then
 			eval `scram unsetenv -sh`
 			gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}
-			gfal-copy -f ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
+			gfal-copy --checksum-mode=both -f ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
+
 		else
 			echo "output doesn't exist"
 		fi
