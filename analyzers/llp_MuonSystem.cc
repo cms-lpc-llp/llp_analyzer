@@ -13,6 +13,7 @@
 
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
+#define N_MAX_CSC 2000
 #define NTriggersMAX 601 //Number of trigger in the .dat file
 using namespace std;
 
@@ -63,15 +64,28 @@ struct largest_pt_jet
 } my_largest_pt_jet;
 
 
-class RazorLiteTree
+class LiteTreeMuonSystem
 {
 
 public:
   UInt_t  runNum, lumiSec, evtNum;
   UInt_t  category;
   UInt_t  npv, npu;
-  Float_t rho, weight;
-  Float_t met, metPhi;
+  float rho, weight;
+  float met, metPhi;
+
+  //csc
+  int           nCsc;
+  float         cscPhi[N_MAX_CSC];   //[nCsc]
+  float         cscEta[N_MAX_CSC];   //[nCsc]
+  float         cscX[N_MAX_CSC];   //[nCsc]
+  float         cscY[N_MAX_CSC];   //[nCsc]
+  float         cscZ[N_MAX_CSC];   //[nCsc]
+  float         cscNRecHits[N_MAX_CSC];   //[nCsc]
+  float         cscNRecHits_flag[N_MAX_CSC];   //[nCsc]
+  float         cscT[N_MAX_CSC];   //[nCsc]
+  float         cscChi2[N_MAX_CSC];   //[nCsc]
+
   //leptons
   int nLeptons;
   float lepE[N_MAX_LEPTONS];
@@ -120,12 +134,12 @@ public:
   TTree *tree_;
   TFile *f_;
 
-  RazorLiteTree()
+  LiteTreeMuonSystem()
   {
     InitVariables();
   };
 
-  ~RazorLiteTree()
+  ~LiteTreeMuonSystem()
   {
     if (f_) f_->Close();
   };
@@ -135,6 +149,20 @@ public:
     runNum=0; lumiSec=0; evtNum=0; category=0;
     npv=0; npu=0; rho=-1; weight=-1;
     met=-1; metPhi=-1;
+    //CSC
+    nCsc = 0;
+    for( int i = 0; i < N_MAX_CSC; i++ )
+    {
+      cscPhi[i] = -999;   //[nCsc]
+      cscEta[i] = -999;   //[nCsc]
+      cscX[i] = -999;   //[nCsc]
+      cscY[i] = -999;   //[nCsc]
+      cscZ[i] = -999;   //[nCsc]
+      cscNRecHits[i] = -999;   //[nCsc]
+      cscNRecHits_flag[i] = -999;   //[nCsc]
+      cscT[i] = -999;   //[nCsc]
+      cscChi2[i] = -999;   //[nCsc]
+    }
 
     //leptons
     nLeptons = 0;
@@ -185,14 +213,14 @@ public:
   {
     f_ = TFile::Open(file);
     assert(f_);
-    tree_ = dynamic_cast<TTree*>(f_->Get("vH"));
+    tree_ = dynamic_cast<TTree*>(f_->Get("MuonSystem"));
     InitTree();
     assert(tree_);
   };
 
   void CreateTree()
   {
-    tree_ = new TTree("vH","vH");
+    tree_ = new TTree("MuonSystem","MuonSystem");
     f_ = 0;
 
     tree_->Branch("runNum",      &runNum,     "runNum/i");      // event run number
@@ -205,6 +233,18 @@ public:
     tree_->Branch("rho",         &rho,        "rho/F");
     tree_->Branch("met",         &met,        "met/F");         // MET
     tree_->Branch("metPhi",      &metPhi,     "metPhi/F");      // phi(MET)
+    //CSC
+    tree_->Branch("nCsc",             &nCsc,            "nCsc/I");
+    tree_->Branch("cscPhi",           cscPhi,           "cscPhi[nCsc]/F");
+    tree_->Branch("cscEta",           cscEta,           "cscEta[nCsc]/F");
+    tree_->Branch("cscX",             cscX,             "cscX[nCsc]/F");
+    tree_->Branch("cscY",             cscY,             "cscY[nCsc]/F");
+    tree_->Branch("cscZ",             cscZ,             "cscZ[nCsc]/F");
+    tree_->Branch("cscNRecHits",      cscNRecHits,      "cscNRecHits[nCsc]/F");
+    tree_->Branch("cscNRecHits_flag", cscNRecHits_flag, "cscNRecHits_flag[nCsc]/F");
+    tree_->Branch("cscT",             cscT,             "cscT[nCsc]/F");
+    tree_->Branch("cscChi2",          cscChi2,          "cscChi2[nCsc]/F");
+    /*
     //leptons
     tree_->Branch("nLeptons",  &nLeptons, "nLeptons/I");
     tree_->Branch("lepE",      lepE,      "lepE[nLeptons]/F");
@@ -243,9 +283,7 @@ public:
     tree_->Branch("jetNeutralEMEnergyFraction",   jetNeutralEMEnergyFraction,   "jetNeutralEMEnergyFraction[nJets]/F");
     tree_->Branch("jetChargedHadronEnergyFraction",   jetChargedHadronEnergyFraction,   "jetChargedHadronEnergyFraction[nJets]/F");
     tree_->Branch("jetNeutralHadronEnergyFraction",   jetNeutralHadronEnergyFraction,   "jetNeutralHadronEnergyFraction[nJets]/F");
-
-
-
+    */
   };
 
   void InitTree()
@@ -263,6 +301,18 @@ public:
     tree_->SetBranchAddress("rho",         &rho);
     tree_->SetBranchAddress("met",         &met);
     tree_->SetBranchAddress("metPhi",      &metPhi);
+    //CSC
+    tree_->SetBranchAddress("nCsc",             &nCsc);
+    tree_->SetBranchAddress("cscPhi",           cscPhi);
+    tree_->SetBranchAddress("cscEta",           cscEta);
+    tree_->SetBranchAddress("cscX",             cscX);
+    tree_->SetBranchAddress("cscY",             cscY);
+    tree_->SetBranchAddress("cscZ",             cscZ);
+    tree_->SetBranchAddress("cscNRecHits",      cscNRecHits);
+    tree_->SetBranchAddress("cscNRecHits_flag", cscNRecHits_flag);
+    tree_->SetBranchAddress("cscT",             cscT);
+    tree_->SetBranchAddress("cscChi2",          cscChi2);
+    /*
     //Leptons
     tree_->SetBranchAddress("nLeptons",    &nLeptons);
     tree_->SetBranchAddress("lepE",        lepE);
@@ -304,7 +354,7 @@ public:
     // tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
     // triggers
     tree_->SetBranchAddress("HLTDecision",   HLTDecision);
-
+    */
   };
 
 };
@@ -394,12 +444,12 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
   //Set up Output File
   //-----------------------------------------------
   string outfilename = outputfilename;
-  if (outfilename == "") outfilename = "vH_Tree.root";
+  if (outfilename == "") outfilename = "MuonSystem_Tree.root";
   TFile *outFile = new TFile(outfilename.c_str(), "RECREATE");
-  RazorLiteTree *vH = new RazorLiteTree;
-  vH->CreateTree();
-  vH->tree_->SetAutoFlush(0);
-  vH->InitTree();
+  LiteTreeMuonSystem *MuonSystem = new LiteTreeMuonSystem;
+  MuonSystem->CreateTree();
+  MuonSystem->tree_->SetAutoFlush(0);
+  MuonSystem->InitTree();
   //histogram containing total number of processed events (for normalization)
   TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
   TH1F *generatedEvents = new TH1F("generatedEvents", "generatedEvents", 1, 1, 2);
@@ -463,32 +513,32 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
 
     //fill normalization histogram
     //std::cout << "deb0 " << jentry << std::endl;
-    vH->InitVariables();
+    MuonSystem->InitVariables();
     //std::cout << "deb1 " << jentry << std::endl;
     if (label =="bkg_wH"|| label == "bkg_zH"){
       if (isData)
       {
         NEvents->Fill(1);
-        vH->weight = 1;
+        MuonSystem->weight = 1;
       }
       else
       {
         //NEvents->Fill(genWeight);
-        //vH->weight = genWeight;
+        //MuonSystem->weight = genWeight;
         NEvents->Fill(1);
-        vH->weight = 1;
+        MuonSystem->weight = 1;
       }
 
     }
     else{
       generatedEvents->Fill(1);
-      vH->weight = 1;
+      MuonSystem->weight = 1;
     }
     //std::cout << "deb2 " << jentry << std::endl;
     //event info
-    vH->runNum = runNum;
-    vH->lumiSec = lumiNum;
-    vH->evtNum = eventNum;
+    MuonSystem->runNum = runNum;
+    MuonSystem->lumiSec = lumiNum;
+    MuonSystem->evtNum = eventNum;
     //std::cout << "deb3 " << jentry << std::endl;
     if (label == "zH" || label == "wH"){
       bool wzFlag = false;
@@ -510,18 +560,18 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     {
       if (BunchXing[i] == 0)
       {
-        vH->npu = nPUmean[i];
+        MuonSystem->npu = nPUmean[i];
       }
     }
     //get NPU
-    vH->npv = nPV;
-    vH->rho = fixedGridRhoFastjetAll;
-    vH->met = metType1Pt;
-    vH->metPhi = metType1Phi;
+    MuonSystem->npv = nPV;
+    MuonSystem->rho = fixedGridRhoFastjetAll;
+    MuonSystem->met = metType1Pt;
+    MuonSystem->metPhi = metType1Phi;
 
     //Triggers
     for(int i = 0; i < NTriggersMAX; i++){
-      vH->HLTDecision[i] = HLTDecision[i];
+      MuonSystem->HLTDecision[i] = HLTDecision[i];
     }
     bool triggered = false;
     for(int i = 0; i < NTrigger; i++)
@@ -535,6 +585,22 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //*************************************************************************
     //Start Object Selection
     //*************************************************************************
+    //CSC INFO
+    if( nCsc < 30 ) continue;//require at least 30 segments in the CSCs
+    MuonSystem->nCsc = nCsc;
+    for(int i = 0; i < nCsc; i++)
+    {
+      MuonSystem->cscPhi[i]           = cscPhi[i];   //[nCsc]
+      MuonSystem->cscEta[i]           = cscEta[i];   //[nCsc]
+      MuonSystem->cscX[i]             = cscX[i];   //[nCsc]
+      MuonSystem->cscY[i]             = cscY[i];   //[nCsc]
+      MuonSystem->cscZ[i]             = cscZ[i];   //[nCsc]
+      MuonSystem->cscNRecHits[i]      = cscNRecHits[i];   //[nCsc]
+      MuonSystem->cscNRecHits_flag[i] = cscNRecHits_flag[i];   //[nCsc]
+      MuonSystem->cscT[i]             = cscT[i];   //[nCsc]
+      MuonSystem->cscChi2[i]          = cscChi2[i];   //[nCsc]
+    }
+
     std::vector<leptons> Leptons;
     //-------------------------------
     //Muons
@@ -602,17 +668,17 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //std::cout << "deb7 " << jentry << std::endl;
     for ( auto &tmp : Leptons )
     {
-      vH->lepE[vH->nLeptons]      = tmp.lepton.E();
-      vH->lepPt[vH->nLeptons]     = tmp.lepton.Pt();
-      vH->lepEta[vH->nLeptons]    = tmp.lepton.Eta();
-      vH->lepPhi[vH->nLeptons]    = tmp.lepton.Phi();
-      vH->lepPdgId[vH->nLeptons]  = tmp.pdgId;
-      vH->lepDZ[vH->nLeptons]     = tmp.dZ;
-      vH->lepPassId[vH->nLeptons] = tmp.passId;
+      MuonSystem->lepE[MuonSystem->nLeptons]      = tmp.lepton.E();
+      MuonSystem->lepPt[MuonSystem->nLeptons]     = tmp.lepton.Pt();
+      MuonSystem->lepEta[MuonSystem->nLeptons]    = tmp.lepton.Eta();
+      MuonSystem->lepPhi[MuonSystem->nLeptons]    = tmp.lepton.Phi();
+      MuonSystem->lepPdgId[MuonSystem->nLeptons]  = tmp.pdgId;
+      MuonSystem->lepDZ[MuonSystem->nLeptons]     = tmp.dZ;
+      MuonSystem->lepPassId[MuonSystem->nLeptons] = tmp.passId;
 
 
-      // std::cout << "lepton pdg " << vH->lepPdgId[vH->nLeptons] << std::endl;
-      vH->nLeptons++;
+      // std::cout << "lepton pdg " << MuonSystem->lepPdgId[MuonSystem->nLeptons] << std::endl;
+      MuonSystem->nLeptons++;
     }
 
     //----------------
@@ -655,12 +721,12 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
 
     if (foundZ && fabs(ZMass-Z_MASS) < 30.0)
     {
-      vH->ZMass = ZMass;
-      vH->ZPt   = ZPt;
-      vH->ZEta  = ZCandidate.Eta();
-      vH->ZPhi  = ZCandidate.Phi();
-      vH->ZleptonIndex1 = ZCandidateLeptonIndex.first;
-      vH->ZleptonIndex2 = ZCandidateLeptonIndex.second;
+      MuonSystem->ZMass = ZMass;
+      MuonSystem->ZPt   = ZPt;
+      MuonSystem->ZEta  = ZCandidate.Eta();
+      MuonSystem->ZPhi  = ZCandidate.Phi();
+      MuonSystem->ZleptonIndex1 = ZCandidateLeptonIndex.first;
+      MuonSystem->ZleptonIndex2 = ZCandidateLeptonIndex.second;
 
       //match to gen leptons
       //if (abs(lep1Id) == 11) lep1IsPrompt = matchesGenElectron(lep1Eta,lep1Phi);
@@ -672,15 +738,18 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //require 1 lepton
     //------------------------
     // if (nMuons == 0 && !(nElectrons == 0)){
-    //   std::cout <<nMuons << "," << nElectrons <<  "," << vH->nLeptons <<  "," << vH->met << std::endl;
+    //   std::cout <<nMuons << "," << nElectrons <<  "," << MuonSystem->nLeptons <<  "," << MuonSystem->met << std::endl;
     // }
 
-    if ( Leptons.size() < nLepton_cut ) continue;
+    //if ( Leptons.size() < nLepton_cut ) continue;
     TLorentzVector met;
-    TLorentzVector visible = Leptons[0].lepton;
-    met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
-    vH->MT = GetMT(visible,met);
 
+    met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
+    if ( Leptons.size() > 0 )
+    {
+      TLorentzVector visible = Leptons[0].lepton;
+      MuonSystem->MT = GetMT(visible,met);
+    }
     // else{
     //   if ( Leptons.size() < 2 ) continue;
     //   if (!(foundZ && fabs(ZMass-Z_MASS) < 15.0 )) continue;
@@ -745,30 +814,30 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //-----------------------------
     //Require at least 2 jets
     //-----------------------------
-    if( Jets.size() < 2 ) continue;
+    //if( Jets.size() < 2 ) continue;
     if (triggered) trig_lepId_dijet->Fill(1);
     sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
     for ( auto &tmp : Jets )
     {
-      vH->jetE[vH->nJets] = tmp.jet.E();
-      vH->jetPt[vH->nJets] = tmp.jet.Pt();
-      vH->jetEta[vH->nJets] = tmp.jet.Eta();
-      vH->jetPhi[vH->nJets] = tmp.jet.Phi();
-      vH->jetTime[vH->nJets] = tmp.time;
-      vH->jetPassId[vH->nJets] = tmp.passId;
-      vH->ecalNRechits[vH->nJets] = tmp.ecalNRechits;
-      vH->ecalNRechits[vH->nJets] = tmp.ecalRechitE;
-      vH->jetChargedEMEnergyFraction[vH->nJets] = tmp.jetChargedEMEnergyFraction;
-      vH->jetNeutralEMEnergyFraction[vH->nJets] = tmp.jetNeutralEMEnergyFraction;
-      vH->jetChargedHadronEnergyFraction[vH->nJets] = tmp.jetChargedHadronEnergyFraction;
-      vH->jetNeutralHadronEnergyFraction[vH->nJets] = tmp.jetNeutralHadronEnergyFraction;
-      // std::cout <<tmp.time << "," <<tmp.ecalRechitE <<  "," << tmp.ecalNRechits << vH->nJets<<std::endl;
+      MuonSystem->jetE[MuonSystem->nJets] = tmp.jet.E();
+      MuonSystem->jetPt[MuonSystem->nJets] = tmp.jet.Pt();
+      MuonSystem->jetEta[MuonSystem->nJets] = tmp.jet.Eta();
+      MuonSystem->jetPhi[MuonSystem->nJets] = tmp.jet.Phi();
+      MuonSystem->jetTime[MuonSystem->nJets] = tmp.time;
+      MuonSystem->jetPassId[MuonSystem->nJets] = tmp.passId;
+      MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalNRechits;
+      MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalRechitE;
+      MuonSystem->jetChargedEMEnergyFraction[MuonSystem->nJets] = tmp.jetChargedEMEnergyFraction;
+      MuonSystem->jetNeutralEMEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralEMEnergyFraction;
+      MuonSystem->jetChargedHadronEnergyFraction[MuonSystem->nJets] = tmp.jetChargedHadronEnergyFraction;
+      MuonSystem->jetNeutralHadronEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralHadronEnergyFraction;
+      // std::cout <<tmp.time << "," <<tmp.ecalRechitE <<  "," << tmp.ecalNRechits << MuonSystem->nJets<<std::endl;
 
-      vH->nJets++;
+      MuonSystem->nJets++;
     }
-    //std::cout << "deb fill: " << vH->nLeptons << " " << jentry << endl;
-    vH->tree_->Fill();
+    //std::cout << "deb fill: " << MuonSystem->nLeptons << " " << jentry << endl;
+    MuonSystem->tree_->Fill();
   }
 
     cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
