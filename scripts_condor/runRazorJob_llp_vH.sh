@@ -13,17 +13,20 @@ jobnumber=$6
 outputfile=$7
 outputDirectory=$8
 code_dir_suffix=$9
-
+CMSSW_BASE=${10}
+homeDir=${11}
 currentDir=`pwd`
-homeDir=/data/christiw/
-runDir=${currentDir}/christiw_${code_dir_suffix}/
+user=${homeDir#*/data/}
+runDir=${currentDir}/${user}_${code_dir_suffix}/
+
 rm -rf ${runDir}
 mkdir -p ${runDir}
 
 if [ -f /cvmfs/cms.cern.ch/cmsset_default.sh ]
 then
 	#setup cmssw
-	cd ${homeDir}LLP/CMSSW_9_4_4/src/
+	#cd $CMSSW_BASE/src/
+	cd ${CMSSW_BASE}/src/
 	workDir=`pwd`
 	echo "entering directory: ${workDir}"
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -34,7 +37,8 @@ then
 
 	cd ${runDir}
 	echo "entering directory: ${runDir}"
-	if [ -f $CMSSW_BASE/src/llp_analyzer/RazorRun_T2 ]
+	echo "${CMSSW_BASE}/src/llp_analyzer/RazorRun_T2"
+	if [ -f ${CMSSW_BASE}/src/llp_analyzer/RazorRun_T2 ]
 	then
 		cp $CMSSW_BASE/src/llp_analyzer/RazorRun_T2 ./
 		mkdir -p JEC
@@ -47,6 +51,8 @@ then
 		fi	
 		#get grid proxy
 		export X509_USER_PROXY=${homeDir}x509_proxy
+		echo "${homeDir}x509_proxy"
+		voms-proxy-info
 
 		#copy pedestal file
                 if [ ${isData} == "yes" ]
@@ -86,12 +92,14 @@ then
 		then
 			eval `scram unsetenv -sh`
 			gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}
-			gfal-copy --checksum-mode=both -f ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
-
+			gfal-copy -f --checksum-mode=both ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
+			#mkdir -p ${outputDirectory}
+			#cp ${outputfile} ${outputDirectory}/${outputfile}
 		else
 			echo "output doesn't exist"
 		fi
 		if [ -f /mnt/hadoop/${outputDirectory}/${outputfile} ]
+		#if [ -f /${outputDirectory}/${outputfile} ]
 		then
 			echo "ZZZZAAAA ============ good news, job finished successfully "
 		else
