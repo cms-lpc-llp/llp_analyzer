@@ -46,7 +46,7 @@ ppTohToSS1SS2_SS1Tobb_SS2Toveve_vh_withISR_mh500_mx225_pl500_ev100000
 
 do
 	echo "Sample " ${sample}
-	inputfilelist=/src/cms_lpc_llp/llp_analyzer/lists/llpntuple/V1p0/MC_Summer16/v1/christiw/${sample}.txt
+	inputfilelist=/src/llp_analyzer/lists/llpntuple/V1p0/MC_Summer16/v1/christiw/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
 	maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 	echo "new sample is ${sample}"
@@ -66,7 +66,7 @@ do
 		jdl_file=submit/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}.jdl
 		echo "Universe = vanilla" > ${jdl_file}
 		echo "Executable = ${job_script}" >> ${jdl_file}
-		echo "Arguments = ${analyzer} ${inputfilelist} no 11 ${filesPerJob} ${jobnumber} ${sample}_Job${jobnumber}_Of_${maxjob}.root /store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v3/signals/wH/${sample} ${analyzerTag} " >> ${jdl_file}
+		echo "Arguments = ${analyzer} ${inputfilelist} no 11 ${filesPerJob} ${jobnumber} ${sample}_Job${jobnumber}_Of_${maxjob}.root /store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v7/signals/wH/${sample} ${analyzerTag} " >> ${jdl_file}
 
 		# option should always be 1, when running condor
 		echo "Log = log/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}_PC.log" >> ${jdl_file}

@@ -9,8 +9,11 @@ sample=$2
 inputDir=$3/${sample}/
 outputDir=$4
 currentDir=`pwd`
-homeDir=/data/christiw/
-runDir=${currentDir}/christiw_${mode}_${sample}/
+CMSSW_BASE=$5
+homeDir=$6
+user=${homeDir#*/data/}
+runDir=${currentDir}/${user}_${code_dir_suffix}/
+
 normalize_file=llp_${mode}_${sample}.txt
 rm -rf ${runDir}
 mkdir -p ${runDir}
@@ -19,7 +22,7 @@ if [ -f /cvmfs/cms.cern.ch/cmsset_default.sh ]
 then
 
 	#setup cmssw
-	cd ${homeDir}LLP/CMSSW_9_4_4/src/
+	cd ${CMSSW_BASE}/src/
 	workDir=`pwd`
 	echo "entering directory: ${workDir}"
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -30,16 +33,17 @@ then
 
 	cd ${runDir}
         echo "entering directory: ${runDir}"
-
+	
+	#hadd all the jobs for this sample
 	echo "/mnt/hadoop/${inputDir}/${sample}*_Job*.root"
 	hadd ${sample}.root /mnt/hadoop/${inputDir}/${sample}*_Job*.root
 
 
 	eval `scramv1 runtime -sh`
-	if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/xSections.dat ]
+	if [ -f $CMSSW_BASE/src/llp_analyzer/data/xSections.dat ]
 	then
 		mkdir -p data
-		cp $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/xSections.dat data/xSections.dat 
+		cp $CMSSW_BASE/src/llp_analyzer/data/xSections.dat data/xSections.dat 
 	else
 		echo "data/xSections.dat doesn't exist"
 
@@ -65,9 +69,9 @@ then
 	fi
 
 	#normalize
-	if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/NormalizeNtuple ]
+	if [ -f $CMSSW_BASE/src/llp_analyzer/NormalizeNtuple ]
         then
-                cp $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/NormalizeNtuple ./
+                cp $CMSSW_BASE/src/llp_analyzer/NormalizeNtuple ./
 	        ./NormalizeNtuple ${normalize_file} 1
 	else
 		echo "NormalizeNtuple not found"
@@ -80,7 +84,7 @@ then
 	# copy normalized file back to hadoop
 	eval `scram unsetenv -sh`
         gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDir}
-	gfal-copy -f ${runDir}/${sample}_1pb_weighted.root gsiftp://transfer.ultralight.org//${outputDir}/${sample}_1pb_weighted.root
+	gfal-copy -f --checksum-mode=both ${runDir}/${sample}_1pb_weighted.root gsiftp://transfer.ultralight.org//${outputDir}/${sample}_1pb_weighted.root
 	
 
 	if [ -f /mnt/hadoop/${outputDir}/${sample}_1pb_weighted.root ]

@@ -225,6 +225,35 @@ public :
    std::vector<bool>    *ecalRechit_GainSwitch1;
    std::vector<bool>    *ecalRechit_GainSwitch6;
    std::vector<float>   *ecalRechit_transpCorr;
+   Int_t           nCsc;
+   Float_t         cscPhi[2000];   //[nCsc]
+   Float_t         cscEta[2000];   //[nCsc]
+   Float_t         cscX[2000];   //[nCsc]
+   Float_t         cscY[2000];   //[nCsc]
+   Float_t         cscZ[2000];   //[nCsc]
+   Float_t         cscNRecHits[2000];   //[nCsc]
+   Float_t         cscNRecHits_flag[2000];   //[nCsc]
+   Float_t         cscT[2000];   //[nCsc]
+   Float_t         cscChi2[2000];   //[nCsc]
+   Int_t           nRpc;
+   Float_t         rpcPhi[2000];   //[nRpc]
+   Float_t         rpcEta[2000];   //[nRpc]
+   Float_t         rpcX[2000];   //[nRpc]
+   Float_t         rpcY[2000];   //[nRpc]
+   Float_t         rpcZ[2000];   //[nRpc]
+   Float_t         rpcT[2000];   //[nRpc]
+   Float_t         rpcTError[2000];   //[nRpc]
+   Int_t           nDt;
+   Float_t         dtPhi[2000];   //[nDt]
+   Float_t         dtEta[2000];   //[nDt]
+   Float_t         dtX[2000];   //[nDt]
+   Float_t         dtY[2000];   //[nDt]
+   Float_t         dtZ[2000];   //[nDt]
+   Float_t         dtDirX[2000];   //[nDt]
+   Float_t         dtDirY[2000];   //[nDt]
+   Float_t         dtDirZ[2000];   //[nDt]
+   Float_t         dtT[2000];   //[nDt]
+   Float_t         dtTError[2000];   //[nDt]
    Int_t           nJets;
    Float_t         jetE[2000];   //[nJets]
    Float_t         jetPt[2000];   //[nJets]
@@ -556,6 +585,35 @@ public :
    TBranch        *b_ecalRechit_GainSwitch1;   //!
    TBranch        *b_ecalRechit_GainSwitch6;   //!
    TBranch        *b_ecalRechit_transpCorr;   //!
+   TBranch        *b_nCsc;   //!
+   TBranch        *b_cscPhi;   //!
+   TBranch        *b_cscEta;   //!
+   TBranch        *b_cscX;   //!
+   TBranch        *b_cscY;   //!
+   TBranch        *b_cscZ;   //!
+   TBranch        *b_cscNRecHits;   //!
+   TBranch        *b_cscNRecHits_flag;   //!
+   TBranch        *b_cscT;   //!
+   TBranch        *b_cscChi2;   //!
+   TBranch        *b_nRpc;   //!
+   TBranch        *b_rpcPhi;   //!
+   TBranch        *b_rpcEta;   //!
+   TBranch        *b_rpcX;   //!
+   TBranch        *b_rpcY;   //!
+   TBranch        *b_rpcZ;   //!
+   TBranch        *b_rpcT;   //!
+   TBranch        *b_rpcTError;   //!
+   TBranch        *b_nDt;   //!
+   TBranch        *b_dtPhi;   //!
+   TBranch        *b_dtEta;   //!
+   TBranch        *b_dtX;   //!
+   TBranch        *b_dtY;   //!
+   TBranch        *b_dtZ;   //!
+   TBranch        *b_dtDirX;   //!
+   TBranch        *b_dtDirY;   //!
+   TBranch        *b_dtDirZ;   //!
+   TBranch        *b_dtT;   //!
+   TBranch        *b_dtTError;   //!
    TBranch        *b_nJets;   //!
    TBranch        *b_jetE;   //!
    TBranch        *b_jetPt;   //!
@@ -974,6 +1032,35 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("ecalRechit_GainSwitch1", &ecalRechit_GainSwitch1, &b_ecalRechit_GainSwitch1);
    fChain->SetBranchAddress("ecalRechit_GainSwitch6", &ecalRechit_GainSwitch6, &b_ecalRechit_GainSwitch6);
    fChain->SetBranchAddress("ecalRechit_transpCorr", &ecalRechit_transpCorr, &b_ecalRechit_transpCorr);
+   fChain->SetBranchAddress("nCsc", &nCsc, &b_nCsc);
+   fChain->SetBranchAddress("cscPhi", cscPhi, &b_cscPhi);
+   fChain->SetBranchAddress("cscEta", cscEta, &b_cscEta);
+   fChain->SetBranchAddress("cscX", cscX, &b_cscX);
+   fChain->SetBranchAddress("cscY", cscY, &b_cscY);
+   fChain->SetBranchAddress("cscZ", cscZ, &b_cscZ);
+   fChain->SetBranchAddress("cscNRecHits", cscNRecHits, &b_cscNRecHits);
+   fChain->SetBranchAddress("cscNRecHits_flag", cscNRecHits_flag, &b_cscNRecHits_flag);
+   fChain->SetBranchAddress("cscT", cscT, &b_cscT);
+   fChain->SetBranchAddress("cscChi2", cscChi2, &b_cscChi2);
+   fChain->SetBranchAddress("nRpc", &nRpc, &b_nRpc);
+   fChain->SetBranchAddress("rpcPhi", rpcPhi, &b_rpcPhi);
+   fChain->SetBranchAddress("rpcEta", rpcEta, &b_rpcEta);
+   fChain->SetBranchAddress("rpcX", rpcX, &b_rpcX);
+   fChain->SetBranchAddress("rpcY", rpcY, &b_rpcY);
+   fChain->SetBranchAddress("rpcZ", rpcZ, &b_rpcZ);
+   fChain->SetBranchAddress("rpcT", rpcT, &b_rpcT);
+   fChain->SetBranchAddress("rpcTError", rpcTError, &b_rpcTError);
+   fChain->SetBranchAddress("nDt", &nDt, &b_nDt);
+   fChain->SetBranchAddress("dtPhi", dtPhi, &b_dtPhi);
+   fChain->SetBranchAddress("dtEta", dtEta, &b_dtEta);
+   fChain->SetBranchAddress("dtX", dtX, &b_dtX);
+   fChain->SetBranchAddress("dtY", dtY, &b_dtY);
+   fChain->SetBranchAddress("dtZ", dtZ, &b_dtZ);
+   fChain->SetBranchAddress("dtDirX", dtDirX, &b_dtDirX);
+   fChain->SetBranchAddress("dtDirY", dtDirY, &b_dtDirY);
+   fChain->SetBranchAddress("dtDirZ", dtDirZ, &b_dtDirZ);
+   fChain->SetBranchAddress("dtT", dtT, &b_dtT);
+   fChain->SetBranchAddress("dtTError", dtTError, &b_dtTError);
    fChain->SetBranchAddress("nJets", &nJets, &b_nJets);
    fChain->SetBranchAddress("jetE", jetE, &b_jetE);
    fChain->SetBranchAddress("jetPt", jetPt, &b_jetPt);
