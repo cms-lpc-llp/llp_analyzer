@@ -20,7 +20,7 @@ fi
 eval `scram unsetenv -sh`
 LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
 
-gfal-copy --checksum-mode=both $outputRoot gsiftp://transfer.ultralight.org/${dir}/$outputRoot
+gfal-copy -f --checksum-mode=both $outputRoot gsiftp://transfer.ultralight.org/${dir}/$outputRoot
 
 if [ -f /mnt/hadoop/$dir/$outputRoot ]
 then
