@@ -15,6 +15,7 @@
 #define N_MAX_JETS 100
 #define N_MAX_CSC 2000
 #define NTriggersMAX 601 //Number of trigger in the .dat file
+#define N_CSC_CUT 20
 using namespace std;
 
 struct greater_than_pt
@@ -73,6 +74,7 @@ public:
   UInt_t  npv, npu;
   float rho, weight;
   float met, metPhi;
+  int lepGenId;
 
   //csc
   int           nCsc;
@@ -83,9 +85,34 @@ public:
   float         cscZ[N_MAX_CSC];   //[nCsc]
   float         cscNRecHits[N_MAX_CSC];   //[nCsc]
   float         cscNRecHits_flag[N_MAX_CSC];   //[nCsc]
+  float         cscNRecHits_jetveto0p4[N_MAX_CSC];   //[nCsc]
+  float         cscNRecHits_jetveto0p8[N_MAX_CSC];   //[nCsc]
   float         cscT[N_MAX_CSC];   //[nCsc]
   float         cscChi2[N_MAX_CSC];   //[nCsc]
 
+  int           nCsc_Me11Veto;
+  int           nCsc_Me12Veto;
+  int           nCsc_Me1112Veto;
+
+  int           nCsc_recoJetVeto0p4;
+  int           nCsc_recoJetVeto0p8;
+  int           nCsc_JetLepVeto0p4;
+  int           nCsc_JetLepVeto0p8;
+  int           nCsc_recoJetVeto0p4_Me11Veto;
+  int           nCsc_recoJetVeto0p8_Me11Veto;
+  int           nCsc_JetLepVeto0p4_Me11Veto;
+  int           nCsc_JetLepVeto0p8_Me11Veto;
+  int           nCsc_recoJetVeto0p4_Me1112Veto;
+  int           nCsc_recoJetVeto0p8_Me1112Veto;
+  int           nCsc_JetLepVeto0p4_Me1112Veto;
+  int           nCsc_JetLepVeto0p8_Me1112Veto;
+  bool          event_recoJetVeto0p4;
+  bool          event_recoJetVeto0p8;
+  bool          event_JetLepVeto0p4;
+  bool          event_JetLepVeto0p8;
+  bool          event_Me1112Veto;
+  bool          event_Me11Veto;
+  bool          event_Me12Veto;
   //leptons
   int nLeptons;
   float lepE[N_MAX_LEPTONS];
@@ -149,8 +176,32 @@ public:
     runNum=0; lumiSec=0; evtNum=0; category=0;
     npv=0; npu=0; rho=-1; weight=-1;
     met=-1; metPhi=-1;
+    lepGenId = 0;
     //CSC
     nCsc = 0;
+    nCsc_Me11Veto = 0;
+    nCsc_Me12Veto = 0;
+    nCsc_Me1112Veto = 0;
+    nCsc_recoJetVeto0p4 = 0;
+    nCsc_recoJetVeto0p8 = 0;
+    nCsc_JetLepVeto0p4 = 0;
+    nCsc_JetLepVeto0p8 = 0;
+    nCsc_recoJetVeto0p4_Me11Veto = 0;
+    nCsc_recoJetVeto0p8_Me11Veto = 0;
+    nCsc_JetLepVeto0p4_Me11Veto = 0;
+    nCsc_JetLepVeto0p8_Me11Veto = 0;
+    nCsc_recoJetVeto0p4_Me1112Veto = 0;
+    nCsc_recoJetVeto0p8_Me1112Veto = 0;
+    nCsc_JetLepVeto0p4_Me1112Veto = 0;
+    nCsc_JetLepVeto0p8_Me1112Veto = 0;
+
+    event_recoJetVeto0p4 = true;
+    event_recoJetVeto0p8 = true;
+    event_JetLepVeto0p4 = true;
+    event_JetLepVeto0p8 = true;
+    event_Me11Veto = true;
+    event_Me12Veto = true;
+    event_Me1112Veto = true;
     for( int i = 0; i < N_MAX_CSC; i++ )
     {
       cscPhi[i] = -999;   //[nCsc]
@@ -233,8 +284,40 @@ public:
     tree_->Branch("rho",         &rho,        "rho/F");
     tree_->Branch("met",         &met,        "met/F");         // MET
     tree_->Branch("metPhi",      &metPhi,     "metPhi/F");      // phi(MET)
+    tree_->Branch("lepGenId",      &lepGenId,     "lepGenId/I");      // phi(MET)
+
     //CSC
-    tree_->Branch("nCsc",             &nCsc,            "nCsc/I");
+    tree_->Branch("nCsc",             &nCsc, "nCsc/I");
+    tree_->Branch("nCsc_Me11Veto",             &nCsc_Me11Veto,"nCsc_Me11Veto/I");
+    tree_->Branch("nCsc_Me12Veto",             &nCsc_Me12Veto,"nCsc_Me12Veto/I");
+    tree_->Branch("nCsc_Me1112Veto",             &nCsc_Me1112Veto,"nCsc_Me1112Veto/I");
+
+    tree_->Branch("nCsc_recoJetVeto0p4",             &nCsc_recoJetVeto0p4,"nCsc_recoJetVeto0p4/I");
+    tree_->Branch("nCsc_recoJetVeto0p8",             &nCsc_recoJetVeto0p8, "nCsc_recoJetVeto0p8/I");
+    tree_->Branch("nCsc_JetLepVeto0p4",             &nCsc_JetLepVeto0p4, "nCsc_JetLepVeto0p4/I");
+    tree_->Branch("nCsc_JetLepVeto0p8",             &nCsc_JetLepVeto0p8, "nCsc_JetLepVeto0p8/I");
+
+    tree_->Branch("nCsc_recoJetVeto0p4_Me11Veto",             &nCsc_recoJetVeto0p4_Me11Veto, "nCsc_recoJetVeto0p4_Me11Veto/I");
+    tree_->Branch("nCsc_recoJetVeto0p8_Me11Veto",             &nCsc_recoJetVeto0p8_Me11Veto, "nCsc_recoJetVeto0p8_Me11Veto/I");
+    tree_->Branch("nCsc_JetLepVeto0p4_Me11Veto",             &nCsc_JetLepVeto0p4_Me11Veto, "nCsc_JetLepVeto0p4_Me11Veto/I");
+    tree_->Branch("nCsc_JetLepVeto0p8_Me11Veto",             &nCsc_JetLepVeto0p8_Me11Veto, "nCsc_JetLepVeto0p8_Me11Veto/I");
+
+    tree_->Branch("nCsc_recoJetVeto0p4_Me1112Veto",             &nCsc_recoJetVeto0p4_Me1112Veto, "nCsc_recoJetVeto0p4_Me1112Veto/I");
+    tree_->Branch("nCsc_recoJetVeto0p8_Me1112Veto",             &nCsc_recoJetVeto0p8_Me1112Veto, "nCsc_recoJetVeto0p8_Me1112Veto/I");
+    tree_->Branch("nCsc_JetLepVeto0p4_Me1112Veto",             &nCsc_JetLepVeto0p4_Me1112Veto, "nCsc_JetLepVeto0p4_Me1112Veto/I");
+    tree_->Branch("nCsc_JetLepVeto0p8_Me1112Veto",             &nCsc_JetLepVeto0p8_Me1112Veto, "nCsc_JetLepVeto0p8_Me1112Veto/I");
+
+
+    tree_->Branch("event_recoJetVeto0p4",             &event_recoJetVeto0p4, "event_recoJetVeto0p4/O");
+    tree_->Branch("event_recoJetVeto0p8",             &event_recoJetVeto0p8, "event_recoJetVeto0p8/O");
+    tree_->Branch("event_JetLepVeto0p4",             &event_JetLepVeto0p4, "event_JetLepVeto0p4/O");
+    tree_->Branch("event_JetLepVeto0p8",             &event_JetLepVeto0p8, "event_JetLepVeto0p8/O");
+
+    tree_->Branch("event_Me11Veto",             &event_Me11Veto,"event_Me11Veto/O");
+    tree_->Branch("event_Me12Veto",             &event_Me12Veto,"event_Me12Veto/O");
+    tree_->Branch("event_Me1112Veto",             &event_Me1112Veto,"event_Me1112Veto/O");
+
+
     tree_->Branch("cscPhi",           cscPhi,           "cscPhi[nCsc]/F");
     tree_->Branch("cscEta",           cscEta,           "cscEta[nCsc]/F");
     tree_->Branch("cscX",             cscX,             "cscX[nCsc]/F");
@@ -244,7 +327,7 @@ public:
     tree_->Branch("cscNRecHits_flag", cscNRecHits_flag, "cscNRecHits_flag[nCsc]/F");
     tree_->Branch("cscT",             cscT,             "cscT[nCsc]/F");
     tree_->Branch("cscChi2",          cscChi2,          "cscChi2[nCsc]/F");
-    /*
+
     //leptons
     tree_->Branch("nLeptons",  &nLeptons, "nLeptons/I");
     tree_->Branch("lepE",      lepE,      "lepE[nLeptons]/F");
@@ -257,7 +340,7 @@ public:
     // tree_->Branch("lepLoosePassId", lepLoosePassId, "lepLoosePassId[nLeptons]/O");
     // tree_->Branch("lepMediumPassId", lepMediumPassId, "lepMediumPassId[nLeptons]/O");
     // tree_->Branch("lepTightPassId", lepTightPassId, "lepTightPassId[nLeptons]/O");
-
+    /*
     //Z-candidate
     tree_->Branch("MT",      &MT,  "MT/F");
     tree_->Branch("ZMass",      &ZMass,  "ZMass/F");
@@ -266,24 +349,24 @@ public:
     tree_->Branch("ZPhi",       &ZPhi,   "ZPhi/F");
     tree_->Branch("ZleptonIndex1", &ZleptonIndex1, "ZleptonIndex1/I");
     tree_->Branch("ZleptonIndex2", &ZleptonIndex2, "ZleptonIndex2/I");
+    */
     //jets
     tree_->Branch("nJets",     &nJets,    "nJets/I");
     tree_->Branch("jetE",      jetE,      "jetE[nJets]/F");
     tree_->Branch("jetPt",     jetPt,     "jetPt[nJets]/F");
     tree_->Branch("jetEta",    jetEta,    "jetEta[nJets]/F");
     tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
-    tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
+    // tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
     tree_->Branch("jetPassId", jetPassId, "jetPassId[nJets]/O");
-    tree_->Branch("ecalNRechits",   ecalNRechits,   "ecalNRechits[nJets]/F");
-    tree_->Branch("ecalRechitE", ecalRechitE, "ecalRechitE[nJets]/F");
+    // tree_->Branch("ecalNRechits",   ecalNRechits,   "ecalNRechits[nJets]/F");
+    // tree_->Branch("ecalRechitE", ecalRechitE, "ecalRechitE[nJets]/F");
     // tree_->Branch("jetLoosePassId", jetLoosePassId, "jetLoosePassId[nJets]/O");
     // tree_->Branch("jetTightPassId", jetTightPassId, "jetTightPassId[nJets]/O");
     tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[601]/O"); //hardcoded
-    tree_->Branch("jetChargedEMEnergyFraction",   jetChargedEMEnergyFraction,   "jetChargedEMEnergyFraction[nJets]/F");
-    tree_->Branch("jetNeutralEMEnergyFraction",   jetNeutralEMEnergyFraction,   "jetNeutralEMEnergyFraction[nJets]/F");
-    tree_->Branch("jetChargedHadronEnergyFraction",   jetChargedHadronEnergyFraction,   "jetChargedHadronEnergyFraction[nJets]/F");
-    tree_->Branch("jetNeutralHadronEnergyFraction",   jetNeutralHadronEnergyFraction,   "jetNeutralHadronEnergyFraction[nJets]/F");
-    */
+    // tree_->Branch("jetChargedEMEnergyFraction",   jetChargedEMEnergyFraction,   "jetChargedEMEnergyFraction[nJets]/F");
+    // tree_->Branch("jetNeutralEMEnergyFraction",   jetNeutralEMEnergyFraction,   "jetNeutralEMEnergyFraction[nJets]/F");
+    // tree_->Branch("jetChargedHadronEnergyFraction",   jetChargedHadronEnergyFraction,   "jetChargedHadronEnergyFraction[nJets]/F");
+    // tree_->Branch("jetNeutralHadronEnergyFraction",   jetNeutralHadronEnergyFraction,   "jetNeutralHadronEnergyFraction[nJets]/F");
   };
 
   void InitTree()
@@ -301,8 +384,40 @@ public:
     tree_->SetBranchAddress("rho",         &rho);
     tree_->SetBranchAddress("met",         &met);
     tree_->SetBranchAddress("metPhi",      &metPhi);
+    tree_->SetBranchAddress("lepGenId",      &lepGenId);
     //CSC
     tree_->SetBranchAddress("nCsc",             &nCsc);
+    tree_->SetBranchAddress("nCsc_Me11Veto",             &nCsc_Me11Veto);
+    tree_->SetBranchAddress("nCsc_Me12Veto",             &nCsc_Me12Veto);
+    tree_->SetBranchAddress("nCsc_Me1112Veto",             &nCsc_Me1112Veto);
+
+    tree_->SetBranchAddress("nCsc_recoJetVeto0p4",             &nCsc_recoJetVeto0p4);
+    tree_->SetBranchAddress("nCsc_recoJetVeto0p8",             &nCsc_recoJetVeto0p8);
+    tree_->SetBranchAddress("nCsc_JetLepVeto0p4",             &nCsc_JetLepVeto0p4);
+    tree_->SetBranchAddress("nCsc_JetLepVeto0p8",             &nCsc_JetLepVeto0p8);
+
+    tree_->SetBranchAddress("nCsc_recoJetVeto0p4_Me11Veto",             &nCsc_recoJetVeto0p4_Me11Veto);
+    tree_->SetBranchAddress("nCsc_recoJetVeto0p8_Me11Veto",             &nCsc_recoJetVeto0p8_Me11Veto);
+    tree_->SetBranchAddress("nCsc_JetLepVeto0p4_Me11Veto",             &nCsc_JetLepVeto0p4_Me11Veto);
+    tree_->SetBranchAddress("nCsc_JetLepVeto0p8_Me11Veto",             &nCsc_JetLepVeto0p8_Me11Veto);
+
+    tree_->SetBranchAddress("nCsc_recoJetVeto0p4_Me1112Veto",             &nCsc_recoJetVeto0p4_Me1112Veto);
+    tree_->SetBranchAddress("nCsc_recoJetVeto0p8_Me1112Veto",             &nCsc_recoJetVeto0p8_Me1112Veto);
+    tree_->SetBranchAddress("nCsc_JetLepVeto0p4_Me1112Veto",             &nCsc_JetLepVeto0p4_Me1112Veto);
+    tree_->SetBranchAddress("nCsc_JetLepVeto0p8_Me1112Veto",             &nCsc_JetLepVeto0p8_Me1112Veto);
+
+
+    tree_->SetBranchAddress("event_recoJetVeto0p4",             &event_recoJetVeto0p4);
+    tree_->SetBranchAddress("event_recoJetVeto0p8",             &event_recoJetVeto0p8);
+    tree_->SetBranchAddress("event_JetLepVeto0p4",             &event_JetLepVeto0p4);
+    tree_->SetBranchAddress("event_JetLepVeto0p8",             &event_JetLepVeto0p8);
+
+    tree_->SetBranchAddress("event_Me11Veto",             &event_Me11Veto);
+    tree_->SetBranchAddress("event_Me12Veto",             &event_Me12Veto);
+    tree_->SetBranchAddress("event_Me1112Veto",             &event_Me1112Veto);
+
+
+
     tree_->SetBranchAddress("cscPhi",           cscPhi);
     tree_->SetBranchAddress("cscEta",           cscEta);
     tree_->SetBranchAddress("cscX",             cscX);
@@ -312,7 +427,6 @@ public:
     tree_->SetBranchAddress("cscNRecHits_flag", cscNRecHits_flag);
     tree_->SetBranchAddress("cscT",             cscT);
     tree_->SetBranchAddress("cscChi2",          cscChi2);
-    /*
     //Leptons
     tree_->SetBranchAddress("nLeptons",    &nLeptons);
     tree_->SetBranchAddress("lepE",        lepE);
@@ -325,7 +439,7 @@ public:
     // tree_->SetBranchAddress("lepMediumPassId", lepMediumPassId);
     // tree_->SetBranchAddress("lepTightPassId", lepTightPassId);
     tree_->SetBranchAddress("lepPassId", lepPassId);
-
+    /*
     //Z-candidate
     tree_->SetBranchAddress("ZMass",       &ZMass);
     tree_->SetBranchAddress("ZPt",         &ZPt);
@@ -334,27 +448,26 @@ public:
     tree_->SetBranchAddress("ZleptonIndex1", &ZleptonIndex1);
     tree_->SetBranchAddress("ZleptonIndex2", &ZleptonIndex2);
     tree_->SetBranchAddress("MT", &MT);
-
+    */
     //jets
     tree_->SetBranchAddress("nJets",     &nJets);
     tree_->SetBranchAddress("jetE",      jetE);
     tree_->SetBranchAddress("jetPt",     jetPt);
     tree_->SetBranchAddress("jetEta",    jetEta);
     tree_->SetBranchAddress("jetPhi",    jetPhi);
-    tree_->SetBranchAddress("jetTime",   jetTime);
+    // tree_->SetBranchAddress("jetTime",   jetTime);
     tree_->SetBranchAddress("jetPassId", jetPassId);
-    tree_->SetBranchAddress("ecalNRechits",   ecalNRechits);
-    tree_->SetBranchAddress("ecalRechitE", ecalRechitE);
-    tree_->SetBranchAddress("jetChargedEMEnergyFraction", jetChargedEMEnergyFraction);
-    tree_->SetBranchAddress("jetNeutralEMEnergyFraction", jetNeutralEMEnergyFraction);
-    tree_->SetBranchAddress("jetChargedHadronEnergyFraction", jetChargedHadronEnergyFraction);
-    tree_->SetBranchAddress("jetNeutralHadronEnergyFraction", jetNeutralHadronEnergyFraction);
+    // tree_->SetBranchAddress("ecalNRechits",   ecalNRechits);
+    // tree_->SetBranchAddress("ecalRechitE", ecalRechitE);
+    // tree_->SetBranchAddress("jetChargedEMEnergyFraction", jetChargedEMEnergyFraction);
+    // tree_->SetBranchAddress("jetNeutralEMEnergyFraction", jetNeutralEMEnergyFraction);
+    // tree_->SetBranchAddress("jetChargedHadronEnergyFraction", jetChargedHadronEnergyFraction);
+    // tree_->SetBranchAddress("jetNeutralHadronEnergyFraction", jetNeutralHadronEnergyFraction);
 
     // tree_->SetBranchAddress("jetLoosePassId", jetLoosePassId);
     // tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
     // triggers
     tree_->SetBranchAddress("HLTDecision",   HLTDecision);
-    */
   };
 
 };
@@ -531,6 +644,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
 
     }
     else{
+      NEvents->Fill(1);
       generatedEvents->Fill(1);
       MuonSystem->weight = 1;
     }
@@ -540,21 +654,20 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     MuonSystem->lumiSec = lumiNum;
     MuonSystem->evtNum = eventNum;
     //std::cout << "deb3 " << jentry << std::endl;
-    if (label == "zH" || label == "wH"){
-      bool wzFlag = false;
-      for (int i=0; i < nGenParticle; ++i)
-      {
-        // if (abs(gParticleId[i]) == wzId && gParticleStatus[i] == 22)
-        // {
-        if (abs(gParticleId[i]) == 13 && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
-        { // choosing only the W->munu events
-          wzFlag = true;
-        }
 
+    bool wzFlag = false;
+    for (int i=0; i < nGenParticle; ++i)
+    {
+
+      if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
+      { // choosing only the W->munu events
+        wzFlag = true;
+        MuonSystem->lepGenId = gParticleId[i];
       }
-      if ( wzFlag == false ) continue;
-      NEvents->Fill(1);
+
     }
+    if ( wzFlag == false ) continue;
+    // NEvents->Fill(1);
 
     for (int i=0; i < nBunchXing; ++i)
     {
@@ -590,6 +703,8 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     MuonSystem->nCsc = nCsc;
     for(int i = 0; i < nCsc; i++)
     {
+      bool me11 = false;
+      bool me12 = false;
       MuonSystem->cscPhi[i]           = cscPhi[i];   //[nCsc]
       MuonSystem->cscEta[i]           = cscEta[i];   //[nCsc]
       MuonSystem->cscX[i]             = cscX[i];   //[nCsc]
@@ -599,7 +714,22 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       MuonSystem->cscNRecHits_flag[i] = cscNRecHits_flag[i];   //[nCsc]
       MuonSystem->cscT[i]             = cscT[i];   //[nCsc]
       MuonSystem->cscChi2[i]          = cscChi2[i];   //[nCsc]
+      float cscR = sqrt(cscX[i]*cscX[i]+cscY[i]*cscY[i]);
+
+      //page 141 of tdr: https://cds.cern.ch/record/343814/files/LHCC-97-032.pdf
+      if (abs(cscZ[i]) > 568 && abs(cscZ[i]) < 632 ) me11 = true;
+      if (abs(cscZ[i]) > 663 && abs(cscZ[i]) < 724 && abs(cscR) > 275 && abs(cscR) < 465) me12 = true;
+      if (me11) MuonSystem->nCsc_Me11Veto++;
+      if (me12) MuonSystem->nCsc_Me12Veto++;
     }
+    if (MuonSystem->nCsc_Me11Veto > N_CSC_CUT)MuonSystem->event_Me11Veto = false;
+    if (MuonSystem->nCsc_Me12Veto > N_CSC_CUT)MuonSystem->event_Me12Veto = false;
+    if ((MuonSystem->nCsc_Me11Veto + MuonSystem->nCsc_Me12Veto)> N_CSC_CUT)MuonSystem->event_Me1112Veto = false;
+    MuonSystem->nCsc_Me1112Veto = MuonSystem->nCsc - (MuonSystem->nCsc_Me11Veto + MuonSystem->nCsc_Me12Veto);
+    MuonSystem->nCsc_Me11Veto = MuonSystem->nCsc - MuonSystem->nCsc_Me11Veto;
+    MuonSystem->nCsc_Me12Veto = MuonSystem->nCsc - MuonSystem->nCsc_Me12Veto;
+
+
 
     std::vector<leptons> Leptons;
     //-------------------------------
@@ -655,7 +785,6 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
         if (RazorAnalyzer::deltaR(eleEta[i],elePhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
       }
       if(overlap) continue;
-      std::cout << "here" << std::endl;
       leptons tmpElectron;
       tmpElectron.lepton.SetPtEtaPhiM(elePt[i],eleEta[i], elePhi[i], ELE_MASS);
       tmpElectron.pdgId = 11 * -1 * eleCharge[i];
@@ -755,7 +884,37 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //   if (!(foundZ && fabs(ZMass-Z_MASS) < 15.0 )) continue;
     // }
     if (triggered) trig_lepId->Fill(1);
+  //Jet vetoing
+  for (int i = 0; i < nCsc; i++)
+  {
+    bool nCscFlag_recoJetVeto0p4 = true;
+    bool nCscFlag_recoJetVeto0p8 = true;
+    bool me11 = false;
+    bool me12 = false;
+    float cscR = sqrt(cscX[i]*cscX[i]+cscY[i]*cscY[i]);
+    if (abs(cscZ[i]) > 568 && abs(cscZ[i]) < 632 ) me11 = true;
+    if (abs(cscZ[i]) > 663 && abs(cscZ[i]) < 724 && abs(cscR) > 275 && abs(cscR) < 465) me12 = true;
+    for (int j = 0; j < nJets; j++)
+    {
+      if (RazorAnalyzer::deltaR(cscEta[i],cscPhi[i],jetEta[j],jetPhi[j]) < 0.4) {
 
+        nCscFlag_recoJetVeto0p4 = false;
+      }
+      if (RazorAnalyzer::deltaR(cscEta[i],cscPhi[i],jetEta[j],jetPhi[j]) < 0.8){
+        nCscFlag_recoJetVeto0p8 = false;
+      }
+
+    }
+    if (nCscFlag_recoJetVeto0p4) MuonSystem->nCsc_recoJetVeto0p4++;
+    if (nCscFlag_recoJetVeto0p8) MuonSystem->nCsc_recoJetVeto0p8++;
+    if (nCscFlag_recoJetVeto0p4 && (!me11)) MuonSystem->nCsc_recoJetVeto0p4_Me11Veto++;
+    if (nCscFlag_recoJetVeto0p8 && (!me11)) MuonSystem->nCsc_recoJetVeto0p8_Me11Veto++;
+    if (nCscFlag_recoJetVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_recoJetVeto0p4_Me1112Veto++;
+    if (nCscFlag_recoJetVeto0p8 && (!me11) && (!me12)) MuonSystem->nCsc_recoJetVeto0p8_Me1112Veto++;
+
+  }
+  if ((MuonSystem->nCsc - MuonSystem->nCsc_recoJetVeto0p4)  > N_CSC_CUT)  MuonSystem->event_recoJetVeto0p4 = false;
+  if ((MuonSystem->nCsc -MuonSystem->nCsc_recoJetVeto0p8)  > N_CSC_CUT)  MuonSystem->event_recoJetVeto0p8 = false;
 
   //-----------------------------------------------
   //Select Jets
@@ -836,6 +995,49 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
 
       MuonSystem->nJets++;
     }
+
+    //Jet vetoing
+    for (int i = 0; i < nCsc; i++)
+    {
+      bool nCscFlag_JetLepVeto0p4 = true;
+      bool nCscFlag_JetLepVeto0p8 = true;
+      bool me11 = false;
+      bool me12 = false;
+      float cscR = sqrt(cscX[i]*cscX[i]+cscY[i]*cscY[i]);
+      if (abs(cscZ[i]) > 568 && abs(cscZ[i]) < 632 ) me11 = true;
+      if (abs(cscZ[i]) > 663 && abs(cscZ[i]) < 724 && abs(cscR) > 275 && abs(cscR) < 465) me12 = true;
+      for (int j = 0; j < MuonSystem->nJets; j++)
+      {
+        if (RazorAnalyzer::deltaR(cscEta[i],cscPhi[i],MuonSystem->jetEta[j],MuonSystem->jetPhi[j]) < 0.4) {
+          nCscFlag_JetLepVeto0p4 = false;
+        }
+        if (RazorAnalyzer::deltaR(cscEta[i],cscPhi[i],MuonSystem->jetEta[j],MuonSystem->jetPhi[j]) < 0.8) {
+          nCscFlag_JetLepVeto0p8 = false;
+        }
+
+      }
+      for (int j = 0; j < MuonSystem->nLeptons; j++)
+      {
+        if (RazorAnalyzer::deltaR(cscEta[i],cscPhi[i],MuonSystem->lepEta[j],MuonSystem->lepPhi[j]) < 0.4) {
+          nCscFlag_JetLepVeto0p4 = false;
+        }
+        if (RazorAnalyzer::deltaR(cscEta[i],cscPhi[i],MuonSystem->lepEta[j],MuonSystem->lepPhi[j]) < 0.8) {
+          nCscFlag_JetLepVeto0p8 = false;
+        }
+      }
+
+      if (nCscFlag_JetLepVeto0p4) MuonSystem->nCsc_JetLepVeto0p4++;
+      if (nCscFlag_JetLepVeto0p8) MuonSystem->nCsc_JetLepVeto0p8++;
+      if (nCscFlag_JetLepVeto0p4 && (!me11)) MuonSystem->nCsc_JetLepVeto0p4_Me11Veto++;
+      if (nCscFlag_JetLepVeto0p8 && (!me11)) MuonSystem->nCsc_JetLepVeto0p8_Me11Veto++;
+      if (nCscFlag_JetLepVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_JetLepVeto0p4_Me1112Veto++;
+      if (nCscFlag_JetLepVeto0p8 && (!me11) && (!me12)) MuonSystem->nCsc_JetLepVeto0p8_Me1112Veto++;
+
+
+    }
+    if ((MuonSystem->nCsc-MuonSystem->nCsc_JetLepVeto0p4)  > N_CSC_CUT)  MuonSystem->event_JetLepVeto0p4 = false;
+    if ((MuonSystem->nCsc-MuonSystem->nCsc_JetLepVeto0p8)  > N_CSC_CUT)  MuonSystem->event_JetLepVeto0p8 = false;
+
     //std::cout << "deb fill: " << MuonSystem->nLeptons << " " << jentry << endl;
     MuonSystem->tree_->Fill();
   }

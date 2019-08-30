@@ -30,7 +30,8 @@ do
 	echo "Output = log/${analyzer}_normalize_${mode}_${sample}_\$(Cluster).\$(Process).out" >> ${jdl_file}
 	echo "Error = log/${analyzer}_normalize_${mode}_${sample}_\$(Cluster).\$(Process).err" >> ${jdl_file}
 
-	echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
+	#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
+	echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
 	echo "RequestMemory = 2000" >> ${jdl_file}
 	echo "RequestCpus = 1" >> ${jdl_file}
 	echo "RequestDisk = 4" >> ${jdl_file}

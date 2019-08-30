@@ -44,7 +44,9 @@ do
 		echo "Output = log/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}_\$(Cluster).\$(Process).out" >> ${jdl_file}
 		echo "Error = log/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}_\$(Cluster).\$(Process).err" >> ${jdl_file}
 
-		echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
+		#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
+		echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
+
 		echo "RequestMemory = 2000" >> ${jdl_file}
 		echo "RequestCpus = 1" >> ${jdl_file}
 		echo "RequestDisk = 4" >> ${jdl_file}
