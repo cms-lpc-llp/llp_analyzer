@@ -49,13 +49,21 @@ The "options" are the following:
 
 
 ## Submit condor jobs on tier2
+Before submitting jobs, make sure proxy and CMSSW environment is setup.
 
-execute the following script to submit jobs to condor, which runs RunRazor_T2 for wH in this case:
-
-	scripts_condor/submit_llp_wH.sh
-
-
-Output llp_analyzers are stored here: ```/mnt/hadoop/store/group/phys_exotica/delayedjets/llp_analyzer/V1p0/MC_Summer16/v1```
+* create the input_list files by running  ```scripts/make_input_list_muonsystem.sh```
+  * Check the ```root_dir```, which is where the ntuples are
+  * check ```list_dir``` where you want the input list to be
+* run the ```llp_MuonSystem``` analyzer for signal and bkg:
+	* ```scripts_condor/submit_llp_wH_muonsystem_bkg.sh```
+	* ```scripts_condor/submit_llp_wH_muonsystem_sig.sh```
+	* Check ```inputfilelist``` where the list you created in step 1 is stored, and ```output``` where you want the output do be stored
+* hadd & normalize the ntuples
+  * ```scripts_condor/submit_normalize_muonsystem_bkg.sh```
+  * ```scripts_condor/submit_normalize_muonsystem_sig.sh```
+  * Check ```outputDir``` and ```inputDir```
+* hadd signals (hadd WminusH and WplusH)
+	*  ```scripts/hadd_displaced.sh```
 
 
 Normalizing the processed ntuples
