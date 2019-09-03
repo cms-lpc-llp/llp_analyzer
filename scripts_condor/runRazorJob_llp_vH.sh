@@ -3,7 +3,7 @@
 hostname
 echo "Job started"
 date
-
+start_time=`date +%s`
 analysisType=$1
 inputfilelist=$2
 isData=$3
@@ -117,3 +117,6 @@ cd ${currentDir}
 #rm -rf ${runDir}
 echo "Job finished"
 date
+end_time=`date +%s`
+runtime=$((end_time-start_time))
+echo ${runtime}
