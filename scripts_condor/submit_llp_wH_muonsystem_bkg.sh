@@ -10,18 +10,18 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=50
+filesPerJob=30
 
 for sample in \
 WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 do
 	echo "Sample " ${sample}
 	#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
-	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
+	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/v3/bkg/wH/${sample}
 	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p7/MC_Summer16/v3/sixie/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
         maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
-        mod=`python -c "print int($nfiles.0%$filesPerJob)"`
+	mod=`python -c "print int($nfiles.0%$filesPerJob)"`
         if [ ${mod} -eq 0 ]
         then
                 maxjob=`python -c "print int($nfiles.0/$filesPerJob)-1"`
@@ -42,7 +42,7 @@ do
 		# option should always be 1, when running condor
 		echo "Log = log/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}_PC.log" >> ${jdl_file}
 		echo "Output = log/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}_\$(Cluster).\$(Process).out" >> ${jdl_file}
-		echo "Error = log/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}_\$(Cluster).\$(Process).err" >> ${jdl_file}
+	        echo "Error = log/${analyzer}_${sample}_Job${jobnumber}_Of_${maxjob}_\$(Cluster).\$(Process).err" >> ${jdl_file}
 
 		#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
 		echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
