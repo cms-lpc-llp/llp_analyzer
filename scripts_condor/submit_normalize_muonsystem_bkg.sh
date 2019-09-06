@@ -10,10 +10,16 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 mode=bkg
-inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/v3/bkg/wH/
+inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v5/v2/bkg/wH/
 outputDir=${inputDir}normalized
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 
+#WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
+#WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
+#WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
+#WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
+#WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
+#WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
 for sample in \
 WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 do

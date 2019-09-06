@@ -32,7 +32,7 @@ double DBSCAN::deltaPhi(double phi1, double phi2)
   }
   return dphi;
 };
-int DBSCAN::result(int &nClusters, int cscLabels[], int clusterSize[], float clusterX[], float clusterY[], float clusterZ[], float clusterEta[], float clusterPhi[]){
+int DBSCAN::result(int &nClusters, int cscLabels[], int clusterSize[], float clusterX[], float clusterY[], float clusterZ[], float clusterEta[], float clusterPhi[], float clusterRadius[]){
 
   for (unsigned int i = 0;i < m_pointSize;i++)
   {
@@ -69,11 +69,64 @@ int DBSCAN::result(int &nClusters, int cscLabels[], int clusterSize[], float clu
     clusterPhi[i] = deltaPhi(clusterPhi[i],0.0);
     double theta = atan(sqrt(pow(avg_x,2)+pow(avg_y,2))/abs(avg_z));
     clusterEta[i] = -1.0*TMath::Sign(1.0, avg_z)*log(tan(theta/2));
-    // std::cout<<clusterPhi[i]<<", "<<clusterEta[i]<<", "<<clusterSize[i]<<std::endl;
+
+    // go through all the points again to get the farthest point from cluster
+    float max_dis = 0.0;
+    // vector<Point>::iterator iter;
+    Point center;
+    center.x = avg_x;
+    center.y = avg_y;
+    center.z = avg_z;
+    center.clusterID =  i+1;
+    for(iter = m_points.begin(); iter != m_points.end(); ++iter)
+    {
+
+      if ( iter->clusterID == i+1 )
+      {
+        float temp_dis = calculateDistance(*iter,center);
+        if ( temp_dis > max_dis )max_dis = temp_dis;
+      }
+    }
+    clusterRadius[i] = max_dis;
+
   }
   return 0;
 }
+int DBSCAN::clusterMoments(int &nClusters, float clusterMajorAxis[], float clusterMinorAxis[], float clusterEta[], float clusterPhi[], int clusterSize[])
+{
 
+
+  for(int i = 0; i < nClusters; i++)
+  {
+    float m11(0.0), m12(0.0), m22(0.0);
+    vector<Point>::iterator iter;
+    for(iter = m_points.begin(); iter != m_points.end(); ++iter)
+    {
+
+
+      if ( iter->clusterID == i+1 )
+      {
+          float phi = atan(iter->y/iter->x);
+          if  (iter->x < 0.0){
+            phi = TMath::Pi() + phi;
+          }
+          phi = deltaPhi(phi,0.0);
+          float eta = atan(sqrt(pow(iter->x,2)+pow(iter->y,2))/abs(iter->z));
+          eta = -1.0*TMath::Sign(1.0, iter->z)*log(tan(eta/2));
+          m11 += (eta-clusterEta[i])*(eta-clusterEta[i]);
+          m12 += (eta-clusterEta[i])*(phi-clusterPhi[i]);
+          m22 += (phi-clusterPhi[i])*(phi-clusterPhi[i]);
+
+      }
+    }
+    float a = (m11+m22)/2;
+    float b = 0.5*sqrt((m11+m22)*(m11+m22)-4*(m11*m22-m12*m12));
+    clusterMajorAxis[i] = sqrt((a+b)/clusterSize[i]);
+    clusterMinorAxis[i] = sqrt((a-b)/clusterSize[i]);
+  }
+  return 0;
+
+}
 
 int DBSCAN::expandCluster(Point point, int clusterID)
 {

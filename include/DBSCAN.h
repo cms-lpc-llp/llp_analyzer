@@ -29,9 +29,11 @@ public:
     }
     ~DBSCAN(){}
 
+
     int run();
     double deltaPhi(double phi1, double phi2);
-    int result(int &nClusters, int cscLabels[], int clusterSize[], float clusterX[], float clusterY[], float clusterZ[], float clusterEta[], float clusterPhi[]);
+    int result(int &nClusters, int cscLabels[], int clusterSize[], float clusterX[], float clusterY[], float clusterZ[], float clusterEta[], float clusterPhi[], float clusterRadius[]);
+    int clusterMoments(int &nClusters, float clusterMajorAxis[], float clusterMinorAxis[], float clusterEta[], float clusterPhi[], int clusterSize[]);
     vector<int> calculateCluster(Point point);
     int expandCluster(Point point, int clusterID);
     inline double calculateDistance(Point pointCore, Point pointTarget);
