@@ -231,6 +231,9 @@ public :
    Float_t         cscX[2000];   //[nCsc]
    Float_t         cscY[2000];   //[nCsc]
    Float_t         cscZ[2000];   //[nCsc]
+   Float_t         cscDirectionX[2000];   //[nCsc]
+   Float_t         cscDirectionY[2000];   //[nCsc]
+   Float_t         cscDirectionZ[2000];   //[nCsc]
    Float_t         cscNRecHits[2000];   //[nCsc]
    Float_t         cscNRecHits_flag[2000];   //[nCsc]
    Float_t         cscT[2000];   //[nCsc]
@@ -254,6 +257,11 @@ public :
    Float_t         dtDirZ[2000];   //[nDt]
    Float_t         dtT[2000];   //[nDt]
    Float_t         dtTError[2000];   //[nDt]
+   Int_t           nCaloJets;
+   Float_t         calojetE[2000];   //[nJets]
+   Float_t         calojetPt[2000];   //[nJets]
+   Float_t         calojetEta[2000];   //[nJets]
+   Float_t         calojetPhi[2000];   //[nJets]
    Int_t           nJets;
    Float_t         jetE[2000];   //[nJets]
    Float_t         jetPt[2000];   //[nJets]
@@ -385,6 +393,10 @@ public :
    Float_t         gParticlePt[4000];   //[nGenParticle]
    Float_t         gParticleEta[4000];   //[nGenParticle]
    Float_t         gParticlePhi[4000];   //[nGenParticle]
+   Float_t         gLLP_eta[2];
+   Float_t         gLLP_decay_vertex_x[2];
+   Float_t         gLLP_decay_vertex_y[2];
+   Float_t         gLLP_decay_vertex_z[2];
 
    // List of branches
    TBranch        *b_isData;   //!
@@ -591,6 +603,9 @@ public :
    TBranch        *b_cscX;   //!
    TBranch        *b_cscY;   //!
    TBranch        *b_cscZ;   //!
+   TBranch        *b_cscDirectionX;   //!
+   TBranch        *b_cscDirectionY;   //!
+   TBranch        *b_cscDirectionZ;   //!
    TBranch        *b_cscNRecHits;   //!
    TBranch        *b_cscNRecHits_flag;   //!
    TBranch        *b_cscT;   //!
@@ -614,6 +629,11 @@ public :
    TBranch        *b_dtDirZ;   //!
    TBranch        *b_dtT;   //!
    TBranch        *b_dtTError;   //!
+   TBranch        *b_nCaloJets;   //!
+   TBranch        *b_calojetE;   //!
+   TBranch        *b_calojetPt;   //!
+   TBranch        *b_calojetEta;   //!
+   TBranch        *b_calojetPhi;   //!
    TBranch        *b_nJets;   //!
    TBranch        *b_jetE;   //!
    TBranch        *b_jetPt;   //!
@@ -745,6 +765,11 @@ public :
    TBranch        *b_gParticlePt;   //!
    TBranch        *b_gParticleEta;   //!
    TBranch        *b_gParticlePhi;   //!
+   TBranch        *b_gLLP_eta;
+   TBranch        *b_gLLP_decay_vertex_x;
+   TBranch        *b_gLLP_decay_vertex_y;
+   TBranch        *b_gLLP_decay_vertex_z;
+
 
    llp_event(TTree *tree=0);
    virtual ~llp_event();
@@ -1038,6 +1063,9 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("cscX", cscX, &b_cscX);
    fChain->SetBranchAddress("cscY", cscY, &b_cscY);
    fChain->SetBranchAddress("cscZ", cscZ, &b_cscZ);
+   fChain->SetBranchAddress("cscDirectionX", cscDirectionX, &b_cscDirectionX);
+   fChain->SetBranchAddress("cscDirectionY", cscDirectionY, &b_cscDirectionY);
+   fChain->SetBranchAddress("cscDirectionZ", cscDirectionZ, &b_cscDirectionZ);
    fChain->SetBranchAddress("cscNRecHits", cscNRecHits, &b_cscNRecHits);
    fChain->SetBranchAddress("cscNRecHits_flag", cscNRecHits_flag, &b_cscNRecHits_flag);
    fChain->SetBranchAddress("cscT", cscT, &b_cscT);
@@ -1061,6 +1089,11 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("dtDirZ", dtDirZ, &b_dtDirZ);
    fChain->SetBranchAddress("dtT", dtT, &b_dtT);
    fChain->SetBranchAddress("dtTError", dtTError, &b_dtTError);
+   fChain->SetBranchAddress("nCaloJets", &nCaloJets, &b_nCaloJets);
+   fChain->SetBranchAddress("calojetE", calojetE, &b_calojetE);
+   fChain->SetBranchAddress("calojetPt", calojetPt, &b_calojetPt);
+   fChain->SetBranchAddress("calojetEta", calojetEta, &b_calojetEta);
+   fChain->SetBranchAddress("calojetPhi", calojetPhi, &b_calojetPhi);
    fChain->SetBranchAddress("nJets", &nJets, &b_nJets);
    fChain->SetBranchAddress("jetE", jetE, &b_jetE);
    fChain->SetBranchAddress("jetPt", jetPt, &b_jetPt);
@@ -1192,6 +1225,11 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("gParticlePt", gParticlePt, &b_gParticlePt);
    fChain->SetBranchAddress("gParticleEta", gParticleEta, &b_gParticleEta);
    fChain->SetBranchAddress("gParticlePhi", gParticlePhi, &b_gParticlePhi);
+   fChain->SetBranchAddress("gLLP_eta", gLLP_eta, &b_gLLP_eta);
+   fChain->SetBranchAddress("gLLP_decay_vertex_x", gLLP_decay_vertex_x, &b_gLLP_decay_vertex_x);
+   fChain->SetBranchAddress("gLLP_decay_vertex_y", gLLP_decay_vertex_y, &b_gLLP_decay_vertex_y);
+   fChain->SetBranchAddress("gLLP_decay_vertex_z", gLLP_decay_vertex_z, &b_gLLP_decay_vertex_z);
+
    Notify();
 }
 

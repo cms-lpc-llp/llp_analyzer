@@ -17,6 +17,7 @@
 #define NTriggersMAX 601 //Number of trigger in the .dat file
 #define N_CSC_CUT 20
 #define JET_PT_CUT 10
+#define MUON_PT_CUT 20
 using namespace std;
 
 struct greater_than_pt
@@ -32,11 +33,27 @@ struct cscCluster
   float phi;
   int nCscSegments;
   bool jetVeto;
+  bool calojetVeto;
+  float time;
   bool muonVeto;
   int station;
+  int Me1112hits;
   float radius;
   float MajorAxis;
   float MinorAxis;
+  float EtaSpread;
+  float PhiSpread;
+  float EtaPhiSpread;
+  float XSpread;
+  float YSpread;
+  float ZSpread;
+  float vertex_r;
+  float vertex_z;
+  int vertex_n;
+  float vertex_dis;
+
+  vector<int> segment_index;
+
 };
 struct leptons
 {
@@ -45,8 +62,8 @@ struct leptons
   float dZ;
   // bool passLooseId;
   // bool passMediumId;
-  // bool passTightId;
   bool passId;
+  bool passVetoId;
 };
 
 
@@ -87,16 +104,17 @@ struct largest_nCsc
 int cscStation(double x, double y, double z)
 {
   double r = sqrt(x*x+y*y);
-  z = abs(z);
-  if (r > 100 && r < 263 && z > 568  && z < 632) return 11;
-  if (r > 275 && r < 465.0 && z > 668.3 && z < 724) return 12;
-  if (r > 505.5 && r < 695.5 && z > 686 && z < 724) return 13;
-  if (r > 138.5 && r < 345 && z > 791 && z < 849.5) return 21;
-  if (r > 357.5 && r < 695.5 && z > 791 && z < 849.5) return 22;
-  if (r > 160.5 && r < 345 && z > 911.5 && z < 970) return 31;
-  if (r > 357.5 && r < 695.5 && z > 911.5 && z < 970) return 32;
-  if (r > 177.5 && r < 345 && z > 1002 && z < 1060.5) return 41;
-  if (r > 357.5 && r < 695.5 && z > 1002 && z < 1060.5) return 42;
+  // z = abs(z);
+  int sign_z = TMath::Sign(1.0, z);
+  if (r > 80 && r < 283 && abs(z) > 568  && abs(z) < 632) return sign_z*11;
+  if (r > 255 && r < 465.0 && abs(z) > 668.3 && abs(z) < 724) return sign_z*12;
+  if (r > 485.5 && r < 695.5 && abs(z) > 686 && abs(z) < 724) return sign_z*13;
+  if (r > 118.5 && r < 345 && abs(z) > 791 && abs(z) < 849.5) return sign_z*21;
+  if (r > 337.5 && r < 695.5 && abs(z) > 791 && abs(z) < 849.5) return sign_z*22;
+  if (r > 140.5 && r < 345 && abs(z) > 911.5 && abs(z) < 970) return sign_z*31;
+  if (r > 337.5 && r < 695.5 && abs(z) > 911.5 && abs(z) < 970) return sign_z*32;
+  if (r > 157.5 && r < 345 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*41;
+  if (r > 337.5 && r < 695.5 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*42;
   return -999;
 };
 class LiteTreeMuonSystem
@@ -108,16 +126,23 @@ public:
   UInt_t  npv, npu;
   float rho, weight;
   float met, metPhi;
-  int lepGenId;
+  int gLepId;
+  float gLepPt, gLepPhi, gLepEta, gLepE;
+
 
   //csc
   int           nCsc;
   int           cscLabels[N_MAX_CSC];
+  int           cscStation[N_MAX_CSC];
+
   float         cscPhi[N_MAX_CSC];   //[nCsc]
   float         cscEta[N_MAX_CSC];   //[nCsc]
   float         cscX[N_MAX_CSC];   //[nCsc]
   float         cscY[N_MAX_CSC];   //[nCsc]
   float         cscZ[N_MAX_CSC];   //[nCsc]
+  float         cscDirectionX[N_MAX_CSC];   //[nCsc]
+  float         cscDirectionY[N_MAX_CSC];   //[nCsc]
+  float         cscDirectionZ[N_MAX_CSC];   //[nCsc]
   float         cscNRecHits[N_MAX_CSC];   //[nCsc]
   float         cscNRecHits_flag[N_MAX_CSC];   //[nCsc]
   float         cscNRecHits_jetveto0p4[N_MAX_CSC];   //[nCsc]
@@ -127,20 +152,35 @@ public:
 
   int           nCscClusters;
   bool          cscClusterJetVeto[N_MAX_CSC];   //[nCsc]
+  bool          cscClusterCaloJetVeto[N_MAX_CSC];
   bool          cscClusterMuonVeto[N_MAX_CSC];   //[nCsc]
+  int           cscClusterMe1112hits[N_MAX_CSC];   //[nCsc]
 
   float         cscClusterX[N_MAX_CSC];   //[nCsc]
   float         cscClusterY[N_MAX_CSC];   //[nCsc]
   float         cscClusterZ[N_MAX_CSC];   //[nCsc]
   float         cscClusterRadius[N_MAX_CSC];   //[nCsc]
+  float         cscClusterTime[N_MAX_CSC];   //[nCsc]
+  float         cscClusterTimeSpread[N_MAX_CSC];
   float         cscClusterMajorAxis[N_MAX_CSC];
   float         cscClusterMinorAxis[N_MAX_CSC];
 
+  float         cscClusterXSpread[N_MAX_CSC];   //[nCsc]
+  float         cscClusterYSpread[N_MAX_CSC];   //[nCsc]
+  float         cscClusterZSpread[N_MAX_CSC];   //[nCsc]
 
+  float         cscClusterEtaPhiSpread[N_MAX_CSC];   //[nCsc]
+  float         cscClusterEtaSpread[N_MAX_CSC];   //[nCsc]
+  float         cscClusterPhiSpread[N_MAX_CSC];   //[nCsc]
   float         cscClusterEta[N_MAX_CSC];   //[nCsc]
   float         cscClusterPhi[N_MAX_CSC];   //[nCsc]
   int           cscClusterSize[N_MAX_CSC];
   int           cscClusterStation[N_MAX_CSC];
+  float         cscClusterVertexR[N_MAX_CSC];   //[nCsc]
+  float         cscClusterVertexZ[N_MAX_CSC];   //[nCsc]
+  int           cscClusterVertexN[N_MAX_CSC];   //[nCsc]
+  float         cscClusterVertexDis[N_MAX_CSC];   //[nCsc]
+
 
 
   int           nCsc_Me11Veto;
@@ -155,23 +195,27 @@ public:
   int           nCsc0_JetMuonVetoCluster0p4;
   int           nCsc_recoJetVeto0p4;
   int           nCsc_recoJetVeto0p8;
-  int           nCsc_JetLepVeto0p4;
-  int           nCsc_JetLepVeto0p8;
   int           nCsc_recoJetVeto0p4_Me11Veto;
   int           nCsc_recoJetVeto0p8_Me11Veto;
-  int           nCsc_JetLepVeto0p4_Me11Veto;
-  int           nCsc_JetLepVeto0p8_Me11Veto;
   int           nCsc_recoJetVeto0p4_Me1112Veto;
   int           nCsc_recoJetVeto0p8_Me1112Veto;
-  int           nCsc_JetLepVeto0p4_Me1112Veto;
-  int           nCsc_JetLepVeto0p8_Me1112Veto;
+
+  int           nCsc_caloJetVetoCluster0p4;
+  int           nCsc_caloJetMuonVetoCluster0p4;
+  int           nCsc_caloJetVetoCluster0p4_Me1112Veto;
+  int           nCsc_caloJetMuonVetoCluster0p4_Me1112Veto;
+
+
+
   bool          event_recoJetVeto0p4;
   bool          event_recoJetVeto0p8;
-  bool          event_JetLepVeto0p4;
-  bool          event_JetLepVeto0p8;
   bool          event_Me1112Veto;
   bool          event_Me11Veto;
   bool          event_Me12Veto;
+  //gLLP
+  float gLLP_eta[2];
+  float gLLP_decay_vertex_r[2];
+  float gLLP_decay_vertex_z[2];
   //leptons
   int nLeptons;
   float lepE[N_MAX_LEPTONS];
@@ -183,6 +227,8 @@ public:
   // bool lepLoosePassId[N_MAX_LEPTONS];
   // bool lepMediumPassId[N_MAX_LEPTONS];
   // bool lepTightPassId[N_MAX_LEPTONS];
+  bool lepPassVetoId[N_MAX_LEPTONS];
+
   bool lepPassId[N_MAX_LEPTONS];
 
   //Z-candidate
@@ -233,9 +279,10 @@ public:
   void InitVariables()
   {
     runNum=0; lumiSec=0; evtNum=0; category=0;
-    npv=0; npu=0; rho=-1; weight=-1;
+    npv=0; npu=0; rho=-1; weight=-1.0;
     met=-1; metPhi=-1;
-    lepGenId = 0;
+    gLepId = 0;
+    gLepPt = 0.; gLepPhi = 0.; gLepEta = 0.; gLepE = 0.;
     //CSC
     nCsc = 0;
     nCscClusters = 0;
@@ -252,32 +299,34 @@ public:
     nCsc_Me1112Veto = 0;
     nCsc_recoJetVeto0p4 = 0;
     nCsc_recoJetVeto0p8 = 0;
-    nCsc_JetLepVeto0p4 = 0;
-    nCsc_JetLepVeto0p8 = 0;
+
     nCsc_recoJetVeto0p4_Me11Veto = 0;
     nCsc_recoJetVeto0p8_Me11Veto = 0;
-    nCsc_JetLepVeto0p4_Me11Veto = 0;
-    nCsc_JetLepVeto0p8_Me11Veto = 0;
     nCsc_recoJetVeto0p4_Me1112Veto = 0;
     nCsc_recoJetVeto0p8_Me1112Veto = 0;
-    nCsc_JetLepVeto0p4_Me1112Veto = 0;
-    nCsc_JetLepVeto0p8_Me1112Veto = 0;
 
+    nCsc_caloJetVetoCluster0p4 = 0;
+    nCsc_caloJetMuonVetoCluster0p4 = 0;
+    nCsc_caloJetVetoCluster0p4_Me1112Veto = 0;
+    nCsc_caloJetMuonVetoCluster0p4_Me1112Veto = 0;
     event_recoJetVeto0p4 = true;
     event_recoJetVeto0p8 = true;
-    event_JetLepVeto0p4 = true;
-    event_JetLepVeto0p8 = true;
+
     event_Me11Veto = true;
     event_Me12Veto = true;
     event_Me1112Veto = true;
     for( int i = 0; i < N_MAX_CSC; i++ )
     {
       cscLabels[i] = -999;
+      cscStation[i] = -999;
       cscPhi[i] = -999;   //[nCsc]
       cscEta[i] = -999;   //[nCsc]
       cscX[i] = -999;   //[nCsc]
       cscY[i] = -999;   //[nCsc]
       cscZ[i] = -999;   //[nCsc]
+      cscDirectionX[i] = -999;   //[nCsc]
+      cscDirectionY[i] = -999;   //[nCsc]
+      cscDirectionZ[i] = -999;   //[nCsc]
       cscNRecHits[i] = -999;   //[nCsc]
       cscNRecHits_flag[i] = -999;   //[nCsc]
       cscT[i] = -999;   //[nCsc]
@@ -286,17 +335,41 @@ public:
       cscClusterX[i] = -999.;
       cscClusterY[i] = -999.;
       cscClusterZ[i] = -999.;
+      cscClusterTime[i] = -999.;
+      cscClusterTimeSpread[i] = -999.;
       cscClusterRadius[i] = -999.;
       cscClusterMajorAxis[i] = -999.;
       cscClusterMinorAxis[i] = -999.;
+      cscClusterXSpread[i] = -999.;
+      cscClusterYSpread[i] = -999.;
+      cscClusterZSpread[i] = -999.;
 
+      cscClusterEtaPhiSpread[i] = -999.;
+      cscClusterEtaSpread[i] = -999.;
+      cscClusterPhiSpread[i] = -999.;
       cscClusterEta[i] = -999.;
       cscClusterPhi[i] = -999.;
       cscClusterJetVeto[i] = true;
+      cscClusterCaloJetVeto[i] = true;
       cscClusterMuonVeto[i] = true;
       cscClusterStation[i] = -999;
-    }
+      cscClusterMe1112hits[i] = -999;
+      cscClusterVertexR[i] = 0.0;
+      cscClusterVertexZ[i] = 0.0;
+      cscClusterVertexDis[i] = 0.0;
 
+      cscClusterVertexN[i] = 0;
+
+    }
+    for(int i = 0;i<2;i++)
+    {
+      gLLP_eta[i] = 0.0;
+      gLLP_decay_vertex_r[i] = 0.0;
+      gLLP_decay_vertex_z[i] = 0.0;
+
+
+
+    }
     //leptons
     nLeptons = 0;
     for( int i = 0; i < N_MAX_LEPTONS; i++ )
@@ -310,6 +383,7 @@ public:
       // lepLoosePassId[i] = false;
       // lepMediumPassId[i] = false;
       // lepTightPassId[i] = false;
+      lepPassVetoId[i] = false;
       lepPassId[i] = false;
     }
     //Z-candidate
@@ -366,7 +440,11 @@ public:
     tree_->Branch("rho",         &rho,        "rho/F");
     tree_->Branch("met",         &met,        "met/F");         // MET
     tree_->Branch("metPhi",      &metPhi,     "metPhi/F");      // phi(MET)
-    tree_->Branch("lepGenId",      &lepGenId,     "lepGenId/I");      // phi(MET)
+    tree_->Branch("gLepId",      &gLepId,     "gLepId/I");      // phi(MET)
+    tree_->Branch("gLepPt",      &gLepPt,     "gLepPt/F");      // phi(MET)
+    tree_->Branch("gLepE",      &gLepE,     "gLepE/F");      // phi(MET)
+    tree_->Branch("gLepEta",      &gLepEta,     "gLepEta/F");      // phi(MET)
+    tree_->Branch("gLepPhi",      &gLepPhi,     "gLepPhi/F");      // phi(MET)
 
     //CSC
     tree_->Branch("nCsc",             &nCsc, "nCsc/I");
@@ -374,66 +452,84 @@ public:
     tree_->Branch("cscClusterX",             cscClusterX,             "cscClusterX[nCscClusters]/F");
     tree_->Branch("cscClusterY",             cscClusterY,             "cscClusterY[nCscClusters]/F");
     tree_->Branch("cscClusterZ",             cscClusterZ,             "cscClusterZ[nCscClusters]/F");
+    tree_->Branch("cscClusterTime",             cscClusterTime,             "cscClusterTime[nCscClusters]/F");
+    tree_->Branch("cscClusterTimeSpread",             cscClusterTimeSpread,             "cscClusterTimeSpread[nCscClusters]/F");
+
     tree_->Branch("cscClusterRadius",             cscClusterRadius,             "cscClusterRadius[nCscClusters]/F");
     tree_->Branch("cscClusterMajorAxis",             cscClusterMajorAxis,             "cscClusterMajorAxis[nCscClusters]/F");
     tree_->Branch("cscClusterMinorAxis",             cscClusterMinorAxis,             "cscClusterMinorAxis[nCscClusters]/F");
-
+    tree_->Branch("cscClusterEtaPhiSpread",             cscClusterEtaPhiSpread,             "cscClusterEtaPhiSpread[nCscClusters]/F");
+    tree_->Branch("cscClusterPhiSpread",             cscClusterPhiSpread,             "cscClusterPhiSpread[nCscClusters]/F");
+    tree_->Branch("cscClusterEtaSpread",             cscClusterEtaSpread,             "cscClusterEtaSpread[nCscClusters]/F");
+    tree_->Branch("cscClusterXSpread",             cscClusterXSpread,             "cscClusterXSpread[nCscClusters]/F");
+    tree_->Branch("cscClusterYSpread",             cscClusterYSpread,             "cscClusterYSpread[nCscClusters]/F");
+    tree_->Branch("cscClusterZSpread",             cscClusterZSpread,             "cscClusterZSpread[nCscClusters]/F");
     tree_->Branch("cscClusterPhi",             cscClusterPhi,             "cscClusterPhi[nCscClusters]/F");
     tree_->Branch("cscClusterEta",             cscClusterEta,             "cscClusterEta[nCscClusters]/F");
     tree_->Branch("cscClusterJetVeto",             cscClusterJetVeto,             "cscClusterJetVeto[nCscClusters]/O");
     tree_->Branch("cscClusterMuonVeto",             cscClusterMuonVeto,             "cscClusterMuonVeto[nCscClusters]/O");
+    tree_->Branch("cscClusterCaloJetVeto",             cscClusterCaloJetVeto,             "cscClusterCaloJetVeto[nCscClusters]/O");
 
     tree_->Branch("cscClusterSize",             cscClusterSize,             "cscClusterSize[nCscClusters]/I");
     tree_->Branch("cscClusterStation",             cscClusterStation,             "cscClusterStation[nCscClusters]/I");
+    tree_->Branch("cscClusterMe1112hits",             cscClusterMe1112hits,             "cscClusterMe1112hits[nCscClusters]/I");
+    tree_->Branch("cscClusterVertexR",             cscClusterVertexR,             "cscClusterVertexR[nCscClusters]/F");
+    tree_->Branch("cscClusterVertexZ",             cscClusterVertexZ,             "cscClusterVertexZ[nCscClusters]/F");
+    tree_->Branch("cscClusterVertexDis",             cscClusterVertexDis,             "cscClusterVertexDis[nCscClusters]/F");
+    tree_->Branch("cscClusterVertexN",             cscClusterVertexN,             "cscClusterVertexN[nCscClusters]/I");
 
     tree_->Branch("nCsc_Me11Veto",             &nCsc_Me11Veto,"nCsc_Me11Veto/I");
     tree_->Branch("nCsc_Me12Veto",             &nCsc_Me12Veto,"nCsc_Me12Veto/I");
     tree_->Branch("nCsc_Me1112Veto",             &nCsc_Me1112Veto,"nCsc_Me1112Veto/I");
+    tree_->Branch("nCsc_caloJetVetoCluster0p4",             &nCsc_caloJetVetoCluster0p4,"nCsc_caloJetVetoCluster0p4/I");
+    tree_->Branch("nCsc_caloJetMuonVetoCluster0p4",             &nCsc_caloJetMuonVetoCluster0p4,"nCsc_caloJetMuonVetoCluster0p4/I");
+    tree_->Branch("nCsc_caloJetVetoCluster0p4_Me1112Veto",             &nCsc_caloJetVetoCluster0p4_Me1112Veto,"nCsc_caloJetVetoCluster0p4_Me1112Veto/I");
+    tree_->Branch("nCsc_caloJetMuonVetoCluster0p4_Me1112Veto",             &nCsc_caloJetMuonVetoCluster0p4_Me1112Veto,"nCsc_caloJetMuonVetoCluster0p4_Me1112Veto/I");
+
     tree_->Branch("nCsc_JetVetoCluster0p4",             &nCsc_JetVetoCluster0p4,"nCsc_JetVetoCluster0p4/I");
     tree_->Branch("nCsc_JetMuonVetoCluster0p4",             &nCsc_JetMuonVetoCluster0p4,"nCsc_JetMuonVetoCluster0p4/I");
 
     tree_->Branch("nCsc_JetVetoCluster0p4_Me11Veto",             &nCsc_JetVetoCluster0p4_Me11Veto,"nCsc_JetVetoCluster0p4_Me11Veto/I");
     tree_->Branch("nCsc_JetVetoCluster0p4_Me1112Veto",             &nCsc_JetVetoCluster0p4_Me1112Veto,"nCsc_JetVetoCluster0p4_Me1112Veto/I");
     tree_->Branch("nCsc_JetMuonVetoCluster0p4_Me1112Veto",             &nCsc_JetMuonVetoCluster0p4_Me1112Veto,"nCsc_JetMuonVetoCluster0p4_Me1112Veto/I");
-
     tree_->Branch("nCsc0_JetMuonVetoCluster0p4",             &nCsc0_JetMuonVetoCluster0p4,"nCsc0_JetMuonVetoCluster0p4/I");
 
     tree_->Branch("nCsc_recoJetVeto0p4",             &nCsc_recoJetVeto0p4,"nCsc_recoJetVeto0p4/I");
     tree_->Branch("nCsc_recoJetVeto0p8",             &nCsc_recoJetVeto0p8, "nCsc_recoJetVeto0p8/I");
-    tree_->Branch("nCsc_JetLepVeto0p4",             &nCsc_JetLepVeto0p4, "nCsc_JetLepVeto0p4/I");
-    tree_->Branch("nCsc_JetLepVeto0p8",             &nCsc_JetLepVeto0p8, "nCsc_JetLepVeto0p8/I");
+
 
     tree_->Branch("nCsc_recoJetVeto0p4_Me11Veto",             &nCsc_recoJetVeto0p4_Me11Veto, "nCsc_recoJetVeto0p4_Me11Veto/I");
     tree_->Branch("nCsc_recoJetVeto0p8_Me11Veto",             &nCsc_recoJetVeto0p8_Me11Veto, "nCsc_recoJetVeto0p8_Me11Veto/I");
-    tree_->Branch("nCsc_JetLepVeto0p4_Me11Veto",             &nCsc_JetLepVeto0p4_Me11Veto, "nCsc_JetLepVeto0p4_Me11Veto/I");
-    tree_->Branch("nCsc_JetLepVeto0p8_Me11Veto",             &nCsc_JetLepVeto0p8_Me11Veto, "nCsc_JetLepVeto0p8_Me11Veto/I");
 
     tree_->Branch("nCsc_recoJetVeto0p4_Me1112Veto",             &nCsc_recoJetVeto0p4_Me1112Veto, "nCsc_recoJetVeto0p4_Me1112Veto/I");
     tree_->Branch("nCsc_recoJetVeto0p8_Me1112Veto",             &nCsc_recoJetVeto0p8_Me1112Veto, "nCsc_recoJetVeto0p8_Me1112Veto/I");
-    tree_->Branch("nCsc_JetLepVeto0p4_Me1112Veto",             &nCsc_JetLepVeto0p4_Me1112Veto, "nCsc_JetLepVeto0p4_Me1112Veto/I");
-    tree_->Branch("nCsc_JetLepVeto0p8_Me1112Veto",             &nCsc_JetLepVeto0p8_Me1112Veto, "nCsc_JetLepVeto0p8_Me1112Veto/I");
 
 
     tree_->Branch("event_recoJetVeto0p4",             &event_recoJetVeto0p4, "event_recoJetVeto0p4/O");
     tree_->Branch("event_recoJetVeto0p8",             &event_recoJetVeto0p8, "event_recoJetVeto0p8/O");
-    tree_->Branch("event_JetLepVeto0p4",             &event_JetLepVeto0p4, "event_JetLepVeto0p4/O");
-    tree_->Branch("event_JetLepVeto0p8",             &event_JetLepVeto0p8, "event_JetLepVeto0p8/O");
 
     tree_->Branch("event_Me11Veto",             &event_Me11Veto,"event_Me11Veto/O");
     tree_->Branch("event_Me12Veto",             &event_Me12Veto,"event_Me12Veto/O");
     tree_->Branch("event_Me1112Veto",             &event_Me1112Veto,"event_Me1112Veto/O");
 
     tree_->Branch("cscLabels",             cscLabels,             "cscLabels[nCsc]/I");
+    tree_->Branch("cscStation",             cscStation,             "cscStation[nCsc]/I");
 
     tree_->Branch("cscPhi",           cscPhi,           "cscPhi[nCsc]/F");
     tree_->Branch("cscEta",           cscEta,           "cscEta[nCsc]/F");
     tree_->Branch("cscX",             cscX,             "cscX[nCsc]/F");
     tree_->Branch("cscY",             cscY,             "cscY[nCsc]/F");
     tree_->Branch("cscZ",             cscZ,             "cscZ[nCsc]/F");
+    tree_->Branch("cscDirectionX",             cscDirectionX,             "cscDirectionX[nCsc]/F");
+    tree_->Branch("cscDirectionY",             cscDirectionY,             "cscDirectionY[nCsc]/F");
+    tree_->Branch("cscDirectionZ",             cscDirectionZ,             "cscDirectionZ[nCsc]/F");
     tree_->Branch("cscNRecHits",      cscNRecHits,      "cscNRecHits[nCsc]/F");
     tree_->Branch("cscNRecHits_flag", cscNRecHits_flag, "cscNRecHits_flag[nCsc]/F");
     tree_->Branch("cscT",             cscT,             "cscT[nCsc]/F");
     tree_->Branch("cscChi2",          cscChi2,          "cscChi2[nCsc]/F");
+    tree_->Branch("gLLP_eta",          gLLP_eta,          "gLLP_eta[2]/F");
+    tree_->Branch("gLLP_decay_vertex_r",          gLLP_decay_vertex_r,          "gLLP_decay_vertex_r[2]/F");
+    tree_->Branch("gLLP_decay_vertex_z",          gLLP_decay_vertex_z,          "gLLP_decay_vertex_z[2]/F");
 
     //leptons
     tree_->Branch("nLeptons",  &nLeptons, "nLeptons/I");
@@ -444,6 +540,8 @@ public:
     tree_->Branch("lepPdgId",  lepPdgId,  "lepPdgId[nLeptons]/I");
     tree_->Branch("lepDZ",     lepDZ,     "lepDZ[nLeptons]/F");
     tree_->Branch("lepPassId", lepPassId, "lepPassId[nLeptons]/O");
+    tree_->Branch("lepPassVetoId", lepPassVetoId, "lepPassVetoId[nLeptons]/O");
+
     // tree_->Branch("lepLoosePassId", lepLoosePassId, "lepLoosePassId[nLeptons]/O");
     // tree_->Branch("lepMediumPassId", lepMediumPassId, "lepMediumPassId[nLeptons]/O");
     // tree_->Branch("lepTightPassId", lepTightPassId, "lepTightPassId[nLeptons]/O");
@@ -491,23 +589,43 @@ public:
     tree_->SetBranchAddress("rho",         &rho);
     tree_->SetBranchAddress("met",         &met);
     tree_->SetBranchAddress("metPhi",      &metPhi);
-    tree_->SetBranchAddress("lepGenId",      &lepGenId);
+    tree_->SetBranchAddress("gLepId",      &gLepId);
+    tree_->SetBranchAddress("gLepPt",      &gLepPt);
+    tree_->SetBranchAddress("gLepPhi",      &gLepPhi);
+    tree_->SetBranchAddress("gLepE",      &gLepE);
+    tree_->SetBranchAddress("gLepEta",      &gLepEta);
+
     //CSC
     tree_->SetBranchAddress("nCsc",             &nCsc);
     tree_->SetBranchAddress("cscClusterStation",             &cscClusterStation);
+    tree_->SetBranchAddress("cscClusterVertexR",             cscClusterVertexR);
+    tree_->SetBranchAddress("cscClusterVertexZ",             cscClusterVertexZ);
+    tree_->SetBranchAddress("cscClusterVertexDis",             cscClusterVertexDis);
+
+    tree_->SetBranchAddress("cscClusterVertexN",             cscClusterVertexN);
 
     tree_->SetBranchAddress("nCscClusters",             &nCscClusters);
     tree_->SetBranchAddress("cscClusterX",             cscClusterX);
     tree_->SetBranchAddress("cscClusterY",             cscClusterY);
     tree_->SetBranchAddress("cscClusterZ",             cscClusterZ);
+    tree_->SetBranchAddress("cscClusterTime",             cscClusterTime);
+    tree_->SetBranchAddress("cscClusterTimeSpread",             cscClusterTimeSpread);
+
     tree_->SetBranchAddress("cscClusterRadius",             cscClusterRadius);
     tree_->SetBranchAddress("cscClusterMajorAxis",             cscClusterMajorAxis);
     tree_->SetBranchAddress("cscClusterMinorAxis",             cscClusterMinorAxis);
-
+    tree_->SetBranchAddress("cscClusterXSpread",             cscClusterXSpread);
+    tree_->SetBranchAddress("cscClusterYSpread",             cscClusterYSpread);
+    tree_->SetBranchAddress("cscClusterZSpread",             cscClusterZSpread);
+    tree_->SetBranchAddress("cscClusterEtaPhiSpread",             cscClusterEtaPhiSpread);
+    tree_->SetBranchAddress("cscClusterEtaSpread",             cscClusterEtaSpread);
+    tree_->SetBranchAddress("cscClusterPhiSpread",             cscClusterPhiSpread);
     tree_->SetBranchAddress("cscClusterEta",             cscClusterEta);
     tree_->SetBranchAddress("cscClusterPhi",             cscClusterPhi);
     tree_->SetBranchAddress("cscClusterJetVeto",             cscClusterJetVeto);
+    tree_->SetBranchAddress("cscClusterCaloJetVeto",             cscClusterCaloJetVeto);
     tree_->SetBranchAddress("cscClusterMuonVeto",             cscClusterMuonVeto);
+    tree_->SetBranchAddress("cscClusterMe1112hits",             cscClusterMe1112hits);
 
     tree_->SetBranchAddress("cscClusterSize",             cscClusterSize);
 
@@ -517,24 +635,16 @@ public:
 
     tree_->SetBranchAddress("nCsc_recoJetVeto0p4",             &nCsc_recoJetVeto0p4);
     tree_->SetBranchAddress("nCsc_recoJetVeto0p8",             &nCsc_recoJetVeto0p8);
-    tree_->SetBranchAddress("nCsc_JetLepVeto0p4",             &nCsc_JetLepVeto0p4);
-    tree_->SetBranchAddress("nCsc_JetLepVeto0p8",             &nCsc_JetLepVeto0p8);
 
     tree_->SetBranchAddress("nCsc_recoJetVeto0p4_Me11Veto",             &nCsc_recoJetVeto0p4_Me11Veto);
     tree_->SetBranchAddress("nCsc_recoJetVeto0p8_Me11Veto",             &nCsc_recoJetVeto0p8_Me11Veto);
-    tree_->SetBranchAddress("nCsc_JetLepVeto0p4_Me11Veto",             &nCsc_JetLepVeto0p4_Me11Veto);
-    tree_->SetBranchAddress("nCsc_JetLepVeto0p8_Me11Veto",             &nCsc_JetLepVeto0p8_Me11Veto);
 
     tree_->SetBranchAddress("nCsc_recoJetVeto0p4_Me1112Veto",             &nCsc_recoJetVeto0p4_Me1112Veto);
     tree_->SetBranchAddress("nCsc_recoJetVeto0p8_Me1112Veto",             &nCsc_recoJetVeto0p8_Me1112Veto);
-    tree_->SetBranchAddress("nCsc_JetLepVeto0p4_Me1112Veto",             &nCsc_JetLepVeto0p4_Me1112Veto);
-    tree_->SetBranchAddress("nCsc_JetLepVeto0p8_Me1112Veto",             &nCsc_JetLepVeto0p8_Me1112Veto);
 
 
     tree_->SetBranchAddress("event_recoJetVeto0p4",             &event_recoJetVeto0p4);
     tree_->SetBranchAddress("event_recoJetVeto0p8",             &event_recoJetVeto0p8);
-    tree_->SetBranchAddress("event_JetLepVeto0p4",             &event_JetLepVeto0p4);
-    tree_->SetBranchAddress("event_JetLepVeto0p8",             &event_JetLepVeto0p8);
 
     tree_->SetBranchAddress("event_Me11Veto",             &event_Me11Veto);
     tree_->SetBranchAddress("event_Me12Veto",             &event_Me12Veto);
@@ -542,16 +652,24 @@ public:
 
 
     tree_->SetBranchAddress("cscLabels",             cscLabels);
+    tree_->SetBranchAddress("cscStation",             cscStation);
 
     tree_->SetBranchAddress("cscPhi",           cscPhi);
     tree_->SetBranchAddress("cscEta",           cscEta);
     tree_->SetBranchAddress("cscX",             cscX);
     tree_->SetBranchAddress("cscY",             cscY);
     tree_->SetBranchAddress("cscZ",             cscZ);
+    tree_->SetBranchAddress("cscDirectionX",             cscDirectionX);
+    tree_->SetBranchAddress("cscDirectionY",             cscDirectionY);
+    tree_->SetBranchAddress("cscDirectionZ",             cscDirectionZ);
     tree_->SetBranchAddress("cscNRecHits",      cscNRecHits);
     tree_->SetBranchAddress("cscNRecHits_flag", cscNRecHits_flag);
     tree_->SetBranchAddress("cscT",             cscT);
     tree_->SetBranchAddress("cscChi2",          cscChi2);
+    tree_->SetBranchAddress("gLLP_eta",    gLLP_eta);
+    tree_->SetBranchAddress("gLLP_decay_vertex_r",    gLLP_decay_vertex_r);
+    tree_->SetBranchAddress("gLLP_decay_vertex_z",    gLLP_decay_vertex_z);
+
     //Leptons
     tree_->SetBranchAddress("nLeptons",    &nLeptons);
     tree_->SetBranchAddress("lepE",        lepE);
@@ -564,6 +682,8 @@ public:
     // tree_->SetBranchAddress("lepMediumPassId", lepMediumPassId);
     // tree_->SetBranchAddress("lepTightPassId", lepTightPassId);
     tree_->SetBranchAddress("lepPassId", lepPassId);
+    tree_->SetBranchAddress("lepPassVetoId", lepPassVetoId);
+
     /*
     //Z-candidate
     tree_->SetBranchAddress("ZMass",       &ZMass);
@@ -658,8 +778,8 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     }
   else{
     NTrigger = 2;
-    muonPt_cut = 27;
-    elePt_cut = 32;
+    muonPt_cut = 25;
+    elePt_cut = 35;
     nLepton_cut = 1;
   }
 
@@ -690,6 +810,8 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
   MuonSystem->InitTree();
   //histogram containing total number of processed events (for normalization)
   TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
+  TH1F *NEvents_genweight = new TH1F("NEvents_genweight", "NEvents_genweight", 1, 1, 2);
+
   TH1F *generatedEvents = new TH1F("generatedEvents", "generatedEvents", 1, 1, 2);
   TH1F *trig = new TH1F("trig", "trig", 1, 1, 2);
   TH1F *trig_lepId = new TH1F("trig_lepId", "trig_lepId", 1, 1, 2);
@@ -753,26 +875,22 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //std::cout << "deb0 " << jentry << std::endl;
     MuonSystem->InitVariables();
     //std::cout << "deb1 " << jentry << std::endl;
-    if (label =="bkg_wH"|| label == "bkg_zH"){
-      if (isData)
-      {
-        NEvents->Fill(1);
-        MuonSystem->weight = 1;
-      }
-      else
-      {
-        //NEvents->Fill(genWeight);
-        //MuonSystem->weight = genWeight;
-        NEvents->Fill(1);
-        MuonSystem->weight = 1;
-      }
 
-    }
-    else{
+    if (isData)
+    {
       NEvents->Fill(1);
-
       MuonSystem->weight = 1;
     }
+    else
+    {
+      //NEvents->Fill(genWeight);
+      MuonSystem->weight = genWeight;
+      NEvents->Fill(1);
+      NEvents_genweight->Fill(1, genWeight);
+
+    }
+
+
     //std::cout << "deb2 " << jentry << std::endl;
     //event info
     MuonSystem->runNum = runNum;
@@ -781,20 +899,41 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //std::cout << "deb3 " << jentry << std::endl;
 
     bool wzFlag = false;
-    for (int i=0; i < nGenParticle; ++i)
+    for (int i=0; i < nGenParticle; i++)
     {
 
       if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
       { // choosing only the W->munu events
         wzFlag = true;
-        MuonSystem->lepGenId = gParticleId[i];
+        MuonSystem->gLepId = gParticleId[i];
+        MuonSystem->gLepPt = gParticlePt[i];
+        MuonSystem->gLepEta = gParticleEta[i];
+        MuonSystem->gLepE = gParticleE[i];
+        MuonSystem->gLepPhi = gParticlePhi[i];
       }
+      else if (abs(gParticleId[i]) == 15 && gParticleStatus[i] == 2 && abs(gParticleMotherId[i]) == wzId){
+        wzFlag = true;
+        MuonSystem->gLepId = gParticleId[i];
+        MuonSystem->gLepPt = gParticlePt[i];
+        MuonSystem->gLepEta = gParticleEta[i];
+        MuonSystem->gLepE = gParticleE[i];
+        MuonSystem->gLepPhi = gParticlePhi[i];
+      }
+
+    }
+    for(int i = 0; i < 2;i++)
+    {
+      MuonSystem->gLLP_eta[i] = gLLP_eta[i];
+      MuonSystem->gLLP_decay_vertex_r[i] = sqrt(gLLP_decay_vertex_x[i]*gLLP_decay_vertex_x[i]+gLLP_decay_vertex_y[i]*gLLP_decay_vertex_y[i]);
+      MuonSystem->gLLP_decay_vertex_z[i] = gLLP_decay_vertex_z[i];
+
+
 
     }
     if ( wzFlag == true ) generatedEvents->Fill(1);;
     // NEvents->Fill(1);
 
-    for (int i=0; i < nBunchXing; ++i)
+    for (int i=0; i < nBunchXing; i++)
     {
       if (BunchXing[i] == 0)
       {
@@ -825,18 +964,23 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //*************************************************************************
     //CSC INFO
     if( nCsc < 30 ) continue;//require at least 30 segments in the CSCs
-    MuonSystem->nCsc = nCsc;
+    MuonSystem->nCsc = 0;
     vector<Point> points;
 
     for(int i = 0; i < nCsc; i++)
     {
+      if (abs(cscT[i]) > 12.5) continue;
       bool me11 = false;
       bool me12 = false;
-      MuonSystem->cscPhi[i]           = cscPhi[i];   //[nCsc]
-      MuonSystem->cscEta[i]           = cscEta[i];   //[nCsc]
-      MuonSystem->cscX[i]             = cscX[i];   //[nCsc]
-      MuonSystem->cscY[i]             = cscY[i];   //[nCsc]
-      MuonSystem->cscZ[i]             = cscZ[i];   //[nCsc]
+      MuonSystem->cscPhi[MuonSystem->nCsc]           = cscPhi[i];   //[nCsc]
+      MuonSystem->cscEta[MuonSystem->nCsc]           = cscEta[i];   //[nCsc]
+      MuonSystem->cscX[MuonSystem->nCsc]             = cscX[i];   //[nCsc]
+      MuonSystem->cscY[MuonSystem->nCsc]             = cscY[i];   //[nCsc]
+      MuonSystem->cscZ[MuonSystem->nCsc]             = cscZ[i];   //[nCsc]
+      MuonSystem->cscDirectionX[MuonSystem->nCsc]             = cscDirectionX[i];   //
+      MuonSystem->cscDirectionY[MuonSystem->nCsc]             = cscDirectionY[i];   //
+      MuonSystem->cscDirectionZ[MuonSystem->nCsc]             = cscDirectionZ[i];   //
+      MuonSystem->cscStation[MuonSystem->nCsc] = cscStation(cscX[i],cscY[i],cscZ[i]);
       // for dbscan
       Point p;
       p.x = cscX[i];
@@ -845,10 +989,10 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       p.clusterID = UNCLASSIFIED;
       points.push_back(p);
 
-      MuonSystem->cscNRecHits[i]      = cscNRecHits[i];   //[nCsc]
-      MuonSystem->cscNRecHits_flag[i] = cscNRecHits_flag[i];   //[nCsc]
-      MuonSystem->cscT[i]             = cscT[i];   //[nCsc]
-      MuonSystem->cscChi2[i]          = cscChi2[i];   //[nCsc]
+      MuonSystem->cscNRecHits[MuonSystem->nCsc]      = cscNRecHits[i];   //[nCsc]
+      MuonSystem->cscNRecHits_flag[MuonSystem->nCsc] = cscNRecHits_flag[i];   //[nCsc]
+      MuonSystem->cscT[MuonSystem->nCsc]             = cscT[i];   //[nCsc]
+      MuonSystem->cscChi2[MuonSystem->nCsc]          = cscChi2[i];   //[nCsc]
       float cscR = sqrt(cscX[i]*cscX[i]+cscY[i]*cscY[i]);
 
       //page 141 of tdr: https://cds.cern.ch/record/343814/files/LHCC-97-032.pdf
@@ -856,6 +1000,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       if (abs(cscZ[i]) > 663 && abs(cscZ[i]) < 724 && abs(cscR) > 275 && abs(cscR) < 465) me12 = true;
       if (me11) MuonSystem->nCsc_Me11Veto++;
       if (me12) MuonSystem->nCsc_Me12Veto++;
+      MuonSystem->nCsc++;
     }
     if (MuonSystem->nCsc_Me11Veto > N_CSC_CUT)MuonSystem->event_Me11Veto = false;
     if (MuonSystem->nCsc_Me12Veto > N_CSC_CUT)MuonSystem->event_Me12Veto = false;
@@ -869,80 +1014,305 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //v2:10,200
     //v3: 10, 100
     //v4:
+    // std::vector<cscCluster> CscCluster;
+    //
+    // int min_point = 10;//6
+    // float epsilon = 100;//100
+    // //loop over stations
+    // int nCluster_count = 0;
+    // int nStations = 18;
+    // int stations[nStations] = {-11, -12, -13, -21, -22, -31, -32, -41, -42, 11, 12, 13, 21, 22, 31, 32, 41, 42};
+    //   // get points in this particular station
+    //
+    // //run db scan only with points in the station
+    // DBSCAN ds(min_point, epsilon, points);
+    // int nClusters = ds.run();
+    // int clusterSize[nClusters] = {0};
+    // int cscLabels_temp[nCsc] = {-999};
+    // float clusterEta[nClusters] = {-999.};
+    // float clusterPhi[nClusters] = {-999.};
+    // float clusterX[nClusters] = {-999.};
+    // float clusterY[nClusters] = {-999.};
+    // float clusterZ[nClusters] = {-999.};
+    // float clusterRadius[nClusters] = {-999.};
+    // float clusterMajorAxis[nClusters] = {-999.};
+    // float clusterMinorAxis[nClusters] = {-999.};
+    // float clusterXSpread[nClusters] = {0.};
+    // float clusterYSpread[nClusters] = {0.};
+    // float clusterZSpread[nClusters] = {0.};
+    // float clusterEtaPhiSpread[nClusters] = {-999.};
+    // float clusterEtaSpread[nClusters] = {-999.};
+    // float clusterPhiSpread[nClusters] = {-999.};
+    // ds.result(nClusters, cscLabels_temp,clusterSize, clusterX, clusterY, clusterZ, clusterEta, clusterPhi, clusterRadius);
+    // ds.clusterMoments(nClusters, clusterMajorAxis, clusterMinorAxis,clusterXSpread, clusterYSpread, clusterZSpread, clusterEtaSpread, clusterPhiSpread, clusterEtaPhiSpread, clusterX, clusterY, clusterZ, clusterEta, clusterPhi, clusterSize);
+    //
+    // // for(unsigned int l=0; l < cscSegmentIndex.size(); l++){
+    // //   MuonSystem->cscLabels[cscSegmentIndex[l]] = (cscLabels_temp[l] == -1) ? -1 : nCluster_count+cscLabels_temp[l];
+    // // }
+    // // nCluster_count+=nClusters;
+    // for(int i = 0;i<nCsc;i++)
+    // {
+    //   MuonSystem->cscLabels[i] = cscLabels_temp[i];
+    // }
+    //
+    // for(int i = 0; i < nClusters; i++)
+    // {
+    //   cscCluster tmpCluster;
+    //   tmpCluster.x = clusterX[i];
+    //   tmpCluster.y = clusterY[i];
+    //   tmpCluster.z = clusterZ[i];
+    //   tmpCluster.radius = clusterRadius[i];
+    //   tmpCluster.MajorAxis = clusterMajorAxis[i];
+    //   tmpCluster.MinorAxis = clusterMinorAxis[i];
+    //   tmpCluster.XSpread = clusterXSpread[i];
+    //   tmpCluster.YSpread = clusterYSpread[i];
+    //   tmpCluster.ZSpread = clusterZSpread[i];
+    //   tmpCluster.EtaPhiSpread = clusterEtaPhiSpread[i];
+    //   tmpCluster.EtaSpread = clusterEtaSpread[i];
+    //   tmpCluster.PhiSpread = clusterPhiSpread[i];
+    //   tmpCluster.eta = clusterEta[i];
+    //   tmpCluster.phi = clusterPhi[i];
+    //   tmpCluster.nCscSegments = clusterSize[i];
+    //   tmpCluster.station = cscStation(clusterX[i],clusterY[i],clusterZ[i]);
+    //   // tmpCluster.segment_index = cluster_index;
+    //   bool nCscFlag_recoJetVeto0p4 = true;
+    //   bool nCscFlag_recoMuonVeto0p4 = true;
+    //   bool nCscFlag_caloJetVeto0p4 = true;
+    //   bool me11 = false;
+    //   bool me12 = false;
+    //   if (abs(tmpCluster.station) == 11) me11 = true;
+    //   if (abs(tmpCluster.station) == 12) me12 = true;
+    //   for (int j = 0; j < nJets; j++)
+    //   {
+    //     if (jetPt[j]<JET_PT_CUT) continue;
+    //     if (abs(jetEta[j])>3) continue;
+    //     if (RazorAnalyzer::deltaR(clusterEta[i],clusterPhi[i],jetEta[j],jetPhi[j]) < 0.4) nCscFlag_recoJetVeto0p4 = false;
+    //   }
+    //   for (int j = 0; j < nCaloJets; j++)
+    //   {
+    //     if (calojetPt[j]<JET_PT_CUT) continue;
+    //     if (abs(calojetEta[j])>3) continue;
+    //
+    //     if (RazorAnalyzer::deltaR(clusterEta[i],clusterPhi[i],calojetEta[j],calojetPhi[j]) < 0.4) nCscFlag_caloJetVeto0p4 = false;
+    //   }
+    //   for (int j = 0; j < nMuons; j++)
+    //   {
+    //     if (muonPt[j]<MUON_PT_CUT) continue;
+    //     if (abs(muonEta[j])>3) continue;
+    //
+    //     if (RazorAnalyzer::deltaR(clusterEta[i],clusterPhi[i],muonEta[j],muonPhi[j]) < 0.4) nCscFlag_recoMuonVeto0p4 = false;
+    //   }
+    //   tmpCluster.jetVeto = nCscFlag_recoJetVeto0p4;
+    //   tmpCluster.muonVeto = nCscFlag_recoMuonVeto0p4;
+    //   tmpCluster.calojetVeto = nCscFlag_caloJetVeto0p4;
+    //   if (nCscFlag_recoJetVeto0p4) MuonSystem->nCsc_JetVetoCluster0p4 += clusterSize[i];
+    //   if (nCscFlag_caloJetVeto0p4) MuonSystem->nCsc_caloJetVetoCluster0p4 += clusterSize[i];
+    //   if (nCscFlag_recoJetVeto0p4 && nCscFlag_recoMuonVeto0p4) MuonSystem->nCsc_JetMuonVetoCluster0p4 += clusterSize[i];
+    //   if (nCscFlag_caloJetVeto0p4 && nCscFlag_recoMuonVeto0p4) MuonSystem->nCsc_caloJetMuonVetoCluster0p4 += clusterSize[i];
+    //
+    //   if (nCscFlag_recoJetVeto0p4 && (!me11)) MuonSystem->nCsc_JetVetoCluster0p4_Me11Veto+= clusterSize[i];
+    //   if (nCscFlag_recoJetVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= clusterSize[i];
+    //   if (nCscFlag_caloJetVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_caloJetVetoCluster0p4_Me1112Veto+= clusterSize[i];
+    //   if (nCscFlag_recoJetVeto0p4 && nCscFlag_recoMuonVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_JetMuonVetoCluster0p4_Me1112Veto+= clusterSize[i];
+    //   if (nCscFlag_caloJetVeto0p4 && nCscFlag_recoMuonVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_caloJetMuonVetoCluster0p4_Me1112Veto+= clusterSize[i];
+    //
+    //   CscCluster.push_back(tmpCluster);
+    // }
+    std::vector<cscCluster> CscCluster;
+
     int min_point = 10;//6
     float epsilon = 100;//100
-    DBSCAN ds(min_point, epsilon, points);
-    int nClusters = ds.run();
-    int clusterSize[nClusters] = {0};
-    int cscLabels_temp[nCsc] = {-999};
-    float clusterEta[nClusters] = {-999.};
-    float clusterPhi[nClusters] = {-999.};
-    float clusterX[nClusters] = {-999.};
-    float clusterY[nClusters] = {-999.};
-    float clusterZ[nClusters] = {-999.};
-    float clusterRadius[nClusters] = {-999.};
-    float clusterMajorAxis[nClusters] = {-999.};
-    float clusterMinorAxis[nClusters] = {-999.};
-
-    ds.result(nClusters, cscLabels_temp,clusterSize, clusterX, clusterY, clusterZ, clusterEta, clusterPhi, clusterRadius);
-    ds.clusterMoments(nClusters, clusterMajorAxis, clusterMinorAxis, clusterEta, clusterPhi, clusterSize);
-    for(int i = 0;i<nCsc;i++)
-    {
-      MuonSystem->cscLabels[i] = cscLabels_temp[i];
-    }
-
-    std::vector<cscCluster> CscCluster;
-    for(int i = 0; i < nClusters; i++)
-    {
-      cscCluster tmpCluster;
-      tmpCluster.x = clusterX[i];
-      tmpCluster.y = clusterY[i];
-      tmpCluster.z = clusterZ[i];
-      tmpCluster.radius = clusterRadius[i];
-      tmpCluster.MajorAxis = clusterMajorAxis[i];
-      tmpCluster.MinorAxis = clusterMinorAxis[i];
-
-      tmpCluster.eta = clusterEta[i];
-      tmpCluster.phi = clusterPhi[i];
-      tmpCluster.nCscSegments = clusterSize[i];
-      tmpCluster.station = cscStation(clusterX[i],clusterY[i],clusterZ[i]);
-
-      bool nCscFlag_recoJetVeto0p4 = true;
-      bool nCscFlag_recoMuonVeto0p4 = true;
-
-      bool me11 = false;
-      bool me12 = false;
-      float clusterR = sqrt(clusterX[i]*clusterX[i]+clusterY[i]*clusterY[i]);
-      if (abs(clusterZ[i]) > 568 && abs(clusterZ[i]) < 632 ) me11 = true;
-      if (abs(clusterZ[i]) > 663 && abs(clusterZ[i]) < 724 && abs(clusterR) > 275 && abs(clusterR) < 465) me12 = true;
-      for (int j = 0; j < nJets; j++)
+    //loop over stations
+    int nCluster_count = 0;
+    int nStations = 18;
+    int stations[nStations] = {-11, -12, -13, -21, -22, -31, -32, -41, -42, 11, 12, 13, 21, 22, 31, 32, 41, 42};
+    for (int k = 0; k<nStations; k++){
+      // get points in this particular station
+      vector<Point> points;
+      vector<int> cscSegmentIndex;
+      for(int l = 0; l < MuonSystem->nCsc; l++)
       {
-        if (jetPt[j]<JET_PT_CUT) continue;
-        if (abs(jetEta[j])>3) continue;
-
-        if (RazorAnalyzer::deltaR(clusterEta[i],clusterPhi[i],jetEta[j],jetPhi[j]) < 0.4) nCscFlag_recoJetVeto0p4 = false;
+        if (!(MuonSystem->cscStation[l] == stations[k])) continue;
+        Point p;
+        p.x = MuonSystem->cscX[l];
+        p.y = MuonSystem->cscY[l];
+        p.z = MuonSystem->cscZ[l];
+        p.clusterID = UNCLASSIFIED;
+        points.push_back(p);
+        cscSegmentIndex.push_back(l);
       }
-      for (int j = 0; j < nMuons; j++)
+      //run db scan only with points in the station
+      DBSCAN ds(min_point, epsilon, points);
+      int nClusters = ds.run();
+      int clusterSize[nClusters] = {0};
+      int cscLabels_temp[nCsc] = {-999};
+      float clusterEta[nClusters] = {-999.};
+      float clusterPhi[nClusters] = {-999.};
+      float clusterX[nClusters] = {-999.};
+      float clusterY[nClusters] = {-999.};
+      float clusterZ[nClusters] = {-999.};
+      float clusterRadius[nClusters] = {-999.};
+      float clusterMajorAxis[nClusters] = {-999.};
+      float clusterMinorAxis[nClusters] = {-999.};
+      float clusterXSpread[nClusters] = {0.};
+      float clusterYSpread[nClusters] = {0.};
+      float clusterZSpread[nClusters] = {0.};
+      float clusterEtaPhiSpread[nClusters] = {-999.};
+      float clusterEtaSpread[nClusters] = {-999.};
+      float clusterPhiSpread[nClusters] = {-999.};
+      ds.result(nClusters, cscLabels_temp,clusterSize, clusterX, clusterY, clusterZ, clusterEta, clusterPhi, clusterRadius);
+      ds.clusterMoments(nClusters, clusterMajorAxis, clusterMinorAxis,clusterXSpread, clusterYSpread, clusterZSpread, clusterEtaSpread, clusterPhiSpread, clusterEtaPhiSpread, clusterX, clusterY, clusterZ, clusterEta, clusterPhi, clusterSize);
+
+      // for(unsigned int l=0; l < cscSegmentIndex.size(); l++){
+      //   MuonSystem->cscLabels[cscSegmentIndex[l]] = (cscLabels_temp[l] == -1) ? -1 : nCluster_count+cscLabels_temp[l];
+      // }
+      // nCluster_count+=nClusters;
+      if (nClusters>1) std::cout<<"nclusters: "<< nClusters<<std::endl;
+      for(int i = 0; i < nClusters; i++)
       {
-        if (muonPt[j]<20) continue;
-        if (abs(muonEta[j])>3) continue;
+        vector<int>cluster_index;
+        vector<float>cscPosX;
+        vector<float>cscPosY;
+        vector<float>cscPosZ;
+        vector<float>cscDirX;
+        vector<float>cscDirY;
+        vector<float>cscDirZ;
 
-        if (RazorAnalyzer::deltaR(clusterEta[i],clusterPhi[i],muonEta[j],muonPhi[j]) < 0.4) nCscFlag_recoMuonVeto0p4 = false;
+        for(unsigned int l=0; l < cscSegmentIndex.size(); l++){
+          if (cscLabels_temp[l] == i+1){
+            int index= cscSegmentIndex[l];
+            cluster_index.push_back(cscSegmentIndex[l]);
+            cscPosX.push_back(MuonSystem->cscX[index]);
+            cscPosY.push_back(MuonSystem->cscY[index]);
+            cscPosZ.push_back(MuonSystem->cscZ[index]);
+            cscDirX.push_back(MuonSystem->cscDirectionX[index]);
+            cscDirY.push_back(MuonSystem->cscDirectionY[index]);
+            cscDirZ.push_back(MuonSystem->cscDirectionZ[index]);
+
+          }// MuonSystem->cscLabels[cscSegmentIndex[l]] = (cscLabels_temp[l] == -1) ? -1 : nCluster_count+cscLabels_temp[l];
+        }
+
+        float clusterVertexR = 0.0;
+        float clusterVertexZ = 0.0;
+        float clusterVertexDis = 0.0;
+        int clusterVertexN = 0;
+        // DBSCAN ds();
+        DBSCAN ds(min_point, epsilon, points);
+        ds.vertexing(cscPosX, cscPosY ,cscPosZ, cscDirX, cscDirY, cscDirZ,clusterVertexR,clusterVertexZ, clusterVertexN, clusterVertexDis);
+        if (clusterVertexN > 3 && clusterVertexR > 0)
+        {
+          for(int llp_index=0;llp_index<2;llp_index++){
+            if (abs(MuonSystem->gLLP_eta[llp_index]) < 2.4 && abs(MuonSystem->gLLP_eta[llp_index]) > 0.9
+              && abs(MuonSystem->gLLP_decay_vertex_z[llp_index])<1100 && abs(MuonSystem->gLLP_decay_vertex_z[llp_index])>568
+              && MuonSystem->gLLP_decay_vertex_r[llp_index] < 695.5){
+                cout << "vertex R, Z, N, dis:  " << clusterVertexR <<", "<< clusterVertexZ << ",  " << clusterVertexN <<",  " << clusterVertexDis<< endl;
+                cout << "LLP decay vertex  " << MuonSystem->gLLP_decay_vertex_r[llp_index] << ", " << MuonSystem->gLLP_decay_vertex_z[llp_index] << endl;
+                cout <<sqrt(pow(clusterVertexR-MuonSystem->gLLP_decay_vertex_r[llp_index],2) + pow(clusterVertexZ-MuonSystem->gLLP_decay_vertex_z[llp_index],2))<<endl;
+              }
+
+          }
+        }
+
+
+
+        cscCluster tmpCluster;
+        tmpCluster.x = clusterX[i];
+        tmpCluster.y = clusterY[i];
+        tmpCluster.z = clusterZ[i];
+        tmpCluster.radius = clusterRadius[i];
+        tmpCluster.MajorAxis = clusterMajorAxis[i];
+        tmpCluster.MinorAxis = clusterMinorAxis[i];
+        tmpCluster.XSpread = clusterXSpread[i];
+        tmpCluster.YSpread = clusterYSpread[i];
+        tmpCluster.ZSpread = clusterZSpread[i];
+        tmpCluster.EtaPhiSpread = clusterEtaPhiSpread[i];
+        tmpCluster.EtaSpread = clusterEtaSpread[i];
+        tmpCluster.PhiSpread = clusterPhiSpread[i];
+        tmpCluster.eta = clusterEta[i];
+        tmpCluster.phi = clusterPhi[i];
+        tmpCluster.nCscSegments = clusterSize[i];
+        tmpCluster.station = cscStation(clusterX[i],clusterY[i],clusterZ[i]);
+        tmpCluster.segment_index = cluster_index;
+        tmpCluster.vertex_r = clusterVertexR;
+        tmpCluster.vertex_z = clusterVertexZ;
+        tmpCluster.vertex_n = clusterVertexN;
+        tmpCluster.vertex_dis = clusterVertexDis;
+
+        if (!(tmpCluster.station == stations[k]))std::cout<<tmpCluster.station<<","<<stations[k]<<std::endl;
+        int Me1112hits = 0;
+        for(int j = 0; j < MuonSystem->nCsc; j++)
+        {
+          if (abs(MuonSystem->cscStation[j])>12) continue;
+          float cscPhi = atan(MuonSystem->cscY[j]/MuonSystem->cscX[j]);
+          if  (MuonSystem->cscX[j] < 0.0){
+            cscPhi = TMath::Pi() + cscPhi;
+          }
+          cscPhi = deltaPhi(cscPhi,0.0);
+          double theta = atan(sqrt(pow(MuonSystem->cscX[j],2)+pow(MuonSystem->cscY[j],2))/abs(MuonSystem->cscZ[j]));
+          float cscEta = -1.0*TMath::Sign(1.0, MuonSystem->cscZ[j])*log(tan(theta/2));
+          if (RazorAnalyzer::deltaR(clusterEta[i],clusterPhi[i],cscEta,cscPhi) < 0.4) Me1112hits++;
+        }
+        tmpCluster.Me1112hits = Me1112hits;
+
+
+        // Jet veto/ muon veto
+        bool nCscFlag_recoJetVeto0p4 = true;
+        bool nCscFlag_recoMuonVeto0p4 = true;
+        bool nCscFlag_caloJetVeto0p4 = true;
+        bool me11 = false;
+        bool me12 = false;
+        if (abs(stations[k]) == 11) me11 = true;
+        if (abs(stations[k]) == 12) me12 = true;
+        for (int j = 0; j < nJets; j++)
+        {
+          if (jetPt[j]<JET_PT_CUT) continue;
+          if (abs(jetEta[j])>3) continue;
+          if (RazorAnalyzer::deltaR(clusterEta[i],clusterPhi[i],jetEta[j],jetPhi[j]) < 0.4) nCscFlag_recoJetVeto0p4 = false;
+        }
+        for (int j = 0; j < nCaloJets; j++)
+        {
+          if (calojetPt[j]<JET_PT_CUT) continue;
+          if (abs(calojetEta[j])>3) continue;
+
+          if (RazorAnalyzer::deltaR(clusterEta[i],clusterPhi[i],calojetEta[j],calojetPhi[j]) < 0.4) nCscFlag_caloJetVeto0p4 = false;
+        }
+        for (int j = 0; j < nMuons; j++)
+        {
+          if (muonPt[j]<MUON_PT_CUT) continue;
+          if (abs(muonEta[j])>3) continue;
+
+          if (RazorAnalyzer::deltaR(clusterEta[i],clusterPhi[i],muonEta[j],muonPhi[j]) < 0.4) nCscFlag_recoMuonVeto0p4 = false;
+        }
+
+        tmpCluster.jetVeto = nCscFlag_recoJetVeto0p4;
+        tmpCluster.muonVeto = nCscFlag_recoMuonVeto0p4;
+        tmpCluster.calojetVeto = nCscFlag_caloJetVeto0p4;
+        if (nCscFlag_recoJetVeto0p4) MuonSystem->nCsc_JetVetoCluster0p4 += clusterSize[i];
+        if (nCscFlag_caloJetVeto0p4) MuonSystem->nCsc_caloJetVetoCluster0p4 += clusterSize[i];
+        if (nCscFlag_recoJetVeto0p4 && nCscFlag_recoMuonVeto0p4) MuonSystem->nCsc_JetMuonVetoCluster0p4 += clusterSize[i];
+        if (nCscFlag_caloJetVeto0p4 && nCscFlag_recoMuonVeto0p4) MuonSystem->nCsc_caloJetMuonVetoCluster0p4 += clusterSize[i];
+
+        if (nCscFlag_recoJetVeto0p4 && (!me11)) MuonSystem->nCsc_JetVetoCluster0p4_Me11Veto+= clusterSize[i];
+        if (nCscFlag_recoJetVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= clusterSize[i];
+        if (nCscFlag_caloJetVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_caloJetVetoCluster0p4_Me1112Veto+= clusterSize[i];
+        if (nCscFlag_recoJetVeto0p4 && nCscFlag_recoMuonVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_JetMuonVetoCluster0p4_Me1112Veto+= clusterSize[i];
+        if (nCscFlag_caloJetVeto0p4 && nCscFlag_recoMuonVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_caloJetMuonVetoCluster0p4_Me1112Veto+= clusterSize[i];
+
+
+
+        CscCluster.push_back(tmpCluster);
       }
-      tmpCluster.jetVeto = nCscFlag_recoJetVeto0p4;
-      tmpCluster.muonVeto = nCscFlag_recoMuonVeto0p4;
-
-      if (nCscFlag_recoJetVeto0p4) MuonSystem->nCsc_JetVetoCluster0p4 += clusterSize[i];
-      if (nCscFlag_recoJetVeto0p4 && nCscFlag_recoMuonVeto0p4) MuonSystem->nCsc_JetMuonVetoCluster0p4+= clusterSize[i];
-
-      if (nCscFlag_recoJetVeto0p4 && (!me11)) MuonSystem->nCsc_JetVetoCluster0p4_Me11Veto+= clusterSize[i];
-      if (nCscFlag_recoJetVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= clusterSize[i];
-      if (nCscFlag_recoJetVeto0p4 && nCscFlag_recoMuonVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_JetMuonVetoCluster0p4_Me1112Veto+= clusterSize[i];
-
-      CscCluster.push_back(tmpCluster);
     }
     sort(CscCluster.begin(), CscCluster.end(), my_largest_nCsc);
+
+    //*********************** VERTEXING ******************** //
     //most populated cluster with jet veto
+    // loop over biggest cluster
+    //input the largest cluster, 30cm, 3 vertex cut
+    //output the vertex location
+
+
+    //*********************** END VERTEXING ******************** //
     bool first = true;
     for ( auto &tmp : CscCluster )
     {
@@ -954,22 +1324,47 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       MuonSystem->cscClusterRadius[MuonSystem->nCscClusters] =tmp.radius;
       MuonSystem->cscClusterMajorAxis[MuonSystem->nCscClusters] =tmp.MajorAxis;
       MuonSystem->cscClusterMinorAxis[MuonSystem->nCscClusters] =tmp.MinorAxis;
-
+      MuonSystem->cscClusterXSpread[MuonSystem->nCscClusters] =tmp.XSpread;
+      MuonSystem->cscClusterYSpread[MuonSystem->nCscClusters] =tmp.YSpread;
+      MuonSystem->cscClusterZSpread[MuonSystem->nCscClusters] =tmp.ZSpread;
+      MuonSystem->cscClusterEtaPhiSpread[MuonSystem->nCscClusters] =tmp.EtaPhiSpread;
+      MuonSystem->cscClusterEtaSpread[MuonSystem->nCscClusters] =tmp.EtaSpread;
+      MuonSystem->cscClusterPhiSpread[MuonSystem->nCscClusters] = tmp.PhiSpread;
       MuonSystem->cscClusterSize[MuonSystem->nCscClusters] = tmp.nCscSegments;
       MuonSystem->cscClusterJetVeto[MuonSystem->nCscClusters] = tmp.jetVeto;
+      MuonSystem->cscClusterCaloJetVeto[MuonSystem->nCscClusters] = tmp.calojetVeto;
+
       MuonSystem->cscClusterMuonVeto[MuonSystem->nCscClusters] = tmp.muonVeto;
       MuonSystem->cscClusterStation[MuonSystem->nCscClusters] = tmp.station;
+      MuonSystem->cscClusterMe1112hits[MuonSystem->nCscClusters] = tmp.Me1112hits;
+      MuonSystem->cscClusterVertexR[MuonSystem->nCscClusters] = tmp.vertex_r;
+      MuonSystem->cscClusterVertexZ[MuonSystem->nCscClusters] = tmp.vertex_z;
+      MuonSystem->cscClusterVertexN[MuonSystem->nCscClusters] = tmp.vertex_n;
+      MuonSystem->cscClusterVertexDis[MuonSystem->nCscClusters] = tmp.vertex_dis;
+
       if (tmp.jetVeto && tmp.muonVeto && first){
         first = false;
         MuonSystem->nCsc0_JetMuonVetoCluster0p4 = tmp.nCscSegments;
       }
+      MuonSystem->cscClusterTime[MuonSystem->nCscClusters] = 0.0;
+      MuonSystem->cscClusterTimeSpread[MuonSystem->nCscClusters] = 0.0;
+      for(unsigned int i = 0; i<tmp.segment_index.size(); i++){
+          MuonSystem->cscLabels[tmp.segment_index[i]] =  MuonSystem->nCscClusters;
+          MuonSystem->cscClusterTime[MuonSystem->nCscClusters] += MuonSystem->cscT[i];
+      }
+      MuonSystem->cscClusterTime[MuonSystem->nCscClusters] = 1.0*MuonSystem->cscClusterTime[MuonSystem->nCscClusters]/tmp.segment_index.size();
+      for(unsigned int i = 0; i<tmp.segment_index.size(); i++){
+          MuonSystem->cscClusterTimeSpread[MuonSystem->nCscClusters] += pow(MuonSystem->cscT[i]-MuonSystem->cscClusterTime[MuonSystem->nCscClusters],2);
+      }
+      MuonSystem->cscClusterTimeSpread[MuonSystem->nCscClusters] = sqrt(MuonSystem->cscClusterTimeSpread[MuonSystem->nCscClusters]/tmp.segment_index.size());
+
 
       // std::cout << "lepton pdg " << MuonSystem->lepPdgId[MuonSystem->nLeptons] << std::endl;
       MuonSystem->nCscClusters++;
     }
 
 
-
+    // std::cout<<nMuons<<","<<nElectrons<<std::endl;
 
 
     std::vector<leptons> Leptons;
@@ -978,9 +1373,9 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //-------------------------------
     for( int i = 0; i < nMuons; i++ )
     {
-      // if(!isMuonPOGLooseMuon(i)) continue;
-      if(muonPt[i] < 20) continue;
-      if(fabs(muonEta[i]) > 3) continue;
+      if(!isMuonPOGLooseMuon(i)) continue;
+      if(muonPt[i] < muonPt_cut) continue;
+      if(fabs(muonEta[i]) > 2.4) continue;
 
       //remove overlaps
       bool overlap = false;
@@ -994,7 +1389,10 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       tmpMuon.lepton.SetPtEtaPhiM(muonPt[i],muonEta[i], muonPhi[i], MU_MASS);
       tmpMuon.pdgId = 13 * -1 * muonCharge[i];
       tmpMuon.dZ = muon_dZ[i];
-      tmpMuon.passId = isMuonPOGTightMuon(i);
+      tmpMuon.passId = isMuonPOGLooseMuon(i);
+      // tmpMuon.passId = isLooseMuon(i);
+      tmpMuon.passVetoId = false;
+      // tmpMuon.passVetoPOGId = false;
 
       Leptons.push_back(tmpMuon);
     }
@@ -1010,13 +1408,11 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       // ( (fabs(eleEta[i]) < 1.5 && fabs(ele_d0[i]) < 0.0564) ||
       // (fabs(eleEta[i]) >= 1.5 && fabs(ele_d0[i]) < 0.222))
       // && passEGammaPOGVetoElectronIso(i))) continue;
-      if (!isEGammaPOGVetoElectron(i, true, true, true, "Summer16")) continue;
-
-      if (!( (fabs(eleEta[i]) < 1.5 && fabs(ele_d0[i]) < 0.0564) ||
-      (fabs(eleEta[i]) >= 1.5 && fabs(ele_d0[i]) < 0.222))) continue;
-
+      // std::cout<<isLooseElectron(i, true, true, true, "Summer16")<<","<<isEGammaPOGLooseElectron(i, true, true, true, "Summer16")<<std::endl;
+      if (!isEGammaPOGLooseElectron(i, true, true, true, "Summer16")) continue;
+      // if (!( (fabs(eleEta[i]) < 1.5 && fabs(ele_d0[i]) < 0.0564) ||
+      // (fabs(eleEta[i]) >= 1.5 && fabs(ele_d0[i]) < 0.222))) continue;
       if(elePt[i] < elePt_cut) continue;
-
       if(fabs(eleEta[i]) > 2.4) continue;
 
       //remove overlaps
@@ -1030,7 +1426,8 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       tmpElectron.lepton.SetPtEtaPhiM(elePt[i],eleEta[i], elePhi[i], ELE_MASS);
       tmpElectron.pdgId = 11 * -1 * eleCharge[i];
       tmpElectron.dZ = ele_dZ[i];
-      // tmpElectron.passId = passMVALooseElectronID(i) && passEGammaPOGLooseElectronIso(i);
+      tmpElectron.passId = isEGammaPOGLooseElectron(i, true, true, true, "Summer16");
+      tmpElectron.passVetoId = isEGammaPOGVetoElectron(i, true, true, true, "Summer16");
       Leptons.push_back(tmpElectron);
     }
 
@@ -1045,7 +1442,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       MuonSystem->lepPdgId[MuonSystem->nLeptons]  = tmp.pdgId;
       MuonSystem->lepDZ[MuonSystem->nLeptons]     = tmp.dZ;
       MuonSystem->lepPassId[MuonSystem->nLeptons] = tmp.passId;
-
+      MuonSystem->lepPassVetoId[MuonSystem->nLeptons] = tmp.passVetoId;
 
       // std::cout << "lepton pdg " << MuonSystem->lepPdgId[MuonSystem->nLeptons] << std::endl;
       MuonSystem->nLeptons++;
@@ -1111,7 +1508,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //   std::cout <<nMuons << "," << nElectrons <<  "," << MuonSystem->nLeptons <<  "," << MuonSystem->met << std::endl;
     // }
 
-    //if ( Leptons.size() < nLepton_cut ) continue;
+    if ( !(Leptons.size() == nLepton_cut )) continue;
     TLorentzVector met;
 
     met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
@@ -1239,49 +1636,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       MuonSystem->nJets++;
     }
 
-    //Jet vetoing
-    for (int i = 0; i < nCsc; i++)
-    {
-      bool nCscFlag_JetLepVeto0p4 = true;
-      bool nCscFlag_JetLepVeto0p8 = true;
-      bool me11 = false;
-      bool me12 = false;
-      float cscR = sqrt(cscX[i]*cscX[i]+cscY[i]*cscY[i]);
-      if (abs(cscZ[i]) > 568 && abs(cscZ[i]) < 632 ) me11 = true;
-      if (abs(cscZ[i]) > 663 && abs(cscZ[i]) < 724 && abs(cscR) > 275 && abs(cscR) < 465) me12 = true;
-      for (int j = 0; j < MuonSystem->nJets; j++)
-      {
-        if (jetPt[j]<5) continue;
-        if (abs(jetEta[j])>3) continue;
-        if (RazorAnalyzer::deltaR(cscEta[i],cscPhi[i],MuonSystem->jetEta[j],MuonSystem->jetPhi[j]) < 0.4) {
-          nCscFlag_JetLepVeto0p4 = false;
-        }
-        if (RazorAnalyzer::deltaR(cscEta[i],cscPhi[i],MuonSystem->jetEta[j],MuonSystem->jetPhi[j]) < 0.8) {
-          nCscFlag_JetLepVeto0p8 = false;
-        }
 
-      }
-      for (int j = 0; j < MuonSystem->nLeptons; j++)
-      {
-        if (RazorAnalyzer::deltaR(cscEta[i],cscPhi[i],MuonSystem->lepEta[j],MuonSystem->lepPhi[j]) < 0.4) {
-          nCscFlag_JetLepVeto0p4 = false;
-        }
-        if (RazorAnalyzer::deltaR(cscEta[i],cscPhi[i],MuonSystem->lepEta[j],MuonSystem->lepPhi[j]) < 0.8) {
-          nCscFlag_JetLepVeto0p8 = false;
-        }
-      }
-
-      if (nCscFlag_JetLepVeto0p4) MuonSystem->nCsc_JetLepVeto0p4++;
-      if (nCscFlag_JetLepVeto0p8) MuonSystem->nCsc_JetLepVeto0p8++;
-      if (nCscFlag_JetLepVeto0p4 && (!me11)) MuonSystem->nCsc_JetLepVeto0p4_Me11Veto++;
-      if (nCscFlag_JetLepVeto0p8 && (!me11)) MuonSystem->nCsc_JetLepVeto0p8_Me11Veto++;
-      if (nCscFlag_JetLepVeto0p4 && (!me11) && (!me12)) MuonSystem->nCsc_JetLepVeto0p4_Me1112Veto++;
-      if (nCscFlag_JetLepVeto0p8 && (!me11) && (!me12)) MuonSystem->nCsc_JetLepVeto0p8_Me1112Veto++;
-
-
-    }
-    if ((MuonSystem->nCsc-MuonSystem->nCsc_JetLepVeto0p4)  > N_CSC_CUT)  MuonSystem->event_JetLepVeto0p4 = false;
-    if ((MuonSystem->nCsc-MuonSystem->nCsc_JetLepVeto0p8)  > N_CSC_CUT)  MuonSystem->event_JetLepVeto0p8 = false;
 
     //std::cout << "deb fill: " << MuonSystem->nLeptons << " " << jentry << endl;
     MuonSystem->tree_->Fill();

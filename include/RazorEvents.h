@@ -348,6 +348,10 @@ public :
    std::vector<bool>    *ecalRechit_GainSwitch1;
    std::vector<bool>    *ecalRechit_GainSwitch6;
    std::vector<float>   *ecalRechit_transpCorr;
+   Float_t         gLLP_eta[2];
+   Float_t         gLLP_decay_vertex_x[2];
+   Float_t         gLLP_decay_vertex_y[2];
+   Float_t         gLLP_decay_vertex_z[2];
    Int_t           nGenJets;
    Float_t         genJetE[50];   //[nGenJets]
    Float_t         genJetPt[50];   //[nGenJets]
@@ -707,6 +711,12 @@ public :
    TBranch        *b_ecalRechit_GainSwitch1;   //!
    TBranch        *b_ecalRechit_GainSwitch6;   //!
    TBranch        *b_ecalRechit_transpCorr;   //!
+   TBranch        *b_gLLP_eta;
+   TBranch        *b_gLLP_decay_vertex_x;
+   TBranch        *b_gLLP_decay_vertex_y;
+   TBranch        *b_gLLP_decay_vertex_z;
+
+
    TBranch        *b_nGenJets;   //!
    TBranch        *b_genJetE;   //!
    TBranch        *b_genJetPt;   //!
@@ -757,7 +767,7 @@ public :
 #endif
 
 #ifdef RazorEvents_cxx
-RazorEvents::RazorEvents(TTree *tree) : fChain(0) 
+RazorEvents::RazorEvents(TTree *tree) : fChain(0)
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
@@ -1173,7 +1183,7 @@ void RazorEvents::Init(TTree *tree)
    fChain->SetBranchAddress("genQScale", &genQScale, &b_genQScale);
    fChain->SetBranchAddress("genAlphaQCD", &genAlphaQCD, &b_genAlphaQCD);
    fChain->SetBranchAddress("genAlphaQED", &genAlphaQED, &b_genAlphaQED);
-   fChain->SetBranchAddress("lheComments", &lheComments, &b_lheComments);   
+   fChain->SetBranchAddress("lheComments", &lheComments, &b_lheComments);
    fChain->SetBranchAddress("scaleWeights", &scaleWeights, &b_scaleWeights);
    fChain->SetBranchAddress("pdfWeights", &pdfWeights, &b_pdfWeights);
    fChain->SetBranchAddress("alphasWeights", &alphasWeights, &b_alphasWeights);

@@ -31,11 +31,13 @@ void RazorAnalyzer::EnableAll(){
     EnablePhotons();
     EnableCSC();
     EnableJets();
+    EnableCaloJets();
     EnableFatJets();
     EnableMet();
     EnablePileup();
     EnableMC();
     EnableGenParticles();
+    EnableLLP();
     EnableEcalRechits();
 }
 
@@ -53,6 +55,7 @@ void RazorAnalyzer::EnableAllWithEcalRechits(){
     EnablePileup();
     EnableMC();
     EnableGenParticles();
+    EnableLLP();
     EnableEcalRechits();
 }
 
@@ -262,6 +265,14 @@ void RazorAnalyzer::EnablePhotons(){
     fChain->SetBranchStatus("pho_anyRecHitSwitchToGain1", 1);
 };
 
+void RazorAnalyzer::EnableCaloJets(){
+  fChain->SetBranchStatus("nCaloJets", 1);
+  fChain->SetBranchStatus("calojetE", 1);
+  fChain->SetBranchStatus("calojetPt", 1);
+  fChain->SetBranchStatus("calojetEta", 1);
+  fChain->SetBranchStatus("calojetPhi", 1);
+};
+
 void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("nJets", 1);
     fChain->SetBranchStatus("jetE", 1);
@@ -411,6 +422,9 @@ void RazorAnalyzer::EnableCSC()
     fChain->SetBranchStatus("cscX", 1);
     fChain->SetBranchStatus("cscY", 1);
     fChain->SetBranchStatus("cscZ", 1);
+    fChain->SetBranchStatus("cscDirectionX", 1);
+    fChain->SetBranchStatus("cscDirectionY", 1);
+    fChain->SetBranchStatus("cscDirectionZ", 1);
     fChain->SetBranchStatus("cscNRecHits", 1);
     fChain->SetBranchStatus("cscNRecHits_flag", 1);
     fChain->SetBranchStatus("cscT", 1);
@@ -452,6 +466,15 @@ void RazorAnalyzer::EnableGenParticles(){
     fChain->SetBranchStatus("gParticlePt", 1);
     fChain->SetBranchStatus("gParticleEta", 1);
     fChain->SetBranchStatus("gParticlePhi", 1);
+    //fChain->SetBranchStatus("gParticleDecayVertexX", 1);
+    //fChain->SetBranchStatus("gParticleDecayVertexY", 1);
+    //fChain->SetBranchStatus("gParticleDecayVertexZ", 1);
+}
+void RazorAnalyzer::EnableLLP(){
+    fChain->SetBranchStatus("gLLP_eta", 1);
+    fChain->SetBranchStatus("gLLP_decay_vertex_x", 1);
+    fChain->SetBranchStatus("gLLP_decay_vertex_y", 1);
+    fChain->SetBranchStatus("gLLP_decay_vertex_z", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexX", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexY", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexZ", 1);
