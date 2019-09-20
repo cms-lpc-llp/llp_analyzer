@@ -1,4 +1,4 @@
-dir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v10/v10/signals/wH/normalized/
+dir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v10/v11/signals/wH/normalized/
 eval `scram runtime -sh`
 
 for sample in \

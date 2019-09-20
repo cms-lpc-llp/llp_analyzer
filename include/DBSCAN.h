@@ -34,8 +34,7 @@ public:
     double deltaPhi(double phi1, double phi2);
     int result(int &nClusters, int cscLabels[], int clusterSize[], float clusterX[], float clusterY[], float clusterZ[], float clusterEta[], float clusterPhi[], float clusterRadius[]);
     int clusterMoments(int &nClusters, float clusterMajorAxis[], float clusterMinorAxis[], float clusterXSpread[], float clusterYSpread[], float clusterZSpread[], float clusterEtaSpread[], float clusterPhiSpread[],float clusterEtaPhiSpread[], float clusterX[], float clusterY[], float clusterZ[], float clusterEta[], float clusterPhi[], int clusterSize[]);
-    int vertexing(vector<float> cscX,vector<float> cscY, vector<float> cscZ, vector<float> cscDirX, vector<float> cscDirY, vector<float> cscDirZ, float &clusterVertexR, float &clusterVertexZ, int &clusterVertexN, float &clusterVertexDis);
-
+    int vertexing(vector<float> cscX,vector<float> cscY, vector<float> cscZ, vector<float> cscDirX, vector<float> cscDirY, vector<float> cscDirZ, float &clusterVertexR, float &clusterVertexZ, float &clusterVertexDis,float &clusterVertexChi2, int &clusterVertexN,int &clusterVertexN1cm, int &clusterVertexN5cm, int &clusterVertexN10cm, int &clusterVertexN15cm, int &clusterVertexN20cm);
     vector<int> calculateCluster(Point point);
     int expandCluster(Point point, int clusterID);
     inline double calculateDistance(Point pointCore, Point pointTarget);

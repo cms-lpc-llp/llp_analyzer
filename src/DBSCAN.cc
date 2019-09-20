@@ -96,7 +96,7 @@ int DBSCAN::result(int &nClusters, int cscLabels[], int clusterSize[], float clu
   return 0;
 }
 //input x,y,z of segments in cluster, avgX, avgY, avgZ
-int DBSCAN::vertexing(vector<float> cscX,vector<float> cscY, vector<float> cscZ, vector<float> cscDirX, vector<float> cscDirY, vector<float> cscDirZ, float &clusterVertexR, float &clusterVertexZ, int &clusterVertexN, float &clusterVertexDis)
+int DBSCAN::vertexing(vector<float> cscX,vector<float> cscY, vector<float> cscZ, vector<float> cscDirX, vector<float> cscDirY, vector<float> cscDirZ, float &clusterVertexR, float &clusterVertexZ, float &clusterVertexDis, float &clusterVertexChi2, int &clusterVertexN,int &clusterVertexN1cm, int &clusterVertexN5cm, int &clusterVertexN10cm, int &clusterVertexN15cm, int &clusterVertexN20cm)
 {
 
   TVector3 vecDir;
@@ -151,17 +151,33 @@ int DBSCAN::vertexing(vector<float> cscX,vector<float> cscY, vector<float> cscZ,
   	  gr->RemovePoint(farSegment);
   	}
   }
+  // count number of segment in distance 1,5,10,20cm
+  for (int i=0; i<gr->GetN(); i++){
+    // Distance from point (x_0, y_0) to line ax + by + c = 0 is |ax_0 + by_0 + c| / sqrt(a^2 + b^2)
+    // Here: a = slope = "X"; b = -1,;c = intercept = "Y"; (x_0, y_0) = (z, r) = (-p[1], p[0]);
+    distance = abs(gr->GetX()[i]*fit->GetParameter(1)*-1.0 + -1.0*fit->GetParameter(0) + gr->GetY()[i]);
+    distance = distance / sqrt(pow(gr->GetX()[i],2)+pow(-1.0,2));
+    if (distance < 1.0) clusterVertexN1cm ++;
+    if (distance < 5.0) clusterVertexN5cm ++;
+    if (distance < 10.0) clusterVertexN10cm ++;
+    if (distance < 15.0) clusterVertexN15cm ++;
+    if (distance < 20.0) clusterVertexN20cm ++;
+
+  }
   if (goodVtx && gr->GetN()>=3){
     clusterVertexR = fit->GetParameter(0);
     clusterVertexZ = -1.0*fit->GetParameter(1);
     clusterVertexN = gr->GetN();
     clusterVertexDis = maxDistance;
+    clusterVertexChi2 = fit->GetChisquare() ;
   }
   else{
     clusterVertexR = 0.0;
     clusterVertexZ = 0.0;
     clusterVertexN = 0;
     clusterVertexDis =-999;
+    clusterVertexChi2 = -999.;
+
   }
   // cout << "vertex? " << goodVtx << ", # segments = " << gr->GetN() << ", maxDistance = " << maxDistance << endl;
   // cout << "vertex R, Z, N:  " << clusterVertexR <<", " << clusterVertexZ << ",  " << clusterVertexN << endl;
