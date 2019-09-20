@@ -39,7 +39,8 @@ double getNormalizationWeight(string filename, string datasetName, double intLum
     return 0;
   }
 
-  TH1F *hist = (TH1F*) file->Get("NEvents");
+  //TH1F *hist = (TH1F*) file->Get("NEvents");
+  TH1F *hist = (TH1F*) file->Get("NEvents_genweight");
   if (!hist) {
     cout << "Could not find histogram NEvents"
          << " in file " << filename << endl;
@@ -181,6 +182,7 @@ int main(int argc, char* argv[]) {
 		  if (foundWeightBranch) {
 		    //if weight branch exists, then multiply the value stored by the normalizationWeight
 		    weight = inputweight * normalizationWeight;		    
+		    //weight = normalizationWeight;
 		  } else {
 		    //if the weight branch doesn't exist, use the normalizationWeight as the weight
 		    weight = normalizationWeight;

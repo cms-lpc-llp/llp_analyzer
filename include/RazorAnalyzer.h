@@ -37,10 +37,12 @@ class RazorAnalyzer: public llp_event {
         void EnableIsoPFCandidates();
         void EnablePhotons();
         void EnableJets();
+        void EnableCaloJets();
         void EnableFatJets();
         void EnableMet();
         void EnablePileup();
         void EnableMC();
+        void EnableLLP();
         void EnableGenParticles();
         void EnableRazor();
         void EnableCSC();

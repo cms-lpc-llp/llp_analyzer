@@ -22,8 +22,8 @@ WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 do
 	echo "Sample " ${sample}
 	#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
-	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v5/v2/bkg/wH/${sample}
-	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p7/MC_Summer16/v5/sixie/${sample}.txt
+	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v10/v11/bkg/wH/${sample}
+	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p7/MC_Summer16/v10/sixie/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
         maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 	mod=`python -c "print int($nfiles.0%$filesPerJob)"`
