@@ -31,8 +31,8 @@ if [ -f /mnt/hadoop/$dir/$outputRoot ]
 then
 	echo "copy succeed"
 	rm ${outputRoot}
-	gfal-rm gsiftp://transfer.ultralight.org//$dir/WplusH_${sample}_1pb_weighted.root
-	gfal-rm gsiftp://transfer.ultralight.org//$dir/WminusH_${sample}_1pb_weighted.root
+#	gfal-rm gsiftp://transfer.ultralight.org//$dir/WplusH_${sample}_1pb_weighted.root
+#	gfal-rm gsiftp://transfer.ultralight.org//$dir/WminusH_${sample}_1pb_weighted.root
 fi
 done
 

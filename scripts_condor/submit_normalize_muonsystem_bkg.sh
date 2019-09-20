@@ -10,7 +10,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 mode=bkg
-inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v10/v10/bkg/wH/
+inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v10/v11/bkg/wH/
 outputDir=${inputDir}normalized
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 
