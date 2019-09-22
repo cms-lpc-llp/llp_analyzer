@@ -191,6 +191,7 @@ public:
   int           cscClusterVertexN20[N_MAX_CSC];   //[nCsc]
   float         cscClusterVertexChi2[N_MAX_CSC];   //[nCsc]
   float         cscClusterVertexDis[N_MAX_CSC];   //[nCsc]
+  float         cscClusterGenMuonDeltaR[N_MAX_CSC];
   int           nCscSubClusters;   //[nCsc]
   int           cscSubClustersSize;   //[nCsc]
 
@@ -231,7 +232,7 @@ public:
   float         cscITClusterTime[N_MAX_CSC];   //[nCsc]
   float         cscITClusterTimeSpread[N_MAX_CSC];
   float         cscITClusterTimeRMS[N_MAX_CSC];
-
+  float         cscITClusterGenMuonDeltaR[N_MAX_CSC];
   float         cscITClusterMajorAxis[N_MAX_CSC];
   float         cscITClusterMinorAxis[N_MAX_CSC];
   float         cscITClusterXSpread[N_MAX_CSC];   //[nCsc]
@@ -425,7 +426,7 @@ public:
       cscClusterVertexN10[i] = 0;
       cscClusterVertexN15[i] = 0;
       cscClusterVertexN20[i] = 0;
-
+      cscClusterGenMuonDeltaR[i] = 999.;
       //csc in time cluster
       cscITClusterSize[i] = -999;
       cscITClusterX[i] = -999.;
@@ -461,6 +462,7 @@ public:
       cscITClusterVertexN10[i] = 0;
       cscITClusterVertexN15[i] = 0;
       cscITClusterVertexN20[i] = 0;
+      cscITClusterGenMuonDeltaR[i] = 999.;
       cscITCluster_match_cscCluster_index[i] = -999;
       cscITCluster_cscCluster_SizeRatio[i] = -999.;
 
@@ -609,6 +611,8 @@ public:
     tree_->Branch("cscClusterVertexN15",             cscClusterVertexN15,             "cscClusterVertexN15[nCscClusters]/I");
     tree_->Branch("cscClusterVertexN20",             cscClusterVertexN20,             "cscClusterVertexN20[nCscClusters]/I");
     tree_->Branch("cscClusterVertexN",             cscClusterVertexN,             "cscClusterVertexN[nCscClusters]/I");
+    tree_->Branch("cscClusterGenMuonDeltaR",             cscClusterGenMuonDeltaR,             "cscClusterGenMuonDeltaR[nCscClusters]/F");
+
 
 
     tree_->Branch("nCsc_Me11Veto",             &nCsc_Me11Veto,"nCsc_Me11Veto/I");
@@ -677,6 +681,7 @@ public:
     tree_->Branch("nCsc_JetMuonVetoITCluster0p4_Me1112Veto",             &nCsc_JetMuonVetoITCluster0p4_Me1112Veto,"nCsc_JetMuonVetoITCluster0p4_Me1112Veto/I");
     tree_->Branch("cscITCluster_match_cscCluster_index",             cscITCluster_match_cscCluster_index,             "cscITCluster_match_cscCluster_index[nCscITClusters]/I");
     tree_->Branch("cscITCluster_cscCluster_SizeRatio",             cscITCluster_cscCluster_SizeRatio,             "cscITCluster_cscCluster_SizeRatio[nCscITClusters]/F");
+    tree_->Branch("cscITClusterGenMuonDeltaR",             cscITClusterGenMuonDeltaR,             "cscITClusterGenMuonDeltaR[nCscITClusters]/F");
 
 
     //gLLP branches
@@ -807,6 +812,7 @@ public:
     tree_->SetBranchAddress("cscClusterMuonVeto",             cscClusterMuonVeto);
     tree_->SetBranchAddress("cscClusterMe1112hits",             cscClusterMe1112hits);
     tree_->SetBranchAddress("cscClusterSize",             cscClusterSize);
+    tree_->SetBranchAddress("cscClusterGenMuonDeltaR",             cscClusterGenMuonDeltaR);
 
     tree_->SetBranchAddress("nCsc_Me11Veto",             &nCsc_Me11Veto);
     tree_->SetBranchAddress("nCsc_Me12Veto",             &nCsc_Me12Veto);
@@ -872,6 +878,7 @@ public:
     tree_->SetBranchAddress("cscITClusterSize",             cscITClusterSize);
     tree_->SetBranchAddress("cscITCluster_match_cscCluster_index",             cscITCluster_match_cscCluster_index);
     tree_->SetBranchAddress("cscITCluster_cscCluster_SizeRatio",             cscITCluster_cscCluster_SizeRatio);
+    tree_->SetBranchAddress("cscITClusterGenMuonDeltaR",             cscITClusterGenMuonDeltaR);
 
     tree_->SetBranchAddress("nCsc_JetVetoITCluster0p4",             &nCsc_JetVetoITCluster0p4);
     tree_->SetBranchAddress("nCsc_JetMuonVetoITCluster0p4",             &nCsc_JetMuonVetoITCluster0p4);
@@ -1585,13 +1592,26 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       for(unsigned int i = 0; i<tmp.segment_index.size(); i++){
           MuonSystem->cscLabels[tmp.segment_index[i]] =  MuonSystem->nCscClusters;
           MuonSystem->cscClusterTime[MuonSystem->nCscClusters] += MuonSystem->cscT[tmp.segment_index[i]];
-          MuonSystem->cscClusterTimeSpread[MuonSystem->nCscClusters] += pow(MuonSystem->cscT[tmp.segment_index[i]]-MuonSystem->cscClusterTime[MuonSystem->nCscClusters],2);
           MuonSystem->cscClusterTimeRMS[MuonSystem->nCscClusters] += pow(MuonSystem->cscT[tmp.segment_index[i]],2);
 
       }
       MuonSystem->cscClusterTime[MuonSystem->nCscClusters] = 1.0*MuonSystem->cscClusterTime[MuonSystem->nCscClusters]/tmp.segment_index.size();
+      for(unsigned int i = 0; i<tmp.segment_index.size(); i++){
+          MuonSystem->cscClusterTimeSpread[MuonSystem->nCscClusters] += pow(MuonSystem->cscT[tmp.segment_index[i]]-MuonSystem->cscClusterTime[MuonSystem->nCscClusters],2);
+
+      }
       MuonSystem->cscClusterTimeSpread[MuonSystem->nCscClusters] = sqrt(MuonSystem->cscClusterTimeSpread[MuonSystem->nCscClusters]/tmp.segment_index.size());
       MuonSystem->cscClusterTimeRMS[MuonSystem->nCscClusters] = sqrt(MuonSystem->cscClusterTimeRMS[MuonSystem->nCscClusters]/tmp.segment_index.size());
+      // match to genmuon
+      for(int i = 0; i < nGenParticle; i++)
+      {
+        if (!(abs(gParticleId[i]) == 13)) continue;
+        float deltaR_temp = RazorAnalyzer::deltaR(tmp.eta, tmp.phi, gParticleEta[i], gParticlePhi[i]);
+        if (deltaR_temp < MuonSystem->cscClusterGenMuonDeltaR[MuonSystem->nCscClusters])  MuonSystem->cscClusterGenMuonDeltaR[MuonSystem->nCscClusters] = deltaR_temp;
+
+      }
+
+
 
       // std::cout << "lepton pdg " << MuonSystem->lepPdgId[MuonSystem->nLeptons] << std::endl;
       MuonSystem->nCscClusters++;
@@ -1850,14 +1870,23 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       for(unsigned int i = 0; i<tmp.segment_index.size(); i++){
           MuonSystem->cscITLabels[tmp.segment_index[i]] =  MuonSystem->nCscITClusters;
           MuonSystem->cscITClusterTime[MuonSystem->nCscITClusters] += MuonSystem->cscT[tmp.segment_index[i]];
-          MuonSystem->cscITClusterTimeSpread[MuonSystem->nCscITClusters] += pow(MuonSystem->cscT[tmp.segment_index[i]]-MuonSystem->cscITClusterTime[MuonSystem->nCscITClusters],2);
           MuonSystem->cscITClusterTimeRMS[MuonSystem->nCscITClusters] += pow(MuonSystem->cscT[tmp.segment_index[i]],2);
 
       }
       MuonSystem->cscITClusterTime[MuonSystem->nCscITClusters] = 1.0*MuonSystem->cscITClusterTime[MuonSystem->nCscITClusters]/tmp.segment_index.size();
+      for(unsigned int i = 0; i<tmp.segment_index.size(); i++){
+          MuonSystem->cscITClusterTimeSpread[MuonSystem->nCscITClusters] += pow(MuonSystem->cscT[tmp.segment_index[i]]-MuonSystem->cscITClusterTime[MuonSystem->nCscITClusters],2);
+
+      }
       MuonSystem->cscITClusterTimeSpread[MuonSystem->nCscITClusters] = sqrt(MuonSystem->cscITClusterTimeSpread[MuonSystem->nCscITClusters]/tmp.segment_index.size());
       MuonSystem->cscITClusterTimeRMS[MuonSystem->nCscITClusters] = sqrt(MuonSystem->cscClusterTimeRMS[MuonSystem->nCscITClusters]/tmp.segment_index.size());
+      for(int i = 0; i < nGenParticle; i++)
+      {
+        if (!(abs(gParticleId[i]) == 13)) continue;
+        float deltaR_temp = RazorAnalyzer::deltaR(tmp.eta, tmp.phi, gParticleEta[i], gParticlePhi[i]);
+        if (deltaR_temp < MuonSystem->cscITClusterGenMuonDeltaR[MuonSystem->nCscITClusters])  MuonSystem->cscITClusterGenMuonDeltaR[MuonSystem->nCscITClusters] = deltaR_temp;
 
+      }
       // std::cout << "lepton pdg " << MuonSystem->lepPdgId[MuonSystem->nLeptons] << std::endl;
       MuonSystem->nCscITClusters++;
     }
