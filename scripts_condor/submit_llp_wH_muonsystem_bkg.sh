@@ -10,20 +10,24 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=30
+filesPerJob=10
 
 #WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8 \
 #WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
 #WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
 #WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
 #WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
+
+#WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8
+#WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 for sample in \
-WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
+WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
 do
 	echo "Sample " ${sample}
 	#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
-	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v10/v11/bkg/wH/${sample}
-	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p7/MC_Summer16/v10/sixie/${sample}.txt
+	version=/V1p7/MC_Fall17/v12/
+	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/${version}/v5/bkg/wH/${sample}
+	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
         maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 	mod=`python -c "print int($nfiles.0%$filesPerJob)"`

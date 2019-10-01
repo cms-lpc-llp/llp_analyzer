@@ -394,6 +394,8 @@ public :
    Float_t         gParticleEta[4000];   //[nGenParticle]
    Float_t         gParticlePhi[4000];   //[nGenParticle]
    Float_t         gLLP_eta[2];
+   Float_t         gLLP_beta[2];
+   Float_t         gLLP_phi[2];
    Float_t         gLLP_decay_vertex_x[2];
    Float_t         gLLP_decay_vertex_y[2];
    Float_t         gLLP_decay_vertex_z[2];
@@ -766,6 +768,8 @@ public :
    TBranch        *b_gParticleEta;   //!
    TBranch        *b_gParticlePhi;   //!
    TBranch        *b_gLLP_eta;
+   TBranch        *b_gLLP_beta;
+   TBranch        *b_gLLP_phi;
    TBranch        *b_gLLP_decay_vertex_x;
    TBranch        *b_gLLP_decay_vertex_y;
    TBranch        *b_gLLP_decay_vertex_z;
@@ -1226,6 +1230,9 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("gParticleEta", gParticleEta, &b_gParticleEta);
    fChain->SetBranchAddress("gParticlePhi", gParticlePhi, &b_gParticlePhi);
    fChain->SetBranchAddress("gLLP_eta", gLLP_eta, &b_gLLP_eta);
+   fChain->SetBranchAddress("gLLP_phi", gLLP_phi, &b_gLLP_phi);
+   fChain->SetBranchAddress("gLLP_beta", gLLP_beta, &b_gLLP_beta);
+
    fChain->SetBranchAddress("gLLP_decay_vertex_x", gLLP_decay_vertex_x, &b_gLLP_decay_vertex_x);
    fChain->SetBranchAddress("gLLP_decay_vertex_y", gLLP_decay_vertex_y, &b_gLLP_decay_vertex_y);
    fChain->SetBranchAddress("gLLP_decay_vertex_z", gLLP_decay_vertex_z, &b_gLLP_decay_vertex_z);

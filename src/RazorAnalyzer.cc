@@ -472,6 +472,9 @@ void RazorAnalyzer::EnableGenParticles(){
 }
 void RazorAnalyzer::EnableLLP(){
     fChain->SetBranchStatus("gLLP_eta", 1);
+    fChain->SetBranchStatus("gLLP_phi", 1);
+    fChain->SetBranchStatus("gLLP_beta", 1);
+
     fChain->SetBranchStatus("gLLP_decay_vertex_x", 1);
     fChain->SetBranchStatus("gLLP_decay_vertex_y", 1);
     fChain->SetBranchStatus("gLLP_decay_vertex_z", 1);
