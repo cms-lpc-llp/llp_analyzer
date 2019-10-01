@@ -12,10 +12,32 @@
 #define FAILURE -3
 
 using namespace std;
+struct cscCluster
+{
+  float x, y, z, t, eta, phi;
+  int nCscSegments;
+  float jetVeto, calojetVeto, muonVeto;
+  int maxChamber, maxChamberSegment, nChamber;
+  int maxStation, maxStationSegment, nStation;
+  float Me1112Ratio;
+  float MajorAxis, MinorAxis, EtaSpread, PhiSpread, EtaPhiSpread;
+  float XSpread, YSpread, ZSpread, TSpread;
+  float vertex_r, vertex_z, vertex_dis, vertex_chi2;
+  int vertex_n, vertex_n1, vertex_n5, vertex_n10, vertex_n15, vertex_n20;
+  vector<int>segment_id;
+};
+
+// struct largest_nCsc_cluster_
+// {
+//   inline bool operator() (const cscCluster& c1, const cscCluster& c2){return c1.nCscSegments > c2.nCscSegments;}
+// } largest_nCsc_cluster;
 
 typedef struct Point_
 {
-    float x, y, z;  // X, Y, Z position
+    float x, y, z, t;  // X, Y, Z position
+    float eta,phi;
+    float dirX, dirY, dirZ;
+    int station, chamber;
     int clusterID;  // clustered ID
 }Point;
 
@@ -28,13 +50,46 @@ public:
         m_pointSize = points.size();
     }
     ~DBSCAN(){}
+    int nClusters;
+    vector<int>clusterSize;
+    vector<int>cscLabels;
+    vector<float>clusterEta;
+    vector<float>clusterPhi;
+    vector<float>clusterX;
+    vector<float>clusterY;
+    vector<float>clusterZ;
+    vector<float>clusterTime;
+    vector<float>clusterMajorAxis;
+    vector<float>clusterMinorAxis;
+    vector<float>clusterXSpread;
+    vector<float>clusterYSpread;
+    vector<float>clusterZSpread;
+    vector<float>clusterTimeSpread;
+    vector<float>clusterEtaPhiSpread;
+    vector<float>clusterEtaSpread;
+    vector<float>clusterPhiSpread;
 
+    vector<float>clusterVertexR;
+    vector<float>clusterVertexZ;
+    vector<float>clusterVertexDis;
+    vector<float>clusterVertexChi2;
+    vector<int>clusterVertexN;
+
+    vector<int>clusterVertexN1cm;
+    vector<int>clusterVertexN5cm;
+    vector<int>clusterVertexN10cm;
+    vector<int>clusterVertexN15cm;
+    vector<int>clusterVertexN20cm;
+
+
+    vector<cscCluster> CscCluster;
 
     int run();
     double deltaPhi(double phi1, double phi2);
-    int result(int &nClusters, int cscLabels[], int clusterSize[], float clusterX[], float clusterY[], float clusterZ[], float clusterEta[], float clusterPhi[], float clusterRadius[]);
-    int clusterMoments(int &nClusters, float clusterMajorAxis[], float clusterMinorAxis[], float clusterXSpread[], float clusterYSpread[], float clusterZSpread[], float clusterEtaSpread[], float clusterPhiSpread[],float clusterEtaPhiSpread[], float clusterX[], float clusterY[], float clusterZ[], float clusterEta[], float clusterPhi[], int clusterSize[]);
-    int vertexing(vector<float> cscX,vector<float> cscY, vector<float> cscZ, vector<float> cscDirX, vector<float> cscDirY, vector<float> cscDirZ, float &clusterVertexR, float &clusterVertexZ, float &clusterVertexDis,float &clusterVertexChi2, int &clusterVertexN,int &clusterVertexN1cm, int &clusterVertexN5cm, int &clusterVertexN10cm, int &clusterVertexN15cm, int &clusterVertexN20cm);
+    int result();
+    int clusterMoments();
+    void sort_clusters();
+    int vertexing();
     vector<int> calculateCluster(Point point);
     int expandCluster(Point point, int clusterID);
     inline double calculateDistance(Point pointCore, Point pointTarget);

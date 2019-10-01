@@ -349,6 +349,7 @@ public :
    std::vector<bool>    *ecalRechit_GainSwitch6;
    std::vector<float>   *ecalRechit_transpCorr;
    Float_t         gLLP_eta[2];
+   Float_t         gLLP_beta[2];
    Float_t         gLLP_decay_vertex_x[2];
    Float_t         gLLP_decay_vertex_y[2];
    Float_t         gLLP_decay_vertex_z[2];
@@ -712,6 +713,7 @@ public :
    TBranch        *b_ecalRechit_GainSwitch6;   //!
    TBranch        *b_ecalRechit_transpCorr;   //!
    TBranch        *b_gLLP_eta;
+   TBranch        *b_gLLP_beta;
    TBranch        *b_gLLP_decay_vertex_x;
    TBranch        *b_gLLP_decay_vertex_y;
    TBranch        *b_gLLP_decay_vertex_z;
