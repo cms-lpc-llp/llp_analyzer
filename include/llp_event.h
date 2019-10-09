@@ -80,7 +80,7 @@ public :
    Float_t         muon_activityMiniIsoAnnulus[2000];   //[nMuons]
    Bool_t          muon_passSingleMuTagFilter[2000];   //[nMuons]
    Bool_t          muon_passHLTFilter[2000][100];   //[nMuons]
-   Float_t         muon_validFractionTrackerHits[2000];   //[nMuons]
+   Float_t         muon_validFractionTrackerHits[2000];  //[nMuons]
    Bool_t          muon_isGlobal[2000];   //[nMuons]
    Float_t         muon_normChi2[2000];   //[nMuons]
    Float_t         muon_chi2LocalPosition[2000];   //[nMuons]
@@ -110,7 +110,7 @@ public :
    Float_t         ele_neutralHadIso[2000];   //[nElectrons]
    Int_t           ele_MissHits[2000];   //[nElectrons]
    Bool_t          ele_PassConvVeto[2000];   //[nElectrons]
-   Float_t         ele_OneOverEminusOneOverP[2000];   //[nElectrons]
+   Float_t         ele_OneOverEminusOneOverP[2000];  //[nElectrons]
    Float_t         ele_IDMVAGeneralPurpose[2000];   //[nElectrons]
    Int_t           ele_IDMVACategoryGeneralPurpose[2000];   //[nElectrons]
    Float_t         ele_IDMVAHZZ[2000];   //[nElectrons]
@@ -160,9 +160,9 @@ public :
    Float_t         isoPFCandidatePt[2000];   //[nIsoPFCandidates]
    Float_t         isoPFCandidateEta[2000];   //[nIsoPFCandidates]
    Float_t         isoPFCandidatePhi[2000];   //[nIsoPFCandidates]
-   Float_t         isoPFCandidateIso04[2000];   //[nIsoPFCandidates]
-   Float_t         isoPFCandidateD0[2000];   //[nIsoPFCandidates]
-   Int_t           isoPFCandidatePdgId[2000];   //[nIsoPFCandidates]
+   Float_t         isoPFCandidateIso04[2000];  //[nIsoPFCandidates]
+   Float_t         isoPFCandidateD0[2000];  //[nIsoPFCandidates]
+   Int_t           isoPFCandidatePdgId[2000];  //[nIsoPFCandidates]
    Int_t           nPhotons;
    Int_t           nPhotons_overlap;
    Float_t         phoE[2000];   //[nPhotons]
@@ -209,10 +209,10 @@ public :
    Float_t         pho_vtxSumPx[2000][200];   //[nPhotons]
    Float_t         pho_vtxSumPy[2000][200];   //[nPhotons]
    Bool_t          pho_isStandardPhoton[2000];   //[nPhotons]
-   Float_t         pho_seedRecHitSwitchToGain6[2000];   //[nPhotons]
-   Float_t         pho_seedRecHitSwitchToGain1[2000];   //[nPhotons]
-   Float_t         pho_anyRecHitSwitchToGain6[2000];   //[nPhotons]
-   Float_t         pho_anyRecHitSwitchToGain1[2000];   //[nPhotons]
+   Float_t         pho_seedRecHitSwitchToGain6[2000];  //[nPhotons]
+   Float_t         pho_seedRecHitSwitchToGain1[2000];  //[nPhotons]
+   Float_t         pho_anyRecHitSwitchToGain6[2000];  //[nPhotons]
+   Float_t         pho_anyRecHitSwitchToGain1[2000];  //[nPhotons]
    std::vector<float>   *ecalRechit_Eta;
    std::vector<float>   *ecalRechit_Phi;
    std::vector<float>   *ecalRechit_X;
@@ -262,6 +262,22 @@ public :
    Float_t         calojetPt[2000];   //[nJets]
    Float_t         calojetEta[2000];   //[nJets]
    Float_t         calojetPhi[2000];   //[nJets]
+   Float_t         calojetMass[2000];   //[nJets]
+   Float_t         calojetJetArea[2000];   //[nJets]
+   Float_t         calojetPileupE[2000];   //[nJets]
+   Float_t         calojetPileupId[2000];   //[nJets]
+   Int_t           calojetPileupIdFlag[2000];   //[nJets]
+   Bool_t          calojetPassIDLoose[2000];   //[nJets]
+   Bool_t          calojetPassIDTight[2000];   //[nJets]
+   Int_t           calojetNRechits[2000];
+   Float_t         calojetRechitE[2000];
+   Float_t         calojetRechitT[2000];
+   Float_t         calojetGammaMax_ET[2000];
+   Float_t         calojetRechitT_rms[2000];
+   Float_t         calojetPtAllPVTracks[2000];
+   Float_t         calojet_EMEnergyFraction[2000];
+   Float_t         calojet_HadronicEnergyFraction[2000];
+   Float_t         calojetMinDeltaRPVTracks[2000];
    Int_t           nJets;
    Float_t         jetE[2000];   //[nJets]
    Float_t         jetPt[2000];   //[nJets]
@@ -279,6 +295,11 @@ public :
    Float_t         jetPileupId[2000];   //[nJets]
    Int_t           jetPileupIdFlag[2000];   //[nJets]
    Bool_t          jetPassIDLoose[2000];   //[nJets]
+   Bool_t          jet_matched[2000];   //[nJets]
+   Float_t         jet_sig_et1[2000];   //[nJets]
+   Float_t         jet_sig_et2[2000];   //[nJets]
+   Float_t          jet_energy_frac[2000];   //[nJets]
+
    Bool_t          jetPassIDTight[2000];   //[nJets]
    Bool_t          jetPassMuFrac[2000];   //[nJets]
    Bool_t          jetPassEleFrac[2000];   //[nJets]
@@ -300,6 +321,9 @@ public :
    Int_t           jetNRechits[2000];   //[nJets]
    Float_t         jetRechitE[2000];   //[nJets]
    Float_t         jetRechitT[2000];   //[nJets]
+   Float_t         jetGammaMax_ET[2000];
+   Float_t         jetMinDeltaRPVTracks[2000];
+   Float_t         jetPtAllPVTracks[2000];
    UInt_t          nFatJets;
    Float_t         fatJetE[400];   //[nFatJets]
    Float_t         fatJetPt[400];   //[nFatJets]
@@ -399,6 +423,9 @@ public :
    Float_t         gLLP_decay_vertex_x[2];
    Float_t         gLLP_decay_vertex_y[2];
    Float_t         gLLP_decay_vertex_z[2];
+   Float_t         gLLP_prod_vertex_x[2];
+   Float_t         gLLP_prod_vertex_y[2];
+   Float_t         gLLP_prod_vertex_z[2];
 
    // List of branches
    TBranch        *b_isData;   //!
@@ -636,6 +663,22 @@ public :
    TBranch        *b_calojetPt;   //!
    TBranch        *b_calojetEta;   //!
    TBranch        *b_calojetPhi;   //!
+   TBranch        *b_calojetMass;   //[nJets]
+   TBranch        *b_calojetJetArea;   //[nJets]
+   TBranch        *b_calojetPileupE;   //[nJets]
+   TBranch        *b_calojetPileupId;   //[nJets]
+   TBranch        *b_calojetPileupIdFlag;   //[nJets]
+   TBranch        *b_calojetPassIDLoose;   //[nJets]
+   TBranch        *b_calojetPassIDTight;   //[nJets]
+   TBranch        *b_calojetNRechits;
+   TBranch        *b_calojetRechitE;
+   TBranch        *b_calojetRechitT;
+   TBranch        *b_calojetGammaMax_ET;
+   TBranch        *b_calojetRechitT_rms;
+   TBranch        *b_calojetPtAllPVTracks;
+   TBranch        *b_calojet_EMEnergyFraction;
+   TBranch        *b_calojet_HadronicEnergyFraction;
+   TBranch        *b_calojetMinDeltaRPVTracks;
    TBranch        *b_nJets;   //!
    TBranch        *b_jetE;   //!
    TBranch        *b_jetPt;   //!
@@ -652,6 +695,10 @@ public :
    TBranch        *b_jetPileupE;   //!
    TBranch        *b_jetPileupId;   //!
    TBranch        *b_jetPileupIdFlag;   //!
+   TBranch        *b_jet_matched;   //!
+   TBranch        *b_jet_energy_frac;
+   TBranch        *b_jet_sig_et1;
+   TBranch        *b_jet_sig_et2;
    TBranch        *b_jetPassIDLoose;   //!
    TBranch        *b_jetPassIDTight;   //!
    TBranch        *b_jetPassMuFrac;   //!
@@ -674,6 +721,9 @@ public :
    TBranch        *b_jetNRechits;   //!
    TBranch        *b_jetRechitE;   //!
    TBranch        *b_jetRechitT;   //!
+   TBranch        *b_jetGammaMax_ET;
+   TBranch        *b_jetMinDeltaRPVTracks;
+   TBranch        *b_jetPtAllPVTracks;
    TBranch        *b_nFatJets;   //!
    TBranch        *b_fatJetE;   //!
    TBranch        *b_fatJetPt;   //!
@@ -773,6 +823,9 @@ public :
    TBranch        *b_gLLP_decay_vertex_x;
    TBranch        *b_gLLP_decay_vertex_y;
    TBranch        *b_gLLP_decay_vertex_z;
+   TBranch        *b_gLLP_prod_vertex_x;
+   TBranch        *b_gLLP_prod_vertex_y;
+   TBranch        *b_gLLP_prod_vertex_z;
 
 
    llp_event(TTree *tree=0);
@@ -1098,6 +1151,22 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("calojetPt", calojetPt, &b_calojetPt);
    fChain->SetBranchAddress("calojetEta", calojetEta, &b_calojetEta);
    fChain->SetBranchAddress("calojetPhi", calojetPhi, &b_calojetPhi);
+   fChain->SetBranchAddress("calojetMass", calojetMass, &b_calojetMass);
+   fChain->SetBranchAddress("calojetJetArea", calojetJetArea, &b_calojetJetArea);
+   fChain->SetBranchAddress("calojetPileupE", calojetPileupE, &b_calojetPileupE);
+   fChain->SetBranchAddress("calojetPileupId", calojetPileupId, &b_calojetPileupId);
+   fChain->SetBranchAddress("calojetPileupIdFlag", calojetPileupIdFlag, &b_calojetPileupIdFlag);
+   fChain->SetBranchAddress("calojetPassIDLoose", calojetPassIDLoose, &b_calojetPassIDLoose);
+   fChain->SetBranchAddress("calojetPassIDTight", calojetPassIDTight, &b_calojetPassIDTight);
+   fChain->SetBranchAddress("calojetNRechits", calojetNRechits, &b_calojetNRechits);
+   fChain->SetBranchAddress("calojetRechitE", calojetRechitE, &b_calojetRechitE);
+   fChain->SetBranchAddress("calojetRechitT", calojetRechitT, &b_calojetRechitT);
+   fChain->SetBranchAddress("calojetGammaMax_ET", calojetGammaMax_ET, &b_calojetGammaMax_ET);
+   fChain->SetBranchAddress("calojetRechitT_rms", calojetRechitT_rms, &b_calojetRechitT_rms);
+   fChain->SetBranchAddress("calojetPtAllPVTracks", calojetPtAllPVTracks, &b_calojetPtAllPVTracks);
+   fChain->SetBranchAddress("calojet_EMEnergyFraction", calojet_EMEnergyFraction, &b_calojet_EMEnergyFraction);
+   fChain->SetBranchAddress("calojet_HadronicEnergyFraction", calojet_HadronicEnergyFraction, &b_calojet_HadronicEnergyFraction);
+   fChain->SetBranchAddress("calojetMinDeltaRPVTracks", calojetMinDeltaRPVTracks, &b_calojetMinDeltaRPVTracks);
    fChain->SetBranchAddress("nJets", &nJets, &b_nJets);
    fChain->SetBranchAddress("jetE", jetE, &b_jetE);
    fChain->SetBranchAddress("jetPt", jetPt, &b_jetPt);
@@ -1114,6 +1183,10 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("jetPileupE", jetPileupE, &b_jetPileupE);
    fChain->SetBranchAddress("jetPileupId", jetPileupId, &b_jetPileupId);
    fChain->SetBranchAddress("jetPileupIdFlag", jetPileupIdFlag, &b_jetPileupIdFlag);
+   fChain->SetBranchAddress("jet_matched", jet_matched, &b_jet_matched);
+   fChain->SetBranchAddress("jet_energy_frac", jet_energy_frac, &b_jet_energy_frac);
+   fChain->SetBranchAddress("jet_sig_et1", jet_sig_et1, &b_jet_sig_et1);
+   fChain->SetBranchAddress("jet_sig_et2", jet_sig_et2, &b_jet_sig_et2);
    fChain->SetBranchAddress("jetPassIDLoose", jetPassIDLoose, &b_jetPassIDLoose);
    fChain->SetBranchAddress("jetPassIDTight", jetPassIDTight, &b_jetPassIDTight);
    fChain->SetBranchAddress("jetPassMuFrac", jetPassMuFrac, &b_jetPassMuFrac);
@@ -1136,6 +1209,9 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("jetNRechits", jetNRechits, &b_jetNRechits);
    fChain->SetBranchAddress("jetRechitE", jetRechitE, &b_jetRechitE);
    fChain->SetBranchAddress("jetRechitT", jetRechitT, &b_jetRechitT);
+   fChain->SetBranchAddress("jetGammaMax_ET", jetGammaMax_ET, &b_jetGammaMax_ET);
+   fChain->SetBranchAddress("jetMinDeltaRPVTracks", jetMinDeltaRPVTracks, &b_jetMinDeltaRPVTracks);
+   fChain->SetBranchAddress("jetPtAllPVTracks", jetPtAllPVTracks, &b_jetPtAllPVTracks);
    fChain->SetBranchAddress("nFatJets", &nFatJets, &b_nFatJets);
    fChain->SetBranchAddress("fatJetE", &fatJetE, &b_fatJetE);
    fChain->SetBranchAddress("fatJetPt", &fatJetPt, &b_fatJetPt);
@@ -1236,6 +1312,10 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("gLLP_decay_vertex_x", gLLP_decay_vertex_x, &b_gLLP_decay_vertex_x);
    fChain->SetBranchAddress("gLLP_decay_vertex_y", gLLP_decay_vertex_y, &b_gLLP_decay_vertex_y);
    fChain->SetBranchAddress("gLLP_decay_vertex_z", gLLP_decay_vertex_z, &b_gLLP_decay_vertex_z);
+
+   fChain->SetBranchAddress("gLLP_prod_vertex_x", gLLP_prod_vertex_x, &b_gLLP_prod_vertex_x);
+   fChain->SetBranchAddress("gLLP_prod_vertex_y", gLLP_prod_vertex_y, &b_gLLP_prod_vertex_y);
+   fChain->SetBranchAddress("gLLP_prod_vertex_z", gLLP_prod_vertex_z, &b_gLLP_prod_vertex_z);
 
    Notify();
 }
