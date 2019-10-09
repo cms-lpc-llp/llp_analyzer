@@ -42,12 +42,20 @@ struct jets
   // bool passMediumId;
   // bool passTightId;
   bool isCSVL;
+  bool matched;
   int ecalNRechits;
   float ecalRechitE;
   float jetChargedEMEnergyFraction;
   float jetNeutralEMEnergyFraction;
   float jetChargedHadronEnergyFraction;
   float jetNeutralHadronEnergyFraction;
+  float jetGammaMax_ET;
+  float jetMinDeltaRPVTracks;
+  float jetPtAllPVTracks;
+  float energy_frac;
+  float sig_et1;
+  float sig_et2;
+
 };
 
 //lepton highest pt comparator
@@ -96,6 +104,7 @@ public:
   //jets
   int nJets;
   float jetE[N_MAX_JETS];
+  float jetEt[N_MAX_JETS];
   float jetPt[N_MAX_JETS];
   float jetEta[N_MAX_JETS];
   float jetPhi[N_MAX_JETS];
@@ -106,11 +115,38 @@ public:
   float jetNeutralEMEnergyFraction[N_MAX_JETS];
   float jetChargedHadronEnergyFraction[N_MAX_JETS];
   float jetNeutralHadronEnergyFraction[N_MAX_JETS];
-
-
+  float jetGammaMax_ET[N_MAX_JETS];
+  float jetMinDeltaRPVTracks[N_MAX_JETS];
+  float jetPtAllPVTracks[N_MAX_JETS];
   // bool jetLoosePassId[N_MAX_JETS];
   bool jetPassId[N_MAX_JETS];
+  bool matched[N_MAX_JETS];
   // bool jetTightPassId[N_MAX_JETS];
+  float jet_energy_frac[N_MAX_JETS];
+  float jet_sig_et1[N_MAX_JETS];
+  float jet_sig_et2[N_MAX_JETS];
+
+  //calojet
+  int nCaloJets;
+  float calojetE[N_MAX_JETS];
+  float calojetEt[N_MAX_JETS];
+  float calojetPt[N_MAX_JETS];
+  float calojetEta[N_MAX_JETS];
+  float calojetPhi[N_MAX_JETS];
+  float calojetTime[N_MAX_JETS];
+  float calojetNRechits[N_MAX_JETS];
+  float calojetRechitE[N_MAX_JETS];
+  float calojetChargedEMEnergyFraction[N_MAX_JETS];
+  float calojetNeutralEMEnergyFraction[N_MAX_JETS];
+  float calojetChargedHadronEnergyFraction[N_MAX_JETS];
+  float calojetNeutralHadronEnergyFraction[N_MAX_JETS];
+  float calojetGammaMax_ET[N_MAX_JETS];
+  float calojetMinDeltaRPVTracks[N_MAX_JETS];
+  float calojetPtAllPVTracks[N_MAX_JETS];
+  // bool jetLoosePassId[N_MAX_JETS];
+  bool calojetPassId[N_MAX_JETS];
+  // // bool jetTightPassId[N_MAX_JETS];
+
   bool HLTDecision[NTriggersMAX];
 
   UInt_t wzevtNum,trig, trig_lepId, trig_lepId_dijet; //number of events that pass each criteria
@@ -157,22 +193,43 @@ public:
     ZleptonIndex1 = -999; ZleptonIndex2 = -999;
     //jets
     nJets = 0;
+    nCaloJets = 0;
     for( int i = 0; i < N_MAX_JETS; i++ )
     {
       jetE[i]      = -999.;
+      jetEt[i] = -999.;
       jetPt[i]     = -999.;
       jetEta[i]    = -999.;
       jetPhi[i]    = -999.;
       jetTime[i]   = -999.;
       // jetLoosePassId[i] = false;
       jetPassId[i] = false;
-      ecalNRechits[i] = -999.;
+      matched[i] = false;
+      jet_energy_frac[i] = -999.;
+      jet_sig_et1[i] = -999.;
+      jet_sig_et2[i] = -999.;
+      ecalNRechits[i] = -999;
       ecalRechitE[i] = -999.;
       jetChargedEMEnergyFraction[i] = -999.;
       jetNeutralEMEnergyFraction[i] = -999.;
       jetChargedHadronEnergyFraction[i] = -999.;
       jetNeutralHadronEnergyFraction[i] = -999.;
-      // jetTightPassId[i] = false;
+      jetGammaMax_ET[i] = -999.;
+      jetMinDeltaRPVTracks[i] = -999.;
+      jetPtAllPVTracks[i] = -999.;
+
+      calojetE[i] = -999.;
+      calojetEt[i] = -999.;
+      calojetPt[i] = -999.;
+      calojetEta[i] = -999.;
+      calojetPhi[i] = -999.;
+      calojetTime[i] = -999.;
+      calojetPassId[i] = -999.;
+      calojetGammaMax_ET[i] = -999.;
+      calojetMinDeltaRPVTracks[i] = -999.;
+      calojetPtAllPVTracks[i] = -999.;
+      calojetNRechits[i] = -999.;
+      calojetRechitE[i] = -999.;
     }
 
     for(int i = 0; i <NTriggersMAX; i++){
@@ -229,20 +286,50 @@ public:
     //jets
     tree_->Branch("nJets",     &nJets,    "nJets/I");
     tree_->Branch("jetE",      jetE,      "jetE[nJets]/F");
+    tree_->Branch("jetEt",      jetEt,      "jetEt[nJets]/F");
     tree_->Branch("jetPt",     jetPt,     "jetPt[nJets]/F");
     tree_->Branch("jetEta",    jetEta,    "jetEta[nJets]/F");
     tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
     tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
     tree_->Branch("jetPassId", jetPassId, "jetPassId[nJets]/O");
+    tree_->Branch("matched", matched, "matched[nJets]/O");
+    tree_->Branch("jet_energy_frac", jet_energy_frac, "jet_energy_frac[nJets]/F");
+    tree_->Branch("jet_sig_et1", jet_sig_et1, "jet_sig_et1[nJets]/F");
+    tree_->Branch("jet_sig_et2", jet_sig_et2, "jet_sig_et2[nJets]/F");
+
+
+    tree_->Branch("jetGammaMax_ET", jetGammaMax_ET, "jetGammaMax_ET[nJets]/F");
+    tree_->Branch("jetMinDeltaRPVTracks", jetMinDeltaRPVTracks, "jetMinDeltaRPVTracks[nJets]/F");
+    tree_->Branch("jetPtAllPVTracks", jetPtAllPVTracks, "jetPtAllPVTracks[nJets]/F");
     tree_->Branch("ecalNRechits",   ecalNRechits,   "ecalNRechits[nJets]/F");
     tree_->Branch("ecalRechitE", ecalRechitE, "ecalRechitE[nJets]/F");
-    // tree_->Branch("jetLoosePassId", jetLoosePassId, "jetLoosePassId[nJets]/O");
-    // tree_->Branch("jetTightPassId", jetTightPassId, "jetTightPassId[nJets]/O");
-    tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[601]/O"); //hardcoded
     tree_->Branch("jetChargedEMEnergyFraction",   jetChargedEMEnergyFraction,   "jetChargedEMEnergyFraction[nJets]/F");
     tree_->Branch("jetNeutralEMEnergyFraction",   jetNeutralEMEnergyFraction,   "jetNeutralEMEnergyFraction[nJets]/F");
     tree_->Branch("jetChargedHadronEnergyFraction",   jetChargedHadronEnergyFraction,   "jetChargedHadronEnergyFraction[nJets]/F");
     tree_->Branch("jetNeutralHadronEnergyFraction",   jetNeutralHadronEnergyFraction,   "jetNeutralHadronEnergyFraction[nJets]/F");
+
+
+      //calojet
+    tree_->Branch("nCaloJets",     &nCaloJets,    "nCaloJets/I");
+    tree_->Branch("calojetE",      calojetE,      "calojetE[nCaloJets]/F");
+    tree_->Branch("calojetEt",      calojetEt,      "calojetEt[nCaloJets]/F");
+    tree_->Branch("calojetPt",     calojetPt,     "calojetPt[nCaloJets]/F");
+    tree_->Branch("calojetEta",    calojetEta,    "calojetEta[nCaloJets]/F");
+    tree_->Branch("calojetPhi",    calojetPhi,    "calojetPhi[nCaloJets]/F");
+    tree_->Branch("calojetTime",   calojetTime,   "calojetTime[nCaloJets]/F");
+    tree_->Branch("calojetPassId", calojetPassId, "calojetPassId[nCaloJets]/O");
+    tree_->Branch("calojetGammaMax_ET", calojetGammaMax_ET, "calojetGammaMax_ET[nCaloJets]/F");
+    tree_->Branch("calojetMinDeltaRPVTracks", calojetMinDeltaRPVTracks, "calojetMinDeltaRPVTracks[nCaloJets]/F");
+    tree_->Branch("calojetPtAllPVTracks", calojetPtAllPVTracks, "calojetPtAllPVTracks[nCaloJets]/F");
+    tree_->Branch("calojetNRechits",   calojetNRechits,   "calojetNRechits[nCaloJets]/F");
+    tree_->Branch("calojetRechitE", calojetRechitE, "calojetRechitE[nCaloJets]/F");
+
+
+
+
+    // tree_->Branch("jetLoosePassId", jetLoosePassId, "jetLoosePassId[nJets]/O");
+    // tree_->Branch("jetTightPassId", jetTightPassId, "jetTightPassId[nJets]/O");
+    tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[601]/O"); //hardcoded
 
 
 
@@ -288,18 +375,44 @@ public:
     //jets
     tree_->SetBranchAddress("nJets",     &nJets);
     tree_->SetBranchAddress("jetE",      jetE);
+    tree_->SetBranchAddress("jetEt",      jetEt);
+
     tree_->SetBranchAddress("jetPt",     jetPt);
     tree_->SetBranchAddress("jetEta",    jetEta);
     tree_->SetBranchAddress("jetPhi",    jetPhi);
     tree_->SetBranchAddress("jetTime",   jetTime);
     tree_->SetBranchAddress("jetPassId", jetPassId);
+    tree_->SetBranchAddress("matched", matched);
+    tree_->SetBranchAddress("jet_energy_frac", jet_energy_frac);
+    tree_->SetBranchAddress("jet_sig_et1", jet_sig_et1);
+    tree_->SetBranchAddress("jet_sig_et2", jet_sig_et2);
+
     tree_->SetBranchAddress("ecalNRechits",   ecalNRechits);
     tree_->SetBranchAddress("ecalRechitE", ecalRechitE);
     tree_->SetBranchAddress("jetChargedEMEnergyFraction", jetChargedEMEnergyFraction);
     tree_->SetBranchAddress("jetNeutralEMEnergyFraction", jetNeutralEMEnergyFraction);
     tree_->SetBranchAddress("jetChargedHadronEnergyFraction", jetChargedHadronEnergyFraction);
     tree_->SetBranchAddress("jetNeutralHadronEnergyFraction", jetNeutralHadronEnergyFraction);
+    tree_->SetBranchAddress("jetGammaMax_ET", jetGammaMax_ET);
+    tree_->SetBranchAddress("jetMinDeltaRPVTracks", jetMinDeltaRPVTracks);
+    tree_->SetBranchAddress("jetPtAllPVTracks", jetPtAllPVTracks);
+    //calojets
+    tree_->SetBranchAddress("nCaloJets",     &nCaloJets);
+    tree_->SetBranchAddress("calojetE",      calojetE);
+    tree_->SetBranchAddress("calojetEt",      calojetEt);
+    tree_->SetBranchAddress("calojetPt",     calojetPt);
+    tree_->SetBranchAddress("calojetEta",    calojetEta);
+    tree_->SetBranchAddress("calojetPhi",    calojetPhi);
+    tree_->SetBranchAddress("calojetTime",   calojetTime);
+    tree_->SetBranchAddress("calojetPassId", calojetPassId);
+    tree_->SetBranchAddress("calojetRechitE",   calojetRechitE);
+    // tree_->SetBranchAddress("calojetRechitT_rms", calojetRechitT_rms);
+    // tree_->SetBranchAddress("calojet_EMEnergyFraction", calojet_EMEnergyFraction);
+    // tree_->SetBranchAddress("calojet_HadronicEnergyFraction", calojet_HadronicEnergyFraction);
 
+    tree_->SetBranchAddress("calojetGammaMax_ET", calojetGammaMax_ET);
+    tree_->SetBranchAddress("calojetMinDeltaRPVTracks", calojetMinDeltaRPVTracks);
+    tree_->SetBranchAddress("calojetPtAllPVTracks", calojetPtAllPVTracks);
     // tree_->SetBranchAddress("jetLoosePassId", jetLoosePassId);
     // tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
     // triggers
@@ -319,31 +432,38 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
   //---------------------------
   int option;
   std::string label;
-  if (options < 20){
+  bool pf;
+  if (options < 200){
     option = 1; // used when running condor
   }
   else{
     option = 0;// used when running locally
   }
-  if (options%10 == 1){
+  if ((options/10)%10 == 1){
     label = "wH";
   }
-  else if (options % 10 == 2){
+  else if ((options/10) % 10 == 2){
     label = "zH";
   }
-  else if (options % 10 == 3){
+  else if ((options/10) % 10 == 3){
     label = "bkg_wH";
   }
   else{
     label = "bkg_zH";
   }
+  if(options%10==1){
+    pf = true;
+  }
+  else{
+    pf = false;
+  }
   if( isData )
   {
-    std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << std::endl;
+    std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << " and pfjet is " << pf << std::endl;
   }
   else
   {
-    std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << std::endl;
+    std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << " and pfjet is " << pf << std::endl;
   }
 
   const float ELE_MASS = 0.000511;
@@ -411,7 +531,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
   char* cmsswPath;
   cmsswPath = getenv("CMSSW_BASE");
   string pathname;
-  if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/llp_analyzer/data/JEC/";
+  if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/cms_lpc_llp/llp_analyzer/data/JEC/";
   if(cmsswPath != NULL and option == 1) pathname = "JEC/"; //run on condor if option == 1
 
   cout << "Getting JEC parameters from " << pathname << endl;
@@ -491,19 +611,20 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
     vH->evtNum = eventNum;
     //std::cout << "deb3 " << jentry << std::endl;
     if (label == "zH" || label == "wH"){
+      NEvents->Fill(1);
       bool wzFlag = false;
       for (int i=0; i < nGenParticle; ++i)
       {
         // if (abs(gParticleId[i]) == wzId && gParticleStatus[i] == 22)
         // {
-        if (abs(gParticleId[i]) == 13 && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
-        { // choosing only the W->munu events
+        if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
+        {
           wzFlag = true;
         }
 
       }
       if ( wzFlag == false ) continue;
-      NEvents->Fill(1);
+
     }
 
     for (int i=0; i < nBunchXing; ++i)
@@ -569,18 +690,13 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
     {
 
 
-      // if(!(passMVAVetoElectronID(i) &&
-      // ( (fabs(eleEta[i]) < 1.5 && fabs(ele_d0[i]) < 0.0564) ||
-      // (fabs(eleEta[i]) >= 1.5 && fabs(ele_d0[i]) < 0.222))
-      // && passEGammaPOGVetoElectronIso(i))) continue;
-      if (!isEGammaPOGVetoElectron(i, true, true, true, "Summer16")) continue;
+      if (!isEGammaPOGLooseElectron(i, true, true, true, "Summer16")) continue;
 
-      if (!( (fabs(eleEta[i]) < 1.5 && fabs(ele_d0[i]) < 0.0564) ||
-      (fabs(eleEta[i]) >= 1.5 && fabs(ele_d0[i]) < 0.222))) continue;
+
 
       if(elePt[i] < elePt_cut) continue;
 
-      if(fabs(eleEta[i]) > 2.4) continue;
+      if(fabs(eleEta[i]) > 2.5) continue;
 
       //remove overlaps
       bool overlap = false;
@@ -589,7 +705,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
         if (RazorAnalyzer::deltaR(eleEta[i],elePhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
       }
       if(overlap) continue;
-      std::cout << "here" << std::endl;
+      // std::cout << "here" << std::endl;
       leptons tmpElectron;
       tmpElectron.lepton.SetPtEtaPhiM(elePt[i],eleEta[i], elePhi[i], ELE_MASS);
       tmpElectron.pdgId = 11 * -1 * eleCharge[i];
@@ -719,8 +835,12 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
 
       if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
       if( fabs( thisJet.Eta() ) >= 3.0 ) continue;
-      if ( !jetPassIDLoose[i] ) continue;
-      if (!(jetRechitE[i] > 0.0)) continue;
+      // if ( !jetPassIDLoose[i] ) continue;
+      // if (!(jetRechitE[i] > 0.0)) continue;
+      // if(jetNRechits[i]<10) continue;
+      // if(jetRechitT[i] < 0.0) continue;
+      // if ((jetChargedHadronEnergyFraction[i]+jetChargedEMEnergyFraction[i]) > 0.4) continue;
+      // if ((jetChargedHadronEnergyFraction[i]+jetNeutralHadronEnergyFraction[i])/(jetChargedEMEnergyFraction[i]+jetNeutralEMEnergyFraction[i]) < 0.2) continue;
 
       // std::cout <<jetRechitT[i] << "," << jetRechitE[i] <<  "," << jetNRechits[i] << std::endl;
 
@@ -728,7 +848,12 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       jets tmpJet;
       tmpJet.jet    = thisJet;
       tmpJet.time   = jetRechitT[i];
-      tmpJet.passId = jetPassIDTight[i];
+      tmpJet.passId = jetPassIDLoose[i];
+      tmpJet.matched = jet_matched[i];
+      tmpJet.energy_frac = jet_energy_frac[i];
+      tmpJet.sig_et1 = jet_sig_et1[i];
+      tmpJet.sig_et2 = jet_sig_et2[i];
+      // std::cout<<tmpJet.sig_et1<<","<<jet_sig_et1[i]<<std::endl;
       tmpJet.isCSVL = isCSVL(i);
       //if (isCSVL(i)) NBJet20++;
       //if (isCSVL(i) && thisJet.Pt() > 30) NBJet30++;
@@ -738,34 +863,130 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
       tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
       tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
+      tmpJet.jetGammaMax_ET = jetGammaMax_ET[i];
+      tmpJet.jetMinDeltaRPVTracks = jetMinDeltaRPVTracks[i];
+      tmpJet.jetPtAllPVTracks = jetPtAllPVTracks[i];
+
       Jets.push_back(tmpJet);
 
     }
+    std::vector<jets> caloJets;
+    //auto highest = [](auto a, auto b) { return a > b; };
 
+    for(int i = 0; i < nCaloJets; i++)
+    {
+
+      //------------------------------------------------------------
+      //exclude selected muons and electrons from the jet collection
+      //------------------------------------------------------------
+      double deltaR = -1;
+      for(auto& lep : Leptons){
+        double thisDR = RazorAnalyzer::deltaR(calojetEta[i],calojetPhi[i],lep.lepton.Eta(),lep.lepton.Phi());
+        if(deltaR < 0 || thisDR < deltaR) deltaR = thisDR;
+      }
+      if(deltaR > 0 && deltaR < 0.4) continue; //jet matches a selected lepton
+
+      //------------------------------------------------------------
+      //Apply Jet Energy and Resolution Corrections
+      //------------------------------------------------------------
+      double JEC = JetEnergyCorrectionFactor(calojetPt[i], calojetEta[i], calojetPhi[i], calojetE[i],
+         fixedGridRhoFastjetAll, calojetJetArea[i] , JetCorrector);
+
+        TLorentzVector thisJet = makeTLorentzVector( calojetPt[i]*JEC,calojetEta[i], calojetPhi[i], calojetE[i]*JEC );
+
+        if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
+        if( fabs( thisJet.Eta() ) >= 3.0 ) continue;
+        // if ( !jetPassIDLoose[i] ) continue;
+        // if (!(jetRechitE[i] > 0.0)) continue;
+        // if(jetNRechits[i]<10) continue;
+        // if(jetRechitT[i] < 0.0) continue;
+        // if ((jetChargedHadronEnergyFraction[i]+jetChargedEMEnergyFraction[i]) > 0.4) continue;
+        // if ((jetChargedHadronEnergyFraction[i]+jetNeutralHadronEnergyFraction[i])/(jetChargedEMEnergyFraction[i]+jetNeutralEMEnergyFraction[i]) < 0.2) continue;
+
+        // std::cout <<jetRechitT[i] << "," << jetRechitE[i] <<  "," << jetNRechits[i] << std::endl;
+
+
+        jets tmpJet;
+        tmpJet.jet    = thisJet;
+        tmpJet.time   = calojetRechitT[i];
+        tmpJet.passId = calojetPassIDLoose[i];
+        tmpJet.isCSVL = isCSVL(i);
+        //if (isCSVL(i)) NBJet20++;
+        //if (isCSVL(i) && thisJet.Pt() > 30) NBJet30++;
+        tmpJet.ecalNRechits = calojetNRechits[i];
+        tmpJet.ecalRechitE = calojetRechitE[i];
+
+        tmpJet.jetGammaMax_ET = calojetGammaMax_ET[i];
+        tmpJet.jetMinDeltaRPVTracks = calojetMinDeltaRPVTracks[i];
+        tmpJet.jetPtAllPVTracks = calojetPtAllPVTracks[i];
+
+        caloJets.push_back(tmpJet);
+
+      }
     //-----------------------------
     //Require at least 2 jets
     //-----------------------------
-    if( Jets.size() < 2 ) continue;
+    if(pf)
+    {
+      if( Jets.size() < 1 ) continue;
+
+    }
+    else
+    {
+      if( caloJets.size() < 1 ) continue;
+
+    }
     if (triggered) trig_lepId_dijet->Fill(1);
     sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
     for ( auto &tmp : Jets )
     {
       vH->jetE[vH->nJets] = tmp.jet.E();
+      vH->jetEt[vH->nJets] = tmp.jet.Et();
       vH->jetPt[vH->nJets] = tmp.jet.Pt();
       vH->jetEta[vH->nJets] = tmp.jet.Eta();
       vH->jetPhi[vH->nJets] = tmp.jet.Phi();
       vH->jetTime[vH->nJets] = tmp.time;
       vH->jetPassId[vH->nJets] = tmp.passId;
+      vH->matched[vH->nJets] = tmp.matched;
+      vH->jet_sig_et1[vH->nJets] = tmp.sig_et1;
+      vH->jet_sig_et2[vH->nJets] = tmp.sig_et2;
+      vH->jet_energy_frac[vH->nJets] = tmp.energy_frac;
       vH->ecalNRechits[vH->nJets] = tmp.ecalNRechits;
-      vH->ecalNRechits[vH->nJets] = tmp.ecalRechitE;
+      vH->ecalRechitE[vH->nJets] = tmp.ecalRechitE;
       vH->jetChargedEMEnergyFraction[vH->nJets] = tmp.jetChargedEMEnergyFraction;
       vH->jetNeutralEMEnergyFraction[vH->nJets] = tmp.jetNeutralEMEnergyFraction;
       vH->jetChargedHadronEnergyFraction[vH->nJets] = tmp.jetChargedHadronEnergyFraction;
       vH->jetNeutralHadronEnergyFraction[vH->nJets] = tmp.jetNeutralHadronEnergyFraction;
+      vH->jetGammaMax_ET[vH->nJets] = tmp.jetGammaMax_ET;
+      vH->jetMinDeltaRPVTracks[vH->nJets] = tmp.jetMinDeltaRPVTracks;
+      vH->jetPtAllPVTracks[vH->nJets] = tmp.jetPtAllPVTracks;
+
       // std::cout <<tmp.time << "," <<tmp.ecalRechitE <<  "," << tmp.ecalNRechits << vH->nJets<<std::endl;
 
       vH->nJets++;
+    }
+    sort(caloJets.begin(), caloJets.end(), my_largest_pt_jet);
+
+    for ( auto &tmp : caloJets )
+    {
+      vH->calojetE[vH->nCaloJets] = tmp.jet.E();
+      vH->calojetEt[vH->nCaloJets] = tmp.jet.Et();
+      vH->calojetPt[vH->nCaloJets] = tmp.jet.Pt();
+      vH->calojetEta[vH->nCaloJets] = tmp.jet.Eta();
+      vH->calojetPhi[vH->nCaloJets] = tmp.jet.Phi();
+      vH->calojetTime[vH->nCaloJets] = tmp.time;
+      vH->calojetPassId[vH->nCaloJets] = tmp.passId;
+      vH->calojetNRechits[vH->nCaloJets] = tmp.ecalNRechits;
+      vH->calojetRechitE[vH->nCaloJets] = tmp.ecalRechitE;
+
+      vH->calojetGammaMax_ET[vH->nCaloJets] = tmp.jetGammaMax_ET;
+      vH->calojetMinDeltaRPVTracks[vH->nCaloJets] = tmp.jetMinDeltaRPVTracks;
+      vH->calojetPtAllPVTracks[vH->nCaloJets] = tmp.jetPtAllPVTracks;
+
+      // std::cout <<tmp.time << "," <<tmp.ecalRechitE <<  "," << tmp.ecalNRechits << vH->nJets<<std::endl;
+
+      vH->nCaloJets++;
     }
     //std::cout << "deb fill: " << vH->nLeptons << " " << jentry << endl;
     vH->tree_->Fill();
