@@ -8,14 +8,16 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=30
+filesPerJob=15
+#WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 
 for sample in \
 WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 do
 	echo "Sample " ${sample}
-        output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v11/v4/bkg/wH/${sample}
-        inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p7/MC_Summer16/v11/sixie/${sample}.txt
+	version=/V1p7/MC_Summer16/v11/
+        output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/${version}/v7/bkg/wH/${sample}
+        inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
 
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
 	maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`

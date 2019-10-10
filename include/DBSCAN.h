@@ -19,7 +19,7 @@ struct cscCluster
   float jetVeto, calojetVeto, muonVeto;
   int maxChamber, maxChamberSegment, nChamber;
   int maxStation, maxStationSegment, nStation;
-  float Me1112Ratio;
+  float Me11Ratio, Me12Ratio;
   float MajorAxis, MinorAxis, EtaSpread, PhiSpread, EtaPhiSpread;
   float XSpread, YSpread, ZSpread, TSpread;
   float vertex_r, vertex_z, vertex_dis, vertex_chi2;

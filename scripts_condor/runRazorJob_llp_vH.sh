@@ -16,7 +16,8 @@ code_dir_suffix=$9
 CMSSW_BASE=${10}
 homeDir=${11}
 currentDir=`pwd`
-user=${homeDir#*/data/}
+#user=${homeDir#*/data/}
+user=${homeDir#*/storage/user/}
 runDir=${currentDir}/${user}_${code_dir_suffix}/
 
 rm -rf ${runDir}

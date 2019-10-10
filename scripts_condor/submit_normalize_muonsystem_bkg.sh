@@ -10,7 +10,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 mode=bkg
-inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v11/v5/bkg/wH/
+inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Fall17/v12/v7/bkg/wH/
 outputDir=${inputDir}normalized
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 
@@ -20,8 +20,11 @@ job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 #WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
 #WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 #WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+#WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 \
+#WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 \
+#WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8
 for sample in \
-WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
+WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
 do
 	echo "Sample " ${sample}
 	analyzer=llp_MuonSystem
@@ -30,7 +33,7 @@ do
 	jdl_file=submit/${analyzer}_normalize_${mode}_${sample}.jdl
 	echo "Universe = vanilla" > ${jdl_file}
 	echo "Executable = ${job_script}" >> ${jdl_file}
-	echo "Arguments =${mode} ${sample} ${inputDir} ${outputDir} ${CMSSW_BASE} ${HOME}/"  >> ${jdl_file}
+	echo "Arguments =${mode} no ${sample} ${inputDir} ${outputDir} ${CMSSW_BASE} ${HOME}/"  >> ${jdl_file}
 
 	echo "Log = log/${analyzer}_normalize_${mode}_${sample}_PC.log" >> ${jdl_file}
 	echo "Output = log/${analyzer}_normalize_${mode}_${sample}_\$(Cluster).\$(Process).out" >> ${jdl_file}

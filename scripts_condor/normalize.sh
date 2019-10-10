@@ -5,12 +5,13 @@ echo "Job started"
 date
 
 mode=$1
-sample=$2
-inputDir=$3/${sample}/
-outputDir=$4
+isData=$2
+sample=$3
+inputDir=$4/${sample}/
+outputDir=$5
 currentDir=`pwd`
-CMSSW_BASE=$5
-homeDir=$6
+CMSSW_BASE=$6
+homeDir=$7
 user=${homeDir#*/data/}
 runDir=${currentDir}/${user}_${code_dir_suffix}/
 
@@ -39,7 +40,7 @@ then
 	hadd ${sample}.root /mnt/hadoop/${inputDir}/${sample}*_Job*.root
 	output=${sample}.root
 	if [ ${isData} == "no" ]
-        	then
+        then
 		eval `scramv1 runtime -sh`
 		if [ -f $CMSSW_BASE/src/llp_analyzer/data/xSections.dat ]
 		then

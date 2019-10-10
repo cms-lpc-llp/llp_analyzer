@@ -33,23 +33,23 @@ void LiteTreeMuonSystem::InitVariables()
   nCsc_JetMuonVetoCluster0p4_Me1112Veto = 0;
   for( int i = 0; i < N_MAX_CSC; i++ )
   {
-    cscLabels[i] = -999;
-    cscITLabels[i] = -999;
-    cscStation[i] = -999;
-    cscChamber[i] = -999;
-
-    cscPhi[i] = -999;   //[nCsc]
-    cscEta[i] = -999;   //[nCsc]
-    cscX[i] = -999;   //[nCsc]
-    cscY[i] = -999;   //[nCsc]
-    cscZ[i] = -999;   //[nCsc]
-    cscDirectionX[i] = -999;   //[nCsc]
-    cscDirectionY[i] = -999;   //[nCsc]
-    cscDirectionZ[i] = -999;   //[nCsc]
-    cscNRecHits[i] = -999;   //[nCsc]
-    cscNRecHits_flag[i] = -999;   //[nCsc]
-    cscT[i] = -999;   //[nCsc]
-    cscChi2[i] = -999;   //[nCsc]
+    // cscLabels[i] = -999;
+    // cscITLabels[i] = -999;
+    // cscStation[i] = -999;
+    // cscChamber[i] = -999;
+    //
+    // cscPhi[i] = -999;   //[nCsc]
+    // cscEta[i] = -999;   //[nCsc]
+    // cscX[i] = -999;   //[nCsc]
+    // cscY[i] = -999;   //[nCsc]
+    // cscZ[i] = -999;   //[nCsc]
+    // cscDirectionX[i] = -999;   //[nCsc]
+    // cscDirectionY[i] = -999;   //[nCsc]
+    // cscDirectionZ[i] = -999;   //[nCsc]
+    // cscNRecHits[i] = -999;   //[nCsc]
+    // cscNRecHits_flag[i] = -999;   //[nCsc]
+    // cscT[i] = -999;   //[nCsc]
+    // cscChi2[i] = -999;   //[nCsc]
 
     cscClusterSize[i] = -999;
     cscClusterX[i] = -999.;
@@ -71,13 +71,17 @@ void LiteTreeMuonSystem::InitVariables()
     cscClusterJetVeto[i] = 0.0;
     cscClusterCaloJetVeto[i] = 0.0;
     cscClusterMuonVeto[i] = 0.0;
+    cscClusterJetVetoE[i] = 0.0;
+    cscClusterCaloJetVetoE[i] = 0.0;
+    cscClusterMuonVetoE[i] = 0.0;
     cscClusterNChamber[i] = -999;
     cscClusterMaxChamberRatio[i] = -999.;
     cscClusterMaxChamber[i] = -999;
     cscClusterNStation[i] = -999;
     cscClusterMaxStationRatio[i] = -999.;
     cscClusterMaxStation[i] = -999;
-    cscClusterMe1112Ratio[i] = -999.;
+    cscClusterMe11Ratio[i] = -999.;
+    cscClusterMe12Ratio[i] = -999.;
     cscClusterVertexR[i] = 0.0;
     cscClusterVertexZ[i] = 0.0;
     cscClusterVertexDis[i] = 0.0;
@@ -111,13 +115,17 @@ void LiteTreeMuonSystem::InitVariables()
     cscITClusterJetVeto[i] = 0.0;
     cscITClusterCaloJetVeto[i] = 0.0;
     cscITClusterMuonVeto[i] = 0.0;
+    cscITClusterJetVetoE[i] = 0.0;
+    cscITClusterCaloJetVetoE[i] = 0.0;
+    cscITClusterMuonVetoE[i] = 0.0;
     cscITClusterNChamber[i] = -999;
     cscITClusterMaxChamberRatio[i] = -999.;
     cscITClusterMaxChamber[i] = -999;
     cscITClusterNStation[i] = -999;
     cscITClusterMaxStationRatio[i] = -999.;
     cscITClusterMaxStation[i] = -999;
-    cscITClusterMe1112Ratio[i] = -999.;
+    cscITClusterMe11Ratio[i] = -999.;
+    cscITClusterMe12Ratio[i] = -999.;
     cscITClusterVertexR[i] = 0.0;
     cscITClusterVertexZ[i] = 0.0;
     cscITClusterVertexDis[i] = 0.0;
@@ -135,6 +143,7 @@ void LiteTreeMuonSystem::InitVariables()
   {
     gLLP_eta[i] = 0.0;
     gLLP_phi[i] = 0.0;
+    gLLP_beta[i] = 0.0;
     gLLP_csc[i] = 0.0;
     gLLP_ctau[i] = 0.0;
     gLLP_decay_vertex_r[i] = 0.0;
@@ -214,23 +223,23 @@ void LiteTreeMuonSystem::InitTree()
 
   //CSC
   tree_->SetBranchAddress("nCsc",             &nCsc);
-  tree_->SetBranchAddress("cscLabels",             cscLabels);
-  tree_->SetBranchAddress("cscITLabels",             cscITLabels);
-  tree_->SetBranchAddress("cscStation",             cscStation);
-  tree_->SetBranchAddress("cscChamber",             cscChamber);
-
-  tree_->SetBranchAddress("cscPhi",           cscPhi);
-  tree_->SetBranchAddress("cscEta",           cscEta);
-  tree_->SetBranchAddress("cscX",             cscX);
-  tree_->SetBranchAddress("cscY",             cscY);
-  tree_->SetBranchAddress("cscZ",             cscZ);
-  tree_->SetBranchAddress("cscDirectionX",             cscDirectionX);
-  tree_->SetBranchAddress("cscDirectionY",             cscDirectionY);
-  tree_->SetBranchAddress("cscDirectionZ",             cscDirectionZ);
-  tree_->SetBranchAddress("cscNRecHits",      cscNRecHits);
-  tree_->SetBranchAddress("cscNRecHits_flag", cscNRecHits_flag);
-  tree_->SetBranchAddress("cscT",             cscT);
-  tree_->SetBranchAddress("cscChi2",          cscChi2);
+  // tree_->SetBranchAddress("cscLabels",             cscLabels);
+  // tree_->SetBranchAddress("cscITLabels",             cscITLabels);
+  // tree_->SetBranchAddress("cscStation",             cscStation);
+  // tree_->SetBranchAddress("cscChamber",             cscChamber);
+  //
+  // tree_->SetBranchAddress("cscPhi",           cscPhi);
+  // tree_->SetBranchAddress("cscEta",           cscEta);
+  // tree_->SetBranchAddress("cscX",             cscX);
+  // tree_->SetBranchAddress("cscY",             cscY);
+  // tree_->SetBranchAddress("cscZ",             cscZ);
+  // tree_->SetBranchAddress("cscDirectionX",             cscDirectionX);
+  // tree_->SetBranchAddress("cscDirectionY",             cscDirectionY);
+  // tree_->SetBranchAddress("cscDirectionZ",             cscDirectionZ);
+  // tree_->SetBranchAddress("cscNRecHits",      cscNRecHits);
+  // tree_->SetBranchAddress("cscNRecHits_flag", cscNRecHits_flag);
+  // tree_->SetBranchAddress("cscT",             cscT);
+  // tree_->SetBranchAddress("cscChi2",          cscChi2);
 
   // CSC CLUSTER
   tree_->SetBranchAddress("nCscClusters",             &nCscClusters);
@@ -240,7 +249,8 @@ void LiteTreeMuonSystem::InitTree()
   tree_->SetBranchAddress("nCsc_JetMuonVetoCluster0p4_Me1112Veto",             &nCsc_JetMuonVetoCluster0p4_Me1112Veto);
 
 
-  tree_->SetBranchAddress("cscClusterMe1112Ratio",             &cscClusterMe1112Ratio);
+  tree_->SetBranchAddress("cscClusterMe11Ratio",             &cscClusterMe11Ratio);
+  tree_->SetBranchAddress("cscClusterMe12Ratio",             &cscClusterMe12Ratio);
   tree_->SetBranchAddress("cscClusterMaxStation",             &cscClusterMaxStation);
   tree_->SetBranchAddress("cscClusterMaxStationRatio",             &cscClusterMaxStationRatio);
   tree_->SetBranchAddress("cscClusterNStation",             &cscClusterNStation);
@@ -277,6 +287,10 @@ void LiteTreeMuonSystem::InitTree()
   tree_->SetBranchAddress("cscClusterJetVeto",             cscClusterJetVeto);
   tree_->SetBranchAddress("cscClusterCaloJetVeto",             cscClusterCaloJetVeto);
   tree_->SetBranchAddress("cscClusterMuonVeto",             cscClusterMuonVeto);
+  tree_->SetBranchAddress("cscClusterJetVetoE",             cscClusterJetVetoE);
+  tree_->SetBranchAddress("cscClusterCaloJetVetoE",             cscClusterCaloJetVetoE);
+  tree_->SetBranchAddress("cscClusterMuonVetoE",             cscClusterMuonVetoE);
+
   tree_->SetBranchAddress("cscClusterSize",             cscClusterSize);
 
   // CSC IT CLUSTER
@@ -286,7 +300,8 @@ void LiteTreeMuonSystem::InitTree()
   tree_->SetBranchAddress("nCsc_JetVetoITCluster0p4_Me1112Veto",             &nCsc_JetVetoITCluster0p4_Me1112Veto);
   tree_->SetBranchAddress("nCsc_JetMuonVetoITCluster0p4_Me1112Veto",             &nCsc_JetMuonVetoITCluster0p4_Me1112Veto);
 
-  tree_->SetBranchAddress("cscITClusterMe1112Ratio",             &cscITClusterMe1112Ratio);
+  tree_->SetBranchAddress("cscITClusterMe11Ratio",             &cscITClusterMe11Ratio);
+  tree_->SetBranchAddress("cscITClusterMe12Ratio",             &cscITClusterMe12Ratio);
   tree_->SetBranchAddress("cscITClusterMaxStation",             &cscITClusterMaxStation);
   tree_->SetBranchAddress("cscITClusterMaxStationRatio",             &cscITClusterMaxStationRatio);
   tree_->SetBranchAddress("cscITClusterNStation",             &cscITClusterNStation);
@@ -325,6 +340,9 @@ void LiteTreeMuonSystem::InitTree()
   tree_->SetBranchAddress("cscITClusterJetVeto",             cscITClusterJetVeto);
   tree_->SetBranchAddress("cscITClusterCaloJetVeto",             cscITClusterCaloJetVeto);
   tree_->SetBranchAddress("cscITClusterMuonVeto",             cscITClusterMuonVeto);
+  tree_->SetBranchAddress("cscITClusterJetVetoE",             cscITClusterJetVetoE);
+  tree_->SetBranchAddress("cscITClusterCaloJetVetoE",             cscITClusterCaloJetVetoE);
+  tree_->SetBranchAddress("cscITClusterMuonVetoE",             cscITClusterMuonVetoE);
   tree_->SetBranchAddress("cscITClusterSize",             cscITClusterSize);
 
 
@@ -336,6 +354,7 @@ void LiteTreeMuonSystem::InitTree()
   tree_->SetBranchAddress("gLLP_phi",    gLLP_phi);
   tree_->SetBranchAddress("gLLP_csc",    gLLP_csc);
   tree_->SetBranchAddress("gLLP_ctau",    gLLP_ctau);
+  tree_->SetBranchAddress("gLLP_beta",    gLLP_beta);
 
   tree_->SetBranchAddress("gLLP_decay_vertex_r",    gLLP_decay_vertex_r);
   tree_->SetBranchAddress("gLLP_decay_vertex_x",    gLLP_decay_vertex_x);
@@ -419,24 +438,24 @@ void LiteTreeMuonSystem::CreateTree()
 
   //CSC
   tree_->Branch("nCsc",             &nCsc, "nCsc/I");
-  tree_->Branch("cscITLabels",             cscITLabels,             "cscITLabels[nCsc]/I");
-
-  tree_->Branch("cscLabels",             cscLabels,             "cscLabels[nCsc]/I");
-  tree_->Branch("cscStation",             cscStation,             "cscStation[nCsc]/I");
-  tree_->Branch("cscChamber",             cscChamber,             "cscChamber[nCsc]/I");
-
-  tree_->Branch("cscPhi",           cscPhi,           "cscPhi[nCsc]/F");
-  tree_->Branch("cscEta",           cscEta,           "cscEta[nCsc]/F");
-  tree_->Branch("cscX",             cscX,             "cscX[nCsc]/F");
-  tree_->Branch("cscY",             cscY,             "cscY[nCsc]/F");
-  tree_->Branch("cscZ",             cscZ,             "cscZ[nCsc]/F");
-  tree_->Branch("cscDirectionX",             cscDirectionX,             "cscDirectionX[nCsc]/F");
-  tree_->Branch("cscDirectionY",             cscDirectionY,             "cscDirectionY[nCsc]/F");
-  tree_->Branch("cscDirectionZ",             cscDirectionZ,             "cscDirectionZ[nCsc]/F");
-  tree_->Branch("cscNRecHits",      cscNRecHits,      "cscNRecHits[nCsc]/F");
-  tree_->Branch("cscNRecHits_flag", cscNRecHits_flag, "cscNRecHits_flag[nCsc]/F");
-  tree_->Branch("cscT",             cscT,             "cscT[nCsc]/F");
-  tree_->Branch("cscChi2",          cscChi2,          "cscChi2[nCsc]/F");
+  // tree_->Branch("cscITLabels",             cscITLabels,             "cscITLabels[nCsc]/I");
+  //
+  // tree_->Branch("cscLabels",             cscLabels,             "cscLabels[nCsc]/I");
+  // tree_->Branch("cscStation",             cscStation,             "cscStation[nCsc]/I");
+  // tree_->Branch("cscChamber",             cscChamber,             "cscChamber[nCsc]/I");
+  //
+  // tree_->Branch("cscPhi",           cscPhi,           "cscPhi[nCsc]/F");
+  // tree_->Branch("cscEta",           cscEta,           "cscEta[nCsc]/F");
+  // tree_->Branch("cscX",             cscX,             "cscX[nCsc]/F");
+  // tree_->Branch("cscY",             cscY,             "cscY[nCsc]/F");
+  // tree_->Branch("cscZ",             cscZ,             "cscZ[nCsc]/F");
+  // tree_->Branch("cscDirectionX",             cscDirectionX,             "cscDirectionX[nCsc]/F");
+  // tree_->Branch("cscDirectionY",             cscDirectionY,             "cscDirectionY[nCsc]/F");
+  // tree_->Branch("cscDirectionZ",             cscDirectionZ,             "cscDirectionZ[nCsc]/F");
+  // tree_->Branch("cscNRecHits",      cscNRecHits,      "cscNRecHits[nCsc]/F");
+  // tree_->Branch("cscNRecHits_flag", cscNRecHits_flag, "cscNRecHits_flag[nCsc]/F");
+  // tree_->Branch("cscT",             cscT,             "cscT[nCsc]/F");
+  // tree_->Branch("cscChi2",          cscChi2,          "cscChi2[nCsc]/F");
 
   // all csc clusters
   tree_->Branch("nCscClusters",             &nCscClusters, "nCscClusters/I");
@@ -464,8 +483,12 @@ void LiteTreeMuonSystem::CreateTree()
   tree_->Branch("cscClusterJetVeto",             cscClusterJetVeto,             "cscClusterJetVeto[nCscClusters]/F");
   tree_->Branch("cscClusterMuonVeto",             cscClusterMuonVeto,             "cscClusterMuonVeto[nCscClusters]/F");
   tree_->Branch("cscClusterCaloJetVeto",             cscClusterCaloJetVeto,             "cscClusterCaloJetVeto[nCscClusters]/F");
+  tree_->Branch("cscClusterJetVetoE",             cscClusterJetVetoE,             "cscClusterJetVetoE[nCscClusters]/F");
+  tree_->Branch("cscClusterMuonVetoE",             cscClusterMuonVetoE,             "cscClusterMuonVetoE[nCscClusters]/F");
+  tree_->Branch("cscClusterCaloJetVetoE",             cscClusterCaloJetVetoE,             "cscClusterCaloJetVetoE[nCscClusters]/F");
   tree_->Branch("cscClusterSize",             cscClusterSize,             "cscClusterSize[nCscClusters]/I");
-  tree_->Branch("cscClusterMe1112Ratio",             cscClusterMe1112Ratio,             "cscClusterMe1112Ratio[nCscClusters]/F");
+  tree_->Branch("cscClusterMe11Ratio",             cscClusterMe11Ratio,             "cscClusterMe11Ratio[nCscClusters]/F");
+  tree_->Branch("cscClusterMe12Ratio",             cscClusterMe12Ratio,             "cscClusterMe12Ratio[nCscClusters]/F");
 
   tree_->Branch("cscClusterNStation",             cscClusterNStation,             "cscClusterNStation[nCscClusters]/I");
   tree_->Branch("cscClusterMaxStation",             cscClusterMaxStation,             "cscClusterMaxStation[nCscClusters]/I");
@@ -513,8 +536,12 @@ void LiteTreeMuonSystem::CreateTree()
   tree_->Branch("cscITClusterJetVeto",             cscITClusterJetVeto,             "cscITClusterJetVeto[nCscITClusters]/F");
   tree_->Branch("cscITClusterMuonVeto",             cscITClusterMuonVeto,             "cscITClusterMuonVeto[nCscITClusters]/F");
   tree_->Branch("cscITClusterCaloJetVeto",             cscITClusterCaloJetVeto,             "cscITClusterCaloJetVeto[nCscITClusters]/F");
+  tree_->Branch("cscITClusterJetVetoE",             cscITClusterJetVetoE,             "cscITClusterJetVetoE[nCscITClusters]/F");
+  tree_->Branch("cscITClusterMuonVetoE",             cscITClusterMuonVetoE,             "cscITClusterMuonVetoE[nCscITClusters]/F");
+  tree_->Branch("cscITClusterCaloJetVetoE",             cscITClusterCaloJetVetoE,             "cscITClusterCaloJetVetoE[nCscITClusters]/F");
   tree_->Branch("cscITClusterSize",             cscITClusterSize,             "cscITClusterSize[nCscITClusters]/I");
-  tree_->Branch("cscITClusterMe1112Ratio",             cscITClusterMe1112Ratio,             "cscITClusterMe1112Ratio[nCscITClusters]/F");
+  tree_->Branch("cscITClusterMe11Ratio",             cscITClusterMe11Ratio,             "cscITClusterMe11Ratio[nCscITClusters]/F");
+  tree_->Branch("cscITClusterMe12Ratio",             cscITClusterMe12Ratio,             "cscITClusterMe12Ratio[nCscITClusters]/F");
 
   tree_->Branch("cscITClusterNStation",             cscITClusterNStation,             "cscITClusterNStation[nCscITClusters]/I");
   tree_->Branch("cscITClusterMaxStation",             cscITClusterMaxStation,             "cscITClusterMaxStation[nCscITClusters]/I");
@@ -540,6 +567,8 @@ void LiteTreeMuonSystem::CreateTree()
   tree_->Branch("gLLP_eta",          gLLP_eta,          "gLLP_eta[2]/F");
   tree_->Branch("gLLP_phi",          gLLP_phi,          "gLLP_phi[2]/F");
   tree_->Branch("gLLP_csc",          gLLP_csc,          "gLLP_csc[2]/F");
+  tree_->Branch("gLLP_beta",          gLLP_beta,          "gLLP_beta[2]/F");
+
   tree_->Branch("gLLP_ctau",          gLLP_ctau,          "gLLP_ctau[2]/F");
 
   tree_->Branch("gLLP_decay_vertex_r",          gLLP_decay_vertex_r,          "gLLP_decay_vertex_r[2]/F");

@@ -3,6 +3,7 @@ dir=/mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/
 if [ "$1" == "" ] || [ "$2" == "" ]; then
     echo "RazorRun <list of input files> <analyzer name> <options>"
 else
+   tar cvf input.tar ${CMSSW_BASE}/src/llp_analyzer/bin/Run$2
    cp ${CMSSW_BASE}/src/llp_analyzer/bin/Run$2 .
    # cp /mnt/hadoop/store/user/jmao/AllUNeed4Razor.tgz ./
    # cp /mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/SusyEwkHgg/Aux/RazorRunAuxFiles_Expanded.tar.gz ./

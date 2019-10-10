@@ -132,8 +132,8 @@ void DBSCAN::sort_clusters()
     vector<int>cscChambers;
     vector<int>cscChambers_copy;
     vector<int>segment_index;
-    int nSegments_Me1112 = 0;
-
+    int nSegments_Me11 = 0;
+    int nSegments_Me12 = 0;
     for(unsigned int l=0; l < m_pointSize; l++){
       if (m_points[l].clusterID == i+1){
         cscStations.push_back(m_points[l].station);
@@ -141,7 +141,8 @@ void DBSCAN::sort_clusters()
         cscStations_copy.push_back(m_points[l].station);
         cscChambers_copy.push_back(m_points[l].chamber);
         segment_index.push_back(l);
-        if (abs(m_points[l].chamber) < 13) nSegments_Me1112++;
+        if (abs(m_points[l].chamber) == 11) nSegments_Me11++;
+        if (abs(m_points[l].chamber) == 12) nSegments_Me12++;
       }
     }
     cscCluster tmpCluster;
@@ -161,7 +162,9 @@ void DBSCAN::sort_clusters()
     tmpCluster.EtaSpread = clusterEtaSpread[i];
     tmpCluster.PhiSpread = clusterPhiSpread[i];
     tmpCluster.nCscSegments = clusterSize[i];
-    tmpCluster.Me1112Ratio = 1.0*nSegments_Me1112/clusterSize[i];
+    tmpCluster.Me11Ratio = 1.0*nSegments_Me11/clusterSize[i];
+    tmpCluster.Me12Ratio = 1.0*nSegments_Me12/clusterSize[i];
+
     tmpCluster.vertex_r = clusterVertexR[i];
     tmpCluster.vertex_z = clusterVertexZ[i];
     tmpCluster.vertex_dis = clusterVertexDis[i];

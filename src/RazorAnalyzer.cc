@@ -24,21 +24,21 @@ void RazorAnalyzer::Analyze(bool isData, int option, string outputFileName, stri
 
 void RazorAnalyzer::EnableAll(){
     EnableEventInfo();
-    EnablePVAll();
+    // EnablePVAll();
     EnableMuons();
     EnableElectrons();
-    EnableTaus();
-    EnablePhotons();
+    // EnableTaus();
+    // EnablePhotons();
     EnableCSC();
     EnableJets();
     EnableCaloJets();
-    EnableFatJets();
+    // EnableFatJets();
     EnableMet();
     EnablePileup();
     EnableMC();
     EnableGenParticles();
     EnableLLP();
-    EnableEcalRechits();
+    // EnableEcalRechits();
 }
 
 void RazorAnalyzer::EnableAllWithEcalRechits(){

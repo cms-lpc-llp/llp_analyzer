@@ -58,30 +58,34 @@ public:
 
   //csc
   int           nCsc;
-  int           cscLabels[N_MAX_CSC];
-  int           cscITLabels[N_MAX_CSC];
-  int           cscStation[N_MAX_CSC];
-  int           cscChamber[N_MAX_CSC];
-
-  float         cscPhi[N_MAX_CSC];   //[nCsc]
-  float         cscEta[N_MAX_CSC];   //[nCsc]
-  float         cscX[N_MAX_CSC];   //[nCsc]
-  float         cscY[N_MAX_CSC];   //[nCsc]
-  float         cscZ[N_MAX_CSC];   //[nCsc]
-  float         cscDirectionX[N_MAX_CSC];   //[nCsc]
-  float         cscDirectionY[N_MAX_CSC];   //[nCsc]
-  float         cscDirectionZ[N_MAX_CSC];   //[nCsc]
-  float         cscNRecHits[N_MAX_CSC];   //[nCsc]
-  float         cscNRecHits_flag[N_MAX_CSC];   //[nCsc]
-  float         cscNRecHits_jetveto0p4[N_MAX_CSC];   //[nCsc]
-  float         cscNRecHits_jetveto0p8[N_MAX_CSC];   //[nCsc]
-  float         cscT[N_MAX_CSC];   //[nCsc]
-  float         cscChi2[N_MAX_CSC];   //[nCsc]
+  // int           cscLabels[N_MAX_CSC];
+  // int           cscITLabels[N_MAX_CSC];
+  // int           cscStation[N_MAX_CSC];
+  // int           cscChamber[N_MAX_CSC];
+  //
+  // float         cscPhi[N_MAX_CSC];   //[nCsc]
+  // float         cscEta[N_MAX_CSC];   //[nCsc]
+  // float         cscX[N_MAX_CSC];   //[nCsc]
+  // float         cscY[N_MAX_CSC];   //[nCsc]
+  // float         cscZ[N_MAX_CSC];   //[nCsc]
+  // float         cscDirectionX[N_MAX_CSC];   //[nCsc]
+  // float         cscDirectionY[N_MAX_CSC];   //[nCsc]
+  // float         cscDirectionZ[N_MAX_CSC];   //[nCsc]
+  // float         cscNRecHits[N_MAX_CSC];   //[nCsc]
+  // float         cscNRecHits_flag[N_MAX_CSC];   //[nCsc]
+  // float         cscNRecHits_jetveto0p4[N_MAX_CSC];   //[nCsc]
+  // float         cscNRecHits_jetveto0p8[N_MAX_CSC];   //[nCsc]
+  // float         cscT[N_MAX_CSC];   //[nCsc]
+  // float         cscChi2[N_MAX_CSC];   //[nCsc]
 
   int           nCscClusters;
   float         cscClusterJetVeto[N_MAX_CSC];   //[nCsc]
   float         cscClusterCaloJetVeto[N_MAX_CSC];
   float         cscClusterMuonVeto[N_MAX_CSC];   //[nCsc]
+  float         cscClusterJetVetoE[N_MAX_CSC];   //[nCsc]
+  float         cscClusterCaloJetVetoE[N_MAX_CSC];
+  float         cscClusterMuonVetoE[N_MAX_CSC];   //[nCsc]
+
   float         cscClusterX[N_MAX_CSC];   //[nCsc]
   float         cscClusterY[N_MAX_CSC];   //[nCsc]
   float         cscClusterZ[N_MAX_CSC];   //[nCsc]
@@ -99,7 +103,9 @@ public:
   float         cscClusterEta[N_MAX_CSC];   //[nCsc]
   float         cscClusterPhi[N_MAX_CSC];   //[nCsc]
   int           cscClusterSize[N_MAX_CSC];
-  float         cscClusterMe1112Ratio[N_MAX_CSC];
+  float         cscClusterMe11Ratio[N_MAX_CSC];
+  float         cscClusterMe12Ratio[N_MAX_CSC];
+
   float         cscClusterVertexR[N_MAX_CSC];   //[nCsc]
   float         cscClusterVertexZ[N_MAX_CSC];   //[nCsc]
   int           cscClusterVertexN[N_MAX_CSC];   //[nCsc]
@@ -125,6 +131,9 @@ public:
   float         cscITClusterJetVeto[N_MAX_CSC];   //[nCsc]
   float         cscITClusterCaloJetVeto[N_MAX_CSC];
   float         cscITClusterMuonVeto[N_MAX_CSC];   //[nCsc]
+  float         cscITClusterJetVetoE[N_MAX_CSC];   //[nCsc]
+  float         cscITClusterCaloJetVetoE[N_MAX_CSC];
+  float         cscITClusterMuonVetoE[N_MAX_CSC];   //[nCsc]
   float         cscITClusterX[N_MAX_CSC];   //[nCsc]
   float         cscITClusterY[N_MAX_CSC];   //[nCsc]
   float         cscITClusterZ[N_MAX_CSC];   //[nCsc]
@@ -144,7 +153,9 @@ public:
   float         cscITClusterEta[N_MAX_CSC];   //[nCsc]
   float         cscITClusterPhi[N_MAX_CSC];   //[nCsc]
   int           cscITClusterSize[N_MAX_CSC];
-  float         cscITClusterMe1112Ratio[N_MAX_CSC];
+  float         cscITClusterMe11Ratio[N_MAX_CSC];
+  float         cscITClusterMe12Ratio[N_MAX_CSC];
+
   float         cscITClusterVertexR[N_MAX_CSC];   //[nCsc]
   float         cscITClusterVertexZ[N_MAX_CSC];   //[nCsc]
   int           cscITClusterVertexN[N_MAX_CSC];   //[nCsc]
@@ -171,6 +182,7 @@ public:
   float gLLP_eta[2];
   float gLLP_phi[2];
   float gLLP_csc[2];
+  float gLLP_beta[2];
   float gLLP_ctau[2];
   float gLLP_decay_vertex_r[2];
   float gLLP_decay_vertex_x[2];
