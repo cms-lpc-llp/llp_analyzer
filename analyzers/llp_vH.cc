@@ -1,5 +1,6 @@
 #include "llp_vH.h"
 #include "RazorHelper.h"
+#include "SusyLLPTree.h"
 #include "JetCorrectorParameters.h"
 #include "JetCorrectionUncertainty.h"
 #include "BTagCalibrationStandalone.h"
@@ -15,11 +16,6 @@
 #define N_MAX_JETS 100
 #define NTriggersMAX 601 //Number of trigger in the .dat file
 using namespace std;
-
-struct greater_than_pt
-{
-  inline bool operator() (const TLorentzVector& p1, const TLorentzVector& p2){return p1.Pt() > p2.Pt();}
-};
 
 struct leptons
 {
@@ -58,11 +54,18 @@ struct jets
 
 };
 
+//pt comparison
+//not used so far
+struct greater_than_pt
+{
+  inline bool operator() (const TLorentzVector& p1, const TLorentzVector& p2){return p1.Pt() > p2.Pt();}
+};
+
 //lepton highest pt comparator
-struct largest_pt
+struct largest_pt_lep
 {
   inline bool operator() (const leptons& p1, const leptons& p2){return p1.lepton.Pt() > p2.lepton.Pt();}
-} my_largest_pt;
+} my_largest_pt_lep;
 
 //jet highest pt comparator
 struct largest_pt_jet
@@ -70,12 +73,16 @@ struct largest_pt_jet
   inline bool operator() (const jets& p1, const jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
 } my_largest_pt_jet;
 
-
+/*
 class RazorLiteTree
 {
 
 public:
-  UInt_t  runNum, lumiSec, evtNum;
+  UInt_t  runNum,
+//pt comparison
+//not used so fa
+////pt comparison
+//not used so farr lumiSec, evtNum;
   UInt_t  category;
   UInt_t  npv, npu;
   Float_t rho, weight;
@@ -421,7 +428,7 @@ public:
   };
 
 };
-
+*/
 void llp_vH::Analyze(bool isData, int options, string outputfilename, string analysisTag)
 {
   //initialization: create one TTree for each analysis box
@@ -516,7 +523,8 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
   string outfilename = outputfilename;
   if (outfilename == "") outfilename = "vH_Tree.root";
   TFile *outFile = new TFile(outfilename.c_str(), "RECREATE");
-  RazorLiteTree *vH = new RazorLiteTree;
+  //RazorLiteTree *vH = new RazorLiteTree;
+  SusyLLPTree *vH = new SusyLLPTree;
   vH->CreateTree();
   vH->tree_->SetAutoFlush(0);
   vH->InitTree();
@@ -714,7 +722,7 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       Leptons.push_back(tmpElectron);
     }
 
-    sort(Leptons.begin(), Leptons.end(), my_largest_pt);
+    sort(Leptons.begin(), Leptons.end(), my_largest_pt_lep);
     //std::cout << "deb7 " << jentry << std::endl;
     for ( auto &tmp : Leptons )
     {
