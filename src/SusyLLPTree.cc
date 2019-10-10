@@ -199,7 +199,7 @@ void SusyLLPTree::LoadTree(const char* file)
 {
     f_ = TFile::Open(file);
     assert(f_);
-    tree_ = dynamic_cast<TTree*>(f_->Get("vH"));
+    tree_ = dynamic_cast<TTree*>(f_->Get("SusyLLPTree"));
     InitTree();
     assert(tree_);
 };
@@ -208,7 +208,7 @@ void SusyLLPTree::LoadTree(const char* file)
 void SusyLLPTree::CreateTree()
 {
     //tree
-    tree_ = new TTree("vH","vH");
+    tree_ = new TTree("SusyLLPTree","SusyLLPTree");
     f_ = 0;
 
     //event info
