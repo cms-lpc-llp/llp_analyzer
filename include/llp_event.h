@@ -274,10 +274,19 @@ public :
    Float_t         calojetRechitT[2000];
    Float_t         calojetGammaMax_ET[2000];
    Float_t         calojetRechitT_rms[2000];
+   Float_t         calojetAlphaMax[2000];
+   Float_t         calojetBetaMax[2000];
+   Float_t         calojetGammaMax[2000];
+   Float_t         calojetGammaMax_EM[2000];
+   Float_t         calojetGammaMax_Hadronic[2000];
+   Float_t         calojetMinDeltaRPVTracks[2000];
    Float_t         calojetPtAllPVTracks[2000];
+   Float_t         calojetMinDeltaRAllTracks[2000];
+   Float_t         calojetPtAllTracks[2000];
+   Float_t	   calojetMedianTheta2D[2000];
+   Float_t	   calojetMedianIP[2000];
    Float_t         calojet_EMEnergyFraction[2000];
    Float_t         calojet_HadronicEnergyFraction[2000];
-   Float_t         calojetMinDeltaRPVTracks[2000];
    Int_t           nJets;
    Float_t         jetE[2000];   //[nJets]
    Float_t         jetPt[2000];   //[nJets]
@@ -298,8 +307,7 @@ public :
    Bool_t          jet_matched[2000];   //[nJets]
    Float_t         jet_sig_et1[2000];   //[nJets]
    Float_t         jet_sig_et2[2000];   //[nJets]
-   Float_t          jet_energy_frac[2000];   //[nJets]
-
+   Float_t         jet_energy_frac[2000];   //[nJets]
    Bool_t          jetPassIDTight[2000];   //[nJets]
    Bool_t          jetPassMuFrac[2000];   //[nJets]
    Bool_t          jetPassEleFrac[2000];   //[nJets]
@@ -321,9 +329,21 @@ public :
    Int_t           jetNRechits[2000];   //[nJets]
    Float_t         jetRechitE[2000];   //[nJets]
    Float_t         jetRechitT[2000];   //[nJets]
+   Float_t         jetRechitT_rms[2000];   //[nJets]
+   Float_t         jetRechitE_Error[2000];   //[nJets]
+   Float_t         jetRechitT_Error[2000];   //[nJets]
+   Float_t         jetAlphaMax[2000];
+   Float_t         jetBetaMax[2000];
+   Float_t         jetGammaMax[2000];
+   Float_t         jetGammaMax_EM[2000];
+   Float_t         jetGammaMax_Hadronic[2000];
    Float_t         jetGammaMax_ET[2000];
    Float_t         jetMinDeltaRPVTracks[2000];
    Float_t         jetPtAllPVTracks[2000];
+   Float_t         jetMinDeltaRAllTracks[2000];
+   Float_t         jetPtAllTracks[2000];
+   Float_t	   jetMedianTheta2D[2000];
+   Float_t	   jetMedianIP[2000];
    UInt_t          nFatJets;
    Float_t         fatJetE[400];   //[nFatJets]
    Float_t         fatJetPt[400];   //[nFatJets]
@@ -675,10 +695,19 @@ public :
    TBranch        *b_calojetRechitT;
    TBranch        *b_calojetGammaMax_ET;
    TBranch        *b_calojetRechitT_rms;
+   TBranch        *b_calojetAlphaMax;
+   TBranch        *b_calojetBetaMax;
+   TBranch        *b_calojetGammaMax;
+   TBranch        *b_calojetGammaMax_EM;
+   TBranch        *b_calojetGammaMax_Hadronic;
+   TBranch        *b_calojetMinDeltaRPVTracks;
    TBranch        *b_calojetPtAllPVTracks;
+   TBranch        *b_calojetMinDeltaRAllTracks;
+   TBranch        *b_calojetPtAllTracks;
+   TBranch	  *b_calojetMedianTheta2D;
+   TBranch	  *b_calojetMedianIP;
    TBranch        *b_calojet_EMEnergyFraction;
    TBranch        *b_calojet_HadronicEnergyFraction;
-   TBranch        *b_calojetMinDeltaRPVTracks;
    TBranch        *b_nJets;   //!
    TBranch        *b_jetE;   //!
    TBranch        *b_jetPt;   //!
@@ -721,9 +750,21 @@ public :
    TBranch        *b_jetNRechits;   //!
    TBranch        *b_jetRechitE;   //!
    TBranch        *b_jetRechitT;   //!
+   TBranch        *b_jetRechitT_rms;   //[nJets]
+   TBranch        *b_jetRechitE_Error;   //[nJets]
+   TBranch        *b_jetRechitT_Error;   //[nJets]
+   TBranch        *b_jetAlphaMax;
+   TBranch        *b_jetBetaMax;
+   TBranch        *b_jetGammaMax;
+   TBranch        *b_jetGammaMax_EM;
+   TBranch        *b_jetGammaMax_Hadronic;
    TBranch        *b_jetGammaMax_ET;
    TBranch        *b_jetMinDeltaRPVTracks;
    TBranch        *b_jetPtAllPVTracks;
+   TBranch        *b_jetMinDeltaRAllTracks;
+   TBranch        *b_jetPtAllTracks;
+   TBranch	  *b_jetMedianTheta2D;
+   TBranch	  *b_jetMedianIP;
    TBranch        *b_nFatJets;   //!
    TBranch        *b_fatJetE;   //!
    TBranch        *b_fatJetPt;   //!
@@ -1163,10 +1204,19 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("calojetRechitT", calojetRechitT, &b_calojetRechitT);
    fChain->SetBranchAddress("calojetGammaMax_ET", calojetGammaMax_ET, &b_calojetGammaMax_ET);
    fChain->SetBranchAddress("calojetRechitT_rms", calojetRechitT_rms, &b_calojetRechitT_rms);
+   fChain->SetBranchAddress("calojetAlphaMax", calojetAlphaMax, &b_calojetAlphaMax);
+   fChain->SetBranchAddress("calojetBetaMax", calojetBetaMax, &b_calojetBetaMax);
+   fChain->SetBranchAddress("calojetGammaMax", calojetGammaMax, &b_calojetBetaMax);
+   fChain->SetBranchAddress("calojetGammaMax_EM", calojetGammaMax_EM, &b_calojetGammaMax_EM);
+   fChain->SetBranchAddress("calojetGammaMax_Hadronic", calojetGammaMax_Hadronic, &b_calojetGammaMax_Hadronic);
+   fChain->SetBranchAddress("calojetMinDeltaRPVTracks", calojetMinDeltaRPVTracks, &b_calojetMinDeltaRPVTracks);
    fChain->SetBranchAddress("calojetPtAllPVTracks", calojetPtAllPVTracks, &b_calojetPtAllPVTracks);
+   fChain->SetBranchAddress("calojetMinDeltaRAllTracks", calojetMinDeltaRAllTracks, &b_calojetMinDeltaRAllTracks);
+   fChain->SetBranchAddress("calojetPtAllTracks", calojetPtAllTracks, &b_calojetPtAllTracks);
+   fChain->SetBranchAddress("calojetMedianTheta2D", calojetMedianTheta2D, &b_calojetMedianTheta2D);
+   fChain->SetBranchAddress("calojetMedianIP", calojetMedianIP, &b_calojetMedianIP);
    fChain->SetBranchAddress("calojet_EMEnergyFraction", calojet_EMEnergyFraction, &b_calojet_EMEnergyFraction);
    fChain->SetBranchAddress("calojet_HadronicEnergyFraction", calojet_HadronicEnergyFraction, &b_calojet_HadronicEnergyFraction);
-   fChain->SetBranchAddress("calojetMinDeltaRPVTracks", calojetMinDeltaRPVTracks, &b_calojetMinDeltaRPVTracks);
    fChain->SetBranchAddress("nJets", &nJets, &b_nJets);
    fChain->SetBranchAddress("jetE", jetE, &b_jetE);
    fChain->SetBranchAddress("jetPt", jetPt, &b_jetPt);
@@ -1209,9 +1259,21 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("jetNRechits", jetNRechits, &b_jetNRechits);
    fChain->SetBranchAddress("jetRechitE", jetRechitE, &b_jetRechitE);
    fChain->SetBranchAddress("jetRechitT", jetRechitT, &b_jetRechitT);
+   fChain->SetBranchAddress("jetRechitT_rms", jetRechitT_rms, &b_jetRechitT_rms);   
+   fChain->SetBranchAddress("jetRechitE_Error", jetRechitE_Error, &b_jetRechitE_Error);   
+   fChain->SetBranchAddress("jetRechitT_Error", jetRechitT_Error, &b_jetRechitT_Error);   
+   fChain->SetBranchAddress("jetAlphaMax", jetAlphaMax, &b_jetAlphaMax);
+   fChain->SetBranchAddress("jetBetaMax", jetBetaMax, &b_jetBetaMax);
+   fChain->SetBranchAddress("jetGammaMax", jetGammaMax, &b_jetBetaMax);
+   fChain->SetBranchAddress("jetGammaMax_EM", jetGammaMax_EM, &b_jetGammaMax_EM);
+   fChain->SetBranchAddress("jetGammaMax_Hadronic", jetGammaMax_Hadronic, &b_jetGammaMax_Hadronic);
    fChain->SetBranchAddress("jetGammaMax_ET", jetGammaMax_ET, &b_jetGammaMax_ET);
    fChain->SetBranchAddress("jetMinDeltaRPVTracks", jetMinDeltaRPVTracks, &b_jetMinDeltaRPVTracks);
    fChain->SetBranchAddress("jetPtAllPVTracks", jetPtAllPVTracks, &b_jetPtAllPVTracks);
+   fChain->SetBranchAddress("jetMinDeltaRAllTracks", jetMinDeltaRAllTracks, &b_jetMinDeltaRAllTracks);
+   fChain->SetBranchAddress("jetPtAllTracks", jetPtAllTracks, &b_jetPtAllTracks);
+   fChain->SetBranchAddress("jetMedianTheta2D", jetMedianTheta2D, &b_jetMedianTheta2D);
+   fChain->SetBranchAddress("jetMedianIP", jetMedianIP, &b_jetMedianIP);
    fChain->SetBranchAddress("nFatJets", &nFatJets, &b_nFatJets);
    fChain->SetBranchAddress("fatJetE", &fatJetE, &b_fatJetE);
    fChain->SetBranchAddress("fatJetPt", &fatJetPt, &b_fatJetPt);
