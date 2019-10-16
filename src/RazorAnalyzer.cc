@@ -271,6 +271,11 @@ void RazorAnalyzer::EnableCaloJets(){
   fChain->SetBranchStatus("calojetPt", 1);
   fChain->SetBranchStatus("calojetEta", 1);
   fChain->SetBranchStatus("calojetPhi", 1);
+  fChain->SetBranchStatus("calojet_EMEnergyFraction", 1);
+  fChain->SetBranchStatus("calojet_HadronicEnergyFraction", 1);
+  fChain->SetBranchStatus("calojetGammaMax_ET", 1);
+  fChain->SetBranchStatus("calojetMinDeltaRPVTracks", 1);
+  fChain->SetBranchStatus("calojetPtAllPVTracks", 1);
 };
 
 void RazorAnalyzer::EnableJets(){
@@ -296,6 +301,9 @@ void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("jetNeutralEMEnergyFraction", 1);
     fChain->SetBranchStatus("jetChargedHadronEnergyFraction", 1);
     fChain->SetBranchStatus("jetNeutralHadronEnergyFraction", 1);
+    fChain->SetBranchStatus("jetGammaMax_ET", 1);
+    fChain->SetBranchStatus("jetMinDeltaRPVTracks", 1);
+    fChain->SetBranchStatus("jetPtAllPVTracks", 1);
     fChain->SetBranchStatus("jetMuonEnergyFraction", 1);
     fChain->SetBranchStatus("jetHOEnergyFraction", 1);
     fChain->SetBranchStatus("jetHFHadronEnergyFraction", 1);

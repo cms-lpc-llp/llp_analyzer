@@ -81,6 +81,12 @@ void SusyLLPTree::InitVariables()
       calojetPhi[i] = -999.;
       calojetTime[i] = -999.;
       calojetPassId[i] = -999.;
+      calojet_EMEnergyFraction[i] = -999.;
+      calojet_HadronicEnergyFraction[i] = -999.;
+      //calojetChargedEMEnergyFraction[i] = -999.;
+      //calojetNeutralEMEnergyFraction[i] = -999.;
+      //calojetChargedHadronEnergyFraction[i] = -999.;
+      //calojetNeutralHadronEnergyFraction[i] = -999.;
       calojetGammaMax_ET[i] = -999.;
       calojetMinDeltaRPVTracks[i] = -999.;
       calojetPtAllPVTracks[i] = -999.;
@@ -170,8 +176,12 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("calojetPassId", calojetPassId);
     tree_->SetBranchAddress("calojetRechitE",   calojetRechitE);
     // tree_->SetBranchAddress("calojetRechitT_rms", calojetRechitT_rms);
-    // tree_->SetBranchAddress("calojet_EMEnergyFraction", calojet_EMEnergyFraction);
-    // tree_->SetBranchAddress("calojet_HadronicEnergyFraction", calojet_HadronicEnergyFraction);
+    tree_->SetBranchAddress("calojet_EMEnergyFraction", calojet_EMEnergyFraction);
+    tree_->SetBranchAddress("calojet_HadronicEnergyFraction", calojet_HadronicEnergyFraction);
+    //tree_->SetBranchAddress("calojetChargedEMEnergyFraction", calojetChargedEMEnergyFraction);
+    //tree_->SetBranchAddress("calojetNeutralEMEnergyFraction", calojetNeutralEMEnergyFraction);
+    //tree_->SetBranchAddress("calojetChargedHadronEnergyFraction", calojetChargedHadronEnergyFraction);
+    //tree_->SetBranchAddress("calojetNeutralHadronEnergyFraction", calojetNeutralHadronEnergyFraction);
 
     tree_->SetBranchAddress("calojetGammaMax_ET", calojetGammaMax_ET);
     tree_->SetBranchAddress("calojetMinDeltaRPVTracks", calojetMinDeltaRPVTracks);
@@ -282,6 +292,12 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("calojetPhi",    calojetPhi,    "calojetPhi[nCaloJets]/F");
     tree_->Branch("calojetTime",   calojetTime,   "calojetTime[nCaloJets]/F");
     tree_->Branch("calojetPassId", calojetPassId, "calojetPassId[nCaloJets]/O");
+    //tree_->Branch("calojetChargedEMEnergyFraction",   calojetChargedEMEnergyFraction,   "calojetChargedEMEnergyFraction[nCaloJets]/F");
+    //tree_->Branch("calojetNeutralEMEnergyFraction",   calojetNeutralEMEnergyFraction,   "calojetNeutralEMEnergyFraction[nCaloJets]/F");
+    //tree_->Branch("calojetChargedHadronEnergyFraction",   calojetChargedHadronEnergyFraction,   "calojetChargedHadronEnergyFraction[nCaloJets]/F");
+    //tree_->Branch("calojetNeutralHadronEnergyFraction",   calojetNeutralHadronEnergyFraction,   "calojetNeutralHadronEnergyFraction[nCaloJets]/F");
+    tree_->Branch("calojet_EMEnergyFraction", calojet_EMEnergyFraction, "calojet_EMEnergyFraction[nCaloJets]/F");
+    tree_->Branch("calojet_HadronicEnergyFraction",   calojet_HadronicEnergyFraction,   "calojet_HadronicEnergyFraction[nCaloJets]/F");
     tree_->Branch("calojetGammaMax_ET", calojetGammaMax_ET, "calojetGammaMax_ET[nCaloJets]/F");
     tree_->Branch("calojetMinDeltaRPVTracks", calojetMinDeltaRPVTracks, "calojetMinDeltaRPVTracks[nCaloJets]/F");
     tree_->Branch("calojetPtAllPVTracks", calojetPtAllPVTracks, "calojetPtAllPVTracks[nCaloJets]/F");

@@ -269,6 +269,10 @@ public :
    Int_t           calojetPileupIdFlag[2000];   //[nJets]
    Bool_t          calojetPassIDLoose[2000];   //[nJets]
    Bool_t          calojetPassIDTight[2000];   //[nJets]
+   Float_t         calojetChargedEMEnergyFraction[2000];   //[nJets]
+   Float_t         calojetNeutralEMEnergyFraction[2000];   //[nJets]
+   Float_t         calojetChargedHadronEnergyFraction[2000];   //[nJets]
+   Float_t         calojetNeutralHadronEnergyFraction[2000];   //[nJets]
    Int_t           calojetNRechits[2000];
    Float_t         calojetRechitE[2000];
    Float_t         calojetRechitT[2000];
@@ -690,6 +694,10 @@ public :
    TBranch        *b_calojetPileupIdFlag;   //[nJets]
    TBranch        *b_calojetPassIDLoose;   //[nJets]
    TBranch        *b_calojetPassIDTight;   //[nJets]
+   TBranch        *b_calojetChargedEMEnergyFraction;   //!
+   TBranch        *b_calojetNeutralEMEnergyFraction;   //!
+   TBranch        *b_calojetChargedHadronEnergyFraction;   //!
+   TBranch        *b_calojetNeutralHadronEnergyFraction;   //!
    TBranch        *b_calojetNRechits;
    TBranch        *b_calojetRechitE;
    TBranch        *b_calojetRechitT;
@@ -1199,6 +1207,10 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("calojetPileupIdFlag", calojetPileupIdFlag, &b_calojetPileupIdFlag);
    fChain->SetBranchAddress("calojetPassIDLoose", calojetPassIDLoose, &b_calojetPassIDLoose);
    fChain->SetBranchAddress("calojetPassIDTight", calojetPassIDTight, &b_calojetPassIDTight);
+   fChain->SetBranchAddress("calojetChargedEMEnergyFraction", calojetChargedEMEnergyFraction, &b_calojetChargedEMEnergyFraction);
+   fChain->SetBranchAddress("calojetNeutralEMEnergyFraction", calojetNeutralEMEnergyFraction, &b_calojetNeutralEMEnergyFraction);
+   fChain->SetBranchAddress("calojetChargedHadronEnergyFraction", calojetChargedHadronEnergyFraction, &b_calojetChargedHadronEnergyFraction);
+   fChain->SetBranchAddress("calojetNeutralHadronEnergyFraction", calojetNeutralHadronEnergyFraction, &b_calojetNeutralHadronEnergyFraction);
    fChain->SetBranchAddress("calojetNRechits", calojetNRechits, &b_calojetNRechits);
    fChain->SetBranchAddress("calojetRechitE", calojetRechitE, &b_calojetRechitE);
    fChain->SetBranchAddress("calojetRechitT", calojetRechitT, &b_calojetRechitT);
@@ -1206,7 +1218,7 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("calojetRechitT_rms", calojetRechitT_rms, &b_calojetRechitT_rms);
    fChain->SetBranchAddress("calojetAlphaMax", calojetAlphaMax, &b_calojetAlphaMax);
    fChain->SetBranchAddress("calojetBetaMax", calojetBetaMax, &b_calojetBetaMax);
-   fChain->SetBranchAddress("calojetGammaMax", calojetGammaMax, &b_calojetBetaMax);
+   fChain->SetBranchAddress("calojetGammaMax", calojetGammaMax, &b_calojetGammaMax);
    fChain->SetBranchAddress("calojetGammaMax_EM", calojetGammaMax_EM, &b_calojetGammaMax_EM);
    fChain->SetBranchAddress("calojetGammaMax_Hadronic", calojetGammaMax_Hadronic, &b_calojetGammaMax_Hadronic);
    fChain->SetBranchAddress("calojetMinDeltaRPVTracks", calojetMinDeltaRPVTracks, &b_calojetMinDeltaRPVTracks);
@@ -1264,7 +1276,7 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("jetRechitT_Error", jetRechitT_Error, &b_jetRechitT_Error);   
    fChain->SetBranchAddress("jetAlphaMax", jetAlphaMax, &b_jetAlphaMax);
    fChain->SetBranchAddress("jetBetaMax", jetBetaMax, &b_jetBetaMax);
-   fChain->SetBranchAddress("jetGammaMax", jetGammaMax, &b_jetBetaMax);
+   fChain->SetBranchAddress("jetGammaMax", jetGammaMax, &b_jetGammaMax);
    fChain->SetBranchAddress("jetGammaMax_EM", jetGammaMax_EM, &b_jetGammaMax_EM);
    fChain->SetBranchAddress("jetGammaMax_Hadronic", jetGammaMax_Hadronic, &b_jetGammaMax_Hadronic);
    fChain->SetBranchAddress("jetGammaMax_ET", jetGammaMax_ET, &b_jetGammaMax_ET);

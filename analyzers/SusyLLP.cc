@@ -12,6 +12,10 @@
 //ROOT includes
 #include "TH1F.h"
 
+#define _debug 0
+#define _debug_jet 0
+#define _debug_calojet 0
+
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
 #define NTriggersMAX 601 //Number of trigger in the .dat file
@@ -54,6 +58,23 @@ struct jets
 
 };
 
+struct calojets
+{
+  TLorentzVector calojet;
+  float time;
+  bool passId;
+  bool isCSVL;
+  bool matched;
+  int ecalNRechits;
+  float ecalRechitE;
+  float calojet_EMEnergyFraction;
+  float calojet_HadronicEnergyFraction;
+  float calojetGammaMax_ET;
+  float calojetMinDeltaRPVTracks;
+  float calojetPtAllPVTracks;
+
+};
+
 //pt comparison
 //not used so far
 struct greater_than_pt
@@ -72,6 +93,12 @@ struct largest_pt_jet
 {
   inline bool operator() (const jets& p1, const jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
 } my_largest_pt_jet;
+
+//calojet highest pt comparator
+struct largest_pt_calojet
+{
+  inline bool operator() (const calojets& p1, const calojets& p2){return p1.calojet.Pt() > p2.calojet.Pt();}
+} my_largest_pt_calojet;
 
 //Analyze
 void SusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag)
@@ -193,11 +220,11 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
   string outfilename = outputfilename;
   if (outfilename == "") outfilename = "SusyLLPTree.root";
   TFile *outFile = new TFile(outfilename.c_str(), "RECREATE");
-  //RazorLiteTree *vH = new RazorLiteTree;
-  SusyLLPTree *vH = new SusyLLPTree;
-  vH->CreateTree();
-  vH->tree_->SetAutoFlush(0);
-  vH->InitTree();
+  //RazorLiteTree *llp_tree = new RazorLiteTree;
+  SusyLLPTree *llp_tree = new SusyLLPTree;
+  llp_tree->CreateTree();
+  llp_tree->tree_->SetAutoFlush(0);
+  llp_tree->InitTree();
   //histogram containing total number of processed events (for normalization)
   TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
   TH1F *generatedEvents = new TH1F("generatedEvents", "generatedEvents", 1, 1, 2);
@@ -260,41 +287,42 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     nb = fChain->GetEntry(jentry); nbytes += nb;
 
     //fill normalization histogram
-    //std::cout << "deb0 " << jentry << std::endl;
-    vH->InitVariables();
-    //std::cout << "deb1 " << jentry << std::endl;
+    if(_debug) std::cout << "deb0 " << jentry << std::endl;
+    llp_tree->InitVariables();
+    if(_debug) std::cout << "deb1 " << jentry << std::endl;
     if (label =="bkg_wH"|| label == "bkg_zH"){
       if (isData)
       {
         NEvents->Fill(1);
-        vH->weight = 1;
+        llp_tree->weight = 1;
       }
       else
       {
         //NEvents->Fill(genWeight);
-        //vH->weight = genWeight;
+        //llp_tree->weight = genWeight;
         NEvents->Fill(1);
-        vH->weight = 1;
+        llp_tree->weight = 1;
       }
 
     }
     else{
       generatedEvents->Fill(1);
-      vH->weight = 1;
+      llp_tree->weight = 1;
     }
-    //std::cout << "deb2 " << jentry << std::endl;
+    if(_debug) std::cout << "deb2 " << jentry << std::endl;
     //event info
-    vH->runNum = runNum;
-    vH->lumiSec = lumiNum;
-    vH->evtNum = eventNum;
-    //std::cout << "deb3 " << jentry << std::endl;
+    llp_tree->runNum = runNum;
+    llp_tree->lumiSec = lumiNum;
+    llp_tree->evtNum = eventNum;
+    if(_debug) std::cout << "deb3 " << jentry << std::endl;
     if (label == "zH" || label == "wH"){
       NEvents->Fill(1);
       bool wzFlag = false;
       for (int i=0; i < nGenParticle; ++i)
       {
         // if (abs(gParticleId[i]) == wzId && gParticleStatus[i] == 22)
-        if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
+        //if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
+        if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] && abs(gParticleMotherId[i]) == wzId)
         {
           wzFlag = true;
         }
@@ -308,18 +336,20 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     {
       if (BunchXing[i] == 0)
       {
-        vH->npu = nPUmean[i];
+        llp_tree->npu = nPUmean[i];
       }
     }
+    if(_debug && llp_tree->npu != 0 ) std::cout << "npu " << llp_tree->npu << std::endl;
     //get NPU
-    vH->npv = nPV;
-    vH->rho = fixedGridRhoFastjetAll;
-    vH->met = metType1Pt;
-    vH->metPhi = metType1Phi;
+    llp_tree->npv = nPV;
+    llp_tree->rho = fixedGridRhoFastjetAll;
+    llp_tree->met = metType1Pt;
+    llp_tree->metPhi = metType1Phi;
+    if(_debug) std::cout << "npv " << llp_tree->npv << std::endl;
 
     //Triggers
     for(int i = 0; i < NTriggersMAX; i++){
-      vH->HLTDecision[i] = HLTDecision[i];
+      llp_tree->HLTDecision[i] = HLTDecision[i];
     }
     bool triggered = false;
     for(int i = 0; i < NTrigger; i++)
@@ -330,6 +360,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
     }
     if (triggered) trig->Fill(1);
+    if(_debug) std::cout << "triggered " << triggered << std::endl;
     //*************************************************************************
     //Start Object Selection
     //*************************************************************************
@@ -337,6 +368,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     //-------------------------------
     //Muons
     //-------------------------------
+    if(_debug) std::cout << "nMuons " << nMuons << std::endl;
     for( int i = 0; i < nMuons; i++ )
     {
       if(!isMuonPOGLooseMuon(i)) continue;
@@ -363,6 +395,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     //-------------------------------
     //Electrons
     //-------------------------------
+    if(_debug) std::cout << "nElectrons " << nElectrons << std::endl;
     for( int i = 0; i < nElectrons; i++ )
     {
 
@@ -395,17 +428,18 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     //std::cout << "deb7 " << jentry << std::endl;
     for ( auto &tmp : Leptons )
     {
-      vH->lepE[vH->nLeptons]      = tmp.lepton.E();
-      vH->lepPt[vH->nLeptons]     = tmp.lepton.Pt();
-      vH->lepEta[vH->nLeptons]    = tmp.lepton.Eta();
-      vH->lepPhi[vH->nLeptons]    = tmp.lepton.Phi();
-      vH->lepPdgId[vH->nLeptons]  = tmp.pdgId;
-      vH->lepDZ[vH->nLeptons]     = tmp.dZ;
-      vH->lepPassId[vH->nLeptons] = tmp.passId;
+      llp_tree->lepE[llp_tree->nLeptons]      = tmp.lepton.E();
+      llp_tree->lepPt[llp_tree->nLeptons]     = tmp.lepton.Pt();
+      llp_tree->lepEta[llp_tree->nLeptons]    = tmp.lepton.Eta();
+      llp_tree->lepPhi[llp_tree->nLeptons]    = tmp.lepton.Phi();
+      llp_tree->lepPdgId[llp_tree->nLeptons]  = tmp.pdgId;
+      llp_tree->lepDZ[llp_tree->nLeptons]     = tmp.dZ;
+      llp_tree->lepPassId[llp_tree->nLeptons] = tmp.passId;
+      if(_debug) std::cout << "lepE " << tmp.lepton.E() << std::endl;
 
 
-      // std::cout << "lepton pdg " << vH->lepPdgId[vH->nLeptons] << std::endl;
-      vH->nLeptons++;
+      // std::cout << "lepton pdg " << llp_tree->lepPdgId[llp_tree->nLeptons] << std::endl;
+      llp_tree->nLeptons++;
     }
 
     //----------------
@@ -419,6 +453,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     pair<uint,uint> ZCandidateLeptonIndex;
     bool foundZ = false;
     TLorentzVector ZCandidate;
+    if(_debug) std::cout << "Leptons.size() " << Leptons.size() << std::endl;
     for( uint i = 0; i < Leptons.size(); i++ )
     {
       for( uint j = 0; j < Leptons.size(); j++ )
@@ -448,12 +483,12 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
     if (foundZ && fabs(ZMass-Z_MASS) < 30.0)
     {
-      vH->ZMass = ZMass;
-      vH->ZPt   = ZPt;
-      vH->ZEta  = ZCandidate.Eta();
-      vH->ZPhi  = ZCandidate.Phi();
-      vH->ZleptonIndex1 = ZCandidateLeptonIndex.first;
-      vH->ZleptonIndex2 = ZCandidateLeptonIndex.second;
+      llp_tree->ZMass = ZMass;
+      llp_tree->ZPt   = ZPt;
+      llp_tree->ZEta  = ZCandidate.Eta();
+      llp_tree->ZPhi  = ZCandidate.Phi();
+      llp_tree->ZleptonIndex1 = ZCandidateLeptonIndex.first;
+      llp_tree->ZleptonIndex2 = ZCandidateLeptonIndex.second;
 
       //match to gen leptons
       //if (abs(lep1Id) == 11) lep1IsPrompt = matchesGenElectron(lep1Eta,lep1Phi);
@@ -465,14 +500,14 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     //require 1 lepton
     //------------------------
     // if (nMuons == 0 && !(nElectrons == 0)){
-    //   std::cout <<nMuons << "," << nElectrons <<  "," << vH->nLeptons <<  "," << vH->met << std::endl;
+    //   std::cout <<nMuons << "," << nElectrons <<  "," << llp_tree->nLeptons <<  "," << llp_tree->met << std::endl;
     // }
 
-    if ( Leptons.size() < nLepton_cut ) continue;
-    TLorentzVector met;
-    TLorentzVector visible = Leptons[0].lepton;
-    met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
-    vH->MT = GetMT(visible,met);
+    //if ( Leptons.size() < nLepton_cut ) continue;
+    //TLorentzVector met;
+    //TLorentzVector visible = Leptons[0].lepton;
+    //met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
+    //llp_tree->MT = GetMT(visible,met);
 
     // else{
     //   if ( Leptons.size() < 2 ) continue;
@@ -490,6 +525,11 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
   //auto highest = [](auto a, auto b) { return a > b; };
   //cout <<"nJets :" << nJets << std::endl;
 
+  if(_debug_jet) std::cout << "nJets " << nJets << std::endl;
+  if(_debug_jet) std::cout << "jetE 0 " << jetE[0] << std::endl;
+  if(_debug_jet) std::cout << "jetChargedEMEnergyFraction 0 " << jetChargedEMEnergyFraction[0] << std::endl;
+  if(_debug_jet) std::cout << "jetNeutralEMEnergyFraction 0 " << jetNeutralEMEnergyFraction[0] << std::endl;
+  if(_debug_jet) std::cout << "jetGammaMax_ET 0 " << jetGammaMax_ET[0] << std::endl;
   for(int i = 0; i < nJets; i++)
   {
 
@@ -546,12 +586,20 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       tmpJet.jetMinDeltaRPVTracks = jetMinDeltaRPVTracks[i];
       tmpJet.jetPtAllPVTracks = jetPtAllPVTracks[i];
 
+      if(_debug_jet) std::cout << "jetE " << jetE[i] << std::endl;
+      if(_debug_jet) std::cout << "jetChargedEMEnergyFraction " << jetChargedEMEnergyFraction[i] << std::endl;
+      if(_debug_jet) std::cout << "jetNeutralEMEnergyFraction " << jetNeutralEMEnergyFraction[i] << std::endl;
+      if(_debug_jet) std::cout << "jetGammaMax_ET " << jetGammaMax_ET[i] << std::endl;
+      if(_debug_jet) std::cout << "jetMinDeltaRPVTracks " << jetMinDeltaRPVTracks[i] << std::endl;
+      if(_debug_jet) std::cout << "jetPtAllPVTracks " << jetPtAllPVTracks[i] << std::endl;
+
       Jets.push_back(tmpJet);
 
     }
-    std::vector<jets> caloJets;
+    std::vector<calojets> caloJets;
     //auto highest = [](auto a, auto b) { return a > b; };
 
+    if(_debug) std::cout << "nCaloJets " << nCaloJets << std::endl;
     for(int i = 0; i < nCaloJets; i++)
     {
 
@@ -585,8 +633,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
         // std::cout <<jetRechitT[i] << "," << jetRechitE[i] <<  "," << jetNRechits[i] << std::endl;
 
 
-        jets tmpJet;
-        tmpJet.jet    = thisJet;
+        calojets tmpJet;
+        tmpJet.calojet    = thisJet;
         tmpJet.time   = calojetRechitT[i];
         tmpJet.passId = calojetPassIDLoose[i];
         tmpJet.isCSVL = isCSVL(i);
@@ -595,9 +643,22 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
         tmpJet.ecalNRechits = calojetNRechits[i];
         tmpJet.ecalRechitE = calojetRechitE[i];
 
-        tmpJet.jetGammaMax_ET = calojetGammaMax_ET[i];
-        tmpJet.jetMinDeltaRPVTracks = calojetMinDeltaRPVTracks[i];
-        tmpJet.jetPtAllPVTracks = calojetPtAllPVTracks[i];
+        tmpJet.calojet_EMEnergyFraction = calojet_EMEnergyFraction[i];
+        tmpJet.calojet_HadronicEnergyFraction = calojet_HadronicEnergyFraction[i];
+        //tmpJet.jetChargedEMEnergyFraction = calojetChargedEMEnergyFraction[i];
+        //tmpJet.jetNeutralEMEnergyFraction = calojetNeutralEMEnergyFraction[i];
+        //tmpJet.jetChargedHadronEnergyFraction = calojetChargedHadronEnergyFraction[i];
+        //tmpJet.jetNeutralHadronEnergyFraction = calojetNeutralHadronEnergyFraction[i];
+        tmpJet.calojetGammaMax_ET = calojetGammaMax_ET[i];
+        tmpJet.calojetMinDeltaRPVTracks = calojetMinDeltaRPVTracks[i];
+        tmpJet.calojetPtAllPVTracks = calojetPtAllPVTracks[i];
+
+        if(_debug_calojet) std::cout << "calojetE " << calojetE[i] << std::endl;
+        if(_debug_calojet) std::cout << "calojetChargedEMEnergyFraction " << calojetChargedEMEnergyFraction[i] << std::endl;
+        if(_debug_calojet) std::cout << "calojetNeutralEMEnergyFraction " << calojetNeutralEMEnergyFraction[i] << std::endl;
+        if(_debug_calojet) std::cout << "calojetGammaMax_ET " << calojetGammaMax_ET[i] << std::endl;
+        if(_debug_calojet) std::cout << "calojetMinDeltaRPVTracks " << calojetMinDeltaRPVTracks[i] << std::endl;
+        if(_debug_calojet) std::cout << "calojetPtAllPVTracks " << calojetPtAllPVTracks[i] << std::endl;
 
         caloJets.push_back(tmpJet);
 
@@ -605,7 +666,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     //-----------------------------
     //Require at least 2 jets
     //-----------------------------
-///*
+/*
     if(pf)
     {
       if( Jets.size() < 1 ) continue;
@@ -616,62 +677,79 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       if( caloJets.size() < 1 ) continue;
 
     }
-//*/
+*/
     if (triggered) trig_lepId_dijet->Fill(1);
     sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
     for ( auto &tmp : Jets )
     {
-      vH->jetE[vH->nJets] = tmp.jet.E();
-      vH->jetEt[vH->nJets] = tmp.jet.Et();
-      vH->jetPt[vH->nJets] = tmp.jet.Pt();
-      vH->jetEta[vH->nJets] = tmp.jet.Eta();
-      vH->jetPhi[vH->nJets] = tmp.jet.Phi();
-      vH->jetTime[vH->nJets] = tmp.time;
-      vH->jetPassId[vH->nJets] = tmp.passId;
-      vH->matched[vH->nJets] = tmp.matched;
-      vH->jet_sig_et1[vH->nJets] = tmp.sig_et1;
-      vH->jet_sig_et2[vH->nJets] = tmp.sig_et2;
-      vH->jet_energy_frac[vH->nJets] = tmp.energy_frac;
-      vH->ecalNRechits[vH->nJets] = tmp.ecalNRechits;
-      vH->ecalRechitE[vH->nJets] = tmp.ecalRechitE;
-      vH->jetChargedEMEnergyFraction[vH->nJets] = tmp.jetChargedEMEnergyFraction;
-      vH->jetNeutralEMEnergyFraction[vH->nJets] = tmp.jetNeutralEMEnergyFraction;
-      vH->jetChargedHadronEnergyFraction[vH->nJets] = tmp.jetChargedHadronEnergyFraction;
-      vH->jetNeutralHadronEnergyFraction[vH->nJets] = tmp.jetNeutralHadronEnergyFraction;
-      vH->jetGammaMax_ET[vH->nJets] = tmp.jetGammaMax_ET;
-      vH->jetMinDeltaRPVTracks[vH->nJets] = tmp.jetMinDeltaRPVTracks;
-      vH->jetPtAllPVTracks[vH->nJets] = tmp.jetPtAllPVTracks;
-      std::cout << "jetE " << tmp.jet.E() << std::endl;
+      llp_tree->jetE[llp_tree->nJets] = tmp.jet.E();
+      llp_tree->jetEt[llp_tree->nJets] = tmp.jet.Et();
+      llp_tree->jetPt[llp_tree->nJets] = tmp.jet.Pt();
+      llp_tree->jetEta[llp_tree->nJets] = tmp.jet.Eta();
+      llp_tree->jetPhi[llp_tree->nJets] = tmp.jet.Phi();
+      llp_tree->jetTime[llp_tree->nJets] = tmp.time;
+      llp_tree->jetPassId[llp_tree->nJets] = tmp.passId;
+      llp_tree->matched[llp_tree->nJets] = tmp.matched;
+      llp_tree->jet_sig_et1[llp_tree->nJets] = tmp.sig_et1;
+      llp_tree->jet_sig_et2[llp_tree->nJets] = tmp.sig_et2;
+      llp_tree->jet_energy_frac[llp_tree->nJets] = tmp.energy_frac;
+      llp_tree->ecalNRechits[llp_tree->nJets] = tmp.ecalNRechits;
+      llp_tree->ecalRechitE[llp_tree->nJets] = tmp.ecalRechitE;
+      llp_tree->jetChargedEMEnergyFraction[llp_tree->nJets] = tmp.jetChargedEMEnergyFraction;
+      llp_tree->jetNeutralEMEnergyFraction[llp_tree->nJets] = tmp.jetNeutralEMEnergyFraction;
+      llp_tree->jetChargedHadronEnergyFraction[llp_tree->nJets] = tmp.jetChargedHadronEnergyFraction;
+      llp_tree->jetNeutralHadronEnergyFraction[llp_tree->nJets] = tmp.jetNeutralHadronEnergyFraction;
+      llp_tree->jetGammaMax_ET[llp_tree->nJets] = tmp.jetGammaMax_ET;
+      llp_tree->jetMinDeltaRPVTracks[llp_tree->nJets] = tmp.jetMinDeltaRPVTracks;
+      llp_tree->jetPtAllPVTracks[llp_tree->nJets] = tmp.jetPtAllPVTracks;
 
-      // std::cout <<tmp.time << "," <<tmp.ecalRechitE <<  "," << tmp.ecalNRechits << vH->nJets<<std::endl;
+      if(_debug_jet) std::cout << "jetE " << tmp.jet.E() << std::endl;
+      if(_debug_jet) std::cout << "jetChargedEMEnergyFraction " << tmp.jetChargedEMEnergyFraction << std::endl;
+      if(_debug_jet) std::cout << "jetNeutralEMEnergyFraction " << tmp.jetNeutralEMEnergyFraction << std::endl;
+      if(_debug_jet) std::cout << "jetGammaMax_ET " << tmp.jetGammaMax_ET << std::endl;
+      if(_debug_jet) std::cout << "jetMinDeltaRPVTracks " << tmp.jetMinDeltaRPVTracks << std::endl;
+      if(_debug_jet) std::cout << "jetPtAllPVTracks " << tmp.jetPtAllPVTracks << std::endl;
 
-      vH->nJets++;
+      // std::cout <<tmp.time << "," <<tmp.ecalRechitE <<  "," << tmp.ecalNRechits << llp_tree->nJets<<std::endl;
+
+      llp_tree->nJets++;
     }
-    sort(caloJets.begin(), caloJets.end(), my_largest_pt_jet);
+    if(_debug) std::cout << "nJets in tree " << llp_tree->nJets << std::endl;
+    sort(caloJets.begin(), caloJets.end(), my_largest_pt_calojet);
 
     for ( auto &tmp : caloJets )
     {
-      vH->calojetE[vH->nCaloJets] = tmp.jet.E();
-      vH->calojetEt[vH->nCaloJets] = tmp.jet.Et();
-      vH->calojetPt[vH->nCaloJets] = tmp.jet.Pt();
-      vH->calojetEta[vH->nCaloJets] = tmp.jet.Eta();
-      vH->calojetPhi[vH->nCaloJets] = tmp.jet.Phi();
-      vH->calojetTime[vH->nCaloJets] = tmp.time;
-      vH->calojetPassId[vH->nCaloJets] = tmp.passId;
-      vH->calojetNRechits[vH->nCaloJets] = tmp.ecalNRechits;
-      vH->calojetRechitE[vH->nCaloJets] = tmp.ecalRechitE;
+      llp_tree->calojetE[llp_tree->nCaloJets] = tmp.calojet.E();
+      llp_tree->calojetEt[llp_tree->nCaloJets] = tmp.calojet.Et();
+      llp_tree->calojetPt[llp_tree->nCaloJets] = tmp.calojet.Pt();
+      llp_tree->calojetEta[llp_tree->nCaloJets] = tmp.calojet.Eta();
+      llp_tree->calojetPhi[llp_tree->nCaloJets] = tmp.calojet.Phi();
+      llp_tree->calojetTime[llp_tree->nCaloJets] = tmp.time;
+      llp_tree->calojetPassId[llp_tree->nCaloJets] = tmp.passId;
+      llp_tree->calojetNRechits[llp_tree->nCaloJets] = tmp.ecalNRechits;
+      llp_tree->calojetRechitE[llp_tree->nCaloJets] = tmp.ecalRechitE;
 
-      vH->calojetGammaMax_ET[vH->nCaloJets] = tmp.jetGammaMax_ET;
-      vH->calojetMinDeltaRPVTracks[vH->nCaloJets] = tmp.jetMinDeltaRPVTracks;
-      vH->calojetPtAllPVTracks[vH->nCaloJets] = tmp.jetPtAllPVTracks;
+      llp_tree->calojet_EMEnergyFraction[llp_tree->nCaloJets] = tmp.calojet_EMEnergyFraction;
+      llp_tree->calojet_HadronicEnergyFraction[llp_tree->nCaloJets] = tmp.calojet_HadronicEnergyFraction;
+      llp_tree->calojetGammaMax_ET[llp_tree->nCaloJets] = tmp.calojetGammaMax_ET;
+      llp_tree->calojetMinDeltaRPVTracks[llp_tree->nCaloJets] = tmp.calojetMinDeltaRPVTracks;
+      llp_tree->calojetPtAllPVTracks[llp_tree->nCaloJets] = tmp.calojetPtAllPVTracks;
 
-      // std::cout <<tmp.time << "," <<tmp.ecalRechitE <<  "," << tmp.ecalNRechits << vH->nJets<<std::endl;
+      // std::cout <<tmp.time << "," <<tmp.ecalRechitE <<  "," << tmp.ecalNRechits << llp_tree->nJets<<std::endl;
+      if(_debug_calojet) std::cout << "calojetE " << tmp.calojet.E() << std::endl;
+      if(_debug_calojet) std::cout << "calojet_EMEnergyFraction " << tmp.calojet_EMEnergyFraction << std::endl;
+      if(_debug_calojet) std::cout << "calojet_HadronicEnergyFraction " << tmp.calojet_HadronicEnergyFraction << std::endl;
+      if(_debug_calojet) std::cout << "calojetGammaMax_ET " << tmp.calojetGammaMax_ET << std::endl;
+      if(_debug_calojet) std::cout << "calojetMinDeltaRPVTracks " << tmp.calojetMinDeltaRPVTracks << std::endl;
+      if(_debug_calojet) std::cout << "calojetPtAllPVTracks " << tmp.calojetPtAllPVTracks << std::endl;
 
-      vH->nCaloJets++;
+
+      llp_tree->nCaloJets++;
     }
-    //std::cout << "deb fill: " << vH->nLeptons << " " << jentry << endl;
-    vH->tree_->Fill();
+    if(_debug) std::cout << "nCaloJets in tree " << llp_tree->nCaloJets << std::endl;
+    //std::cout << "deb fill: " << llp_tree->nLeptons << " " << jentry << endl;
+    llp_tree->tree_->Fill();
   }
 
     cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";

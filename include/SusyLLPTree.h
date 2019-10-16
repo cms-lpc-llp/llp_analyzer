@@ -105,10 +105,12 @@ public:
   float calojetTime[N_MAX_JETS];
   float calojetNRechits[N_MAX_JETS];
   float calojetRechitE[N_MAX_JETS];
-  float calojetChargedEMEnergyFraction[N_MAX_JETS];
-  float calojetNeutralEMEnergyFraction[N_MAX_JETS];
-  float calojetChargedHadronEnergyFraction[N_MAX_JETS];
-  float calojetNeutralHadronEnergyFraction[N_MAX_JETS];
+  //float calojetChargedEMEnergyFraction[N_MAX_JETS];
+  //float calojetNeutralEMEnergyFraction[N_MAX_JETS];
+  //float calojetChargedHadronEnergyFraction[N_MAX_JETS];
+  //float calojetNeutralHadronEnergyFraction[N_MAX_JETS];
+  float calojet_EMEnergyFraction[N_MAX_JETS];
+  float calojet_HadronicEnergyFraction[N_MAX_JETS];
   float calojetGammaMax_ET[N_MAX_JETS];
   float calojetMinDeltaRPVTracks[N_MAX_JETS];
   float calojetPtAllPVTracks[N_MAX_JETS];

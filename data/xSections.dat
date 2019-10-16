@@ -60,6 +60,59 @@ WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythi
 WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
 WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
 
+#13 TeV wino C1N2
+#https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVn2x1wino#Sum_of_NLO_NLL_wino_like_102_AN1
+x1n2_mchi_100    1e+03*22504  
+x1n2_mchi_125    1e+03*9936.7 
+x1n2_mchi_150    1e+03*5118.9 
+x1n2_mchi_175    1e+03*2912.9 
+x1n2_mchi_200    1e+03*1779.1  
+x1n2_mchi_225    1e+03*1145.7   
+x1n2_mchi_250    1e+03*768.61  
+x1n2_mchi_275    1e+03*532.81   
+x1n2_mchi_300    1e+03*379.23  
+x1n2_mchi_325    1e+03*276.17  
+x1n2_mchi_350    1e+03*204.91   
+x1n2_mchi_375    1e+03*154.54   
+x1n2_mchi_400    1e+03*118.22   
+x1n2_mchi_425    1e+03*91.52   
+x1n2_mchi_450    1e+03*71.65   
+x1n2_mchi_475    1e+03*56.6  
+x1n2_mchi_500    1e+03*45.12   
+x1n2_mchi_525    1e+03*36.27   
+x1n2_mchi_550    1e+03*29.32    
+x1n2_mchi_575    1e+03*23.87  
+x1n2_mchi_600    1e+03*19.55    
+x1n2_mchi_625    1e+03*16.1  
+x1n2_mchi_650    1e+03*13.31    
+x1n2_mchi_675    1e+03*11.06  
+x1n2_mchi_700    1e+03*9.21  
+x1n2_mchi_725    1e+03*7.71   
+x1n2_mchi_750    1e+03*6.47   
+x1n2_mchi_775    1e+03*5.46   
+x1n2_mchi_800    1e+03*4.61   
+x1n2_mchi_825    1e+03*3.91  
+x1n2_mchi_850    1e+03*3.32   
+x1n2_mchi_875    1e+03*2.82   
+x1n2_mchi_900    1e+03*2.41  
+x1n2_mchi_925    1e+03*2.06  
+x1n2_mchi_950    1e+03*1.76  
+x1n2_mchi_975    1e+03*1.52  
+x1n2_mchi_1000    1e+03*1.3  
+x1n2_mchi_1025    1e+03*1.12  
+x1n2_mchi_1050    1e+03*0.96  
+x1n2_mchi_1075    1e+03*0.84  
+x1n2_mchi_1100    1e+03*0.72  
+x1n2_mchi_1125    1e+03*0.63  
+x1n2_mchi_1150    1e+03*0.54  
+x1n2_mchi_1175    1e+03*0.47  
+x1n2_mchi_1200    1e+03*0.41  
+x1n2_mchi_1225    1e+03*0.35  
+x1n2_mchi_1250    1e+03*0.31  
+x1n2_mchi_1275    1e+03*0.27  
+x1n2_mchi_1300    1e+03*0.24  
+x1n2_mchi_1325    1e+03*0.21  
+
 #13 TeV Spring 15 MC
 QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8                            2022100000.0
 QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                        2.486e+08
