@@ -441,6 +441,11 @@ public :
    Float_t         gParticlePt[4000];   //[nGenParticle]
    Float_t         gParticleEta[4000];   //[nGenParticle]
    Float_t         gParticlePhi[4000];   //[nGenParticle]
+
+   //gLLP
+   Float_t         gLLP_travel_time[2];
+   Float_t         gLLP_e[2];
+   Float_t         gLLP_pt[2];
    Float_t         gLLP_eta[2];
    Float_t         gLLP_beta[2];
    Float_t         gLLP_phi[2];
@@ -450,6 +455,20 @@ public :
    Float_t         gLLP_prod_vertex_x[2];
    Float_t         gLLP_prod_vertex_y[2];
    Float_t         gLLP_prod_vertex_z[2];
+
+   //gLLP_daughter
+   Float_t         gen_time[4];
+   Float_t         photon_travel_time[4];
+   Float_t         gLLP_daughter_travel_time[4];
+   Float_t         gLLP_daughter_e[4];
+   Float_t         gLLP_daughter_pt[4];
+   Float_t         gLLP_daughter_eta[4];
+   Float_t         gLLP_daughter_phi[4];
+   Float_t         gLLP_daughter_eta_ecalcorr[4];
+   Float_t         gLLP_daughter_phi_ecalcorr[4];
+   Float_t         gLLP_min_delta_r_match_jet[4];
+   UInt_t          gLLP_daughter_match_jet_index[4];
+
 
    // List of branches
    TBranch        *b_isData;   //!
@@ -866,6 +885,9 @@ public :
    TBranch        *b_gParticlePt;   //!
    TBranch        *b_gParticleEta;   //!
    TBranch        *b_gParticlePhi;   //!
+   TBranch        *b_gLLP_travel_time;
+   TBranch        *b_gLLP_e;
+   TBranch        *b_gLLP_pt;
    TBranch        *b_gLLP_eta;
    TBranch        *b_gLLP_beta;
    TBranch        *b_gLLP_phi;
@@ -875,6 +897,17 @@ public :
    TBranch        *b_gLLP_prod_vertex_x;
    TBranch        *b_gLLP_prod_vertex_y;
    TBranch        *b_gLLP_prod_vertex_z;
+   TBranch        *b_gen_time;
+   TBranch        *b_photon_travel_time;
+   TBranch        *b_gLLP_daughter_travel_time;
+   TBranch        *b_gLLP_daughter_e;
+   TBranch        *b_gLLP_daughter_pt;
+   TBranch        *b_gLLP_daughter_eta;
+   TBranch        *b_gLLP_daughter_phi;
+   TBranch        *b_gLLP_daughter_eta_ecalcorr;
+   TBranch        *b_gLLP_daughter_phi_ecalcorr;
+   TBranch        *b_gLLP_min_delta_r_match_jet;
+   TBranch        *b_gLLP_daughter_match_jet_index;
 
 
    llp_event(TTree *tree=0);
@@ -1379,6 +1412,10 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("gParticlePt", gParticlePt, &b_gParticlePt);
    fChain->SetBranchAddress("gParticleEta", gParticleEta, &b_gParticleEta);
    fChain->SetBranchAddress("gParticlePhi", gParticlePhi, &b_gParticlePhi);
+
+   fChain->SetBranchAddress("gLLP_travel_time", gLLP_travel_time, &b_gLLP_travel_time);
+   fChain->SetBranchAddress("gLLP_e", gLLP_e, &b_gLLP_e);
+   fChain->SetBranchAddress("gLLP_pt", gLLP_pt, &b_gLLP_pt);
    fChain->SetBranchAddress("gLLP_eta", gLLP_eta, &b_gLLP_eta);
    fChain->SetBranchAddress("gLLP_phi", gLLP_phi, &b_gLLP_phi);
    fChain->SetBranchAddress("gLLP_beta", gLLP_beta, &b_gLLP_beta);
@@ -1390,6 +1427,18 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("gLLP_prod_vertex_x", gLLP_prod_vertex_x, &b_gLLP_prod_vertex_x);
    fChain->SetBranchAddress("gLLP_prod_vertex_y", gLLP_prod_vertex_y, &b_gLLP_prod_vertex_y);
    fChain->SetBranchAddress("gLLP_prod_vertex_z", gLLP_prod_vertex_z, &b_gLLP_prod_vertex_z);
+
+   fChain->SetBranchAddress("gen_time", gen_time, &b_gen_time);
+   fChain->SetBranchAddress("photon_travel_time", photon_travel_time, &b_photon_travel_time);
+   fChain->SetBranchAddress("gLLP_daughter_travel_time", gLLP_daughter_travel_time, &b_gLLP_daughter_travel_time);
+   fChain->SetBranchAddress("gLLP_daughter_e", gLLP_daughter_e, &b_gLLP_daughter_e);
+   fChain->SetBranchAddress("gLLP_daughter_pt", gLLP_daughter_pt, &b_gLLP_daughter_pt);
+   fChain->SetBranchAddress("gLLP_daughter_eta", gLLP_daughter_eta, &b_gLLP_daughter_eta);
+   fChain->SetBranchAddress("gLLP_daughter_phi", gLLP_daughter_phi, &b_gLLP_daughter_phi);
+   fChain->SetBranchAddress("gLLP_daughter_eta_ecalcorr", gLLP_daughter_eta_ecalcorr, &b_gLLP_daughter_eta_ecalcorr);
+   fChain->SetBranchAddress("gLLP_daughter_phi_ecalcorr", gLLP_daughter_phi_ecalcorr, &b_gLLP_daughter_phi_ecalcorr);
+   fChain->SetBranchAddress("gLLP_min_delta_r_match_jet", gLLP_min_delta_r_match_jet, &b_gLLP_min_delta_r_match_jet);
+   fChain->SetBranchAddress("gLLP_daughter_match_jet_index", gLLP_daughter_match_jet_index, &b_gLLP_daughter_match_jet_index);
 
    Notify();
 }

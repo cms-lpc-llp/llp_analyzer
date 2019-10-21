@@ -16,6 +16,8 @@
 #define _debug_jet 0
 #define _debug_calojet 0
 
+#define N_MAX_LLP_DAUGHTERS 4
+#define N_MAX_LLPS 2
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
 #define NTriggersMAX 601 //Number of trigger in the .dat file
@@ -749,6 +751,39 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     }
     if(_debug) std::cout << "nCaloJets in tree " << llp_tree->nCaloJets << std::endl;
     //std::cout << "deb fill: " << llp_tree->nLeptons << " " << jentry << endl;
+    
+    //gLLP
+    for(int i = 0; i <N_MAX_LLPS; i++){
+      llp_tree->gLLP_travel_time[i] = gLLP_travel_time[i];
+      llp_tree->gLLP_e[i] = gLLP_e[i];
+      llp_tree->gLLP_pt[i] = gLLP_pt[i];
+      llp_tree->gLLP_eta[i] = gLLP_eta[i];
+      llp_tree->gLLP_beta[i] = gLLP_beta[i];
+      llp_tree->gLLP_phi[i] = gLLP_phi[i];
+      llp_tree->gLLP_decay_vertex_x[i] = gLLP_decay_vertex_x[i];
+      llp_tree->gLLP_decay_vertex_y[i] = gLLP_decay_vertex_y[i];
+      llp_tree->gLLP_decay_vertex_z[i] = gLLP_decay_vertex_z[i];
+      llp_tree->gLLP_prod_vertex_x[i] = gLLP_prod_vertex_x[i];
+      llp_tree->gLLP_prod_vertex_y[i] = gLLP_prod_vertex_y[i];
+      llp_tree->gLLP_prod_vertex_z[i] = gLLP_prod_vertex_z[i];
+
+    }
+
+    //gLLP daughters
+    for(int i = 0; i <N_MAX_LLP_DAUGHTERS; i++){
+      llp_tree->gen_time[i] = gen_time[i];
+      llp_tree->photon_travel_time[i] = photon_travel_time[i];
+      llp_tree->gLLP_daughter_travel_time[i] = gLLP_daughter_travel_time[i];
+      llp_tree->gLLP_daughter_e[i] = gLLP_daughter_e[i];
+      llp_tree->gLLP_daughter_pt[i] = gLLP_daughter_pt[i];
+      llp_tree->gLLP_daughter_eta[i] = gLLP_daughter_eta[i];
+      llp_tree->gLLP_daughter_phi[i] = gLLP_daughter_phi[i];
+      llp_tree->gLLP_daughter_eta_ecalcorr[i] = gLLP_daughter_eta_ecalcorr[i];
+      llp_tree->gLLP_min_delta_r_match_jet[i] = gLLP_min_delta_r_match_jet[i];
+      llp_tree->gLLP_daughter_match_jet_index[i] = gLLP_daughter_match_jet_index[i];
+
+    }
+
     llp_tree->tree_->Fill();
   }
 

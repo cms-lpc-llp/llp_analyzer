@@ -3,6 +3,8 @@
 #ifndef SusyLLPTree_H
 #define SusyLLPTree_H
 
+#define N_MAX_LLPS 2
+#define N_MAX_LLP_DAUGHTERS 4
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
 #define N_MAX_CSC 2000
@@ -119,15 +121,36 @@ public:
   // // bool jetTightPassId[N_MAX_JETS];
 
   //gLLP
-  float gLLP_eta[2];
-  float gLLP_phi[2];
-  float gLLP_csc[2];
-  float gLLP_ctau[2];
-  float gLLP_decay_vertex_r[2];
-  float gLLP_decay_vertex_x[2];
-  float gLLP_decay_vertex_y[2];
-  float gLLP_decay_vertex_z[2];
+  float gLLP_csc[N_MAX_LLPS];
+  float gLLP_ctau[N_MAX_LLPS];
  
+   //gLLP
+   float         gLLP_travel_time[N_MAX_LLPS];
+   float         gLLP_e[N_MAX_LLPS];
+   float         gLLP_pt[N_MAX_LLPS];
+   float         gLLP_eta[N_MAX_LLPS];
+   float         gLLP_beta[N_MAX_LLPS];
+   float         gLLP_phi[N_MAX_LLPS];
+   float         gLLP_decay_vertex_x[N_MAX_LLPS];
+   float         gLLP_decay_vertex_y[N_MAX_LLPS];
+   float         gLLP_decay_vertex_z[N_MAX_LLPS];
+   float         gLLP_prod_vertex_x[N_MAX_LLPS];
+   float         gLLP_prod_vertex_y[N_MAX_LLPS];
+   float         gLLP_prod_vertex_z[N_MAX_LLPS];
+
+   //gLLP_daughter
+   float         gen_time[N_MAX_LLP_DAUGHTERS];
+   float         photon_travel_time[N_MAX_LLP_DAUGHTERS];
+   float         gLLP_daughter_travel_time[N_MAX_LLP_DAUGHTERS];
+   float         gLLP_daughter_e[N_MAX_LLP_DAUGHTERS];
+   float         gLLP_daughter_pt[N_MAX_LLP_DAUGHTERS];
+   float         gLLP_daughter_eta[N_MAX_LLP_DAUGHTERS];
+   float         gLLP_daughter_phi[N_MAX_LLP_DAUGHTERS];
+   float         gLLP_daughter_eta_ecalcorr[N_MAX_LLP_DAUGHTERS];
+   float         gLLP_daughter_phi_ecalcorr[N_MAX_LLP_DAUGHTERS];
+   float         gLLP_min_delta_r_match_jet[N_MAX_LLP_DAUGHTERS];
+   unsigned int          gLLP_daughter_match_jet_index[N_MAX_LLP_DAUGHTERS];
+
   //HLT 
   bool HLTDecision[NTriggersMAX];
 

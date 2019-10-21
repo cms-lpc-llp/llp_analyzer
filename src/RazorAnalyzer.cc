@@ -287,6 +287,7 @@ void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("jetCSV", 1);
     fChain->SetBranchStatus("jetCISV", 1);
     fChain->SetBranchStatus("jetMass", 1);
+    fChain->SetBranchStatus("jet_matched", 1);
     fChain->SetBranchStatus("jetJetArea", 1);
     fChain->SetBranchStatus("jetPileupE", 1);
     fChain->SetBranchStatus("jetPileupId", 1);
@@ -479,6 +480,9 @@ void RazorAnalyzer::EnableGenParticles(){
     //fChain->SetBranchStatus("gParticleDecayVertexZ", 1);
 }
 void RazorAnalyzer::EnableLLP(){
+    fChain->SetBranchStatus("gLLP_travel_time", 1);
+    fChain->SetBranchStatus("gLLP_e", 1);
+    fChain->SetBranchStatus("gLLP_pt", 1);
     fChain->SetBranchStatus("gLLP_eta", 1);
     fChain->SetBranchStatus("gLLP_phi", 1);
     fChain->SetBranchStatus("gLLP_beta", 1);
@@ -486,6 +490,23 @@ void RazorAnalyzer::EnableLLP(){
     fChain->SetBranchStatus("gLLP_decay_vertex_x", 1);
     fChain->SetBranchStatus("gLLP_decay_vertex_y", 1);
     fChain->SetBranchStatus("gLLP_decay_vertex_z", 1);
+
+    fChain->SetBranchStatus("gLLP_prod_vertex_x", 1);
+    fChain->SetBranchStatus("gLLP_prod_vertex_y", 1);
+    fChain->SetBranchStatus("gLLP_prod_vertex_z", 1);
+
+    fChain->SetBranchStatus("gen_time", 1);
+    fChain->SetBranchStatus("photon_travel_time", 1);
+    fChain->SetBranchStatus("gLLP_daughter_travel_time", 1);
+    fChain->SetBranchStatus("gLLP_daughter_e", 1);
+    fChain->SetBranchStatus("gLLP_daughter_pt", 1);
+    fChain->SetBranchStatus("gLLP_daughter_eta", 1);
+    fChain->SetBranchStatus("gLLP_daughter_phi", 1);
+    fChain->SetBranchStatus("gLLP_daughter_eta_ecal_corr", 1);
+    fChain->SetBranchStatus("gLLP_daughter_phi_ecal_corr", 1);
+    fChain->SetBranchStatus("gLLP_min_delta_r_match_jet", 1);
+    fChain->SetBranchStatus("gLLP_daughter_match_jet_index", 1);
+
     //fChain->SetBranchStatus("gParticleDecayVertexX", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexY", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexZ", 1);

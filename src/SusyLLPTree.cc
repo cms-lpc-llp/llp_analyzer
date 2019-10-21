@@ -3,6 +3,8 @@
 #include "assert.h"
 #include "TTree.h"
 
+#define N_MAX_LLPS 2
+#define N_MAX_LLP_DAUGHTERS 4
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
 #define NTriggersMAX 601 //Number of trigger in the .dat file
@@ -93,9 +95,43 @@ void SusyLLPTree::InitVariables()
       calojetNRechits[i] = -999.;
       calojetRechitE[i] = -999.;
     }
-
+    
+    //triggers
     for(int i = 0; i <NTriggersMAX; i++){
       HLTDecision[i] = false;
+    }
+
+    //gLLP
+    for(int i = 0; i <N_MAX_LLPS; i++){
+      gLLP_travel_time[i] = -999.;
+      gLLP_e[i] = -999.;
+      gLLP_pt[i] = -999.;
+      gLLP_eta[i] = -999.;
+      gLLP_beta[i] = -999.;
+      gLLP_phi[i] = -999.;
+      gLLP_decay_vertex_x[i] = -999.;
+      gLLP_decay_vertex_y[i] = -999.;
+      gLLP_decay_vertex_z[i] = -999.;
+      gLLP_prod_vertex_x[i] = -999.;
+      gLLP_prod_vertex_y[i] = -999.;
+      gLLP_prod_vertex_z[i] = -999.;
+
+    }
+
+    //gLLP daughters
+    for(int i = 0; i <N_MAX_LLP_DAUGHTERS; i++){
+      gen_time[i] = -999.;
+      photon_travel_time[i] = -999.;
+      gLLP_daughter_travel_time[i] = -999.;
+      gLLP_daughter_e[i] = -999.;
+      gLLP_daughter_pt[i] = -999.;
+      gLLP_daughter_eta[i] = -999.;
+      gLLP_daughter_phi[i] = -999.;
+      gLLP_daughter_eta_ecalcorr[i] = -999.;
+      gLLP_daughter_phi_ecalcorr[i] = -999.;
+      gLLP_min_delta_r_match_jet[i] = -999.;
+      gLLP_daughter_match_jet_index[i] = 999;
+
     }
 
 };
@@ -188,20 +224,42 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("calojetPtAllPVTracks", calojetPtAllPVTracks);
     // tree_->SetBranchAddress("jetLoosePassId", jetLoosePassId);
     // tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
+
     // triggers
     tree_->SetBranchAddress("HLTDecision",   HLTDecision);
-/*
-  // gLLP
-  tree_->SetBranchAddress("gLLP_eta",    gLLP_eta);
-  tree_->SetBranchAddress("gLLP_phi",    gLLP_phi);
-  tree_->SetBranchAddress("gLLP_csc",    gLLP_csc);
-  tree_->SetBranchAddress("gLLP_ctau",    gLLP_ctau);
 
-  tree_->SetBranchAddress("gLLP_decay_vertex_r",    gLLP_decay_vertex_r);
-  tree_->SetBranchAddress("gLLP_decay_vertex_x",    gLLP_decay_vertex_x);
-  tree_->SetBranchAddress("gLLP_decay_vertex_y",    gLLP_decay_vertex_y);
-  tree_->SetBranchAddress("gLLP_decay_vertex_z",    gLLP_decay_vertex_z);
-*/
+    // gLLP
+    tree_->SetBranchAddress("gLLP_travel_time",    gLLP_travel_time);
+    tree_->SetBranchAddress("gLLP_e",    gLLP_e);
+    tree_->SetBranchAddress("gLLP_pt",    gLLP_pt);
+    tree_->SetBranchAddress("gLLP_eta",    gLLP_eta);
+    tree_->SetBranchAddress("gLLP_phi",    gLLP_phi);
+    tree_->SetBranchAddress("gLLP_beta",    gLLP_beta);
+    tree_->SetBranchAddress("gLLP_csc",    gLLP_csc);
+    tree_->SetBranchAddress("gLLP_ctau",    gLLP_ctau);
+  
+    //tree_->SetBranchAddress("gLLP_decay_vertex_r",    gLLP_decay_vertex_r);
+    tree_->SetBranchAddress("gLLP_decay_vertex_x",    gLLP_decay_vertex_x);
+    tree_->SetBranchAddress("gLLP_decay_vertex_y",    gLLP_decay_vertex_y);
+    tree_->SetBranchAddress("gLLP_decay_vertex_z",    gLLP_decay_vertex_z);
+
+    tree_->SetBranchAddress("gLLP_prod_vertex_x",    gLLP_prod_vertex_x);
+    tree_->SetBranchAddress("gLLP_prod_vertex_y",    gLLP_prod_vertex_y);
+    tree_->SetBranchAddress("gLLP_prod_vertex_z",    gLLP_prod_vertex_z);
+
+    // gLLP daughters
+    tree_->SetBranchAddress("gen_time",    gen_time);
+    tree_->SetBranchAddress("photon_travel_time",    photon_travel_time);
+    tree_->SetBranchAddress("gLLP_daughter_travel_time",    gLLP_daughter_travel_time);
+    tree_->SetBranchAddress("gLLP_daughter_e",    gLLP_daughter_e);
+    tree_->SetBranchAddress("gLLP_daughter_pt",    gLLP_daughter_pt);
+    tree_->SetBranchAddress("gLLP_daughter_eta",    gLLP_daughter_eta);
+    tree_->SetBranchAddress("gLLP_daughter_phi",    gLLP_daughter_phi);
+    tree_->SetBranchAddress("gLLP_daughter_eta_ecalcorr",    gLLP_daughter_eta_ecalcorr);
+    tree_->SetBranchAddress("gLLP_daughter_phi_ecalcorr",    gLLP_daughter_phi_ecalcorr);
+    tree_->SetBranchAddress("gLLP_min_delta_r_match_jet",    gLLP_min_delta_r_match_jet);
+    tree_->SetBranchAddress("gLLP_daughter_match_jet_index",   gLLP_daughter_match_jet_index);
+  
 };
 
 //LoadTree
@@ -306,15 +364,36 @@ void SusyLLPTree::CreateTree()
 
     //HLT
     tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[601]/O"); //hardcoded
-/*
+
   //gLLP branches
+  tree_->Branch("gLLP_travel_time",          gLLP_travel_time,          "gLLP_travel_time[2]/F");
+  tree_->Branch("gLLP_e",          gLLP_e,          "gLLP_e[2]/F");
+  tree_->Branch("gLLP_pt",          gLLP_pt,          "gLLP_pt[2]/F");
   tree_->Branch("gLLP_eta",          gLLP_eta,          "gLLP_eta[2]/F");
+  tree_->Branch("gLLP_beta",          gLLP_beta,          "gLLP_beta[2]/F");
   tree_->Branch("gLLP_phi",          gLLP_phi,          "gLLP_phi[2]/F");
   tree_->Branch("gLLP_ctau",          gLLP_ctau,          "gLLP_ctau[2]/F");
 
-  tree_->Branch("gLLP_decay_vertex_r",          gLLP_decay_vertex_r,          "gLLP_decay_vertex_r[2]/F");
+  //tree_->Branch("gLLP_decay_vertex_r",          gLLP_decay_vertex_r,          "gLLP_decay_vertex_r[2]/F");
   tree_->Branch("gLLP_decay_vertex_x",          gLLP_decay_vertex_x,          "gLLP_decay_vertex_x[2]/F");
   tree_->Branch("gLLP_decay_vertex_y",          gLLP_decay_vertex_y,          "gLLP_decay_vertex_y[2]/F");
   tree_->Branch("gLLP_decay_vertex_z",          gLLP_decay_vertex_z,          "gLLP_decay_vertex_z[2]/F");
-*/
+
+  tree_->Branch("gLLP_prod_vertex_x",          gLLP_prod_vertex_x,          "gLLP_prod_vertex_x[2]/F");
+  tree_->Branch("gLLP_prod_vertex_y",          gLLP_prod_vertex_y,          "gLLP_prod_vertex_y[2]/F");
+  tree_->Branch("gLLP_prod_vertex_z",          gLLP_prod_vertex_z,          "gLLP_prod_vertex_z[2]/F");
+
+  //gLLP daughter branches
+  tree_->Branch("gen_time",          gen_time,          "gen_time[4]/F");
+  tree_->Branch("photon_travel_time",          photon_travel_time,          "photon_travel_time[4]/F");
+  tree_->Branch("gLLP_daughter_travel_time",          gLLP_daughter_travel_time,          "gLLP_daughter_travel_time[4]/F");
+  tree_->Branch("gLLP_daughter_e",          gLLP_daughter_e,          "gLLP_daughter_e[4]/F");
+  tree_->Branch("gLLP_daughter_pt",          gLLP_daughter_pt,          "gLLP_daughter_pt[4]/F");
+  tree_->Branch("gLLP_daughter_eta",          gLLP_daughter_eta,          "gLLP_daughter_eta[4]/F");
+  tree_->Branch("gLLP_daughter_phi",          gLLP_daughter_phi,          "gLLP_daughter_phi[4]/F");
+  tree_->Branch("gLLP_daughter_eta_ecalcorr",          gLLP_daughter_eta_ecalcorr,          "gLLP_daughter_eta_ecalcorr[4]/F");
+  tree_->Branch("gLLP_daughter_phi_ecalcorr",          gLLP_daughter_phi_ecalcorr,          "gLLP_daughter_phi_ecalcorr[4]/F");
+  tree_->Branch("gLLP_min_delta_r_match_jet",          gLLP_min_delta_r_match_jet,          "gLLP_min_delta_r_match_jet[4]/F");
+  tree_->Branch("gLLP_daughter_match_jet_index",          gLLP_daughter_match_jet_index,          "gLLP_daughter_match_jet_index[4]/i");
+
 };
