@@ -5,6 +5,7 @@
 
 #define N_MAX_LLPS 2
 #define N_MAX_LLP_DAUGHTERS 4
+#define N_MAX_LLP_GRAND_DAUGHTERS 4
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
 #define N_MAX_CSC 2000
@@ -91,7 +92,9 @@ public:
   float jetPtAllPVTracks[N_MAX_JETS];
   // bool jetLoosePassId[N_MAX_JETS];
   bool jetPassId[N_MAX_JETS];
-  bool matched[N_MAX_JETS];
+  //bool matched[N_MAX_JETS];
+  bool jet_matched_gLLP_daughter[N_MAX_JETS];
+  bool jet_matched_gLLP_grandaughter[N_MAX_JETS];
   // bool jetTightPassId[N_MAX_JETS];
   float jet_energy_frac[N_MAX_JETS];
   float jet_sig_et1[N_MAX_JETS];
@@ -137,7 +140,7 @@ public:
    float         gLLP_prod_vertex_x[N_MAX_LLPS];
    float         gLLP_prod_vertex_y[N_MAX_LLPS];
    float         gLLP_prod_vertex_z[N_MAX_LLPS];
-
+/*
    //gLLP_daughter
    float         gen_time[N_MAX_LLP_DAUGHTERS];
    float         photon_travel_time[N_MAX_LLP_DAUGHTERS];
@@ -150,6 +153,60 @@ public:
    float         gLLP_daughter_phi_ecalcorr[N_MAX_LLP_DAUGHTERS];
    float         gLLP_min_delta_r_match_jet[N_MAX_LLP_DAUGHTERS];
    unsigned int          gLLP_daughter_match_jet_index[N_MAX_LLP_DAUGHTERS];
+*/
+ //daughters
+ bool gLLP_daughter_EB[N_MAX_LLP_DAUGHTERS]; 
+ bool gLLP_daughter_ETL[N_MAX_LLP_DAUGHTERS];
+
+ float gLLP_daughter_photon_travel_time_EB[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_photon_travel_time_ETL[N_MAX_LLP_DAUGHTERS];
+
+ float gLLP_daughter_travel_time_EB[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_travel_time_ETL[N_MAX_LLP_DAUGHTERS];
+
+ float gen_time_daughter_EB[N_MAX_LLP_DAUGHTERS];
+ float gen_time_daughter_ETL[N_MAX_LLP_DAUGHTERS];
+
+ int   gLLP_daughter_id[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_pt[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_eta[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_phi[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_eta_ecalcorr[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_phi_ecalcorr[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_e[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_mass[N_MAX_LLP_DAUGHTERS];
+
+ unsigned int gLLP_daughter_match_jet_index[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_min_delta_r_match_jet[N_MAX_LLP_DAUGHTERS];
+ unsigned int gLLP_daughter_match_calojet_index[N_MAX_LLP_DAUGHTERS];
+ float gLLP_daughter_min_delta_r_match_calojet[N_MAX_LLP_DAUGHTERS];
+
+ //grandaughters
+ bool gLLP_grandaughter_EB[N_MAX_LLP_GRAND_DAUGHTERS]; 
+ bool gLLP_grandaughter_ETL[N_MAX_LLP_GRAND_DAUGHTERS];
+
+ float gLLP_grandaughter_photon_travel_time_EB[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_photon_travel_time_ETL[N_MAX_LLP_GRAND_DAUGHTERS];
+
+ float gLLP_grandaughter_travel_time_EB[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_travel_time_ETL[N_MAX_LLP_GRAND_DAUGHTERS];
+
+ float gen_time_grandaughter_EB[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gen_time_grandaughter_ETL[N_MAX_LLP_GRAND_DAUGHTERS];
+
+ int   gLLP_grandaughter_id[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_pt[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_eta[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_phi[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_eta_ecalcorr[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_phi_ecalcorr[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_e[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_mass[N_MAX_LLP_GRAND_DAUGHTERS];
+
+ unsigned int gLLP_grandaughter_match_jet_index[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_min_delta_r_match_jet[N_MAX_LLP_GRAND_DAUGHTERS];
+ unsigned int gLLP_grandaughter_match_calojet_index[N_MAX_LLP_GRAND_DAUGHTERS];
+ float gLLP_grandaughter_min_delta_r_match_calojet[N_MAX_LLP_GRAND_DAUGHTERS];
 
   //HLT 
   bool HLTDecision[NTriggersMAX];

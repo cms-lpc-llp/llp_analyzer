@@ -287,7 +287,9 @@ void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("jetCSV", 1);
     fChain->SetBranchStatus("jetCISV", 1);
     fChain->SetBranchStatus("jetMass", 1);
-    fChain->SetBranchStatus("jet_matched", 1);
+    //fChain->SetBranchStatus("jet_matched", 1);
+    fChain->SetBranchStatus("jet_matched_gLLP_daughter", 1);
+    fChain->SetBranchStatus("jet_matched_gLLP_grandaughter", 1);
     fChain->SetBranchStatus("jetJetArea", 1);
     fChain->SetBranchStatus("jetPileupE", 1);
     fChain->SetBranchStatus("jetPileupId", 1);
@@ -494,7 +496,7 @@ void RazorAnalyzer::EnableLLP(){
     fChain->SetBranchStatus("gLLP_prod_vertex_x", 1);
     fChain->SetBranchStatus("gLLP_prod_vertex_y", 1);
     fChain->SetBranchStatus("gLLP_prod_vertex_z", 1);
-
+/*
     fChain->SetBranchStatus("gen_time", 1);
     fChain->SetBranchStatus("photon_travel_time", 1);
     fChain->SetBranchStatus("gLLP_daughter_travel_time", 1);
@@ -506,10 +508,65 @@ void RazorAnalyzer::EnableLLP(){
     fChain->SetBranchStatus("gLLP_daughter_phi_ecal_corr", 1);
     fChain->SetBranchStatus("gLLP_min_delta_r_match_jet", 1);
     fChain->SetBranchStatus("gLLP_daughter_match_jet_index", 1);
-
+*/
     //fChain->SetBranchStatus("gParticleDecayVertexX", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexY", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexZ", 1);
+
+ //daughters
+ fChain->SetBranchStatus("gLLP_daughter_EB", 1); 
+ fChain->SetBranchStatus("gLLP_daughter_ETL", 1);
+
+ fChain->SetBranchStatus("gLLP_daughter_photon_travel_time_EB", 1);
+ fChain->SetBranchStatus("gLLP_daughter_photon_travel_time_ETL", 1);
+
+ fChain->SetBranchStatus("gLLP_daughter_travel_time_EB", 1);
+ fChain->SetBranchStatus("gLLP_daughter_travel_time_ETL", 1);
+
+ fChain->SetBranchStatus("gen_time_daughter_EB", 1);
+ fChain->SetBranchStatus("gen_time_daughter_ETL", 1);
+
+ fChain->SetBranchStatus("gLLP_daughter_id", 1);
+ fChain->SetBranchStatus("gLLP_daughter_pt", 1);
+ fChain->SetBranchStatus("gLLP_daughter_eta", 1);
+ fChain->SetBranchStatus("gLLP_daughter_phi", 1);
+ fChain->SetBranchStatus("gLLP_daughter_eta_ecalcorr", 1);
+ fChain->SetBranchStatus("gLLP_daughter_phi_ecalcorr", 1);
+ fChain->SetBranchStatus("gLLP_daughter_e", 1);
+ fChain->SetBranchStatus("gLLP_daughter_mass", 1);
+
+ fChain->SetBranchStatus("gLLP_daughter_match_jet_index", 1);
+ fChain->SetBranchStatus("gLLP_daughter_min_delta_r_match_jet", 1);
+ fChain->SetBranchStatus("gLLP_daughter_match_calojet_index", 1);
+ fChain->SetBranchStatus("gLLP_daughter_min_delta_r_match_calojet", 1);
+
+ //grandaughters
+ fChain->SetBranchStatus("gLLP_grandaughter_EB", 1); 
+ fChain->SetBranchStatus("gLLP_grandaughter_ETL", 1);
+
+ fChain->SetBranchStatus("gLLP_grandaughter_photon_travel_time_EB", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_photon_travel_time_ETL", 1);
+
+ fChain->SetBranchStatus("gLLP_grandaughter_travel_time_EB", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_travel_time_ETL", 1);
+
+ fChain->SetBranchStatus("gen_time_grandaughter_EB", 1);
+ fChain->SetBranchStatus("gen_time_grandaughter_ETL", 1);
+
+ fChain->SetBranchStatus("gLLP_grandaughter_id", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_pt", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_eta", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_phi", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_eta_ecalcorr", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_phi_ecalcorr", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_e", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_mass", 1);
+
+ fChain->SetBranchStatus("gLLP_grandaughter_match_jet_index", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_min_delta_r_match_jet", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_match_calojet_index", 1);
+ fChain->SetBranchStatus("gLLP_grandaughter_min_delta_r_match_calojet", 1);
+
 }
 
 void RazorAnalyzer::EnableEcalRechits(){

@@ -5,6 +5,7 @@
 
 #define N_MAX_LLPS 2
 #define N_MAX_LLP_DAUGHTERS 4
+#define N_MAX_LLP_GRAND_DAUGHTERS 4
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
 #define NTriggersMAX 601 //Number of trigger in the .dat file
@@ -62,7 +63,9 @@ void SusyLLPTree::InitVariables()
       jetTime[i]   = -999.;
       // jetLoosePassId[i] = false;
       jetPassId[i] = false;
-      matched[i] = false;
+      //matched[i] = false;
+      jet_matched_gLLP_daughter[i] = false;
+      jet_matched_gLLP_grandaughter[i] = false;
       jet_energy_frac[i] = -999.;
       jet_sig_et1[i] = -999.;
       jet_sig_et2[i] = -999.;
@@ -117,7 +120,7 @@ void SusyLLPTree::InitVariables()
       gLLP_prod_vertex_z[i] = -999.;
 
     }
-
+/*
     //gLLP daughters
     for(int i = 0; i <N_MAX_LLP_DAUGHTERS; i++){
       gen_time[i] = -999.;
@@ -133,6 +136,65 @@ void SusyLLPTree::InitVariables()
       gLLP_daughter_match_jet_index[i] = 999;
 
     }
+*/
+    //gLLP daughters
+    for(int i = 0; i <N_MAX_LLP_DAUGHTERS; i++){
+    gLLP_daughter_EB[i] = false;
+    gLLP_daughter_ETL[i] = false;
+
+    gLLP_daughter_photon_travel_time_EB[i] = -666.;
+    gLLP_daughter_photon_travel_time_ETL[i] = -666.;
+
+    gLLP_daughter_travel_time_EB[i] = -666.;
+    gLLP_daughter_travel_time_ETL[i] = -666.;
+
+    gen_time_daughter_EB[i] = -666.;
+    gen_time_daughter_ETL[i] = -666.;
+
+    gLLP_daughter_id[i] = 0;
+    gLLP_daughter_pt[i] = -666.;
+    gLLP_daughter_eta[i] = -666.;
+    gLLP_daughter_phi[i] = -666.;
+    gLLP_daughter_eta_ecalcorr[i] = -666.;
+    gLLP_daughter_phi_ecalcorr[i] = -666.;
+    gLLP_daughter_e[i] = -666.;
+    gLLP_daughter_mass[i] = -666.;
+
+    gLLP_daughter_match_calojet_index[i] = 666;
+    gLLP_daughter_match_jet_index[i] = 666;
+    gLLP_daughter_min_delta_r_match_calojet[i] = -666.;
+    gLLP_daughter_min_delta_r_match_jet[i] = -666.;
+    }
+ //grandaughters
+  for(int i = 0; i <N_MAX_LLP_GRAND_DAUGHTERS; i++)
+  {
+    gLLP_grandaughter_EB[i] = false;
+    gLLP_grandaughter_ETL[i] = false;
+
+    gLLP_grandaughter_photon_travel_time_EB[i] = -666.;
+    gLLP_grandaughter_photon_travel_time_ETL[i] = -666.;
+
+    gLLP_grandaughter_travel_time_EB[i] = -666.;
+    gLLP_grandaughter_travel_time_ETL[i] = -666.;
+
+    gen_time_grandaughter_EB[i] = -666.;
+    gen_time_grandaughter_ETL[i] = -666.;
+
+    gLLP_grandaughter_id[i] = 0;
+    gLLP_grandaughter_pt[i] = -666.;
+    gLLP_grandaughter_eta[i] = -666.;
+    gLLP_grandaughter_phi[i] = -666.;
+    gLLP_grandaughter_eta_ecalcorr[i] = -666.;
+    gLLP_grandaughter_phi_ecalcorr[i] = -666.;
+    gLLP_grandaughter_e[i] = -666.;
+    gLLP_grandaughter_mass[i] = -666.;
+
+    gLLP_grandaughter_match_calojet_index[i] = 666;
+    gLLP_grandaughter_match_jet_index[i] = 666;
+    gLLP_grandaughter_min_delta_r_match_calojet[i] = -666.;
+    gLLP_grandaughter_min_delta_r_match_jet[i] = -666.;
+
+  }
 
 };
 
@@ -186,7 +248,9 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("jetPhi",    jetPhi);
     tree_->SetBranchAddress("jetTime",   jetTime);
     tree_->SetBranchAddress("jetPassId", jetPassId);
-    tree_->SetBranchAddress("matched", matched);
+    //tree_->SetBranchAddress("matched", matched);
+    tree_->SetBranchAddress("jet_matched_gLLP_daughter", jet_matched_gLLP_daughter);
+    tree_->SetBranchAddress("jet_matched_gLLP_grandaughter", jet_matched_gLLP_grandaughter);
     tree_->SetBranchAddress("jet_energy_frac", jet_energy_frac);
     tree_->SetBranchAddress("jet_sig_et1", jet_sig_et1);
     tree_->SetBranchAddress("jet_sig_et2", jet_sig_et2);
@@ -246,7 +310,7 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("gLLP_prod_vertex_x",    gLLP_prod_vertex_x);
     tree_->SetBranchAddress("gLLP_prod_vertex_y",    gLLP_prod_vertex_y);
     tree_->SetBranchAddress("gLLP_prod_vertex_z",    gLLP_prod_vertex_z);
-
+/*
     // gLLP daughters
     tree_->SetBranchAddress("gen_time",    gen_time);
     tree_->SetBranchAddress("photon_travel_time",    photon_travel_time);
@@ -259,7 +323,61 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("gLLP_daughter_phi_ecalcorr",    gLLP_daughter_phi_ecalcorr);
     tree_->SetBranchAddress("gLLP_min_delta_r_match_jet",    gLLP_min_delta_r_match_jet);
     tree_->SetBranchAddress("gLLP_daughter_match_jet_index",   gLLP_daughter_match_jet_index);
-  
+*/  
+ //daughters
+ tree_->SetBranchAddress("gLLP_daughter_EB", gLLP_daughter_EB);
+ tree_->SetBranchAddress("gLLP_daughter_ETL", gLLP_daughter_ETL);
+
+ tree_->SetBranchAddress("gLLP_daughter_photon_travel_time_EB", gLLP_daughter_photon_travel_time_EB);
+ tree_->SetBranchAddress("gLLP_daughter_photon_travel_time_ET", gLLP_daughter_photon_travel_time_ETL);
+
+ tree_->SetBranchAddress("gLLP_daughter_travel_time_EB", gLLP_daughter_travel_time_EB);
+ tree_->SetBranchAddress("gLLP_daughter_travel_time_ETL", gLLP_daughter_travel_time_ETL);
+
+ tree_->SetBranchAddress("gen_time_daughter_EB", gen_time_daughter_EB);
+ tree_->SetBranchAddress("gen_time_daughter_ETL", gen_time_daughter_ETL);
+
+ tree_->SetBranchAddress("gLLP_daughter_id", gLLP_daughter_id);
+ tree_->SetBranchAddress("gLLP_daughter_pt", gLLP_daughter_pt);
+ tree_->SetBranchAddress("gLLP_daughter_eta", gLLP_daughter_eta);
+ tree_->SetBranchAddress("gLLP_daughter_phi", gLLP_daughter_phi);
+ tree_->SetBranchAddress("gLLP_daughter_eta_ecalcorr", gLLP_daughter_eta_ecalcorr);
+ tree_->SetBranchAddress("gLLP_daughter_phi_ecalcorr", gLLP_daughter_phi_ecalcorr);
+ tree_->SetBranchAddress("gLLP_daughter_e", gLLP_daughter_e);
+ tree_->SetBranchAddress("gLLP_daughter_mass", gLLP_daughter_mass);
+
+ tree_->SetBranchAddress("gLLP_daughter_match_jet_index", gLLP_daughter_match_jet_index);
+ tree_->SetBranchAddress("gLLP_daughter_min_delta_r_match_jet", gLLP_daughter_min_delta_r_match_jet);
+ tree_->SetBranchAddress("gLLP_daughter_match_calojet_index", gLLP_daughter_match_calojet_index);
+ tree_->SetBranchAddress("gLLP_daughter_min_delta_r_match_calojet", gLLP_daughter_min_delta_r_match_calojet);
+
+ //grandaughters
+ tree_->SetBranchAddress("gLLP_grandaughter_EB", gLLP_grandaughter_EB);
+ tree_->SetBranchAddress("gLLP_grandaughter_ETL", gLLP_grandaughter_ETL);
+
+ tree_->SetBranchAddress("gLLP_grandaughter_photon_travel_time_EB", gLLP_grandaughter_photon_travel_time_EB);
+ tree_->SetBranchAddress("gLLP_grandaughter_photon_travel_time_ET", gLLP_grandaughter_photon_travel_time_ETL);
+
+ tree_->SetBranchAddress("gLLP_grandaughter_travel_time_EB", gLLP_grandaughter_travel_time_EB);
+ tree_->SetBranchAddress("gLLP_grandaughter_travel_time_ETL", gLLP_grandaughter_travel_time_ETL);
+
+ tree_->SetBranchAddress("gen_time_grandaughter_EB", gen_time_grandaughter_EB);
+ tree_->SetBranchAddress("gen_time_grandaughter_ETL", gen_time_grandaughter_ETL);
+
+ tree_->SetBranchAddress("gLLP_grandaughter_id", gLLP_grandaughter_id);
+ tree_->SetBranchAddress("gLLP_grandaughter_pt", gLLP_grandaughter_pt);
+ tree_->SetBranchAddress("gLLP_grandaughter_eta", gLLP_grandaughter_eta);
+ tree_->SetBranchAddress("gLLP_grandaughter_phi", gLLP_grandaughter_phi);
+ tree_->SetBranchAddress("gLLP_grandaughter_eta_ecalcorr", gLLP_grandaughter_eta_ecalcorr);
+ tree_->SetBranchAddress("gLLP_grandaughter_phi_ecalcorr", gLLP_grandaughter_phi_ecalcorr);
+ tree_->SetBranchAddress("gLLP_grandaughter_e", gLLP_grandaughter_e);
+ tree_->SetBranchAddress("gLLP_grandaughter_mass", gLLP_grandaughter_mass);
+
+ tree_->SetBranchAddress("gLLP_grandaughter_match_jet_index", gLLP_grandaughter_match_jet_index);
+ tree_->SetBranchAddress("gLLP_grandaughter_min_delta_r_match_jet", gLLP_grandaughter_min_delta_r_match_jet);
+ tree_->SetBranchAddress("gLLP_grandaughter_match_calojet_index", gLLP_grandaughter_match_calojet_index);
+ tree_->SetBranchAddress("gLLP_grandaughter_min_delta_r_match_calojet", gLLP_grandaughter_min_delta_r_match_calojet);
+
 };
 
 //LoadTree
@@ -322,7 +440,9 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
     tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
     tree_->Branch("jetPassId", jetPassId, "jetPassId[nJets]/O");
-    tree_->Branch("matched", matched, "matched[nJets]/O");
+    //tree_->Branch("matched", matched, "matched[nJets]/O");
+    tree_->Branch("jet_matched_gLLP_daughter", jet_matched_gLLP_daughter, "jet_matched_gLLP_daughter[nJets]/O");
+    tree_->Branch("jet_matched_gLLP_grandaughter", jet_matched_gLLP_grandaughter, "jet_matched_gLLP_grandaughter[nJets]/O");
     tree_->Branch("jet_energy_frac", jet_energy_frac, "jet_energy_frac[nJets]/F");
     tree_->Branch("jet_sig_et1", jet_sig_et1, "jet_sig_et1[nJets]/F");
     tree_->Branch("jet_sig_et2", jet_sig_et2, "jet_sig_et2[nJets]/F");
@@ -382,7 +502,7 @@ void SusyLLPTree::CreateTree()
   tree_->Branch("gLLP_prod_vertex_x",          gLLP_prod_vertex_x,          "gLLP_prod_vertex_x[2]/F");
   tree_->Branch("gLLP_prod_vertex_y",          gLLP_prod_vertex_y,          "gLLP_prod_vertex_y[2]/F");
   tree_->Branch("gLLP_prod_vertex_z",          gLLP_prod_vertex_z,          "gLLP_prod_vertex_z[2]/F");
-
+/*
   //gLLP daughter branches
   tree_->Branch("gen_time",          gen_time,          "gen_time[4]/F");
   tree_->Branch("photon_travel_time",          photon_travel_time,          "photon_travel_time[4]/F");
@@ -395,5 +515,59 @@ void SusyLLPTree::CreateTree()
   tree_->Branch("gLLP_daughter_phi_ecalcorr",          gLLP_daughter_phi_ecalcorr,          "gLLP_daughter_phi_ecalcorr[4]/F");
   tree_->Branch("gLLP_min_delta_r_match_jet",          gLLP_min_delta_r_match_jet,          "gLLP_min_delta_r_match_jet[4]/F");
   tree_->Branch("gLLP_daughter_match_jet_index",          gLLP_daughter_match_jet_index,          "gLLP_daughter_match_jet_index[4]/i");
+*/
+   //daughters
+   tree_->Branch("gLLP_daughter_EB", gLLP_daughter_EB, "gLLP_daughter_EB[4]/O");
+   tree_->Branch("gLLP_daughter_ETL", gLLP_daughter_ETL, "gLLP_daughter_ETL[4]/O");
+
+   tree_->Branch("gLLP_daughter_photon_travel_time_EB", gLLP_daughter_photon_travel_time_EB, "gLLP_daughter_photon_travel_time_EB[4]/F");
+   tree_->Branch("gLLP_daughter_photon_travel_time_ETL", gLLP_daughter_photon_travel_time_ETL, "gLLP_daughter_photon_travel_time_ETL[4]/F");
+
+   tree_->Branch("gLLP_daughter_travel_time_EB", gLLP_daughter_travel_time_EB, "gLLP_daughter_travel_time_EB[4]/F");
+   tree_->Branch("gLLP_daughter_travel_time_ETL", gLLP_daughter_travel_time_ETL, "gLLP_daughter_travel_time_ETL[4]/F");
+
+   tree_->Branch("gen_time_daughter_EB", gen_time_daughter_EB, "gen_time_daughter_EB[4]/F");
+   tree_->Branch("gen_time_daughter_ETL", gen_time_daughter_ETL, "gen_time_daughter_ETL[4]/F");
+
+   tree_->Branch("gLLP_daughter_id", gLLP_daughter_id, "gLLP_daughter_id[4]/I");
+   tree_->Branch("gLLP_daughter_pt", gLLP_daughter_pt, "gLLP_daughter_pt[4]/F");
+   tree_->Branch("gLLP_daughter_eta", gLLP_daughter_eta, "gLLP_daughter_eta[4]/F");
+   tree_->Branch("gLLP_daughter_phi", gLLP_daughter_phi, "gLLP_daughter_phi[4]/F");
+   tree_->Branch("gLLP_daughter_eta_ecalcorr", gLLP_daughter_eta_ecalcorr, "gLLP_daughter_eta_ecalcorr[4]/F");
+   tree_->Branch("gLLP_daughter_phi_ecalcorr", gLLP_daughter_phi_ecalcorr, "gLLP_daughter_phi_ecalcorr[4]/F");
+   tree_->Branch("gLLP_daughter_e", gLLP_daughter_e, "gLLP_daughter_e[4]/F");
+   tree_->Branch("gLLP_daughter_mass", gLLP_daughter_mass, "gLLP_daughter_mass[4]/F");
+
+   tree_->Branch("gLLP_daughter_min_delta_r_match_calojet", gLLP_daughter_min_delta_r_match_calojet, "gLLP_daughter_min_delta_r_match_calojet[4]/F");
+   tree_->Branch("gLLP_daughter_match_calojet_index", gLLP_daughter_match_calojet_index, "gLLP_daughter_match_calojet_index[4]/i");
+   tree_->Branch("gLLP_daughter_match_jet_index", gLLP_daughter_match_jet_index, "gLLP_daughter_match_jet_index[4]/i");
+   tree_->Branch("gLLP_daughter_min_delta_r_match_jet", gLLP_daughter_min_delta_r_match_jet, "gLLP_daughter_min_delta_r_match_jet[4]/F");
+
+   //grandaughters
+   tree_->Branch("gLLP_grandaughter_EB", gLLP_grandaughter_EB, "gLLP_grandaughter_EB[4]/O");
+   tree_->Branch("gLLP_grandaughter_ETL", gLLP_grandaughter_ETL, "gLLP_grandaughter_ETL[4]/O");
+
+   tree_->Branch("gLLP_grandaughter_photon_travel_time_EB", gLLP_grandaughter_photon_travel_time_EB, "gLLP_grandaughter_photon_travel_time_EB[4]/F");
+   tree_->Branch("gLLP_grandaughter_photon_travel_time_ETL", gLLP_grandaughter_photon_travel_time_ETL, "gLLP_grandaughter_photon_travel_time_ETL[4]/F");
+
+   tree_->Branch("gLLP_grandaughter_travel_time_EB", gLLP_grandaughter_travel_time_EB, "gLLP_grandaughter_travel_time_EB[4]/F");
+   tree_->Branch("gLLP_grandaughter_travel_time_ETL", gLLP_grandaughter_travel_time_ETL, "gLLP_grandaughter_travel_time_ETL[4]/F");
+
+   tree_->Branch("gen_time_grandaughter_EB", gen_time_grandaughter_EB, "gen_time_grandaughter_EB[4]/F");
+   tree_->Branch("gen_time_grandaughter_ETL", gen_time_grandaughter_ETL, "gen_time_grandaughter_ETL[4]/F");
+
+   tree_->Branch("gLLP_grandaughter_id", gLLP_grandaughter_id, "gLLP_grandaughter_id[4]/I");
+   tree_->Branch("gLLP_grandaughter_pt", gLLP_grandaughter_pt, "gLLP_grandaughter_pt[4]/F");
+   tree_->Branch("gLLP_grandaughter_eta", gLLP_grandaughter_eta, "gLLP_grandaughter_eta[4]/F");
+   tree_->Branch("gLLP_grandaughter_phi", gLLP_grandaughter_phi, "gLLP_grandaughter_phi[4]/F");
+   tree_->Branch("gLLP_grandaughter_eta_ecalcorr", gLLP_grandaughter_eta_ecalcorr, "gLLP_grandaughter_eta_ecalcorr[4]/F");
+   tree_->Branch("gLLP_grandaughter_phi_ecalcorr", gLLP_grandaughter_phi_ecalcorr, "gLLP_grandaughter_phi_ecalcorr[4]/F");
+   tree_->Branch("gLLP_grandaughter_e", gLLP_grandaughter_e, "gLLP_grandaughter_e[4]/F");
+   tree_->Branch("gLLP_grandaughter_mass", gLLP_grandaughter_mass, "gLLP_grandaughter_mass[4]/F");
+
+   tree_->Branch("gLLP_grandaughter_min_delta_r_match_calojet", gLLP_grandaughter_min_delta_r_match_calojet, "gLLP_grandaughter_min_delta_r_match_calojet[4]/F");
+   tree_->Branch("gLLP_grandaughter_match_calojet_index", gLLP_grandaughter_match_calojet_index, "gLLP_grandaughter_match_calojet_index[4]/i");
+   tree_->Branch("gLLP_grandaughter_match_jet_index", gLLP_grandaughter_match_jet_index, "gLLP_grandaughter_match_jet_index[4]/i");
+   tree_->Branch("gLLP_grandaughter_min_delta_r_match_jet", gLLP_grandaughter_min_delta_r_match_jet, "gLLP_grandaughter_min_delta_r_match_jet[4]/F");
 
 };

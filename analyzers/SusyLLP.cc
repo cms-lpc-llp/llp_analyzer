@@ -17,6 +17,7 @@
 #define _debug_calojet 0
 
 #define N_MAX_LLP_DAUGHTERS 4
+#define N_MAX_LLP_GRAND_DAUGHTERS 4
 #define N_MAX_LLPS 2
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
@@ -44,7 +45,9 @@ struct jets
   // bool passMediumId;
   // bool passTightId;
   bool isCSVL;
-  bool matched;
+  //bool matched;
+  bool jet_matched_gLLP_daughter;
+  bool jet_matched_gLLP_grandaughter;
   int ecalNRechits;
   float ecalRechitE;
   float jetChargedEMEnergyFraction;
@@ -570,7 +573,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       tmpJet.jet    = thisJet;
       tmpJet.time   = jetRechitT[i];
       tmpJet.passId = jetPassIDLoose[i];
-      tmpJet.matched = jet_matched[i];
+      //tmpJet.matched = jet_matched[i];
+      tmpJet.jet_matched_gLLP_daughter = jet_matched_gLLP_daughter[i];
+      tmpJet.jet_matched_gLLP_grandaughter = jet_matched_gLLP_grandaughter[i];
       tmpJet.energy_frac = jet_energy_frac[i];
       tmpJet.sig_et1 = jet_sig_et1[i];
       tmpJet.sig_et2 = jet_sig_et2[i];
@@ -692,7 +697,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->jetPhi[llp_tree->nJets] = tmp.jet.Phi();
       llp_tree->jetTime[llp_tree->nJets] = tmp.time;
       llp_tree->jetPassId[llp_tree->nJets] = tmp.passId;
-      llp_tree->matched[llp_tree->nJets] = tmp.matched;
+      //llp_tree->matched[llp_tree->nJets] = tmp.matched;
+      llp_tree->jet_matched_gLLP_daughter[llp_tree->nJets] = tmp.jet_matched_gLLP_daughter;
+      llp_tree->jet_matched_gLLP_grandaughter[llp_tree->nJets] = tmp.jet_matched_gLLP_grandaughter;
       llp_tree->jet_sig_et1[llp_tree->nJets] = tmp.sig_et1;
       llp_tree->jet_sig_et2[llp_tree->nJets] = tmp.sig_et2;
       llp_tree->jet_energy_frac[llp_tree->nJets] = tmp.energy_frac;
@@ -771,6 +778,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
     //gLLP daughters
     for(int i = 0; i <N_MAX_LLP_DAUGHTERS; i++){
+/*
       llp_tree->gen_time[i] = gen_time[i];
       llp_tree->photon_travel_time[i] = photon_travel_time[i];
       llp_tree->gLLP_daughter_travel_time[i] = gLLP_daughter_travel_time[i];
@@ -781,7 +789,63 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->gLLP_daughter_eta_ecalcorr[i] = gLLP_daughter_eta_ecalcorr[i];
       llp_tree->gLLP_min_delta_r_match_jet[i] = gLLP_min_delta_r_match_jet[i];
       llp_tree->gLLP_daughter_match_jet_index[i] = gLLP_daughter_match_jet_index[i];
+*/
+      llp_tree->gLLP_daughter_EB[i] = gLLP_daughter_EB[i];
+      llp_tree->gLLP_daughter_ETL[i] = gLLP_daughter_ETL[i];
 
+      llp_tree->gLLP_daughter_photon_travel_time_EB[i] = gLLP_daughter_photon_travel_time_EB[i];
+      llp_tree->gLLP_daughter_photon_travel_time_ETL[i] = gLLP_daughter_photon_travel_time_ETL[i];
+
+      llp_tree->gLLP_daughter_travel_time_EB[i] = gLLP_daughter_travel_time_EB[i];
+      llp_tree->gLLP_daughter_travel_time_ETL[i] = gLLP_daughter_travel_time_ETL[i];
+
+      llp_tree->gen_time_daughter_EB[i] = gen_time_daughter_EB[i];
+      llp_tree->gen_time_daughter_ETL[i] = gen_time_daughter_ETL[i];
+
+      llp_tree->gLLP_daughter_match_jet_index[i] = gLLP_daughter_match_jet_index[i];
+      llp_tree->gLLP_daughter_match_calojet_index[i] = gLLP_daughter_match_calojet_index[i];
+
+      llp_tree->gLLP_daughter_min_delta_r_match_jet[i] = gLLP_daughter_min_delta_r_match_jet[i];
+      llp_tree->gLLP_daughter_min_delta_r_match_calojet[i] = gLLP_daughter_min_delta_r_match_calojet[i];
+
+      llp_tree->gLLP_daughter_id[i] = gLLP_daughter_id[i];
+      llp_tree->gLLP_daughter_mass[i] = gLLP_daughter_mass[i];
+      llp_tree->gLLP_daughter_e[i] = gLLP_daughter_e[i];
+      llp_tree->gLLP_daughter_pt[i] = gLLP_daughter_pt[i];
+      llp_tree->gLLP_daughter_eta[i] = gLLP_daughter_eta[i];
+      llp_tree->gLLP_daughter_phi[i] = gLLP_daughter_phi[i];
+      llp_tree->gLLP_daughter_eta_ecalcorr[i] = gLLP_daughter_eta_ecalcorr[i];
+      llp_tree->gLLP_daughter_phi_ecalcorr[i] = gLLP_daughter_phi_ecalcorr[i];
+    }
+
+    //gLLP grandaughters
+    for(int i = 0; i <N_MAX_LLP_GRAND_DAUGHTERS; i++){
+      llp_tree->gLLP_grandaughter_EB[i] = gLLP_grandaughter_EB[i];
+      llp_tree->gLLP_grandaughter_ETL[i] = gLLP_grandaughter_ETL[i];
+
+      llp_tree->gLLP_grandaughter_photon_travel_time_EB[i] = gLLP_grandaughter_photon_travel_time_EB[i];
+      llp_tree->gLLP_grandaughter_photon_travel_time_ETL[i] = gLLP_grandaughter_photon_travel_time_ETL[i];
+
+      llp_tree->gLLP_grandaughter_travel_time_EB[i] = gLLP_grandaughter_travel_time_EB[i];
+      llp_tree->gLLP_grandaughter_travel_time_ETL[i] = gLLP_grandaughter_travel_time_ETL[i];
+
+      llp_tree->gen_time_grandaughter_EB[i] = gen_time_grandaughter_EB[i];
+      llp_tree->gen_time_grandaughter_ETL[i] = gen_time_grandaughter_ETL[i];
+
+      llp_tree->gLLP_grandaughter_match_jet_index[i] = gLLP_grandaughter_match_jet_index[i];
+      llp_tree->gLLP_grandaughter_match_calojet_index[i] = gLLP_grandaughter_match_calojet_index[i];
+
+      llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = gLLP_grandaughter_min_delta_r_match_jet[i];
+      llp_tree->gLLP_grandaughter_min_delta_r_match_calojet[i] = gLLP_grandaughter_min_delta_r_match_calojet[i];
+
+      llp_tree->gLLP_grandaughter_id[i] = gLLP_grandaughter_id[i];
+      llp_tree->gLLP_grandaughter_mass[i] = gLLP_grandaughter_mass[i];
+      llp_tree->gLLP_grandaughter_e[i] = gLLP_grandaughter_e[i];
+      llp_tree->gLLP_grandaughter_pt[i] = gLLP_grandaughter_pt[i];
+      llp_tree->gLLP_grandaughter_eta[i] = gLLP_grandaughter_eta[i];
+      llp_tree->gLLP_grandaughter_phi[i] = gLLP_grandaughter_phi[i];
+      llp_tree->gLLP_grandaughter_eta_ecalcorr[i] = gLLP_grandaughter_eta_ecalcorr[i];
+      llp_tree->gLLP_grandaughter_phi_ecalcorr[i] = gLLP_grandaughter_phi_ecalcorr[i];
     }
 
     llp_tree->tree_->Fill();
