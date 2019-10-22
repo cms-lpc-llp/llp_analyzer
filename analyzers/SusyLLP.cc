@@ -45,9 +45,11 @@ struct jets
   // bool passMediumId;
   // bool passTightId;
   bool isCSVL;
-  //bool matched;
-  bool jet_matched_gLLP_daughter;
-  bool jet_matched_gLLP_grandaughter;
+  bool matched;
+  bool jet_matched_gLLP0_daughter;
+  bool jet_matched_gLLP1_daughter;
+  bool jet_matched_gLLP0_grandaughter;
+  bool jet_matched_gLLP1_grandaughter;
   int ecalNRechits;
   float ecalRechitE;
   float jetChargedEMEnergyFraction;
@@ -573,9 +575,11 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       tmpJet.jet    = thisJet;
       tmpJet.time   = jetRechitT[i];
       tmpJet.passId = jetPassIDLoose[i];
-      //tmpJet.matched = jet_matched[i];
-      tmpJet.jet_matched_gLLP_daughter = jet_matched_gLLP_daughter[i];
-      tmpJet.jet_matched_gLLP_grandaughter = jet_matched_gLLP_grandaughter[i];
+      tmpJet.matched = jet_matched[i];
+      tmpJet.jet_matched_gLLP0_daughter = jet_matched_gLLP0_daughter[i];
+      tmpJet.jet_matched_gLLP1_daughter = jet_matched_gLLP1_daughter[i];
+      tmpJet.jet_matched_gLLP0_grandaughter = jet_matched_gLLP0_grandaughter[i];
+      tmpJet.jet_matched_gLLP1_grandaughter = jet_matched_gLLP1_grandaughter[i];
       tmpJet.energy_frac = jet_energy_frac[i];
       tmpJet.sig_et1 = jet_sig_et1[i];
       tmpJet.sig_et2 = jet_sig_et2[i];
@@ -697,9 +701,11 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->jetPhi[llp_tree->nJets] = tmp.jet.Phi();
       llp_tree->jetTime[llp_tree->nJets] = tmp.time;
       llp_tree->jetPassId[llp_tree->nJets] = tmp.passId;
-      //llp_tree->matched[llp_tree->nJets] = tmp.matched;
-      llp_tree->jet_matched_gLLP_daughter[llp_tree->nJets] = tmp.jet_matched_gLLP_daughter;
-      llp_tree->jet_matched_gLLP_grandaughter[llp_tree->nJets] = tmp.jet_matched_gLLP_grandaughter;
+      llp_tree->matched[llp_tree->nJets] = tmp.matched;
+      llp_tree->jet_matched_gLLP0_daughter[llp_tree->nJets] = tmp.jet_matched_gLLP0_daughter;
+      llp_tree->jet_matched_gLLP1_daughter[llp_tree->nJets] = tmp.jet_matched_gLLP1_daughter;
+      llp_tree->jet_matched_gLLP0_grandaughter[llp_tree->nJets] = tmp.jet_matched_gLLP0_grandaughter;
+      llp_tree->jet_matched_gLLP1_grandaughter[llp_tree->nJets] = tmp.jet_matched_gLLP1_grandaughter;
       llp_tree->jet_sig_et1[llp_tree->nJets] = tmp.sig_et1;
       llp_tree->jet_sig_et2[llp_tree->nJets] = tmp.sig_et2;
       llp_tree->jet_energy_frac[llp_tree->nJets] = tmp.energy_frac;
@@ -773,6 +779,45 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->gLLP_prod_vertex_x[i] = gLLP_prod_vertex_x[i];
       llp_tree->gLLP_prod_vertex_y[i] = gLLP_prod_vertex_y[i];
       llp_tree->gLLP_prod_vertex_z[i] = gLLP_prod_vertex_z[i];
+
+      //acceptance
+      double decay_radius = sqrt( pow(gLLP_decay_vertex_x[i],2) + pow(gLLP_decay_vertex_y[i],2) );
+      double decay_z = abs( gLLP_decay_vertex_z[i] );
+      double decay_eta = abs( gLLP_eta[i] );
+      if(decay_eta != 666) std::cout << "deb gLLP decay radius " << decay_radius << " z " << decay_z  << " eta " << decay_eta << endl;
+
+      // barrel, 30 cm < r < 1.84 m, |z| < 3.76m  ( ecal outter edge )
+      // EB_z = 268.36447217; // cm 129*sinh(1.479)
+      bool inEB = false;
+      if(decay_radius > 30. && decay_radius < 184. && decay_z < 376. && decay_eta != 666)
+      {
+	if(i==0)
+	{
+	  inEB = true;
+          llp_tree->gLLP0_EB = inEB;
+	}
+	else
+	{
+          llp_tree->gLLP1_EB = true;
+	}
+      }
+      if(decay_eta != 666 && i==0) std::cout << "deb gLLP EB: " << jentry << " evtNum " << llp_tree->evtNum  << " index of llp " << i << " ; 0  " << llp_tree->gLLP0_EB  << " 1 " << llp_tree->gLLP1_EB << endl;
+
+      // endcap, 1.5 < |eta| < 2.6, 1 m < |z| <  3.9 m
+      bool inEE = false;
+      if(decay_eta > 1.5 && decay_eta < 2.6 && decay_z > 100. && decay_z < 390. && decay_eta != 666)
+      {
+	if(i==0)
+	{
+          inEE = true;
+          llp_tree->gLLP0_EE = inEE;
+	}
+	else
+	{
+          llp_tree->gLLP1_EE = true;
+	}
+      }
+
 
     }
 
@@ -853,6 +898,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
     cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
     cout << "Writing output trees..." << endl;
+    llp_tree->tree_->Write();
     outFile->Write();
     outFile->Close();
 }

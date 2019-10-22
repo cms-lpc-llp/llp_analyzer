@@ -308,9 +308,11 @@ public :
    Float_t         jetPileupId[2000];   //[nJets]
    Int_t           jetPileupIdFlag[2000];   //[nJets]
    Bool_t          jetPassIDLoose[2000];   //[nJets]
-   //Bool_t          jet_matched[2000];   //[nJets]
-   Bool_t          jet_matched_gLLP_daughter[2000];   //[nJets]
-   Bool_t          jet_matched_gLLP_grandaughter[2000];   //[nJets]
+   Bool_t          jet_matched[2000];   //[nJets]
+   Bool_t          jet_matched_gLLP0_daughter[2000];   //[nJets]
+   Bool_t          jet_matched_gLLP1_daughter[2000];   //[nJets]
+   Bool_t          jet_matched_gLLP0_grandaughter[2000];   //[nJets]
+   Bool_t          jet_matched_gLLP1_grandaughter[2000];   //[nJets]
    Float_t         jet_sig_et1[2000];   //[nJets]
    Float_t         jet_sig_et2[2000];   //[nJets]
    Float_t         jet_energy_frac[2000];   //[nJets]
@@ -807,9 +809,11 @@ public :
    TBranch        *b_jetPileupE;   //!
    TBranch        *b_jetPileupId;   //!
    TBranch        *b_jetPileupIdFlag;   //!
-   //TBranch        *b_jet_matched;   //!
-   TBranch        *b_jet_matched_gLLP_daughter;   //!
-   TBranch        *b_jet_matched_gLLP_grandaughter;   //!
+   TBranch        *b_jet_matched;   //!
+   TBranch        *b_jet_matched_gLLP0_daughter;   //!
+   TBranch        *b_jet_matched_gLLP1_daughter;   //!
+   TBranch        *b_jet_matched_gLLP0_grandaughter;   //!
+   TBranch        *b_jet_matched_gLLP1_grandaughter;   //!
    TBranch        *b_jet_energy_frac;
    TBranch        *b_jet_sig_et1;
    TBranch        *b_jet_sig_et2;
@@ -1391,9 +1395,11 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("jetPileupE", jetPileupE, &b_jetPileupE);
    fChain->SetBranchAddress("jetPileupId", jetPileupId, &b_jetPileupId);
    fChain->SetBranchAddress("jetPileupIdFlag", jetPileupIdFlag, &b_jetPileupIdFlag);
-   //fChain->SetBranchAddress("jet_matched", jet_matched, &b_jet_matched);
-   fChain->SetBranchAddress("jet_matched_gLLP_daughter", jet_matched_gLLP_daughter, &b_jet_matched_gLLP_daughter);
-   fChain->SetBranchAddress("jet_matched_gLLP_grandaughter", jet_matched_gLLP_grandaughter, &b_jet_matched_gLLP_grandaughter);
+   fChain->SetBranchAddress("jet_matched", jet_matched, &b_jet_matched);
+   fChain->SetBranchAddress("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter, &b_jet_matched_gLLP0_daughter);
+   fChain->SetBranchAddress("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter, &b_jet_matched_gLLP1_daughter);
+   fChain->SetBranchAddress("jet_matched_gLLP0_grandaughter", jet_matched_gLLP0_grandaughter, &b_jet_matched_gLLP0_grandaughter);
+   fChain->SetBranchAddress("jet_matched_gLLP1_grandaughter", jet_matched_gLLP1_grandaughter, &b_jet_matched_gLLP1_grandaughter);
    fChain->SetBranchAddress("jet_energy_frac", jet_energy_frac, &b_jet_energy_frac);
    fChain->SetBranchAddress("jet_sig_et1", jet_sig_et1, &b_jet_sig_et1);
    fChain->SetBranchAddress("jet_sig_et2", jet_sig_et2, &b_jet_sig_et2);
@@ -1560,7 +1566,7 @@ void llp_event::Init(TTree *tree)
  fChain->SetBranchAddress("gLLP_daughter_ETL", gLLP_daughter_ETL, &b_gLLP_daughter_ETL);
 
  fChain->SetBranchAddress("gLLP_daughter_photon_travel_time_EB", gLLP_daughter_photon_travel_time_EB, &b_gLLP_daughter_photon_travel_time_EB);
- fChain->SetBranchAddress("gLLP_daughter_photon_travel_time_ET", gLLP_daughter_photon_travel_time_ETL, &b_gLLP_daughter_photon_travel_time_ETL);
+ fChain->SetBranchAddress("gLLP_daughter_photon_travel_time_ETL", gLLP_daughter_photon_travel_time_ETL, &b_gLLP_daughter_photon_travel_time_ETL);
 
  fChain->SetBranchAddress("gLLP_daughter_travel_time_EB", gLLP_daughter_travel_time_EB, &b_gLLP_daughter_travel_time_EB);
  fChain->SetBranchAddress("gLLP_daughter_travel_time_ETL", gLLP_daughter_travel_time_ETL, &b_gLLP_daughter_travel_time_ETL);
@@ -1587,7 +1593,7 @@ void llp_event::Init(TTree *tree)
  fChain->SetBranchAddress("gLLP_grandaughter_ETL", gLLP_grandaughter_ETL, &b_gLLP_grandaughter_ETL);
 
  fChain->SetBranchAddress("gLLP_grandaughter_photon_travel_time_EB", gLLP_grandaughter_photon_travel_time_EB, &b_gLLP_grandaughter_photon_travel_time_EB);
- fChain->SetBranchAddress("gLLP_grandaughter_photon_travel_time_ET", gLLP_grandaughter_photon_travel_time_ETL, &b_gLLP_grandaughter_photon_travel_time_ETL);
+ fChain->SetBranchAddress("gLLP_grandaughter_photon_travel_time_ETL", gLLP_grandaughter_photon_travel_time_ETL, &b_gLLP_grandaughter_photon_travel_time_ETL);
 
  fChain->SetBranchAddress("gLLP_grandaughter_travel_time_EB", gLLP_grandaughter_travel_time_EB, &b_gLLP_grandaughter_travel_time_EB);
  fChain->SetBranchAddress("gLLP_grandaughter_travel_time_ETL", gLLP_grandaughter_travel_time_ETL, &b_gLLP_grandaughter_travel_time_ETL);

@@ -287,9 +287,11 @@ void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("jetCSV", 1);
     fChain->SetBranchStatus("jetCISV", 1);
     fChain->SetBranchStatus("jetMass", 1);
-    //fChain->SetBranchStatus("jet_matched", 1);
-    fChain->SetBranchStatus("jet_matched_gLLP_daughter", 1);
-    fChain->SetBranchStatus("jet_matched_gLLP_grandaughter", 1);
+    fChain->SetBranchStatus("jet_matched", 1);
+    fChain->SetBranchStatus("jet_matched_gLLP0_daughter", 1);
+    fChain->SetBranchStatus("jet_matched_gLLP1_daughter", 1);
+    fChain->SetBranchStatus("jet_matched_gLLP0_grandaughter", 1);
+    fChain->SetBranchStatus("jet_matched_gLLP1_grandaughter", 1);
     fChain->SetBranchStatus("jetJetArea", 1);
     fChain->SetBranchStatus("jetPileupE", 1);
     fChain->SetBranchStatus("jetPileupId", 1);

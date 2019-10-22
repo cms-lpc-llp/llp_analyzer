@@ -63,9 +63,11 @@ void SusyLLPTree::InitVariables()
       jetTime[i]   = -999.;
       // jetLoosePassId[i] = false;
       jetPassId[i] = false;
-      //matched[i] = false;
-      jet_matched_gLLP_daughter[i] = false;
-      jet_matched_gLLP_grandaughter[i] = false;
+      matched[i] = false;
+      jet_matched_gLLP0_daughter[i] = false;
+      jet_matched_gLLP1_daughter[i] = false;
+      jet_matched_gLLP0_grandaughter[i] = false;
+      jet_matched_gLLP1_grandaughter[i] = false;
       jet_energy_frac[i] = -999.;
       jet_sig_et1[i] = -999.;
       jet_sig_et2[i] = -999.;
@@ -105,6 +107,11 @@ void SusyLLPTree::InitVariables()
     }
 
     //gLLP
+    gLLP0_EB = false;
+    gLLP1_EB = false;
+    gLLP0_EE = false;
+    gLLP1_EE = false;
+
     for(int i = 0; i <N_MAX_LLPS; i++){
       gLLP_travel_time[i] = -999.;
       gLLP_e[i] = -999.;
@@ -248,9 +255,11 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("jetPhi",    jetPhi);
     tree_->SetBranchAddress("jetTime",   jetTime);
     tree_->SetBranchAddress("jetPassId", jetPassId);
-    //tree_->SetBranchAddress("matched", matched);
-    tree_->SetBranchAddress("jet_matched_gLLP_daughter", jet_matched_gLLP_daughter);
-    tree_->SetBranchAddress("jet_matched_gLLP_grandaughter", jet_matched_gLLP_grandaughter);
+    tree_->SetBranchAddress("matched", matched);
+    tree_->SetBranchAddress("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter);
+    tree_->SetBranchAddress("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter);
+    tree_->SetBranchAddress("jet_matched_gLLP0_grandaughter", jet_matched_gLLP0_grandaughter);
+    tree_->SetBranchAddress("jet_matched_gLLP1_grandaughter", jet_matched_gLLP1_grandaughter);
     tree_->SetBranchAddress("jet_energy_frac", jet_energy_frac);
     tree_->SetBranchAddress("jet_sig_et1", jet_sig_et1);
     tree_->SetBranchAddress("jet_sig_et2", jet_sig_et2);
@@ -329,7 +338,7 @@ void SusyLLPTree::InitTree()
  tree_->SetBranchAddress("gLLP_daughter_ETL", gLLP_daughter_ETL);
 
  tree_->SetBranchAddress("gLLP_daughter_photon_travel_time_EB", gLLP_daughter_photon_travel_time_EB);
- tree_->SetBranchAddress("gLLP_daughter_photon_travel_time_ET", gLLP_daughter_photon_travel_time_ETL);
+ tree_->SetBranchAddress("gLLP_daughter_photon_travel_time_ETL", gLLP_daughter_photon_travel_time_ETL);
 
  tree_->SetBranchAddress("gLLP_daughter_travel_time_EB", gLLP_daughter_travel_time_EB);
  tree_->SetBranchAddress("gLLP_daughter_travel_time_ETL", gLLP_daughter_travel_time_ETL);
@@ -440,9 +449,11 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
     tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
     tree_->Branch("jetPassId", jetPassId, "jetPassId[nJets]/O");
-    //tree_->Branch("matched", matched, "matched[nJets]/O");
-    tree_->Branch("jet_matched_gLLP_daughter", jet_matched_gLLP_daughter, "jet_matched_gLLP_daughter[nJets]/O");
-    tree_->Branch("jet_matched_gLLP_grandaughter", jet_matched_gLLP_grandaughter, "jet_matched_gLLP_grandaughter[nJets]/O");
+    tree_->Branch("matched", matched, "matched[nJets]/O");
+    tree_->Branch("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter, "jet_matched_gLLP0_daughter[nJets]/O");
+    tree_->Branch("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter, "jet_matched_gLLP1_daughter[nJets]/O");
+    tree_->Branch("jet_matched_gLLP0_grandaughter", jet_matched_gLLP0_grandaughter, "jet_matched_gLLP0_grandaughter[nJets]/O");
+    tree_->Branch("jet_matched_gLLP1_grandaughter", jet_matched_gLLP1_grandaughter, "jet_matched_gLLP1_grandaughter[nJets]/O");
     tree_->Branch("jet_energy_frac", jet_energy_frac, "jet_energy_frac[nJets]/F");
     tree_->Branch("jet_sig_et1", jet_sig_et1, "jet_sig_et1[nJets]/F");
     tree_->Branch("jet_sig_et2", jet_sig_et2, "jet_sig_et2[nJets]/F");
@@ -486,6 +497,11 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[601]/O"); //hardcoded
 
   //gLLP branches
+  tree_->Branch("gLLP0_EB", &gLLP0_EB, "gLLP0_EB/O");
+  tree_->Branch("gLLP1_EB", &gLLP1_EB, "gLLP1_EB/O");
+  tree_->Branch("gLLP0_EE", &gLLP0_EE, "gLLP0_EE/O");
+  tree_->Branch("gLLP1_EE", &gLLP1_EE, "gLLP1_EE/O");
+
   tree_->Branch("gLLP_travel_time",          gLLP_travel_time,          "gLLP_travel_time[2]/F");
   tree_->Branch("gLLP_e",          gLLP_e,          "gLLP_e[2]/F");
   tree_->Branch("gLLP_pt",          gLLP_pt,          "gLLP_pt[2]/F");

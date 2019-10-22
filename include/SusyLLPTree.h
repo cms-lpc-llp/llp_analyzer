@@ -92,9 +92,11 @@ public:
   float jetPtAllPVTracks[N_MAX_JETS];
   // bool jetLoosePassId[N_MAX_JETS];
   bool jetPassId[N_MAX_JETS];
-  //bool matched[N_MAX_JETS];
-  bool jet_matched_gLLP_daughter[N_MAX_JETS];
-  bool jet_matched_gLLP_grandaughter[N_MAX_JETS];
+  bool matched[N_MAX_JETS];
+  bool jet_matched_gLLP0_daughter[N_MAX_JETS];
+  bool jet_matched_gLLP1_daughter[N_MAX_JETS];
+  bool jet_matched_gLLP0_grandaughter[N_MAX_JETS];
+  bool jet_matched_gLLP1_grandaughter[N_MAX_JETS];
   // bool jetTightPassId[N_MAX_JETS];
   float jet_energy_frac[N_MAX_JETS];
   float jet_sig_et1[N_MAX_JETS];
@@ -128,6 +130,11 @@ public:
   float gLLP_ctau[N_MAX_LLPS];
  
    //gLLP
+   bool          gLLP0_EB;
+   bool          gLLP1_EB;
+   bool          gLLP0_EE;
+   bool          gLLP1_EE;
+
    float         gLLP_travel_time[N_MAX_LLPS];
    float         gLLP_e[N_MAX_LLPS];
    float         gLLP_pt[N_MAX_LLPS];
