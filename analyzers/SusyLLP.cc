@@ -784,7 +784,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       double decay_radius = sqrt( pow(gLLP_decay_vertex_x[i],2) + pow(gLLP_decay_vertex_y[i],2) );
       double decay_z = abs( gLLP_decay_vertex_z[i] );
       double decay_eta = abs( gLLP_eta[i] );
-      if(decay_eta != 666) std::cout << "deb gLLP decay radius " << decay_radius << " z " << decay_z  << " eta " << decay_eta << endl;
+      //if(decay_eta != 666) std::cout << "deb gLLP decay radius " << decay_radius << " z " << decay_z  << " eta " << decay_eta << endl;
 
       // barrel, 30 cm < r < 1.84 m, |z| < 3.76m  ( ecal outter edge )
       // EB_z = 268.36447217; // cm 129*sinh(1.479)
@@ -801,7 +801,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
           llp_tree->gLLP1_EB = true;
 	}
       }
-      if(decay_eta != 666 && i==0) std::cout << "deb gLLP EB: " << jentry << " evtNum " << llp_tree->evtNum  << " index of llp " << i << " ; 0  " << llp_tree->gLLP0_EB  << " 1 " << llp_tree->gLLP1_EB << endl;
+      //if(decay_eta != 666 && i==0) std::cout << "deb gLLP EB: " << jentry << " evtNum " << llp_tree->evtNum  << " index of llp " << i << " ; 0  " << llp_tree->gLLP0_EB  << " 1 " << llp_tree->gLLP1_EB << endl;
 
       // endcap, 1.5 < |eta| < 2.6, 1 m < |z| <  3.9 m
       bool inEE = false;

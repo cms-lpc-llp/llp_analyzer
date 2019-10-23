@@ -365,7 +365,7 @@ void SusyLLPTree::InitTree()
  tree_->SetBranchAddress("gLLP_grandaughter_ETL", gLLP_grandaughter_ETL);
 
  tree_->SetBranchAddress("gLLP_grandaughter_photon_travel_time_EB", gLLP_grandaughter_photon_travel_time_EB);
- tree_->SetBranchAddress("gLLP_grandaughter_photon_travel_time_ET", gLLP_grandaughter_photon_travel_time_ETL);
+ tree_->SetBranchAddress("gLLP_grandaughter_photon_travel_time_ETL", gLLP_grandaughter_photon_travel_time_ETL);
 
  tree_->SetBranchAddress("gLLP_grandaughter_travel_time_EB", gLLP_grandaughter_travel_time_EB);
  tree_->SetBranchAddress("gLLP_grandaughter_travel_time_ETL", gLLP_grandaughter_travel_time_ETL);
