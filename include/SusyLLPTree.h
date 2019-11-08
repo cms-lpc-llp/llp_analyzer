@@ -90,6 +90,13 @@ public:
   float jetGammaMax_ET[N_MAX_JETS];
   float jetMinDeltaRPVTracks[N_MAX_JETS];
   float jetPtAllPVTracks[N_MAX_JETS];
+  float jetMinDeltaRAllTracks[N_MAX_JETS];
+  float jetPtAllTracks[N_MAX_JETS];
+  float jetGammaMax_ET_wp[N_MAX_JETS];
+  float jetMinDeltaRPVTracks_wp[N_MAX_JETS];
+  float jetPtAllPVTracks_wp[N_MAX_JETS];
+  float jetMinDeltaRAllTracks_wp[N_MAX_JETS];
+  float jetPtAllTracks_wp[N_MAX_JETS];
   // bool jetLoosePassId[N_MAX_JETS];
   bool jetPassId[N_MAX_JETS];
   bool matched[N_MAX_JETS];

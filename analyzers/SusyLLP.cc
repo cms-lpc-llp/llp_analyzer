@@ -59,6 +59,13 @@ struct jets
   float jetGammaMax_ET;
   float jetMinDeltaRPVTracks;
   float jetPtAllPVTracks;
+  float jetMinDeltaRAllTracks;
+  float jetPtAllTracks;
+  float jetGammaMax_ET_wp;
+  float jetMinDeltaRPVTracks_wp;
+  float jetPtAllPVTracks_wp;
+  float jetMinDeltaRAllTracks_wp;
+  float jetPtAllTracks_wp;
   float energy_frac;
   float sig_et1;
   float sig_et2;
@@ -596,6 +603,13 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       tmpJet.jetGammaMax_ET = jetGammaMax_ET[i];
       tmpJet.jetMinDeltaRPVTracks = jetMinDeltaRPVTracks[i];
       tmpJet.jetPtAllPVTracks = jetPtAllPVTracks[i];
+      tmpJet.jetMinDeltaRAllTracks = jetMinDeltaRAllTracks[i];
+      tmpJet.jetPtAllTracks = jetPtAllTracks[i];
+      tmpJet.jetGammaMax_ET_wp = jetGammaMax_ET_wp[i];
+      tmpJet.jetMinDeltaRPVTracks_wp = jetMinDeltaRPVTracks_wp[i];
+      tmpJet.jetPtAllPVTracks_wp = jetPtAllPVTracks_wp[i];
+      tmpJet.jetMinDeltaRAllTracks_wp = jetMinDeltaRAllTracks_wp[i];
+      tmpJet.jetPtAllTracks_wp = jetPtAllTracks_wp[i];
 
       if(_debug_jet) std::cout << "jetE " << jetE[i] << std::endl;
       if(_debug_jet) std::cout << "jetChargedEMEnergyFraction " << jetChargedEMEnergyFraction[i] << std::endl;
@@ -718,6 +732,13 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->jetGammaMax_ET[llp_tree->nJets] = tmp.jetGammaMax_ET;
       llp_tree->jetMinDeltaRPVTracks[llp_tree->nJets] = tmp.jetMinDeltaRPVTracks;
       llp_tree->jetPtAllPVTracks[llp_tree->nJets] = tmp.jetPtAllPVTracks;
+      llp_tree->jetMinDeltaRAllTracks[llp_tree->nJets] = tmp.jetMinDeltaRAllTracks;
+      llp_tree->jetPtAllTracks[llp_tree->nJets] = tmp.jetPtAllTracks;
+      llp_tree->jetGammaMax_ET_wp[llp_tree->nJets] = tmp.jetGammaMax_ET_wp;
+      llp_tree->jetMinDeltaRPVTracks_wp[llp_tree->nJets] = tmp.jetMinDeltaRPVTracks_wp;
+      llp_tree->jetPtAllPVTracks_wp[llp_tree->nJets] = tmp.jetPtAllPVTracks_wp;
+      llp_tree->jetMinDeltaRAllTracks_wp[llp_tree->nJets] = tmp.jetMinDeltaRAllTracks_wp;
+      llp_tree->jetPtAllTracks_wp[llp_tree->nJets] = tmp.jetPtAllTracks_wp;
 
       if(_debug_jet) std::cout << "jetE " << tmp.jet.E() << std::endl;
       if(_debug_jet) std::cout << "jetChargedEMEnergyFraction " << tmp.jetChargedEMEnergyFraction << std::endl;

@@ -80,6 +80,14 @@ void SusyLLPTree::InitVariables()
       jetGammaMax_ET[i] = -999.;
       jetMinDeltaRPVTracks[i] = -999.;
       jetPtAllPVTracks[i] = -999.;
+      jetMinDeltaRAllTracks[i] = -999.;
+      jetPtAllTracks[i] = -999.;
+
+      jetGammaMax_ET_wp[i] = -999.;
+      jetMinDeltaRPVTracks_wp[i] = -999.;
+      jetPtAllPVTracks_wp[i] = -999.;
+      jetMinDeltaRAllTracks_wp[i] = -999.;
+      jetPtAllTracks_wp[i] = -999.;
 
       calojetE[i] = -999.;
       calojetEt[i] = -999.;
@@ -273,6 +281,14 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("jetGammaMax_ET", jetGammaMax_ET);
     tree_->SetBranchAddress("jetMinDeltaRPVTracks", jetMinDeltaRPVTracks);
     tree_->SetBranchAddress("jetPtAllPVTracks", jetPtAllPVTracks);
+    tree_->SetBranchAddress("jetMinDeltaRAllTracks", jetMinDeltaRAllTracks);
+    tree_->SetBranchAddress("jetPtAllTracks", jetPtAllTracks);
+
+    tree_->SetBranchAddress("jetGammaMax_ET_wp", jetGammaMax_ET_wp);
+    tree_->SetBranchAddress("jetMinDeltaRPVTracks_wp", jetMinDeltaRPVTracks_wp);
+    tree_->SetBranchAddress("jetPtAllPVTracks_wp", jetPtAllPVTracks_wp);
+    tree_->SetBranchAddress("jetMinDeltaRAllTracks_wp", jetMinDeltaRAllTracks_wp);
+    tree_->SetBranchAddress("jetPtAllTracks_wp", jetPtAllTracks_wp);
 
     //calojets
     tree_->SetBranchAddress("nCaloJets",     &nCaloJets);
@@ -462,6 +478,15 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("jetGammaMax_ET", jetGammaMax_ET, "jetGammaMax_ET[nJets]/F");
     tree_->Branch("jetMinDeltaRPVTracks", jetMinDeltaRPVTracks, "jetMinDeltaRPVTracks[nJets]/F");
     tree_->Branch("jetPtAllPVTracks", jetPtAllPVTracks, "jetPtAllPVTracks[nJets]/F");
+    tree_->Branch("jetMinDeltaRAllTracks", jetMinDeltaRAllTracks, "jetMinDeltaRAllTracks[nJets]/F");
+    tree_->Branch("jetPtAllTracks", jetPtAllTracks, "jetPtAllTracks[nJets]/F");
+
+    tree_->Branch("jetGammaMax_ET_wp", jetGammaMax_ET_wp, "jetGammaMax_ET_wp[nJets]/F");
+    tree_->Branch("jetMinDeltaRPVTracks_wp", jetMinDeltaRPVTracks_wp, "jetMinDeltaRPVTracks_wp[nJets]/F");
+    tree_->Branch("jetPtAllPVTracks_wp", jetPtAllPVTracks_wp, "jetPtAllPVTracks_wp[nJets]/F");
+    tree_->Branch("jetMinDeltaRAllTracks_wp", jetMinDeltaRAllTracks_wp, "jetMinDeltaRAllTracks_wp[nJets]/F");
+    tree_->Branch("jetPtAllTracks_wp", jetPtAllTracks_wp, "jetPtAllTracks_wp[nJets]/F");
+
     tree_->Branch("ecalNRechits",   ecalNRechits,   "ecalNRechits[nJets]/F");
     tree_->Branch("ecalRechitE", ecalRechitE, "ecalRechitE[nJets]/F");
     tree_->Branch("jetChargedEMEnergyFraction",   jetChargedEMEnergyFraction,   "jetChargedEMEnergyFraction[nJets]/F");

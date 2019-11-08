@@ -350,6 +350,11 @@ public :
    Float_t         jetPtAllPVTracks[2000];
    Float_t         jetMinDeltaRAllTracks[2000];
    Float_t         jetPtAllTracks[2000];
+   Float_t         jetGammaMax_ET_wp[2000];
+   Float_t         jetMinDeltaRPVTracks_wp[2000];
+   Float_t         jetPtAllPVTracks_wp[2000];
+   Float_t         jetMinDeltaRAllTracks_wp[2000];
+   Float_t         jetPtAllTracks_wp[2000];
    Float_t	   jetMedianTheta2D[2000];
    Float_t	   jetMedianIP[2000];
    UInt_t          nFatJets;
@@ -852,6 +857,11 @@ public :
    TBranch        *b_jetPtAllPVTracks;
    TBranch        *b_jetMinDeltaRAllTracks;
    TBranch        *b_jetPtAllTracks;
+   TBranch        *b_jetGammaMax_ET_wp;
+   TBranch        *b_jetMinDeltaRPVTracks_wp;
+   TBranch        *b_jetPtAllPVTracks_wp;
+   TBranch        *b_jetMinDeltaRAllTracks_wp;
+   TBranch        *b_jetPtAllTracks_wp;
    TBranch	  *b_jetMedianTheta2D;
    TBranch	  *b_jetMedianIP;
    TBranch        *b_nFatJets;   //!
@@ -1438,6 +1448,11 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("jetPtAllPVTracks", jetPtAllPVTracks, &b_jetPtAllPVTracks);
    fChain->SetBranchAddress("jetMinDeltaRAllTracks", jetMinDeltaRAllTracks, &b_jetMinDeltaRAllTracks);
    fChain->SetBranchAddress("jetPtAllTracks", jetPtAllTracks, &b_jetPtAllTracks);
+   fChain->SetBranchAddress("jetGammaMax_ET_wp", jetGammaMax_ET_wp, &b_jetGammaMax_ET_wp);
+   fChain->SetBranchAddress("jetMinDeltaRPVTracks_wp", jetMinDeltaRPVTracks_wp, &b_jetMinDeltaRPVTracks_wp);
+   fChain->SetBranchAddress("jetPtAllPVTracks_wp", jetPtAllPVTracks_wp, &b_jetPtAllPVTracks_wp);
+   fChain->SetBranchAddress("jetMinDeltaRAllTracks_wp", jetMinDeltaRAllTracks_wp, &b_jetMinDeltaRAllTracks_wp);
+   fChain->SetBranchAddress("jetPtAllTracks_wp", jetPtAllTracks_wp, &b_jetPtAllTracks_wp);
    fChain->SetBranchAddress("jetMedianTheta2D", jetMedianTheta2D, &b_jetMedianTheta2D);
    fChain->SetBranchAddress("jetMedianIP", jetMedianIP, &b_jetMedianIP);
    fChain->SetBranchAddress("nFatJets", &nFatJets, &b_nFatJets);

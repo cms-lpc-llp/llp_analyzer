@@ -309,6 +309,13 @@ void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("jetGammaMax_ET", 1);
     fChain->SetBranchStatus("jetMinDeltaRPVTracks", 1);
     fChain->SetBranchStatus("jetPtAllPVTracks", 1);
+    fChain->SetBranchStatus("jetMinDeltaRAllTracks", 1);
+    fChain->SetBranchStatus("jetPtAllTracks", 1);
+    fChain->SetBranchStatus("jetGammaMax_ET_wp", 1);
+    fChain->SetBranchStatus("jetMinDeltaRPVTracks_wp", 1);
+    fChain->SetBranchStatus("jetPtAllPVTracks_wp", 1);
+    fChain->SetBranchStatus("jetMinDeltaRAllTracks_wp", 1);
+    fChain->SetBranchStatus("jetPtAllTracks_wp", 1);
     fChain->SetBranchStatus("jetMuonEnergyFraction", 1);
     fChain->SetBranchStatus("jetHOEnergyFraction", 1);
     fChain->SetBranchStatus("jetHFHadronEnergyFraction", 1);
