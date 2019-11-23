@@ -12,7 +12,8 @@ outputDir=$5
 currentDir=`pwd`
 CMSSW_BASE=$6
 homeDir=$7
-user=${homeDir#*/data/}
+#user=${homeDir#*/data/}
+user=${homeDir#*/storage/user/}
 runDir=${currentDir}/${user}_${code_dir_suffix}/
 
 normalize_file=llp_${mode}_${sample}.txt

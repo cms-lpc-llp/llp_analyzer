@@ -8,7 +8,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=15
+filesPerJob=10
 #WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 
 for sample in \
@@ -16,7 +16,7 @@ WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 do
 	echo "Sample " ${sample}
 	version=/V1p7/MC_Summer16/v11/
-        output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/${version}/v7/bkg/wH/${sample}
+        output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v8/bkg/wH/${sample}
         inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
 
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `

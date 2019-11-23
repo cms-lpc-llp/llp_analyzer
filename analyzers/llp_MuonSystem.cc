@@ -5,7 +5,7 @@
 #include "JetCorrectionUncertainty.h"
 #include "BTagCalibrationStandalone.h"
 #include "EnergyScaleCorrection_class.hh"
-#include "DBSCAN.h"
+// #include "DBSCAN.h"
 //C++ includes
 #include "assert.h"
 
@@ -112,32 +112,21 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
 
   //---------------------------
   int option;
-  std::string label;
-  if (options < 20){
+  if (options == 1){
     option = 1; // used when running condor
   }
   else{
     option = 0;// used when running locally
   }
-  if (options%10 == 1){
-    label = "wH";
-  }
-  else if (options % 10 == 2){
-    label = "zH";
-  }
-  else if (options % 10 == 3){
-    label = "bkg_wH";
-  }
-  else{
-    label = "bkg_zH";
-  }
+
+
   if( isData )
   {
-    std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << std::endl;
+    std::cout << "[INFO]: running on data with option: " << option << std::endl;
   }
   else
   {
-    std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << std::endl;
+    std::cout << "[INFO]: running on MC with option: " << option << std::endl;
   }
 
   const float ELE_MASS = 0.000511;
@@ -149,41 +138,28 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
 
   }
   int wzId;
-  int NTrigger;//Number of trigger in trigger paths
-  int elePt_cut = 0;
-  int muonPt_cut = 0;
-  uint nLepton_cut = 0;
 
 
+  const int zh_lepton0_cut = 15;
+  const int zh_lepton1_cut = 15;
 
-  if (label == "zH" || label == "bkg_zH" ){
-    NTrigger = 4;
-    muonPt_cut = 15;
-    elePt_cut = 15;
-    nLepton_cut = 2;
-    }
-  else{
-    NTrigger = 2;
-    muonPt_cut = 25;
-    elePt_cut = 35;
-    nLepton_cut = 1;
-  }
+  const int wh_muonPt_cut = 25;
+  const int wh_elePt_cut = 35;
+  //
+  // if (label == "zH" || label == "bkg_zH" ){
+  //   NTrigger = 4;
+  //   muonPt_cut = 15;
+  //   elePt_cut = 15;
+  //   nLepton_cut = 2;
+  // }
+  // else{
+  //   NTrigger = 2;
+  //   muonPt_cut = 25;
+  //   elePt_cut = 35;
+  //   nLepton_cut = 1;
+  // }
 
-  int trigger_paths[NTrigger];
-  if (label == "wH" || label == "bkg_wH"){
-    wzId = 24;
-    trigger_paths[0] = 87;
-    trigger_paths[1] = 135;
-    // trigger_paths[2] = 310;
-  }
-  else if (label == "zH" || label == "bkg_zH"){
-    wzId = 23;
-    trigger_paths[0] = 177;
-    trigger_paths[1] = 362;
-    // trigger_paths[2] = 310;
-    trigger_paths[2] = 87;
-    trigger_paths[3] = 135;
-  }
+
   //-----------------------------------------------
   //Set up Output File
   //-----------------------------------------------
@@ -197,12 +173,6 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
   //histogram containing total number of processed events (for normalization)
   TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
   TH1F *NEvents_genweight = new TH1F("NEvents_genweight", "NEvents_genweight", 1, 1, 2);
-
-  TH1F *generatedEvents = new TH1F("generatedEvents", "generatedEvents", 1, 1, 2);
-  TH1F *trig = new TH1F("trig", "trig", 1, 1, 2);
-  TH1F *trig_lepId = new TH1F("trig_lepId", "trig_lepId", 1, 1, 2);
-  TH1F *trig_lepId_dijet = new TH1F("trig_lepId_dijet", "trig_lepId_dijet", 1, 1, 2);
-
 
   char* cmsswPath;
   cmsswPath = getenv("CMSSW_BASE");
@@ -251,15 +221,12 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
   for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++) {
 
     //begin event
-    // clock_t start, end;
-    // double time_taken;
-    // start = clock();
-    if(jentry % 10000 == 0) cout << "Processing entry " << jentry << endl;
 
     if(jentry % 10000 == 0)
     {
       end = clock();
       double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+      cout << "Processing entry " << jentry << endl;
       cout << "Time taken by program is : " << time_taken << endl;
       start = clock();
     }
@@ -284,7 +251,6 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       MuonSystem->weight = genWeight;
       NEvents->Fill(1);
       NEvents_genweight->Fill(1, genWeight);
-      // cout<<genWeight<<endl;
     }
 
 
@@ -292,7 +258,6 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     MuonSystem->runNum = runNum;
     MuonSystem->lumiSec = lumiNum;
     MuonSystem->evtNum = eventNum;
-    //std::cout << "deb3 " << jentry << std::endl;
 
     bool wzFlag = false;
     for (int i=0; i < nGenParticle; i++)
@@ -337,7 +302,6 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
 
 
     }
-    if ( wzFlag == true ) generatedEvents->Fill(1);;
     for (int i=0; i < nBunchXing; i++)
     {
       if (BunchXing[i] == 0)
@@ -355,15 +319,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     for(int i = 0; i < NTriggersMAX; i++){
       MuonSystem->HLTDecision[i] = HLTDecision[i];
     }
-    bool triggered = false;
-    for(int i = 0; i < NTrigger; i++)
-    {
-      int trigger_temp = trigger_paths[i];
 
-      triggered = triggered || HLTDecision[trigger_temp];
-
-    }
-    if (triggered) trig->Fill(1);
 
 
     //*************************************************************************
@@ -376,8 +332,9 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //-------------------------------
     for( int i = 0; i < nMuons; i++ )
     {
+
       if(!isMuonPOGLooseMuon(i)) continue;
-      if(muonPt[i] < muonPt_cut) continue;
+      if(muonPt[i] < zh_lepton1_cut) continue;
       if(fabs(muonEta[i]) > 2.4) continue;
 
       //remove overlaps
@@ -392,20 +349,23 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       tmpMuon.lepton.SetPtEtaPhiM(muonPt[i],muonEta[i], muonPhi[i], MU_MASS);
       tmpMuon.pdgId = 13 * -1 * muonCharge[i];
       tmpMuon.dZ = muon_dZ[i];
-      tmpMuon.passId = isMuonPOGLooseMuon(i);
+      tmpMuon.passId = isMuonPOGTightMuon(i);
       // tmpMuon.passId = isLooseMuon(i);
       tmpMuon.passVetoId = false;
       // tmpMuon.passVetoPOGId = false;
 
       Leptons.push_back(tmpMuon);
     }
+    // cout<<"jere"<<endl;
+
     //-------------------------------
     //Electrons
     //-------------------------------
     for( int i = 0; i < nElectrons; i++ )
     {
+
       if (!isEGammaPOGLooseElectron(i, true, true, true, "Summer16")) continue;
-      if(elePt[i] < elePt_cut) continue;
+      if(elePt[i] < zh_lepton1_cut) continue;
       if(fabs(eleEta[i]) > 2.4) continue;
 
       //remove overlaps
@@ -419,37 +379,26 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       tmpElectron.lepton.SetPtEtaPhiM(elePt[i],eleEta[i], elePhi[i], ELE_MASS);
       tmpElectron.pdgId = 11 * -1 * eleCharge[i];
       tmpElectron.dZ = ele_dZ[i];
-      tmpElectron.passId = isEGammaPOGLooseElectron(i, true, true, true, "Summer16");
+      tmpElectron.passId = isEGammaPOGTightElectron(i, true, true, true, "Summer16");
       tmpElectron.passVetoId = isEGammaPOGVetoElectron(i, true, true, true, "Summer16");
       Leptons.push_back(tmpElectron);
     }
 
     sort(Leptons.begin(), Leptons.end(), my_largest_pt);
     //std::cout << "deb7 " << jentry << std::endl;
-    for ( auto &tmp : Leptons )
-    {
-      MuonSystem->lepE[MuonSystem->nLeptons]      = tmp.lepton.E();
-      MuonSystem->lepPt[MuonSystem->nLeptons]     = tmp.lepton.Pt();
-      MuonSystem->lepEta[MuonSystem->nLeptons]    = tmp.lepton.Eta();
-      MuonSystem->lepPhi[MuonSystem->nLeptons]    = tmp.lepton.Phi();
-      MuonSystem->lepPdgId[MuonSystem->nLeptons]  = tmp.pdgId;
-      MuonSystem->lepDZ[MuonSystem->nLeptons]     = tmp.dZ;
-      MuonSystem->lepPassId[MuonSystem->nLeptons] = tmp.passId;
-      MuonSystem->lepPassVetoId[MuonSystem->nLeptons] = tmp.passVetoId;
 
-      // std::cout << "lepton pdg " << MuonSystem->lepPdgId[MuonSystem->nLeptons] << std::endl;
-      MuonSystem->nLeptons++;
-    }
 
     //----------------
     //Find Z Candidate
     //----------------
+
     double ZMass = -999;
     double ZPt = -999;
     double tmpDistToZPole = 9999;
     pair<uint,uint> ZCandidateLeptonIndex;
     bool foundZ = false;
     TLorentzVector ZCandidate;
+    double leadingLepPt = 0.0;
     for( uint i = 0; i < Leptons.size(); i++ )
     {
       for( uint j = 0; j < Leptons.size(); j++ )
@@ -472,12 +421,13 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
           ZMass = tmpMass;
           ZPt = (Leptons[i].lepton+Leptons[j].lepton).Pt();
           ZCandidate = Leptons[i].lepton+Leptons[j].lepton;
+          leadingLepPt = max(Leptons[i].lepton.Pt(),Leptons[j].lepton.Pt());
           foundZ = true;
         }
       }
     }
 
-    if (foundZ && fabs(ZMass-Z_MASS) < 30.0)
+    if (foundZ && fabs(ZMass-Z_MASS) < 30.0 && Leptons.size() == 2 && leadingLepPt > zh_lepton0_cut)
     {
       MuonSystem->ZMass = ZMass;
       MuonSystem->ZPt   = ZPt;
@@ -485,15 +435,36 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       MuonSystem->ZPhi  = ZCandidate.Phi();
       MuonSystem->ZleptonIndex1 = ZCandidateLeptonIndex.first;
       MuonSystem->ZleptonIndex2 = ZCandidateLeptonIndex.second;
-
+      MuonSystem->category = 2;
     } // endif foundZ
-    //------------------------
-    //require 1 lepton
-    //------------------------
-    if ( !(Leptons.size() == nLepton_cut )) continue;
-    // end = clock();
-    // time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-    // if (nCsc >= 30) cout << "Time taken by program is after lepton : " << time_taken << endl;
+    else{
+      for ( unsigned int i = Leptons.size(); i>0; --i )
+      {
+        int index = i-1;
+        if (abs(Leptons[index].pdgId) == 13 && Leptons[index].lepton.Pt() < wh_muonPt_cut)
+        {
+           Leptons.erase(Leptons.begin() + index);
+        }
+        else if (abs(Leptons[index].pdgId) == 11 && Leptons[index].lepton.Pt() < wh_elePt_cut)
+        {
+          Leptons.erase(Leptons.begin() + index);
+        }
+      }
+      if (Leptons.size() == 1) MuonSystem->category = 1;
+      else MuonSystem->category = 0;
+    }
+    for ( auto &tmp : Leptons )
+    {
+      MuonSystem->lepE[MuonSystem->nLeptons]      = tmp.lepton.E();
+      MuonSystem->lepPt[MuonSystem->nLeptons]     = tmp.lepton.Pt();
+      MuonSystem->lepEta[MuonSystem->nLeptons]    = tmp.lepton.Eta();
+      MuonSystem->lepPhi[MuonSystem->nLeptons]    = tmp.lepton.Phi();
+      MuonSystem->lepPdgId[MuonSystem->nLeptons]  = tmp.pdgId;
+      MuonSystem->lepDZ[MuonSystem->nLeptons]     = tmp.dZ;
+      MuonSystem->lepPassId[MuonSystem->nLeptons] = tmp.passId;
+      MuonSystem->nLeptons++;
+    }
+
     TLorentzVector met;
     met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
     if ( Leptons.size() > 0 )
@@ -501,14 +472,13 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       TLorentzVector visible = Leptons[0].lepton;
       MuonSystem->MT = GetMT(visible,met);
     }
-    if (triggered) trig_lepId->Fill(1);
 
 
   //-----------------------------------------------
   //Select Jets
   //-----------------------------------------------
 
-  std::vector<jets> Jets;
+  /*std::vector<jets> Jets;
   for(int i = 0; i < nJets; i++)
   {
 
@@ -530,7 +500,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
 
     TLorentzVector thisJet = makeTLorentzVector( jetPt[i]*JEC, jetEta[i], jetPhi[i], jetE[i]*JEC );
 
-    if( thisJet.Pt() < 10 ) continue;//According to the April 1st 2015 AN
+    if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
     if( fabs( thisJet.Eta() ) >= 3.0 ) continue;
     if ( !jetPassIDLoose[i] ) continue;
     // if (!(jetRechitE[i] > 0.0)) continue;
@@ -559,7 +529,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //Require at least 2 jets
     //-----------------------------
     //if( Jets.size() < 2 ) continue;
-    if (triggered) trig_lepId_dijet->Fill(1);
+    // if (triggered) trig_lepId_dijet->Fill(1);
     sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
     for ( auto &tmp : Jets )
@@ -569,7 +539,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       MuonSystem->jetEta[MuonSystem->nJets] = tmp.jet.Eta();
       MuonSystem->jetPhi[MuonSystem->nJets] = tmp.jet.Phi();
       // MuonSystem->jetTime[MuonSystem->nJets] = tmp.time;
-      MuonSystem->jetPassId[MuonSystem->nJets] = tmp.passId;
+      // MuonSystem->jetPassId[MuonSystem->nJets] = tmp.passId;
       // MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalNRechits;
       // MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalRechitE;
       // MuonSystem->jetChargedEMEnergyFraction[MuonSystem->nJets] = tmp.jetChargedEMEnergyFraction;
@@ -577,328 +547,221 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       // MuonSystem->jetChargedHadronEnergyFraction[MuonSystem->nJets] = tmp.jetChargedHadronEnergyFraction;
       // MuonSystem->jetNeutralHadronEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralHadronEnergyFraction;
       MuonSystem->nJets++;
-    }
+    }*/
 
 
-
+    // cout<<"jere"<<endl;
     //-----------------------------
     // CSC INFO
     //-----------------------------
-    if( nCsc < 15 ) continue;//require at least 30 segments in the CSCs
-    // end = clock();
-    // time_taken = double(end - start) / double(CLOCKS_PER_SEC);
-    // cout << "Time taken by program is after jets : " << time_taken << endl;
-    MuonSystem->nCsc = 0;
-    vector<Point> points;
-    for(int i = 0; i < nCsc; i++)
+    // if( nCsc < 10 ) continue;
+    if(MuonSystem->category !=1) continue;
+    if(nCscClusters == 0) continue;
+
+    for(int i = 0; i < nCscClusters; i++)
     {
-      // if (cscT[i] > 22.0) continue;
-      // if (cscT[i] < -12.5) continue;
+      MuonSystem->cscClusterX[MuonSystem->nCscClusters] =cscClusterX[i];
+      MuonSystem->cscClusterY[MuonSystem->nCscClusters] =cscClusterY[i];
+      MuonSystem->cscClusterZ[MuonSystem->nCscClusters] =cscClusterZ[i];
+      MuonSystem->cscClusterTime[MuonSystem->nCscClusters] =cscClusterTime[i];
+      MuonSystem->cscClusterEta[MuonSystem->nCscClusters] =cscClusterEta[i];
+      MuonSystem->cscClusterPhi[MuonSystem->nCscClusters] =cscClusterPhi[i];
+      MuonSystem->cscClusterMajorAxis[MuonSystem->nCscClusters] =cscClusterMajorAxis[i];
+      MuonSystem->cscClusterMinorAxis[MuonSystem->nCscClusters] =cscClusterMinorAxis[i];
+      MuonSystem->cscClusterXSpread[MuonSystem->nCscClusters] =cscClusterXSpread[i];
+      MuonSystem->cscClusterYSpread[MuonSystem->nCscClusters] =cscClusterYSpread[i];
+      MuonSystem->cscClusterZSpread[MuonSystem->nCscClusters] =cscClusterZSpread[i];
+      MuonSystem->cscClusterEtaPhiSpread[MuonSystem->nCscClusters] =cscClusterEtaPhiSpread[i];
+      MuonSystem->cscClusterEtaSpread[MuonSystem->nCscClusters] =cscClusterEtaSpread[i];
+      MuonSystem->cscClusterPhiSpread[MuonSystem->nCscClusters] = cscClusterPhiSpread[i];
+      MuonSystem->cscClusterTimeSpread[MuonSystem->nCscClusters] =cscClusterTimeSpread[i];
 
-      // MuonSystem->cscPhi[MuonSystem->nCsc]           = cscPhi[i];   //[nCsc]
-      // MuonSystem->cscEta[MuonSystem->nCsc]           = cscEta[i];   //[nCsc]
-      // MuonSystem->cscX[MuonSystem->nCsc]             = cscX[i];   //[nCsc]
-      // MuonSystem->cscY[MuonSystem->nCsc]             = cscY[i];   //[nCsc]
-      // MuonSystem->cscZ[MuonSystem->nCsc]             = cscZ[i];   //[nCsc]
-      // MuonSystem->cscDirectionX[MuonSystem->nCsc]             = cscDirectionX[i];   //
-      // MuonSystem->cscDirectionY[MuonSystem->nCsc]             = cscDirectionY[i];   //
-      // MuonSystem->cscDirectionZ[MuonSystem->nCsc]             = cscDirectionZ[i];   //
-      // MuonSystem->cscStation[MuonSystem->nCsc] = cscStation(cscX[i],cscY[i],cscZ[i]);
-      // MuonSystem->cscChamber[MuonSystem->nCsc] = cscChamber(cscX[i],cscY[i],cscZ[i]);
+      MuonSystem->cscClusterJetVetoPt[MuonSystem->nCscClusters] =cscClusterJetVetoPt[i];
+      MuonSystem->cscClusterJetVetoE[MuonSystem->nCscClusters] =cscClusterJetVetoE[i];
+      MuonSystem->cscClusterMuonVetoPt[MuonSystem->nCscClusters] =cscClusterMuonVetoPt[i];
+      MuonSystem->cscClusterMuonVetoE[MuonSystem->nCscClusters] =cscClusterMuonVetoE[i];
 
-      // for dbscan
-      Point p;
-      p.phi = cscPhi[i];
-      p.eta = cscEta[i];
-      p.x = cscX[i];
-      p.y = cscY[i];
-      p.z = cscZ[i];
-      p.t = cscT[i];
-      p.dirX = cscDirectionX[i];
-      p.dirY = cscDirectionY[i];
-      p.dirZ = cscDirectionZ[i];
-      // p.station = MuonSystem->cscStation[MuonSystem->nCsc];
-      // p.chamber = MuonSystem->cscChamber[MuonSystem->nCsc];
-      p.station = cscStation(cscX[i],cscY[i],cscZ[i]);
-      p.chamber = cscChamber(cscX[i],cscY[i],cscZ[i]);
-      p.clusterID = UNCLASSIFIED;
-      points.push_back(p);
+      MuonSystem->cscClusterSize[MuonSystem->nCscClusters] = cscClusterSize[i];
+      MuonSystem->cscClusterMaxChamber[MuonSystem->nCscClusters] =cscClusterMaxChamber[i];
+      MuonSystem->cscClusterMaxChamberRatio[MuonSystem->nCscClusters] = cscClusterMaxChamberRatio[i];
+      MuonSystem->cscClusterNChamber[MuonSystem->nCscClusters] =cscClusterNChamber[i];
+      MuonSystem->cscClusterMaxStation[MuonSystem->nCscClusters] = cscClusterMaxStation[i];
+      MuonSystem->cscClusterMaxStationRatio[MuonSystem->nCscClusters] = cscClusterMaxStationRatio[i];
+      MuonSystem->cscClusterNStation[MuonSystem->nCscClusters] = cscClusterNStation[i];
+      MuonSystem->cscClusterMe11Ratio[MuonSystem->nCscClusters] =cscClusterMe11Ratio[i];
+      MuonSystem->cscClusterMe12Ratio[MuonSystem->nCscClusters] = cscClusterMe12Ratio[i];
 
-      // MuonSystem->cscNRecHits[MuonSystem->nCsc]      = cscNRecHits[i];   //[nCsc]
-      // MuonSystem->cscNRecHits_flag[MuonSystem->nCsc] = cscNRecHits_flag[i];   //[nCsc]
-      // MuonSystem->cscT[MuonSystem->nCsc]             = cscT[i];   //[nCsc]
-      // MuonSystem->cscChi2[MuonSystem->nCsc]          = cscChi2[i];   //[nCsc]
+      MuonSystem->cscClusterNSegmentChamberPlus11[MuonSystem->nCscClusters] = cscClusterNSegmentChamberPlus11[i];
+      MuonSystem->cscClusterNSegmentChamberPlus12[MuonSystem->nCscClusters] = cscClusterNSegmentChamberPlus12[i];
+      MuonSystem->cscClusterNSegmentChamberPlus13[MuonSystem->nCscClusters] = cscClusterNSegmentChamberPlus13[i];
+      MuonSystem->cscClusterNSegmentChamberPlus21[MuonSystem->nCscClusters] = cscClusterNSegmentChamberPlus21[i];
+      MuonSystem->cscClusterNSegmentChamberPlus22[MuonSystem->nCscClusters] = cscClusterNSegmentChamberPlus22[i];
+      MuonSystem->cscClusterNSegmentChamberPlus31[MuonSystem->nCscClusters] = cscClusterNSegmentChamberPlus31[i];
+      MuonSystem->cscClusterNSegmentChamberPlus32[MuonSystem->nCscClusters] = cscClusterNSegmentChamberPlus32[i];
+      MuonSystem->cscClusterNSegmentChamberPlus41[MuonSystem->nCscClusters] = cscClusterNSegmentChamberPlus41[i];
+      MuonSystem->cscClusterNSegmentChamberPlus42[MuonSystem->nCscClusters] = cscClusterNSegmentChamberPlus42[i];
 
-      //page 141 of tdr: https://cds.cern.ch/record/343814/files/LHCC-97-032.pdf
-
-      MuonSystem->nCsc++;
-    }
-
-
-
-    //****************************************
-    // CLUSTERING ALGORITHM WITHOUT TIME CUT
-    //****************************************
-
-    int min_point = 10;//6
-    float epsilon = 0.2;//100
-    //run db scan only with points in the station
-    DBSCAN ds(min_point, epsilon, points);
-    ds.run();
-    ds.result();
-    ds.clusterMoments();
-    ds.vertexing();
-    ds.sort_clusters();
-
-    for ( auto &tmp : ds.CscCluster )
-    {
-      MuonSystem->cscClusterX[MuonSystem->nCscClusters] =tmp.x;
-      MuonSystem->cscClusterY[MuonSystem->nCscClusters] =tmp.y;
-      MuonSystem->cscClusterZ[MuonSystem->nCscClusters] =tmp.z;
-      MuonSystem->cscClusterTime[MuonSystem->nCscClusters] = tmp.t;
-      MuonSystem->cscClusterEta[MuonSystem->nCscClusters] =tmp.eta;
-      MuonSystem->cscClusterPhi[MuonSystem->nCscClusters] = tmp.phi;
-      MuonSystem->cscClusterMajorAxis[MuonSystem->nCscClusters] =tmp.MajorAxis;
-      MuonSystem->cscClusterMinorAxis[MuonSystem->nCscClusters] =tmp.MinorAxis;
-      MuonSystem->cscClusterXSpread[MuonSystem->nCscClusters] =tmp.XSpread;
-      MuonSystem->cscClusterYSpread[MuonSystem->nCscClusters] =tmp.YSpread;
-      MuonSystem->cscClusterZSpread[MuonSystem->nCscClusters] =tmp.ZSpread;
-      MuonSystem->cscClusterEtaPhiSpread[MuonSystem->nCscClusters] =tmp.EtaPhiSpread;
-      MuonSystem->cscClusterEtaSpread[MuonSystem->nCscClusters] =tmp.EtaSpread;
-      MuonSystem->cscClusterPhiSpread[MuonSystem->nCscClusters] = tmp.PhiSpread;
-      MuonSystem->cscClusterTimeSpread[MuonSystem->nCscClusters] = tmp.TSpread;
-      MuonSystem->cscClusterSize[MuonSystem->nCscClusters] = tmp.nCscSegments;
-
-      MuonSystem->cscClusterMaxChamber[MuonSystem->nCscClusters] = tmp.maxChamber;
-      MuonSystem->cscClusterMaxChamberRatio[MuonSystem->nCscClusters] = 1.0*tmp.maxChamberSegment/tmp.nCscSegments;
-      MuonSystem->cscClusterNChamber[MuonSystem->nCscClusters] = tmp.nChamber;
-      MuonSystem->cscClusterMaxStation[MuonSystem->nCscClusters] = tmp.maxStation;
-      MuonSystem->cscClusterMaxStationRatio[MuonSystem->nCscClusters] = 1.0*tmp.maxStationSegment/tmp.nCscSegments;
-      MuonSystem->cscClusterNStation[MuonSystem->nCscClusters] = tmp.nStation;
-      MuonSystem->cscClusterMe11Ratio[MuonSystem->nCscClusters] = tmp.Me11Ratio;
-      MuonSystem->cscClusterMe12Ratio[MuonSystem->nCscClusters] = tmp.Me12Ratio;
-      MuonSystem->cscClusterVertexR[MuonSystem->nCscClusters] = tmp.vertex_r;
-      MuonSystem->cscClusterVertexZ[MuonSystem->nCscClusters] = tmp.vertex_z;
-      MuonSystem->cscClusterVertexChi2[MuonSystem->nCscClusters] = tmp.vertex_chi2;
-      MuonSystem->cscClusterVertexDis[MuonSystem->nCscClusters] = tmp.vertex_dis;
-      MuonSystem->cscClusterVertexN[MuonSystem->nCscClusters] = tmp.vertex_n;
-      MuonSystem->cscClusterVertexN1[MuonSystem->nCscClusters] = tmp.vertex_n1;
-      MuonSystem->cscClusterVertexN5[MuonSystem->nCscClusters] = tmp.vertex_n5;
-      MuonSystem->cscClusterVertexN15[MuonSystem->nCscClusters] = tmp.vertex_n15;
-      MuonSystem->cscClusterVertexN20[MuonSystem->nCscClusters] = tmp.vertex_n20;
-      MuonSystem->cscClusterVertexN10[MuonSystem->nCscClusters] = tmp.vertex_n10;
-      // for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
-      // {
-      //   MuonSystem->cscLabels[j] = MuonSystem->nCscClusters;
-      // } it should be cscLabels[tmp.segment_id[j]]
-
-      //Jet veto/ muon veto
-      MuonSystem->cscClusterJetVeto[MuonSystem->nCscClusters] = 0.0;
-      MuonSystem->cscClusterCaloJetVeto[MuonSystem->nCscClusters] = 0.0;
-      MuonSystem->cscClusterMuonVeto[MuonSystem->nCscClusters] = 0.0;
-
-      for (int j = 0; j < nJets; j++)
-      {
-        // if (jetPt[j]<JET_PT_CUT) continue;
-        if (abs(jetEta[j])>3) continue;
-        if (RazorAnalyzer::deltaR(tmp.eta, tmp.phi, jetEta[j],jetPhi[j]) < 0.4 && jetPt[j] > MuonSystem->cscClusterJetVeto[MuonSystem->nCscClusters]){
-          MuonSystem->cscClusterJetVeto[MuonSystem->nCscClusters]  = jetPt[j];
-          MuonSystem->cscClusterJetVetoE[MuonSystem->nCscClusters]  = jetE[j];
-
-        }
-      }
-      for (int j = 0; j < nCaloJets; j++)
-      {
-        // if (calojetPt[j]<JET_PT_CUT) continue;
-        if (abs(calojetEta[j])>3) continue;
-        if (RazorAnalyzer::deltaR(tmp.eta, tmp.phi, calojetEta[j],calojetPhi[j]) < 0.4 && calojetPt[j] > MuonSystem->cscClusterCaloJetVeto[MuonSystem->nCscClusters])
-        {
-          MuonSystem->cscClusterCaloJetVeto[MuonSystem->nCscClusters] = calojetPt[j];
-          MuonSystem->cscClusterCaloJetVetoE[MuonSystem->nCscClusters] = calojetE[j];
-
-        }
-      }
-      for (int j = 0; j < nMuons; j++)
-      {
-        // if (muonPt[j]<MUON_PT_CUT) continue;
-        if (abs(muonEta[j])>3) continue;
-        if (RazorAnalyzer::deltaR(tmp.eta, tmp.phi, muonEta[j],muonPhi[j]) < 0.4 && muonPt[j] > MuonSystem->cscClusterMuonVeto[MuonSystem->nCscClusters])
-        {
-          MuonSystem->cscClusterMuonVeto[MuonSystem->nCscClusters] = muonPt[j];
-          MuonSystem->cscClusterMuonVetoE[MuonSystem->nCscClusters] = muonE[j];
-
-        }
-      }
+      MuonSystem->cscClusterNSegmentChamberMinus11[MuonSystem->nCscClusters] = cscClusterNSegmentChamberMinus11[i];
+      MuonSystem->cscClusterNSegmentChamberMinus12[MuonSystem->nCscClusters] = cscClusterNSegmentChamberMinus12[i];
+      MuonSystem->cscClusterNSegmentChamberMinus13[MuonSystem->nCscClusters] = cscClusterNSegmentChamberMinus13[i];
+      MuonSystem->cscClusterNSegmentChamberMinus21[MuonSystem->nCscClusters] = cscClusterNSegmentChamberMinus21[i];
+      MuonSystem->cscClusterNSegmentChamberMinus22[MuonSystem->nCscClusters] = cscClusterNSegmentChamberMinus22[i];
+      MuonSystem->cscClusterNSegmentChamberMinus31[MuonSystem->nCscClusters] = cscClusterNSegmentChamberMinus31[i];
+      MuonSystem->cscClusterNSegmentChamberMinus32[MuonSystem->nCscClusters] = cscClusterNSegmentChamberMinus32[i];
+      MuonSystem->cscClusterNSegmentChamberMinus41[MuonSystem->nCscClusters] = cscClusterNSegmentChamberMinus41[i];
+      MuonSystem->cscClusterNSegmentChamberMinus42[MuonSystem->nCscClusters] = cscClusterNSegmentChamberMinus42[i];
       bool me1112_veto = MuonSystem->cscClusterMe11Ratio[MuonSystem->nCscClusters] == 0.0 && MuonSystem->cscClusterMe12Ratio[MuonSystem->nCscClusters] == 0.0;
-      if (MuonSystem->cscClusterJetVeto[MuonSystem->nCscClusters] < JET_PT_CUT) MuonSystem->nCsc_JetVetoCluster0p4 += tmp.nCscSegments;
-      if (MuonSystem->cscClusterJetVeto[MuonSystem->nCscClusters] < JET_PT_CUT && MuonSystem->cscClusterMuonVeto[MuonSystem->nCscClusters] < MUON_PT_CUT) MuonSystem->nCsc_JetMuonVetoCluster0p4 += tmp.nCscSegments;
-      if (MuonSystem->cscClusterJetVeto[MuonSystem->nCscClusters] < JET_PT_CUT && me1112_veto) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= tmp.nCscSegments;
-      if (MuonSystem->cscClusterJetVeto[MuonSystem->nCscClusters] < JET_PT_CUT && MuonSystem->cscClusterMuonVeto[MuonSystem->nCscClusters] < MUON_PT_CUT && me1112_veto) MuonSystem->nCsc_JetMuonVetoCluster0p4_Me1112Veto+= tmp.nCscSegments;
+      // if (MuonSystem->cscClusterJetVetoPt[MuonSystem->nCscClusters] < JET_PT_CUT) MuonSystem->nCsc_JetVetoCluster0p4 += cscClusterSize[i];
+      // if (MuonSystem->cscClusterJetVetoPt[MuonSystem->nCscClusters] < JET_PT_CUT && MuonSystem->cscClusterMuonVetoPt[MuonSystem->nCscClusters] < MUON_PT_CUT) MuonSystem->nCsc_JetMuonVetoCluster0p4 += cscClusterSize[i];
+      // if (MuonSystem->cscClusterJetVetoPt[MuonSystem->nCscClusters] < JET_PT_CUT && me1112_veto) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= cscClusterSize[i];
+      // if (MuonSystem->cscClusterJetVetoPt[MuonSystem->nCscClusters] < JET_PT_CUT && MuonSystem->cscClusterMuonVetoPt[MuonSystem->nCscClusters] < MUON_PT_CUT && me1112_veto) MuonSystem->nCsc_JetMuonVetoCluster0p4_Me1112Veto+= cscClusterSize[i];
+      float min_deltaR = 15.;
+      int index = 999;
+      for(int j = 0; j < 2;j++)
+      {
 
-
+        double current_delta_r = RazorAnalyzer::deltaR(cscClusterEta[i], cscClusterPhi[i], gLLP_eta[j], gLLP_phi[j]);
+        if (current_delta_r < min_deltaR)
+        {
+          min_deltaR = current_delta_r;
+          index = j;
+        }
+      }
+      if (min_deltaR < 0.4)
+      {
+        MuonSystem->cscCluster_match_gLLP[i] = true;
+        MuonSystem->cscCluster_match_gLLP_minDeltaR[i] = min_deltaR;
+        MuonSystem->cscCluster_match_gLLP_index[i] = index;
+      }
 
       MuonSystem->nCscClusters++;
     }
-    if(MuonSystem->nCscClusters == 0) continue;
-    //****************************************
-    // CLUSTERING ALGORITHM WITH TIME CUT
-    //****************************************
+    /*if(nCscSegClusters == 0 && nCscRechitClusters == 0) continue;
 
-    points.clear();
-    for(int i = 0; i < nCsc; i++)
+    for(int i = 0; i < nCscSegClusters; i++)
     {
-      if(isData){
-        if (cscT[i] > -28.0) continue;
-        if (cscT[i] < -62.5) continue;
-      }
-      else{
-        if (cscT[i] > 22.0) continue;
-        if (cscT[i] < -12.5) continue;
-      }
+      MuonSystem->cscSegClusterX[MuonSystem->nCscSegClusters] =cscSegClusterX[i];
+      MuonSystem->cscSegClusterY[MuonSystem->nCscSegClusters] =cscSegClusterY[i];
+      MuonSystem->cscSegClusterZ[MuonSystem->nCscSegClusters] =cscSegClusterZ[i];
+      MuonSystem->cscSegClusterTime[MuonSystem->nCscSegClusters] =cscSegClusterTime[i];
+      MuonSystem->cscSegClusterEta[MuonSystem->nCscSegClusters] =cscSegClusterEta[i];
+      MuonSystem->cscSegClusterPhi[MuonSystem->nCscSegClusters] =cscSegClusterPhi[i];
+      MuonSystem->cscSegClusterMajorAxis[MuonSystem->nCscSegClusters] =cscSegClusterMajorAxis[i];
+      MuonSystem->cscSegClusterMinorAxis[MuonSystem->nCscSegClusters] =cscSegClusterMinorAxis[i];
+      MuonSystem->cscSegClusterXSpread[MuonSystem->nCscSegClusters] =cscSegClusterXSpread[i];
+      MuonSystem->cscSegClusterYSpread[MuonSystem->nCscSegClusters] =cscSegClusterYSpread[i];
+      MuonSystem->cscSegClusterZSpread[MuonSystem->nCscSegClusters] =cscSegClusterZSpread[i];
+      MuonSystem->cscSegClusterEtaPhiSpread[MuonSystem->nCscSegClusters] =cscSegClusterEtaPhiSpread[i];
+      MuonSystem->cscSegClusterEtaSpread[MuonSystem->nCscSegClusters] =cscSegClusterEtaSpread[i];
+      MuonSystem->cscSegClusterPhiSpread[MuonSystem->nCscSegClusters] = cscSegClusterPhiSpread[i];
+      MuonSystem->cscSegClusterTimeSpread[MuonSystem->nCscSegClusters] =cscSegClusterTimeSpread[i];
 
-      // for dbscan
-      // Point p;
-      // p.phi = MuonSystem->cscPhi[i];
-      // p.eta = MuonSystem->cscEta[i];
-      // p.x = MuonSystem->cscX[i];
-      // p.y = MuonSystem->cscY[i];
-      // p.z = MuonSystem->cscZ[i];
-      // p.t = MuonSystem->cscT[i];
-      // p.dirX = MuonSystem->cscDirectionX[i];
-      // p.dirY = MuonSystem->cscDirectionY[i];
-      // p.dirZ = MuonSystem->cscDirectionZ[i];
-      // p.station = MuonSystem->cscStation[i];
-      // p.chamber = MuonSystem->cscChamber[i];
-      // p.clusterID = UNCLASSIFIED;
-      // points.push_back(p);
-      Point p;
-      p.phi = cscPhi[i];
-      p.eta = cscEta[i];
-      p.x = cscX[i];
-      p.y = cscY[i];
-      p.z = cscZ[i];
-      p.t = cscT[i];
-      p.dirX = cscDirectionX[i];
-      p.dirY = cscDirectionY[i];
-      p.dirZ = cscDirectionZ[i];
-      p.station = cscStation(cscX[i],cscY[i],cscZ[i]);
-      p.chamber = cscChamber(cscX[i],cscY[i],cscZ[i]);
-      p.clusterID = UNCLASSIFIED;
-      points.push_back(p);
+      MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] =cscSegClusterJetVetoPt[i];
+      MuonSystem->cscSegClusterJetVetoE[MuonSystem->nCscSegClusters] =cscSegClusterJetVetoE[i];
+      MuonSystem->cscSegClusterMuonVetoPt[MuonSystem->nCscSegClusters] =cscSegClusterMuonVetoPt[i];
+      MuonSystem->cscSegClusterMuonVetoE[MuonSystem->nCscSegClusters] =cscSegClusterMuonVetoE[i];
 
+      MuonSystem->cscSegClusterSize[MuonSystem->nCscSegClusters] = cscSegClusterSize[i];
+      MuonSystem->cscSegClusterMaxChamber[MuonSystem->nCscSegClusters] =cscSegClusterMaxChamber[i];
+      MuonSystem->cscSegClusterMaxChamberRatio[MuonSystem->nCscSegClusters] = cscSegClusterMaxChamberRatio[i];
+      MuonSystem->cscSegClusterNChamber[MuonSystem->nCscSegClusters] =cscSegClusterNChamber[i];
+      MuonSystem->cscSegClusterMaxStation[MuonSystem->nCscSegClusters] = cscSegClusterMaxStation[i];
+      MuonSystem->cscSegClusterMaxStationRatio[MuonSystem->nCscSegClusters] = cscSegClusterMaxStationRatio[i];
+      MuonSystem->cscSegClusterNStation[MuonSystem->nCscSegClusters] = cscSegClusterNStation[i];
+      MuonSystem->cscSegClusterMe11Ratio[MuonSystem->nCscSegClusters] =cscSegClusterMe11Ratio[i];
+      MuonSystem->cscSegClusterMe12Ratio[MuonSystem->nCscSegClusters] = cscSegClusterMe12Ratio[i];
+
+      MuonSystem->cscSegClusterNSegmentChamberPlus11[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus11[i];
+      MuonSystem->cscSegClusterNSegmentChamberPlus12[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus12[i];
+      MuonSystem->cscSegClusterNSegmentChamberPlus13[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus13[i];
+      MuonSystem->cscSegClusterNSegmentChamberPlus21[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus21[i];
+      MuonSystem->cscSegClusterNSegmentChamberPlus22[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus22[i];
+      MuonSystem->cscSegClusterNSegmentChamberPlus31[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus31[i];
+      MuonSystem->cscSegClusterNSegmentChamberPlus32[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus32[i];
+      MuonSystem->cscSegClusterNSegmentChamberPlus41[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus41[i];
+      MuonSystem->cscSegClusterNSegmentChamberPlus42[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus42[i];
+
+      MuonSystem->cscSegClusterNSegmentChamberMinus11[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus11[i];
+      MuonSystem->cscSegClusterNSegmentChamberMinus12[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus12[i];
+      MuonSystem->cscSegClusterNSegmentChamberMinus13[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus13[i];
+      MuonSystem->cscSegClusterNSegmentChamberMinus21[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus21[i];
+      MuonSystem->cscSegClusterNSegmentChamberMinus22[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus22[i];
+      MuonSystem->cscSegClusterNSegmentChamberMinus31[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus31[i];
+      MuonSystem->cscSegClusterNSegmentChamberMinus32[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus32[i];
+      MuonSystem->cscSegClusterNSegmentChamberMinus41[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus41[i];
+      MuonSystem->cscSegClusterNSegmentChamberMinus42[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus42[i];
+      bool me1112_veto = MuonSystem->cscSegClusterMe11Ratio[MuonSystem->nCscSegClusters] == 0.0 && MuonSystem->cscSegClusterMe12Ratio[MuonSystem->nCscSegClusters] == 0.0;
+      if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT) MuonSystem->nCsc_JetVetoCluster0p4 += cscSegClusterSize[i];
+      if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT && MuonSystem->cscSegClusterMuonVetoPt[MuonSystem->nCscSegClusters] < MUON_PT_CUT) MuonSystem->nCsc_JetMuonVetoCluster0p4 += cscSegClusterSize[i];
+      if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT && me1112_veto) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= cscSegClusterSize[i];
+      if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT && MuonSystem->cscSegClusterMuonVetoPt[MuonSystem->nCscSegClusters] < MUON_PT_CUT && me1112_veto) MuonSystem->nCsc_JetMuonVetoCluster0p4_Me1112Veto+= cscSegClusterSize[i];
+
+
+      MuonSystem->nCscSegClusters++;
     }
 
-    //run db scan only with points in time
-    DBSCAN ds_it(min_point, epsilon, points);
-    ds_it.run();
-    ds_it.result();
-    ds_it.clusterMoments();
-    ds_it.vertexing();
-    ds_it.sort_clusters();
-    for ( auto &tmp : ds_it.CscCluster )
+    for(int i = 0; i < nCscRechitClusters; i++)
     {
-      MuonSystem->cscITClusterX[MuonSystem->nCscITClusters] =tmp.x;
-      MuonSystem->cscITClusterY[MuonSystem->nCscITClusters] =tmp.y;
-      MuonSystem->cscITClusterZ[MuonSystem->nCscITClusters] =tmp.z;
-      MuonSystem->cscITClusterTime[MuonSystem->nCscITClusters] = tmp.t;
-      MuonSystem->cscITClusterEta[MuonSystem->nCscITClusters] =tmp.eta;
-      MuonSystem->cscITClusterPhi[MuonSystem->nCscITClusters] = tmp.phi;
-      MuonSystem->cscITClusterMajorAxis[MuonSystem->nCscITClusters] =tmp.MajorAxis;
-      MuonSystem->cscITClusterMinorAxis[MuonSystem->nCscITClusters] =tmp.MinorAxis;
-      MuonSystem->cscITClusterXSpread[MuonSystem->nCscITClusters] =tmp.XSpread;
-      MuonSystem->cscITClusterYSpread[MuonSystem->nCscITClusters] =tmp.YSpread;
-      MuonSystem->cscITClusterZSpread[MuonSystem->nCscITClusters] =tmp.ZSpread;
-      MuonSystem->cscITClusterEtaPhiSpread[MuonSystem->nCscITClusters] =tmp.EtaPhiSpread;
-      MuonSystem->cscITClusterEtaSpread[MuonSystem->nCscITClusters] =tmp.EtaSpread;
-      MuonSystem->cscITClusterPhiSpread[MuonSystem->nCscITClusters] = tmp.PhiSpread;
-      MuonSystem->cscITClusterTimeSpread[MuonSystem->nCscITClusters] = tmp.TSpread;
-      MuonSystem->cscITClusterSize[MuonSystem->nCscITClusters] = tmp.nCscSegments;
+      MuonSystem->cscRechitClusterX[MuonSystem->nCscRechitClusters] =cscRechitClusterX[i];
+      MuonSystem->cscRechitClusterY[MuonSystem->nCscRechitClusters] =cscRechitClusterY[i];
+      MuonSystem->cscRechitClusterZ[MuonSystem->nCscRechitClusters] =cscRechitClusterZ[i];
+      MuonSystem->cscRechitClusterTime[MuonSystem->nCscRechitClusters] =cscRechitClusterTime[i];
+      MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters] =cscRechitClusterEta[i];
+      MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters] =cscRechitClusterPhi[i];
+      MuonSystem->cscRechitClusterMajorAxis[MuonSystem->nCscRechitClusters] =cscRechitClusterMajorAxis[i];
+      MuonSystem->cscRechitClusterMinorAxis[MuonSystem->nCscRechitClusters] =cscRechitClusterMinorAxis[i];
+      MuonSystem->cscRechitClusterXSpread[MuonSystem->nCscRechitClusters] =cscRechitClusterXSpread[i];
+      MuonSystem->cscRechitClusterYSpread[MuonSystem->nCscRechitClusters] =cscRechitClusterYSpread[i];
+      MuonSystem->cscRechitClusterZSpread[MuonSystem->nCscRechitClusters] =cscRechitClusterZSpread[i];
+      MuonSystem->cscRechitClusterEtaPhiSpread[MuonSystem->nCscRechitClusters] =cscRechitClusterEtaPhiSpread[i];
+      MuonSystem->cscRechitClusterEtaSpread[MuonSystem->nCscRechitClusters] =cscRechitClusterEtaSpread[i];
+      MuonSystem->cscRechitClusterPhiSpread[MuonSystem->nCscRechitClusters] = cscRechitClusterPhiSpread[i];
+      MuonSystem->cscRechitClusterTimeSpread[MuonSystem->nCscRechitClusters] =cscRechitClusterTimeSpread[i];
 
-      MuonSystem->cscITClusterMaxChamber[MuonSystem->nCscITClusters] = tmp.maxChamber;
-      MuonSystem->cscITClusterMaxChamberRatio[MuonSystem->nCscITClusters] = 1.0*tmp.maxChamberSegment/tmp.nCscSegments;
-      MuonSystem->cscITClusterNChamber[MuonSystem->nCscITClusters] = tmp.nChamber;
-      MuonSystem->cscITClusterMaxStation[MuonSystem->nCscITClusters] = tmp.maxStation;
-      MuonSystem->cscITClusterMaxStationRatio[MuonSystem->nCscITClusters] = 1.0*tmp.maxStationSegment/tmp.nCscSegments;
-      MuonSystem->cscITClusterNStation[MuonSystem->nCscITClusters] = tmp.nStation;
+      MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] =cscRechitClusterJetVetoPt[i];
+      MuonSystem->cscRechitClusterJetVetoE[MuonSystem->nCscRechitClusters] =cscRechitClusterJetVetoE[i];
+      MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] =cscRechitClusterMuonVetoPt[i];
+      MuonSystem->cscRechitClusterMuonVetoE[MuonSystem->nCscRechitClusters] =cscRechitClusterMuonVetoE[i];
 
-      MuonSystem->cscITClusterMe11Ratio[MuonSystem->nCscITClusters] = tmp.Me11Ratio;
-      MuonSystem->cscITClusterMe12Ratio[MuonSystem->nCscITClusters] = tmp.Me12Ratio;
-      MuonSystem->cscITClusterVertexR[MuonSystem->nCscITClusters] = tmp.vertex_r;
-      MuonSystem->cscITClusterVertexZ[MuonSystem->nCscITClusters] = tmp.vertex_z;
-      MuonSystem->cscITClusterVertexChi2[MuonSystem->nCscITClusters] = tmp.vertex_chi2;
-      MuonSystem->cscITClusterVertexDis[MuonSystem->nCscITClusters] = tmp.vertex_dis;
-      MuonSystem->cscITClusterVertexN[MuonSystem->nCscITClusters] = tmp.vertex_n;
-      MuonSystem->cscITClusterVertexN1[MuonSystem->nCscITClusters] = tmp.vertex_n1;
-      MuonSystem->cscITClusterVertexN5[MuonSystem->nCscITClusters] = tmp.vertex_n5;
-      MuonSystem->cscITClusterVertexN15[MuonSystem->nCscITClusters] = tmp.vertex_n15;
-      MuonSystem->cscITClusterVertexN20[MuonSystem->nCscITClusters] = tmp.vertex_n20;
-      MuonSystem->cscITClusterVertexN10[MuonSystem->nCscITClusters] = tmp.vertex_n10;
-      // for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
-      // {
-      //   MuonSystem->cscITLabels[j] = MuonSystem->nCscClusters;
-      // }
+      MuonSystem->cscRechitClusterSize[MuonSystem->nCscRechitClusters] = cscRechitClusterSize[i];
+      MuonSystem->cscRechitClusterMaxChamber[MuonSystem->nCscRechitClusters] =cscRechitClusterMaxChamber[i];
+      MuonSystem->cscRechitClusterMaxChamberRatio[MuonSystem->nCscRechitClusters] = cscRechitClusterMaxChamberRatio[i];
+      MuonSystem->cscRechitClusterNChamber[MuonSystem->nCscRechitClusters] =cscRechitClusterNChamber[i];
+      MuonSystem->cscRechitClusterMaxStation[MuonSystem->nCscRechitClusters] = cscRechitClusterMaxStation[i];
+      MuonSystem->cscRechitClusterMaxStationRatio[MuonSystem->nCscRechitClusters] = cscRechitClusterMaxStationRatio[i];
+      MuonSystem->cscRechitClusterNStation[MuonSystem->nCscRechitClusters] = cscRechitClusterNStation[i];
+      MuonSystem->cscRechitClusterMe11Ratio[MuonSystem->nCscRechitClusters] =cscRechitClusterMe11Ratio[i];
+      MuonSystem->cscRechitClusterMe12Ratio[MuonSystem->nCscRechitClusters] = cscRechitClusterMe12Ratio[i];
+
+      MuonSystem->cscRechitClusterNRechitChamberPlus11[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberPlus11[i];
+      MuonSystem->cscRechitClusterNRechitChamberPlus12[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberPlus12[i];
+      MuonSystem->cscRechitClusterNRechitChamberPlus13[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberPlus13[i];
+      MuonSystem->cscRechitClusterNRechitChamberPlus21[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberPlus21[i];
+      MuonSystem->cscRechitClusterNRechitChamberPlus22[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberPlus22[i];
+      MuonSystem->cscRechitClusterNRechitChamberPlus31[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberPlus31[i];
+      MuonSystem->cscRechitClusterNRechitChamberPlus32[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberPlus32[i];
+      MuonSystem->cscRechitClusterNRechitChamberPlus41[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberPlus41[i];
+      MuonSystem->cscRechitClusterNRechitChamberPlus42[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberPlus42[i];
+
+      MuonSystem->cscRechitClusterNRechitChamberMinus11[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus11[i];
+      MuonSystem->cscRechitClusterNRechitChamberMinus12[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus12[i];
+      MuonSystem->cscRechitClusterNRechitChamberMinus13[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus13[i];
+      MuonSystem->cscRechitClusterNRechitChamberMinus21[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus21[i];
+      MuonSystem->cscRechitClusterNRechitChamberMinus22[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus22[i];
+      MuonSystem->cscRechitClusterNRechitChamberMinus31[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus31[i];
+      MuonSystem->cscRechitClusterNRechitChamberMinus32[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus32[i];
+      MuonSystem->cscRechitClusterNRechitChamberMinus41[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus41[i];
+      MuonSystem->cscRechitClusterNRechitChamberMinus42[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus42[i];
+      bool me1112_veto = MuonSystem->cscRechitClusterMe11Ratio[MuonSystem->nCscRechitClusters] == 0.0 && MuonSystem->cscRechitClusterMe12Ratio[MuonSystem->nCscRechitClusters] == 0.0;
+      if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT) MuonSystem->nCsc_JetVetoCluster0p4 += cscRechitClusterSize[i];
+      if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT && MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] < MUON_PT_CUT) MuonSystem->nCsc_JetMuonVetoCluster0p4 += cscRechitClusterSize[i];
+      if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT && me1112_veto) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= cscRechitClusterSize[i];
+      if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT && MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] < MUON_PT_CUT && me1112_veto) MuonSystem->nCsc_JetMuonVetoCluster0p4_Me1112Veto+= cscRechitClusterSize[i];
 
 
-      //Jet veto / muon veto
-      MuonSystem->cscITClusterJetVeto[MuonSystem->nCscITClusters] = 0.0;
-      MuonSystem->cscITClusterCaloJetVeto[MuonSystem->nCscITClusters] = 0.0;
-      MuonSystem->cscITClusterMuonVeto[MuonSystem->nCscITClusters] = 0.0;
+      MuonSystem->nCscRechitClusters++;
+    }*/
 
-      for (int j = 0; j < nJets; j++)
-      {
-        // if (jetPt[j]<JET_PT_CUT) continue;
-        if (abs(jetEta[j])>3) continue;
-        if (RazorAnalyzer::deltaR(tmp.eta, tmp.phi, jetEta[j],jetPhi[j]) < 0.4 && jetPt[j] > MuonSystem->cscITClusterJetVeto[MuonSystem->nCscITClusters]){
-          MuonSystem->cscITClusterJetVeto[MuonSystem->nCscITClusters]  = jetPt[j];
-          MuonSystem->cscITClusterJetVetoE[MuonSystem->nCscITClusters]  = jetE[j];
-
-        }
-      }
-      for (int j = 0; j < nCaloJets; j++)
-      {
-        // if (calojetPt[j]<JET_PT_CUT) continue;
-        if (abs(calojetEta[j])>3) continue;
-        if (RazorAnalyzer::deltaR(tmp.eta, tmp.phi, calojetEta[j],calojetPhi[j]) < 0.4 && calojetPt[j] > MuonSystem->cscITClusterCaloJetVeto[MuonSystem->nCscITClusters])
-        {
-          MuonSystem->cscITClusterCaloJetVeto[MuonSystem->nCscITClusters] = calojetPt[j];
-          MuonSystem->cscITClusterCaloJetVetoE[MuonSystem->nCscITClusters] = calojetE[j];
-
-        }
-      }
-      for (int j = 0; j < nMuons; j++)
-      {
-        // if (muonPt[j]<MUON_PT_CUT) continue;
-        if (abs(muonEta[j])>3) continue;
-        if (RazorAnalyzer::deltaR(tmp.eta, tmp.phi, muonEta[j],muonPhi[j]) < 0.4 && muonPt[j] > MuonSystem->cscITClusterMuonVeto[MuonSystem->nCscITClusters])
-        {
-          MuonSystem->cscITClusterMuonVeto[MuonSystem->nCscITClusters] = muonPt[j];
-          MuonSystem->cscITClusterMuonVetoE[MuonSystem->nCscITClusters] = muonE[j];
-
-        }
-      }
-      bool me1112_veto = MuonSystem->cscITClusterMe11Ratio[MuonSystem->nCscITClusters] == 0.0 && MuonSystem->cscITClusterMe12Ratio[MuonSystem->nCscITClusters] == 0.0;
-      if (MuonSystem->cscITClusterJetVeto[MuonSystem->nCscITClusters] < JET_PT_CUT) MuonSystem->nCsc_JetVetoITCluster0p4 += tmp.nCscSegments;
-      if (MuonSystem->cscITClusterJetVeto[MuonSystem->nCscITClusters] < JET_PT_CUT && MuonSystem->cscITClusterMuonVeto[MuonSystem->nCscITClusters] < MUON_PT_CUT) MuonSystem->nCsc_JetMuonVetoITCluster0p4 += tmp.nCscSegments;
-      if (MuonSystem->cscITClusterJetVeto[MuonSystem->nCscITClusters] < JET_PT_CUT && me1112_veto) MuonSystem->nCsc_JetVetoITCluster0p4_Me1112Veto+= tmp.nCscSegments;
-      if (MuonSystem->cscITClusterJetVeto[MuonSystem->nCscITClusters] < JET_PT_CUT && MuonSystem->cscITClusterMuonVeto[MuonSystem->nCscITClusters] < MUON_PT_CUT && me1112_veto) MuonSystem->nCsc_JetMuonVetoITCluster0p4_Me1112Veto+= tmp.nCscSegments;
-
-      MuonSystem->nCscITClusters++;
-    }
-    //match cscITClusters with cscClusters
-    for(int i = 0; i < MuonSystem->nCscITClusters; i++)
-    {
-     float minDeltaR = 100000;
-     for(int j = 0;j < MuonSystem->nCscClusters;j++)
-     {
-       float deltaR_temp = RazorAnalyzer::deltaR(MuonSystem->cscITClusterEta[i],MuonSystem->cscITClusterPhi[i],MuonSystem->cscClusterEta[j],MuonSystem->cscClusterPhi[j]);
-       if ( deltaR_temp < minDeltaR)
-       {
-         minDeltaR = deltaR_temp;
-         MuonSystem->cscITCluster_match_cscCluster_index[i] = j;
-         MuonSystem->cscITCluster_cscCluster_SizeRatio[i] = 1.0* MuonSystem->cscITClusterSize[i]/MuonSystem->cscClusterSize[j];
-       }
-     }
-   }
     MuonSystem->tree_->Fill();
   }
 

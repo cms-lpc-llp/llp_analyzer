@@ -60,6 +60,24 @@ WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythi
 WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
 WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8	8.4E-01*0.324
 
+# https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt13TeV#ppWH_Total_Cross_Section_with_ap
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8		0.08946 
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8 	0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-40_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-40_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-40_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-40_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-40_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8		0.08946
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8		0.08946
 #13 TeV Spring 15 MC
 QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8                            2022100000.0
 QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                        2.486e+08

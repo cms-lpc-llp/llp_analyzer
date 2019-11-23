@@ -10,21 +10,35 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 mode=bkg
-inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/V1p7/MC_Fall17/v12/v7/bkg/wH/
+year=16
+
+if [ $year == '16' ]
+then
+	year=MC_Summer16
+	echo "year ${year}"
+	samples='WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8'
+elif  [ $year == '17' ] 
+then
+	year=MC_Fall17
+	echo "year ${year}"
+	samples='WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8'
+elif  [ $year == '18' ]
+then
+	year=MC_Autumn18
+	echo "year ${year}"
+	samples='WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8'
+else
+	echo "year invalid"
+	samples=''
+fi
+
+samples=DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
+inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p8/${year}/v2/v1/bkg/wH/
 outputDir=${inputDir}normalized
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 
-#WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
-#WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
-#WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
-#WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
-#WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
-#WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
-#WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 \
-#WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 \
-#WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8
-for sample in \
-WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+
+for sample in ${samples}
 do
 	echo "Sample " ${sample}
 	analyzer=llp_MuonSystem
@@ -50,7 +64,7 @@ do
 	echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
 	echo '+SingularityBindCVMFS = True' >> ${jdl_file}
 	echo "run_as_owner = True" >> ${jdl_file}
-	echo "x509userproxy = /data/christiw/x509_proxy" >> ${jdl_file}
+	echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}
 	echo "should_transfer_files = YES" >> ${jdl_file}
 	echo "when_to_transfer_output = ON_EXIT" >> ${jdl_file}
 	echo "Queue 1" >> ${jdl_file}

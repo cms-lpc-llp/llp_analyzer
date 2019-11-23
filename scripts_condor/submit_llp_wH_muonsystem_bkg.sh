@@ -10,25 +10,42 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
+
+year=16
+
+if [ $year == '16' ]
+then
+        year=MC_Summer16
+        echo "year ${year}"
+        samples='WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8'
+	filesPerJob=10
+elif  [ $year == '17' ]
+then
+        year=MC_Fall17
+        echo "year ${year}"
+        samples='WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8'
+	filesPerJob=5
+elif  [ $year == '18' ]
+then
+        year=MC_Autumn18
+        echo "year ${year}"
+        samples='WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8'
+	filesPerJob=5
+else
+        echo "year invalid"
+        samples=''
+fi
+
+samples=DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
+samples=WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 filesPerJob=10
-
-#WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8 \
-#WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
-#WJetsToLNu_Pt-250To400_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
-#WJetsToLNu_Pt-400To600_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
-#WJetsToLNu_Pt-600ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
-
-#WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8
-#WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
-for sample in \
-WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+for sample in ${samples}
 do
 	echo "Sample " ${sample}
-	#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
-	version=/V1p7/MC_Fall17/v12/
-	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/${version}/v7/bkg/wH/${sample}
-	inputfileDir=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/
-	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
+	version=/V1p9/${year}/v1/
+	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v1/bkg/wH/${sample}
+	inputfileDir=/src/llp_analyzer/lists/llpntuple/${version}/sixie/
+	inputfilelist=/src/llp_analyzer/lists/llpntuple/${version}/sixie/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
         maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 	mod=`python -c "print int($nfiles.0%$filesPerJob)"`
@@ -36,7 +53,7 @@ do
         then
                 maxjob=`python -c "print int($nfiles.0/$filesPerJob)-1"`
         fi
-	analyzer=llp_MuonSystem
+	analyzer=llp_vH_MuonSystem
 	analyzerTag=Razor2016_80X
 	rm -f submit/${analyzer}_${sample}_Job*.jdl
 	rm -f log/${analyzer}_${sample}_Job*
@@ -61,7 +78,7 @@ do
 
 		#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
 		echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
-		echo "RequestMemory = 4000" >> ${jdl_file}
+		echo "RequestMemory = 2000" >> ${jdl_file}
 		echo "RequestCpus = 1" >> ${jdl_file}
 		echo "RequestDisk = 4" >> ${jdl_file}
 		echo "+RunAsOwner = True" >> ${jdl_file}
@@ -70,7 +87,7 @@ do
 		echo '+SingularityBindCVMFS = True' >> ${jdl_file}
 #		echo "transfer_input_files = tarball/${sample}.tar" >> ${jdl_file}
 		echo "run_as_owner = True" >> ${jdl_file}
-		echo "x509userproxy = /data/christiw/x509_proxy" >> ${jdl_file}
+		echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}
 		echo "should_transfer_files = YES" >> ${jdl_file}
 		echo "when_to_transfer_output = ON_EXIT" >> ${jdl_file}
 		echo "Queue 1" >> ${jdl_file}
