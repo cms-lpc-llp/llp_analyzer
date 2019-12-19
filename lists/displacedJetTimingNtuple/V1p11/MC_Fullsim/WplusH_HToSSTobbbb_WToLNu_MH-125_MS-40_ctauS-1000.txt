@@ -1,0 +1,3 @@
+/mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/fullsim/MSSM-2d-prod/x1n2-n1-wlv-hbb/x1n2-n1-wlv-hbb_mh200_pl1000_ev100000/ntuple_RunIIFall17_WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-1000_fullsim_signal_aod_0Of3.root
+/mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/fullsim/MSSM-2d-prod/x1n2-n1-wlv-hbb/x1n2-n1-wlv-hbb_mh200_pl1000_ev100000/ntuple_RunIIFall17_WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-1000_fullsim_signal_aod_1Of3.root
+/mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/fullsim/MSSM-2d-prod/x1n2-n1-wlv-hbb/x1n2-n1-wlv-hbb_mh200_pl1000_ev100000/ntuple_RunIIFall17_WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-1000_fullsim_signal_aod_2Of3.root
