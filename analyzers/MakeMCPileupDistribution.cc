@@ -31,13 +31,14 @@ void MakeMCPileupDistribution::Analyze(bool isData, int option, string outputFil
     outputFileName = "MCPileupDistribution.root";
   }
   //---------------------------
-  
+
   TFile outFile(outputFileName.c_str(), "RECREATE");
 
   string Label = label;
   if (label != "") Label = "_"+label;
-
   TH1F* histPUMean =  new TH1F( ("PUMean"+Label).c_str(),";nPUMean;Number of Events", 200, -0.5, 199.5);
+
+  // TH1F* histPUMean =  new TH1F( ("PUMean"+Label).c_str(),";nPUMean;Number of Events", 200, 0, 200);
 
   //begin loop
   if (fChain == 0) return;

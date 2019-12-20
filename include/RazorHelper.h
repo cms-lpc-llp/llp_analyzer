@@ -159,6 +159,7 @@ class RazorHelper {
         void loadTag_Razor2017_92X(); // Configuration for 2017 92X
         void loadTag_Razor2017_17Nov2017Rereco(); // Configuration for 2017 92X
         void loadTag_Razor2017_31Mar2018Rereco(); // Configuration for 2017 94X
+        void loadTag_Razor2018_17SeptEarlyReReco();
         void loadTag_Null(); // Default when tag is not provided
         void loadCMSSWPath();
         double lookupPtEtaScaleFactor(TH2D *hist, double pt, double eta, double ptmin=10.01, double ptmax=199.9, bool useAbsEta=true);
@@ -261,6 +262,12 @@ class RazorHelper {
         void loadPhoton_Razor2017_31Mar2018Rereco();
         void loadLepton_Razor2017_31Mar2018Rereco();
         void loadJECs_Razor2017_31Mar2018Rereco();
+
+        //for Razor Razor2018
+        void loadPileup_Razor2018_17SeptEarlyReReco();
+        // void loadTrigger_Razor2018_17SeptEarlyReReco();
+        // void loadLepton_Razor2018();
+        void loadJECs_Razor2018_17SeptEarlyReReco();
 
         // member data
         std::string tag;

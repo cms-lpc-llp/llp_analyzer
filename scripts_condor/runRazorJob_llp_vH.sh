@@ -10,15 +10,18 @@ isData=$3
 option=$4
 filePerJob=$5
 jobnumber=$6
-outputfile=$7
+maxjob=$7
+sample=${inputfilelist##*/}
+sample=${sample%.txt}
+outputfile=${sample}_Job${jobnumber}_of_${maxjob}.root
 outputDirectory=$8
-code_dir_suffix=$9
+analyzerTag=$9
 CMSSW_BASE=${10}
 homeDir=${11}
 currentDir=`pwd`
 #user=${homeDir#*/data/}
 user=${homeDir#*/storage/user/}
-runDir=${currentDir}/${user}_${code_dir_suffix}/
+runDir=${currentDir}/${user}_${analyzerTag}/
 
 rm -rf ${runDir}
 mkdir -p ${runDir}
@@ -42,14 +45,6 @@ then
 	if [ -f ${CMSSW_BASE}/src/llp_analyzer/RazorRun_T2 ]
 	then
 		cp $CMSSW_BASE/src/llp_analyzer/RazorRun_T2 ./
-		mkdir -p JEC
-		cp -r $CMSSW_BASE/src/llp_analyzer/data/JEC/Summer16_23Sep2016V3_MC/ JEC/Summer16_23Sep2016V3_MC
-		if [ -d JEC/Summer16_23Sep2016V3_MC ]
-		then
-			echo "copied JEC parameters"
-		else
-			echo "didn't copy JEC parameters"
-		fi	
 		#get grid proxy
 		export X509_USER_PROXY=${homeDir}x509_proxy
 		echo "${homeDir}x509_proxy"
@@ -65,8 +60,8 @@ then
 		echo "************************************"
 		echo ""
 		echo " "; echo "Starting razor run job now"; echo " ";
-		echo ./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile}
-		./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${label}
+		echo ./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${analyzerTag}
+		./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${analyzerTag}
 		echo ${outputfile}
 		echo ${outputDirectory}
 

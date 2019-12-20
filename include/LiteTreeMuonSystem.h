@@ -10,6 +10,7 @@
 #define N_CSC_CUT 20
 #define JET_PT_CUT 10
 #define MUON_PT_CUT 20
+#define N_MAX_GPARTICLES 2000
 
 #include <iostream>
 #include <string>
@@ -51,10 +52,34 @@ public:
   UInt_t  category;
   UInt_t  npv, npu;
   float rho, weight;
-  float met, metPhi;
+  float pileupWeight, pileupWeightUp, pileupWeightDown;
+  float met, metPhi, jetMet_dPhi, jetMet_dPhiMin,jetMet_dPhiMin4, metJESUp, metJESDown;
   int gLepId;
   float gLepPt, gLepPhi, gLepEta, gLepE;
+  int nGenParticle;
+  int gParticleId[N_MAX_GPARTICLES];
+  int gParticleStatus[N_MAX_GPARTICLES];
+  int gParticleMotherId[N_MAX_GPARTICLES];
+  float gParticlePt[N_MAX_GPARTICLES];
+  float gParticleEta[N_MAX_GPARTICLES];
+  float gParticlePhi[N_MAX_GPARTICLES];
+  float gParticleE[N_MAX_GPARTICLES];
 
+  float genMetPtTrue;
+  float genMetPhiTrue;
+  float genMetPtCalo;
+  float genMetPhiCalo;
+
+
+  int nGenJets;
+  float genJetE[N_MAX_GPARTICLES];
+  float genJetPt[N_MAX_GPARTICLES];
+  float genJetEta[N_MAX_GPARTICLES];
+  float genJetPhi[N_MAX_GPARTICLES];
+
+
+
+  float genJetMET[N_MAX_GPARTICLES];
 
   //csc
   int           nCsc;
@@ -141,8 +166,8 @@ public:
     int           cscClusterNSegmentChamberMinus32[N_MAX_CSC];
     int           cscClusterNSegmentChamberMinus41[N_MAX_CSC];
     int           cscClusterNSegmentChamberMinus42[N_MAX_CSC];
-/*
 
+/*
   int           nCscSegClusters;
   float         cscSegClusterX[N_MAX_CSC];   //[nCsc]
   float         cscSegClusterY[N_MAX_CSC];   //[nCsc]
@@ -207,9 +232,12 @@ public:
   int           nCsc_JetMuonVetoCluster0p4;
   int           nCsc_JetVetoCluster0p4_Me1112Veto;
   int           nCsc_JetMuonVetoCluster0p4_Me1112Veto;
-
+  */
+  int           nCsc_JetMuonVetoRechitCluster0p4_Me1112Veto;
   int           nCscRechitClusters;
-
+  bool          cscRechitCluster_match_gLLP[N_MAX_CSC];
+  int           cscRechitCluster_match_gLLP_index[N_MAX_CSC];
+  float         cscRechitCluster_match_gLLP_minDeltaR[N_MAX_CSC];
   float         cscRechitClusterX[N_MAX_CSC];   //[nCsc]
   float         cscRechitClusterY[N_MAX_CSC];   //[nCsc]
   float         cscRechitClusterZ[N_MAX_CSC];   //[nCsc]
@@ -268,7 +296,7 @@ public:
   int           cscRechitClusterNRechitChamberMinus31[N_MAX_CSC];
   int           cscRechitClusterNRechitChamberMinus32[N_MAX_CSC];
   int           cscRechitClusterNRechitChamberMinus41[N_MAX_CSC];
-  int           cscRechitClusterNRechitChamberMinus42[N_MAX_CSC];*/
+  int           cscRechitClusterNRechitChamberMinus42[N_MAX_CSC];
   // //csc intime cluster
   // int           nCscITClusters;
   // float         cscITClusterJetVeto[N_MAX_CSC];   //[nCsc]
@@ -331,6 +359,10 @@ public:
   float gLLP_decay_vertex_x[2];
   float gLLP_decay_vertex_y[2];
   float gLLP_decay_vertex_z[2];
+  float gHiggsPt;
+  float gHiggsEta;
+  float gHiggsPhi;
+  float gHiggsE;
 
   //leptons
   int nLeptons;
@@ -368,6 +400,10 @@ public:
   float jetNeutralEMEnergyFraction[N_MAX_JETS];
   float jetChargedHadronEnergyFraction[N_MAX_JETS];
   float jetNeutralHadronEnergyFraction[N_MAX_JETS];
+  float jet_match_genJet_minDeltaR[N_MAX_JETS];
+  int jet_match_genJet_index[N_MAX_JETS];
+  float jet_match_genJet_pt[N_MAX_JETS];
+
   // bool jetLoosePassId[N_MAX_JETS];
   bool jetPassId[N_MAX_JETS];
   // bool jetTightPassId[N_MAX_JETS];

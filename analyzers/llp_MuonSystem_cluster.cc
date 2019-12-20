@@ -657,7 +657,7 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
     ds.vertexing();
     ds.sort_clusters();
 
-    for ( auto &tmp : ds.CscCluster )
+    /*for ( auto &tmp : ds.CscCluster )
     {
       MuonSystem->cscClusterX[MuonSystem->nCscClusters] =tmp.x;
       MuonSystem->cscClusterY[MuonSystem->nCscClusters] =tmp.y;
@@ -747,6 +747,7 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
       MuonSystem->nCscClusters++;
     }
     if(MuonSystem->nCscClusters == 0) continue;
+    */
     //****************************************
     // CLUSTERING ALGORITHM WITH TIME CUT
     //****************************************

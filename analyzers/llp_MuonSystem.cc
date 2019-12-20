@@ -180,23 +180,29 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
   if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/llp_analyzer/data/JEC/";
   if(cmsswPath != NULL and option == 1) pathname = "JEC/"; //run on condor if option == 1
 
-  cout << "Getting JEC parameters from " << pathname << endl;
+  // cout << "Getting JEC parameters from " << pathname << endl;
+  //
+  // std::vector<JetCorrectorParameters> correctionParameters;
+  // correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt", pathname.c_str())));
+  // correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt", pathname.c_str())));
+  // correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt", pathname.c_str())));
+  //
+  // FactorizedJetCorrector *JetCorrector = new FactorizedJetCorrector(correctionParameters);
 
-  std::vector<JetCorrectorParameters> correctionParameters;
-  correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt", pathname.c_str())));
-  correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt", pathname.c_str())));
-  correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt", pathname.c_str())));
 
-  FactorizedJetCorrector *JetCorrector = new FactorizedJetCorrector(correctionParameters);
+
 
   //--------------------------------
   //Initialize helper
   //--------------------------------
   RazorHelper *helper = 0;
-  if (analysisTag == "Razor2015_76X") helper = new RazorHelper("Razor2015_76X", isData, false);
-  else if (analysisTag == "Razor2016_MoriondRereco") helper = new RazorHelper("Razor2016_MoriondRereco", isData, false);
+  if (analysisTag == "Razor2018_17SeptEarlyReReco") helper = new RazorHelper("Razor2018_17SeptEarlyReReco", isData, false);
   else helper = new RazorHelper(analysisTag, isData, false);
 
+
+
+  std::vector<FactorizedJetCorrector*> JetCorrector = helper->getJetCorrector();
+  std::vector<std::pair<int,int> > JetCorrectorIOV = helper->getJetCorrectionsIOV();
   //----------
   //pu histo
   //----------
@@ -260,60 +266,104 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     MuonSystem->evtNum = eventNum;
 
     bool wzFlag = false;
-    for (int i=0; i < nGenParticle; i++)
+    // cout<<"ngenparticles: "<<nGenParticle<<endl;
+    if (!isData)
     {
-
-      if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
-      { // choosing only the W->munu events
-        wzFlag = true;
-        MuonSystem->gLepId = gParticleId[i];
-        MuonSystem->gLepPt = gParticlePt[i];
-        MuonSystem->gLepEta = gParticleEta[i];
-        MuonSystem->gLepE = gParticleE[i];
-        MuonSystem->gLepPhi = gParticlePhi[i];
-      }
-      else if (abs(gParticleId[i]) == 15 && gParticleStatus[i] == 2 && abs(gParticleMotherId[i]) == wzId){
-        wzFlag = true;
-        MuonSystem->gLepId = gParticleId[i];
-        MuonSystem->gLepPt = gParticlePt[i];
-        MuonSystem->gLepEta = gParticleEta[i];
-        MuonSystem->gLepE = gParticleE[i];
-        MuonSystem->gLepPhi = gParticlePhi[i];
-      }
-
-    }
-    for(int i = 0; i < 2;i++)
-    {
-      MuonSystem->gLLP_eta[i] = gLLP_eta[i];
-      MuonSystem->gLLP_phi[i] = gLLP_phi[i];
-      MuonSystem->gLLP_decay_vertex_r[i] = sqrt(gLLP_decay_vertex_x[i]*gLLP_decay_vertex_x[i]+gLLP_decay_vertex_y[i]*gLLP_decay_vertex_y[i]);
-      MuonSystem->gLLP_decay_vertex_x[i] = gLLP_decay_vertex_x[i];
-      MuonSystem->gLLP_decay_vertex_y[i] = gLLP_decay_vertex_y[i];
-      MuonSystem->gLLP_decay_vertex_z[i] = gLLP_decay_vertex_z[i];
-      float beta = gLLP_beta[i];
-      float gLLP_decay_vertex = sqrt(pow(MuonSystem->gLLP_decay_vertex_r[i], 2) + pow(MuonSystem->gLLP_decay_vertex_z[i],2));
-      float gamma = 1.0/sqrt(1-beta*beta);
-      MuonSystem->gLLP_ctau[i] = gLLP_decay_vertex/(beta * gamma);
-      MuonSystem->gLLP_beta[i] = gLLP_beta[i];
-
-      if (abs(MuonSystem->gLLP_eta[i]) < 2.4 && abs(MuonSystem->gLLP_eta[i]) > 0.9
-        && abs(MuonSystem->gLLP_decay_vertex_z[i])<1100 && abs(MuonSystem->gLLP_decay_vertex_z[i])>568
-        && MuonSystem->gLLP_decay_vertex_r[i] < 695.5) MuonSystem->gLLP_csc[i] = true;
-
-
-    }
-    for (int i=0; i < nBunchXing; i++)
-    {
-      if (BunchXing[i] == 0)
+      for (int i=0; i < nGenParticle; i++)
       {
-        MuonSystem->npu = nPUmean[i];
+
+        if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
+        { // choosing only the W->munu events
+          wzFlag = true;
+          MuonSystem->gLepId = gParticleId[i];
+          MuonSystem->gLepPt = gParticlePt[i];
+          MuonSystem->gLepEta = gParticleEta[i];
+          MuonSystem->gLepE = gParticleE[i];
+          MuonSystem->gLepPhi = gParticlePhi[i];
+        }
+        else if (abs(gParticleId[i]) == 15 && gParticleStatus[i] == 2 && abs(gParticleMotherId[i]) == wzId){
+          wzFlag = true;
+          MuonSystem->gLepId = gParticleId[i];
+          MuonSystem->gLepPt = gParticlePt[i];
+          MuonSystem->gLepEta = gParticleEta[i];
+          MuonSystem->gLepE = gParticleE[i];
+          MuonSystem->gLepPhi = gParticlePhi[i];
+        }
+        if (abs(gParticleId[i])== 25)
+        {
+          MuonSystem->gHiggsPt = gParticlePt[i];
+          MuonSystem->gHiggsEta = gParticleEta[i];
+          MuonSystem->gHiggsPhi = gParticlePhi[i];
+          MuonSystem->gHiggsE = gParticleE[i];
+
+        }
+        MuonSystem->gParticleStatus[MuonSystem->nGenParticle] = gParticleStatus[i];
+        MuonSystem->gParticleId[MuonSystem->nGenParticle]  = gParticleId[i];
+        MuonSystem->gParticleMotherId[MuonSystem->nGenParticle]  = gParticleMotherId[i];
+        MuonSystem->gParticlePt[MuonSystem->nGenParticle]  = gParticlePt[i];
+        MuonSystem->gParticleEta[MuonSystem->nGenParticle]  = gParticleEta[i];
+        MuonSystem->gParticlePhi[MuonSystem->nGenParticle]  = gParticlePhi[i];
+        MuonSystem->gParticleE[MuonSystem->nGenParticle]  = gParticleE[i];
+        MuonSystem->nGenParticle++;
+        // cout<<"genparticles: "<<MuonSystem->nGenParticle<<endl;
+
+
       }
+      // cout<<nGenJets<<endl;
+      // MuonSystem->nGenJets = 0;
+      for(int i=0; i < nGenJets; i++)
+      {
+        // cout<<genJetE[i]<<","<<MuonSystem->nGenJets<<","<<nGenJets<<endl;
+        MuonSystem->genJetE[MuonSystem->nGenJets] = genJetE[i];
+        MuonSystem->genJetPt[MuonSystem->nGenJets] = genJetPt[i];
+        MuonSystem->genJetEta[MuonSystem->nGenJets] = genJetEta[i];
+        MuonSystem->genJetPhi[MuonSystem->nGenJets] = genJetPhi[i];
+        MuonSystem->genJetMET[MuonSystem->nGenJets] = genJetMET[i];
+        MuonSystem->nGenJets++;
+      }
+      MuonSystem->genMetPtTrue = genMetPtTrue;
+      MuonSystem->genMetPhiTrue = genMetPhiTrue;
+      MuonSystem->genMetPtCalo = genMetPtCalo;
+      MuonSystem->genMetPhiCalo = genMetPhiCalo;
+      for(int i = 0; i < 2;i++)
+      {
+        MuonSystem->gLLP_eta[i] = gLLP_eta[i];
+        MuonSystem->gLLP_phi[i] = gLLP_phi[i];
+        MuonSystem->gLLP_decay_vertex_r[i] = sqrt(gLLP_decay_vertex_x[i]*gLLP_decay_vertex_x[i]+gLLP_decay_vertex_y[i]*gLLP_decay_vertex_y[i]);
+        MuonSystem->gLLP_decay_vertex_x[i] = gLLP_decay_vertex_x[i];
+        MuonSystem->gLLP_decay_vertex_y[i] = gLLP_decay_vertex_y[i];
+        MuonSystem->gLLP_decay_vertex_z[i] = gLLP_decay_vertex_z[i];
+        float beta = gLLP_beta[i];
+        float gLLP_decay_vertex = sqrt(pow(MuonSystem->gLLP_decay_vertex_r[i], 2) + pow(MuonSystem->gLLP_decay_vertex_z[i],2));
+        float gamma = 1.0/sqrt(1-beta*beta);
+        MuonSystem->gLLP_ctau[i] = gLLP_decay_vertex/(beta * gamma);
+        MuonSystem->gLLP_beta[i] = gLLP_beta[i];
+
+        if (abs(MuonSystem->gLLP_eta[i]) < 2.4 && abs(MuonSystem->gLLP_eta[i]) > 0.9
+          && abs(MuonSystem->gLLP_decay_vertex_z[i])<1100 && abs(MuonSystem->gLLP_decay_vertex_z[i])>568
+          && MuonSystem->gLLP_decay_vertex_r[i] < 695.5) MuonSystem->gLLP_csc[i] = true;
+
+
+      }
+      for (int i=0; i < nBunchXing; i++)
+      {
+        if (BunchXing[i] == 0)
+        {
+          MuonSystem->npu = nPUmean[i];
+        }
+      }
+      MuonSystem->pileupWeight = helper->getPileupWeight(MuonSystem->npu);
+      MuonSystem->pileupWeightUp = helper->getPileupWeightUp(MuonSystem->npu) / MuonSystem->pileupWeight;
+      MuonSystem->pileupWeightDown = helper->getPileupWeightDown(MuonSystem->npu) / MuonSystem->pileupWeight;
     }
+
     //get NPU
     MuonSystem->npv = nPV;
     MuonSystem->rho = fixedGridRhoFastjetAll;
     MuonSystem->met = metType1Pt;
     MuonSystem->metPhi = metType1Phi;
+    MuonSystem->metJESUp = MuonSystem->met;
+    MuonSystem->metJESDown = MuonSystem->met;
 
     //Triggers
     for(int i = 0; i < NTriggersMAX; i++){
@@ -478,7 +528,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
   //Select Jets
   //-----------------------------------------------
 
-  /*std::vector<jets> Jets;
+  std::vector<jets> Jets;
   for(int i = 0; i < nJets; i++)
   {
 
@@ -495,32 +545,37 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //------------------------------------------------------------
     //Apply Jet Energy and Resolution Corrections
     //------------------------------------------------------------
-    double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
-       fixedGridRhoFastjetAll, jetJetArea[i] , JetCorrector);
-
-    TLorentzVector thisJet = makeTLorentzVector( jetPt[i]*JEC, jetEta[i], jetPhi[i], jetE[i]*JEC );
+    // double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
+       // fixedGridRhoFastjetAll, jetJetArea[i] , JetCorrector);
+   double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
+ 						   fixedGridRhoFastjetAll, jetJetArea[i],
+ 						   runNum,
+ 						   JetCorrectorIOV,JetCorrector);
+    double jetCorrPt = jetPt[i]*JEC;
+    double jetCorrE = jetE[i]*JEC;
+    // cout<<"corrected pt: "<<jetCorrPt<<", "<<"eta: "<<jetEta[i]<<endl;
+    TLorentzVector thisJet = makeTLorentzVector( jetCorrPt, jetEta[i], jetPhi[i], jetCorrE );
 
     if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
     if( fabs( thisJet.Eta() ) >= 3.0 ) continue;
     if ( !jetPassIDLoose[i] ) continue;
-    // if (!(jetRechitE[i] > 0.0)) continue;
-
-      // std::cout <<jetRechitT[i] << "," << jetRechitE[i] <<  "," << jetNRechits[i] << std::endl;
-
 
     jets tmpJet;
     tmpJet.jet    = thisJet;
-    // tmpJet.time   = jetRechitT[i];
     tmpJet.passId = jetPassIDLoose[i];
-    // tmpJet.isCSVL = isCSVL(i);
-    //if (isCSVL(i)) NBJet20++;
-    //if (isCSVL(i) && thisJet.Pt() > 30) NBJet30++;
-    // tmpJet.ecalNRechits = jetNRechits[i];
-    // tmpJet.ecalRechitE = jetRechitE[i];
-    // tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
-    // tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
-    // tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
-    // tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
+
+    // calculate jet energy scale uncertainty
+    double unc = helper->getJecUnc( jetCorrPt, jetEta[i], runNum ); //use run=999 as default
+    double jetPtJESUp = jetCorrPt*(1+unc);
+    double jetPtJESDown = jetCorrPt/(1+unc);
+    double jetEJESUp = jetCorrE*(1+unc);
+    double jetEJESDown = jetCorrE/(1+unc);
+    TLorentzVector thisJetJESUp = makeTLorentzVector(jetPtJESUp, jetEta[i], jetPhi[i], jetEJESUp);
+    TLorentzVector thisJetJESDown = makeTLorentzVector(jetPtJESDown, jetEta[i], jetPhi[i], jetEJESDown);
+    if (jetPtJESUp > 20) MuonSystem->metJESUp +=  -1 * (thisJetJESUp.Pt() - thisJet.Pt());
+    if (jetPtJESDown > 20) MuonSystem->metJESDown +=  -1 * (thisJetJESDown.Pt() - thisJet.Pt());
+
+
     Jets.push_back(tmpJet);
 
     }
@@ -528,17 +583,35 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //-----------------------------
     //Require at least 2 jets
     //-----------------------------
-    //if( Jets.size() < 2 ) continue;
+    // if( Jets.size() < 2 ) continue;
     // if (triggered) trig_lepId_dijet->Fill(1);
     sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
-
+    if (Jets.size()>0)
+    {
+      MuonSystem->jetMet_dPhi = RazorAnalyzer::deltaPhi(jetPhi[0],metType1Phi);
+    }
+    else{
+      MuonSystem->jetMet_dPhi = -999.;
+    }
+    double jetMet_dPhiMin_temp = 999.;
+    double jetMet_dPhiMin4_temp = 999.;
     for ( auto &tmp : Jets )
     {
       MuonSystem->jetE[MuonSystem->nJets] = tmp.jet.E();
       MuonSystem->jetPt[MuonSystem->nJets] = tmp.jet.Pt();
       MuonSystem->jetEta[MuonSystem->nJets] = tmp.jet.Eta();
       MuonSystem->jetPhi[MuonSystem->nJets] = tmp.jet.Phi();
-      // MuonSystem->jetTime[MuonSystem->nJets] = tmp.time;
+      MuonSystem->jetTime[MuonSystem->nJets] = tmp.time;
+      if (jetMet_dPhiMin4_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi)) && MuonSystem->nJets < 4)
+      {
+        jetMet_dPhiMin4_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi));
+
+      }
+      if (jetMet_dPhiMin_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi)))
+      {
+        jetMet_dPhiMin_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi));
+
+      }
       // MuonSystem->jetPassId[MuonSystem->nJets] = tmp.passId;
       // MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalNRechits;
       // MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalRechitE;
@@ -546,17 +619,35 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       // MuonSystem->jetNeutralEMEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralEMEnergyFraction;
       // MuonSystem->jetChargedHadronEnergyFraction[MuonSystem->nJets] = tmp.jetChargedHadronEnergyFraction;
       // MuonSystem->jetNeutralHadronEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralHadronEnergyFraction;
+      float min_deltaR = 15.;
+      int index = 999;
+      for(int i=0; i < nGenJets; i++)
+      {
+
+        double current_delta_r = RazorAnalyzer::deltaPhi(genJetPhi[i],jetPhi[MuonSystem->nJets]);
+        if (current_delta_r < min_deltaR)
+        {
+          min_deltaR = current_delta_r;
+          index = i;
+        }
+      }
+      if (min_deltaR < 0.4)
+      {
+        MuonSystem->jet_match_genJet_minDeltaR[MuonSystem->nJets] = min_deltaR;
+        MuonSystem->jet_match_genJet_index[MuonSystem->nJets] = index;
+        MuonSystem->jet_match_genJet_pt[MuonSystem->nJets] = jetPt[index];
+      }
       MuonSystem->nJets++;
-    }*/
+    }
 
 
-    // cout<<"jere"<<endl;
+    MuonSystem-> jetMet_dPhiMin = jetMet_dPhiMin_temp;
+    MuonSystem-> jetMet_dPhiMin4 = jetMet_dPhiMin4_temp;
+
     //-----------------------------
     // CSC INFO
     //-----------------------------
-    // if( nCsc < 10 ) continue;
-    if(MuonSystem->category !=1) continue;
-    if(nCscClusters == 0) continue;
+    /*if(nCscClusters == 0) continue;
 
     for(int i = 0; i < nCscClusters; i++)
     {
@@ -635,10 +726,9 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       }
 
       MuonSystem->nCscClusters++;
-    }
-    /*if(nCscSegClusters == 0 && nCscRechitClusters == 0) continue;
+    }*/
 
-    for(int i = 0; i < nCscSegClusters; i++)
+    /*for(int i = 0; i < nCscSegClusters; i++)
     {
       MuonSystem->cscSegClusterX[MuonSystem->nCscSegClusters] =cscSegClusterX[i];
       MuonSystem->cscSegClusterY[MuonSystem->nCscSegClusters] =cscSegClusterY[i];
@@ -698,10 +788,12 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
 
 
       MuonSystem->nCscSegClusters++;
-    }
+    }*/
+    if(nCscRechitClusters == 0) continue;
 
     for(int i = 0; i < nCscRechitClusters; i++)
     {
+      // if (cscRechitClusterTime[i] > -12.5) continue;
       MuonSystem->cscRechitClusterX[MuonSystem->nCscRechitClusters] =cscRechitClusterX[i];
       MuonSystem->cscRechitClusterY[MuonSystem->nCscRechitClusters] =cscRechitClusterY[i];
       MuonSystem->cscRechitClusterZ[MuonSystem->nCscRechitClusters] =cscRechitClusterZ[i];
@@ -752,16 +844,36 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       MuonSystem->cscRechitClusterNRechitChamberMinus32[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus32[i];
       MuonSystem->cscRechitClusterNRechitChamberMinus41[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus41[i];
       MuonSystem->cscRechitClusterNRechitChamberMinus42[MuonSystem->nCscRechitClusters] = cscRechitClusterNRechitChamberMinus42[i];
-      bool me1112_veto = MuonSystem->cscRechitClusterMe11Ratio[MuonSystem->nCscRechitClusters] == 0.0 && MuonSystem->cscRechitClusterMe12Ratio[MuonSystem->nCscRechitClusters] == 0.0;
-      if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT) MuonSystem->nCsc_JetVetoCluster0p4 += cscRechitClusterSize[i];
-      if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT && MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] < MUON_PT_CUT) MuonSystem->nCsc_JetMuonVetoCluster0p4 += cscRechitClusterSize[i];
-      if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT && me1112_veto) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= cscRechitClusterSize[i];
-      if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT && MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] < MUON_PT_CUT && me1112_veto) MuonSystem->nCsc_JetMuonVetoCluster0p4_Me1112Veto+= cscRechitClusterSize[i];
+      bool me1112_veto = abs(MuonSystem->cscRechitClusterMaxChamber[MuonSystem->nCscRechitClusters]) > 12;
+      // if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT) MuonSystem->nCsc_JetVetoCluster0p4 += cscRechitClusterSize[i];
+      // if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT && MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] < MUON_PT_CUT) MuonSystem->nCsc_JetMuonVetoCluster0p4 += cscRechitClusterSize[i];
+      // if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT && me1112_veto) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= cscRechitClusterSize[i];
+      if (MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] < JET_PT_CUT && MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] < MUON_PT_CUT && me1112_veto) MuonSystem->nCsc_JetMuonVetoRechitCluster0p4_Me1112Veto+= cscRechitClusterSize[i];
+      //
+      float min_deltaR = 15.;
+      int index = 999;
+      for(int j = 0; j < 2;j++)
+      {
 
-
+        double current_delta_r = RazorAnalyzer::deltaR(cscRechitClusterEta[MuonSystem->nCscRechitClusters], cscRechitClusterPhi[MuonSystem->nCscRechitClusters], gLLP_eta[j], gLLP_phi[j]);
+        if (current_delta_r < min_deltaR)
+        {
+          min_deltaR = current_delta_r;
+          index = j;
+        }
+      }
+      if (min_deltaR < 0.4)
+      {
+        MuonSystem->cscRechitCluster_match_gLLP[MuonSystem->nCscRechitClusters] = true;
+        MuonSystem->cscRechitCluster_match_gLLP_minDeltaR[MuonSystem->nCscRechitClusters] = min_deltaR;
+        MuonSystem->cscRechitCluster_match_gLLP_index[MuonSystem->nCscRechitClusters] = index;
+      }
+      // else{
+      //   continue;
+      // }
       MuonSystem->nCscRechitClusters++;
-    }*/
-
+    }
+    if (MuonSystem->nCscRechitClusters == 0) continue;
     MuonSystem->tree_->Fill();
   }
 

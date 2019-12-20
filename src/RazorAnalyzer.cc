@@ -429,6 +429,7 @@ void RazorAnalyzer::EnableCSC()
     fChain->SetBranchStatus("cscNRecHits_flag", 1);
     fChain->SetBranchStatus("cscT", 1);
     fChain->SetBranchStatus("cscChi2", 1);
+    /*
     fChain->SetBranchStatus("nCscClusters", 1);
     fChain->SetBranchStatus("cscClusterX", 1);
     fChain->SetBranchStatus("cscClusterY", 1);
@@ -488,7 +489,9 @@ void RazorAnalyzer::EnableCSC()
     fChain->SetBranchStatus("cscClusterVertexN15", 1);
     fChain->SetBranchStatus("cscClusterVertexN20", 1);
     fChain->SetBranchStatus("cscClusterVertexN", 1);
-    /*fChain->SetBranchStatus("nCscSegClusters", 1);
+    */
+    /*
+    fChain->SetBranchStatus("nCscSegClusters", 1);
     fChain->SetBranchStatus("cscSegClusterX", 1);
     fChain->SetBranchStatus("cscSegClusterY", 1);
     fChain->SetBranchStatus("cscSegClusterZ", 1);
@@ -548,6 +551,7 @@ void RazorAnalyzer::EnableCSC()
     fChain->SetBranchStatus("cscSegClusterVertexN20", 1);
     fChain->SetBranchStatus("cscSegClusterVertexN", 1);
 
+    */
 
     fChain->SetBranchStatus("nCscRechitClusters", 1);
     fChain->SetBranchStatus("cscRechitClusterX", 1);
@@ -607,7 +611,7 @@ void RazorAnalyzer::EnableCSC()
     fChain->SetBranchStatus("cscRechitClusterVertexN10", 1);
     fChain->SetBranchStatus("cscRechitClusterVertexN15", 1);
     fChain->SetBranchStatus("cscRechitClusterVertexN20", 1);
-    fChain->SetBranchStatus("cscRechitClusterVertexN", 1);*/
+    fChain->SetBranchStatus("cscRechitClusterVertexN", 1);
 
 
 
@@ -619,6 +623,8 @@ void RazorAnalyzer::EnableMC(){
     fChain->SetBranchStatus("genJetPt", 1);
     fChain->SetBranchStatus("genJetEta", 1);
     fChain->SetBranchStatus("genJetPhi", 1);
+    fChain->SetBranchStatus("genJetMET", 1);
+
     fChain->SetBranchStatus("genMetPtCalo", 1);
     fChain->SetBranchStatus("genMetPhiCalo", 1);
     fChain->SetBranchStatus("genMetPtTrue", 1);
