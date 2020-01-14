@@ -14,6 +14,7 @@
 
 #define _debug 0
 #define _debug_jet 0
+#define _debug_trg 1
 #define _debug_calojet 0
 
 #define N_MAX_LLP_DAUGHTERS 4
@@ -156,6 +157,14 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
   }
   else if ((options/10) % 10 == 4){
     label = "bkg_zH";
+    cout << "signal / bkg label: " << label << "\n";
+  }
+  else if ((options/10) % 10 == 5){
+    label = "HH";
+    cout << "signal / bkg label: " << label << "\n";
+  }
+  else if ((options/10) % 10 == 6){
+    label = "bkg_HH";
     cout << "signal / bkg label: " << label << "\n";
   }
   else{
@@ -329,6 +338,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     llp_tree->lumiSec = lumiNum;
     llp_tree->evtNum = eventNum;
     if(_debug) std::cout << "deb3 " << jentry << std::endl;
+    if(_debug) std::cout << "nBunchXing " << nBunchXing << std::endl;
     if (label == "zH" || label == "wH"){
       NEvents->Fill(1);
       bool wzFlag = false;
@@ -346,11 +356,15 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
     }
 
+    if(_debug) std::cout << "nBunchXing " << nBunchXing << std::endl;
     for (int i=0; i < nBunchXing; ++i)
     {
+      if(_debug) std::cout << "BunchXing[i] " << BunchXing[i] << std::endl;
       if (BunchXing[i] == 0)
       {
-        llp_tree->npu = nPUmean[i];
+        llp_tree->npu = int(nPUmean[i]);
+        if(_debug) std::cout << "BunchXing[i] " << BunchXing[i] << std::endl;
+        if(_debug) std::cout << "nPUmean[i] " << nPUmean[i] << std::endl;
       }
     }
     if(_debug && llp_tree->npu != 0 ) std::cout << "npu " << llp_tree->npu << std::endl;
@@ -365,6 +379,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     for(int i = 0; i < NTriggersMAX; i++){
       llp_tree->HLTDecision[i] = HLTDecision[i];
     }
+    if(_debug_trg) std::cout << "begin: 310 " << HLTDecision[310] << std::endl;
+    if(_debug_trg) std::cout << "begin: 310 " << llp_tree->HLTDecision[310] << std::endl;
     bool triggered = false;
     for(int i = 0; i < NTrigger; i++)
     {
@@ -913,6 +929,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->gLLP_grandaughter_eta_ecalcorr[i] = gLLP_grandaughter_eta_ecalcorr[i];
       llp_tree->gLLP_grandaughter_phi_ecalcorr[i] = gLLP_grandaughter_phi_ecalcorr[i];
     }
+    if(_debug_trg) std::cout << "end: 310 " << HLTDecision[310] << std::endl;
+    if(_debug_trg) std::cout << "end: 310 " << llp_tree->HLTDecision[310] << std::endl;
 
     llp_tree->tree_->Fill();
   }

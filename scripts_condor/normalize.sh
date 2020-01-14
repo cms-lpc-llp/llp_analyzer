@@ -5,14 +5,25 @@ echo "Job started"
 date
 
 mode=$1
-sample=$2
-inputDir=$3/${sample}/
-outputDir=$4
+isData=$2
+sample=$3
+inputDir=$4/${sample}/
+outputDir=$5
 currentDir=`pwd`
-CMSSW_BASE=$5
-homeDir=$6
-user=${homeDir#*/data/}
+CMSSW_BASE=$6
+homeDir=$7
+#user=${homeDir#*/data/}
+user=${homeDir#*/storage/user/}
 runDir=${currentDir}/${user}_${code_dir_suffix}/
+
+#sample=$2
+#inputDir=$3/${sample}/
+#outputDir=$4
+#currentDir=`pwd`
+#CMSSW_BASE=$5
+#homeDir=$6
+#user=${homeDir#*/data/}
+#runDir=${currentDir}/${user}_${code_dir_suffix}/
 
 normalize_file=llp_${mode}_${sample}.txt
 rm -rf ${runDir}
@@ -41,10 +52,10 @@ then
 	if [ ${isData} == "no" ]
         	then
 		eval `scramv1 runtime -sh`
-		if [ -f $CMSSW_BASE/src/llp_analyzer/data/xSections.dat ]
+		if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/xSections.dat ]
 		then
 			mkdir -p data
-			cp $CMSSW_BASE/src/llp_analyzer/data/xSections.dat data/xSections.dat 
+			cp $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/xSections.dat data/xSections.dat 
 		else
 			echo "data/xSections.dat doesn't exist"
 
@@ -70,9 +81,9 @@ then
 		fi
 
 		#normalize
-		if [ -f $CMSSW_BASE/src/llp_analyzer/NormalizeNtuple ]
+		if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/NormalizeNtuple ]
         	then
-        	        cp $CMSSW_BASE/src/llp_analyzer/NormalizeNtuple ./
+        	        cp $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/NormalizeNtuple ./
 		        ./NormalizeNtuple ${normalize_file} 1
 		else
 			echo "NormalizeNtuple not found"

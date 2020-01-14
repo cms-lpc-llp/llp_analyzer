@@ -222,6 +222,13 @@ public:
  unsigned int gLLP_grandaughter_match_calojet_index[N_MAX_LLP_GRAND_DAUGHTERS];
  float gLLP_grandaughter_min_delta_r_match_calojet[N_MAX_LLP_GRAND_DAUGHTERS];
 
+  //MET
+ float metType1Pt;
+ float metType1Px;
+ float metType1Py;
+ float metType1Eta;
+ float metType1Phi; 
+
   //HLT 
   bool HLTDecision[NTriggersMAX];
 

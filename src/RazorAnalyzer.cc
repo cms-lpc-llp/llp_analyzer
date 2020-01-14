@@ -328,6 +328,8 @@ void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("jetNRechits", 1);
     fChain->SetBranchStatus("jetRechitE", 1);
     fChain->SetBranchStatus("jetRechitT", 1);
+    fChain->SetBranchStatus("jet_sig_et1", 1);
+    fChain->SetBranchStatus("jet_sig_et2", 1);
 };
 
 void RazorAnalyzer::EnableFatJets(){

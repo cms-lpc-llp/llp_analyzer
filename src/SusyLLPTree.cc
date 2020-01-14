@@ -315,7 +315,7 @@ void SusyLLPTree::InitTree()
     // tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
 
     // triggers
-    tree_->SetBranchAddress("HLTDecision",   HLTDecision);
+    tree_->SetBranchAddress("HLTDecision",   &HLTDecision);
 
     // gLLP
     tree_->SetBranchAddress("gLLP_travel_time",    gLLP_travel_time);

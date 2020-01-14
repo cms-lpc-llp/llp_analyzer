@@ -62,6 +62,8 @@ WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8
 
 #13 TeV wino C1N2
 #https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVn2x1wino#Sum_of_NLO_NLL_wino_like_102_AN1
+x1n2_wlv_hbb_mchi_200    1e-03*1779.1*0.324*0.5824  
+
 x1n2_mchi_100    1e-03*22504  
 x1n2_mchi_125    1e-03*9936.7 
 x1n2_mchi_150    1e-03*5118.9 
@@ -112,6 +114,53 @@ x1n2_mchi_1250    1e-03*0.31
 x1n2_mchi_1275    1e-03*0.27  
 x1n2_mchi_1300    1e-03*0.24  
 x1n2_mchi_1325    1e-03*0.21  
+
+#13 TeV Higgsino NLO-NLL Higgsino-like Cross Sections (fully-degenerate case) 
+#https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVhino
+n3n2_hbb_hbb_mchi_200 	1e-03*1335.62*0.5824*0.5824
+n3n2_hinc_hbb_mchi_200 	1e-03*1335.62*0.5824
+n3n2_zll_hbb_mchi_200 	1e-03*1335.62*0.067294*0.5824 #z->ee/mumu
+n3n2_zinc_hbb_mchi_200 	1e-03*1335.62*0.5824 #z->ee/mumu
+
+n3n2_mchi_100 	1e-03*16797.2
+n3n2_mchi_150 	1e-03*3832.31
+n3n2_mchi_200 	1e-03*1335.62
+n3n2_mchi_250 	1e-03*577.314
+n3n2_mchi_300 	1e-03*284.855
+n3n2_mchi_350 	1e-03*153.841
+n3n2_mchi_400 	1e-03*88.7325
+n3n2_mchi_450 	1e-03*53.7702
+n3n2_mchi_500 	1e-03*33.8387
+n3n2_mchi_550 	1e-03*21.9868
+n3n2_mchi_600 	1e-03*14.6677
+n3n2_mchi_650 	1e-03*9.96406
+n3n2_mchi_700 	1e-03*6.89981
+n3n2_mchi_750 	1e-03*4.8731 
+n3n2_mchi_800 	1e-03*3.46143
+n3n2_mchi_850 	1e-03*2.4923 
+n3n2_mchi_900 	1e-03*1.80616
+n3n2_mchi_950 	1e-03*1.32692
+n3n2_mchi_1000 	1e-03*0.968853 
+n3n2_mchi_1050 	1e-03*0.731306 
+n3n2_mchi_1100 	1e-03*0.538005 
+n3n2_mchi_1150 	1e-03*0.405108 
+n3n2_mchi_1200 	1e-03*0.299347 
+n3n2_mchi_1250 	1e-03*0.240471 
+n3n2_mchi_1300 	1e-03*0.160765 
+n3n2_mchi_1350 	1e-03*0.111174 
+n3n2_mchi_1400 	1e-03*0.0780263
+n3n2_mchi_1450 	1e-03*0.0696962
+
+#qcd ht
+QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                        2.486e+08
+QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                        27990000.0
+QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                         1712000
+QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                          347700
+QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                           32100
+QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                           6831
+QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                          1207
+QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                           119.9
+QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                             25.24
 
 #13 TeV Spring 15 MC
 QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8                            2022100000.0
