@@ -47,6 +47,8 @@ struct jets
   float jetNeutralEMEnergyFraction;
   float jetChargedHadronEnergyFraction;
   float jetNeutralHadronEnergyFraction;
+  bool jetPassMuFrac;
+
 };
 
 //lepton highest pt comparator
@@ -364,13 +366,19 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     MuonSystem->metPhi = metType1Phi;
     MuonSystem->metJESUp = MuonSystem->met;
     MuonSystem->metJESDown = MuonSystem->met;
-
+    if (MuonSystem->met < 200) continue;
     //Triggers
     for(int i = 0; i < NTriggersMAX; i++){
       MuonSystem->HLTDecision[i] = HLTDecision[i];
     }
-
-
+    // flags
+    MuonSystem->Flag_HBHENoiseFilter = Flag_HBHENoiseFilter;
+    MuonSystem->Flag_HBHEIsoNoiseFilter = Flag_HBHEIsoNoiseFilter;
+    MuonSystem->Flag_BadPFMuonFilter = Flag_BadPFMuonFilter;
+    MuonSystem->Flag_CSCTightHaloFilter = Flag_CSCTightHaloFilter;
+    MuonSystem->Flag_goodVertices = Flag_goodVertices;
+    MuonSystem->Flag_ecalBadCalibFilter = Flag_ecalBadCalibFilter;
+    MuonSystem->Flag_all = Flag_goodVertices && Flag_HBHEIsoNoiseFilter && Flag_BadPFMuonFilter && Flag_CSCTightHaloFilter && Flag_goodVertices && Flag_ecalBadCalibFilter;
 
     //*************************************************************************
     //Start Object Selection
@@ -547,12 +555,14 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //------------------------------------------------------------
     // double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
        // fixedGridRhoFastjetAll, jetJetArea[i] , JetCorrector);
+   // cout<<"before JEC"<<endl;
    double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
  						   fixedGridRhoFastjetAll, jetJetArea[i],
  						   runNum,
  						   JetCorrectorIOV,JetCorrector);
     double jetCorrPt = jetPt[i]*JEC;
     double jetCorrE = jetE[i]*JEC;
+    // cout<<JEC<<endl;
     // cout<<"corrected pt: "<<jetCorrPt<<", "<<"eta: "<<jetEta[i]<<endl;
     TLorentzVector thisJet = makeTLorentzVector( jetCorrPt, jetEta[i], jetPhi[i], jetCorrE );
 
@@ -562,7 +572,13 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
 
     jets tmpJet;
     tmpJet.jet    = thisJet;
-    tmpJet.passId = jetPassIDLoose[i];
+    tmpJet.passId = jetPassIDTight[i];
+
+    tmpJet.jetPassMuFrac = jetPassMuFrac[i];
+    tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
+    tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
+    tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
+    tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
 
     // calculate jet energy scale uncertainty
     double unc = helper->getJecUnc( jetCorrPt, jetEta[i], runNum ); //use run=999 as default
@@ -612,15 +628,17 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
         jetMet_dPhiMin_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi));
 
       }
-      // MuonSystem->jetPassId[MuonSystem->nJets] = tmp.passId;
+      MuonSystem->jetPassId[MuonSystem->nJets] = tmp.passId;
       // MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalNRechits;
       // MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalRechitE;
-      // MuonSystem->jetChargedEMEnergyFraction[MuonSystem->nJets] = tmp.jetChargedEMEnergyFraction;
-      // MuonSystem->jetNeutralEMEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralEMEnergyFraction;
-      // MuonSystem->jetChargedHadronEnergyFraction[MuonSystem->nJets] = tmp.jetChargedHadronEnergyFraction;
-      // MuonSystem->jetNeutralHadronEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralHadronEnergyFraction;
+      MuonSystem->jetChargedEMEnergyFraction[MuonSystem->nJets] = tmp.jetChargedEMEnergyFraction;
+      MuonSystem->jetNeutralEMEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralEMEnergyFraction;
+      MuonSystem->jetChargedHadronEnergyFraction[MuonSystem->nJets] = tmp.jetChargedHadronEnergyFraction;
+      MuonSystem->jetNeutralHadronEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralHadronEnergyFraction;
+      MuonSystem->jetPassMuFrac[MuonSystem->nJets] = tmp.jetPassMuFrac;
       float min_deltaR = 15.;
       int index = 999;
+      // cout<<"nGenJets"<<nGenJets<<endl;
       for(int i=0; i < nGenJets; i++)
       {
 
@@ -647,9 +665,9 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //-----------------------------
     // CSC INFO
     //-----------------------------
-    /*if(nCscClusters == 0) continue;
+    //if(nCscClusters == 0) continue;
 
-    for(int i = 0; i < nCscClusters; i++)
+    /*for(int i = 0; i < nCscClusters; i++)
     {
       MuonSystem->cscClusterX[MuonSystem->nCscClusters] =cscClusterX[i];
       MuonSystem->cscClusterY[MuonSystem->nCscClusters] =cscClusterY[i];
@@ -725,71 +743,143 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
         MuonSystem->cscCluster_match_gLLP_index[i] = index;
       }
 
+      //match cluster to met
+      MuonSystem->cscClusterMet_dPhi[MuonSystem->nCscClusters] =  RazorAnalyzer::deltaPhi(cscClusterPhi[i],MuonSystem->metPhi);
+
+
+
+
+
       MuonSystem->nCscClusters++;
-    }*/
-
-    /*for(int i = 0; i < nCscSegClusters; i++)
+    }
+    */
+    /*
+    if (isData)
     {
-      MuonSystem->cscSegClusterX[MuonSystem->nCscSegClusters] =cscSegClusterX[i];
-      MuonSystem->cscSegClusterY[MuonSystem->nCscSegClusters] =cscSegClusterY[i];
-      MuonSystem->cscSegClusterZ[MuonSystem->nCscSegClusters] =cscSegClusterZ[i];
-      MuonSystem->cscSegClusterTime[MuonSystem->nCscSegClusters] =cscSegClusterTime[i];
-      MuonSystem->cscSegClusterEta[MuonSystem->nCscSegClusters] =cscSegClusterEta[i];
-      MuonSystem->cscSegClusterPhi[MuonSystem->nCscSegClusters] =cscSegClusterPhi[i];
-      MuonSystem->cscSegClusterMajorAxis[MuonSystem->nCscSegClusters] =cscSegClusterMajorAxis[i];
-      MuonSystem->cscSegClusterMinorAxis[MuonSystem->nCscSegClusters] =cscSegClusterMinorAxis[i];
-      MuonSystem->cscSegClusterXSpread[MuonSystem->nCscSegClusters] =cscSegClusterXSpread[i];
-      MuonSystem->cscSegClusterYSpread[MuonSystem->nCscSegClusters] =cscSegClusterYSpread[i];
-      MuonSystem->cscSegClusterZSpread[MuonSystem->nCscSegClusters] =cscSegClusterZSpread[i];
-      MuonSystem->cscSegClusterEtaPhiSpread[MuonSystem->nCscSegClusters] =cscSegClusterEtaPhiSpread[i];
-      MuonSystem->cscSegClusterEtaSpread[MuonSystem->nCscSegClusters] =cscSegClusterEtaSpread[i];
-      MuonSystem->cscSegClusterPhiSpread[MuonSystem->nCscSegClusters] = cscSegClusterPhiSpread[i];
-      MuonSystem->cscSegClusterTimeSpread[MuonSystem->nCscSegClusters] =cscSegClusterTimeSpread[i];
+      for(int i = 0; i < nCscSegClusters; i++)
+      {
+        MuonSystem->cscSegClusterX[MuonSystem->nCscSegClusters] =cscSegClusterX[i];
+        MuonSystem->cscSegClusterY[MuonSystem->nCscSegClusters] =cscSegClusterY[i];
+        MuonSystem->cscSegClusterZ[MuonSystem->nCscSegClusters] =cscSegClusterZ[i];
+        MuonSystem->cscSegClusterTime[MuonSystem->nCscSegClusters] =cscSegClusterTime[i];
+        MuonSystem->cscSegClusterEta[MuonSystem->nCscSegClusters] =cscSegClusterEta[i];
+        MuonSystem->cscSegClusterPhi[MuonSystem->nCscSegClusters] =cscSegClusterPhi[i];
+        MuonSystem->cscSegClusterMajorAxis[MuonSystem->nCscSegClusters] =cscSegClusterMajorAxis[i];
+        MuonSystem->cscSegClusterMinorAxis[MuonSystem->nCscSegClusters] =cscSegClusterMinorAxis[i];
+        MuonSystem->cscSegClusterXSpread[MuonSystem->nCscSegClusters] =cscSegClusterXSpread[i];
+        MuonSystem->cscSegClusterYSpread[MuonSystem->nCscSegClusters] =cscSegClusterYSpread[i];
+        MuonSystem->cscSegClusterZSpread[MuonSystem->nCscSegClusters] =cscSegClusterZSpread[i];
+        MuonSystem->cscSegClusterEtaPhiSpread[MuonSystem->nCscSegClusters] =cscSegClusterEtaPhiSpread[i];
+        MuonSystem->cscSegClusterEtaSpread[MuonSystem->nCscSegClusters] =cscSegClusterEtaSpread[i];
+        MuonSystem->cscSegClusterPhiSpread[MuonSystem->nCscSegClusters] = cscSegClusterPhiSpread[i];
+        MuonSystem->cscSegClusterTimeSpread[MuonSystem->nCscSegClusters] =cscSegClusterTimeSpread[i];
 
-      MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] =cscSegClusterJetVetoPt[i];
-      MuonSystem->cscSegClusterJetVetoE[MuonSystem->nCscSegClusters] =cscSegClusterJetVetoE[i];
-      MuonSystem->cscSegClusterMuonVetoPt[MuonSystem->nCscSegClusters] =cscSegClusterMuonVetoPt[i];
-      MuonSystem->cscSegClusterMuonVetoE[MuonSystem->nCscSegClusters] =cscSegClusterMuonVetoE[i];
+        MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] =cscSegClusterJetVetoPt[i];
+        MuonSystem->cscSegClusterJetVetoE[MuonSystem->nCscSegClusters] =cscSegClusterJetVetoE[i];
+        MuonSystem->cscSegClusterMuonVetoPt[MuonSystem->nCscSegClusters] =cscSegClusterMuonVetoPt[i];
+        MuonSystem->cscSegClusterMuonVetoE[MuonSystem->nCscSegClusters] =cscSegClusterMuonVetoE[i];
 
-      MuonSystem->cscSegClusterSize[MuonSystem->nCscSegClusters] = cscSegClusterSize[i];
-      MuonSystem->cscSegClusterMaxChamber[MuonSystem->nCscSegClusters] =cscSegClusterMaxChamber[i];
-      MuonSystem->cscSegClusterMaxChamberRatio[MuonSystem->nCscSegClusters] = cscSegClusterMaxChamberRatio[i];
-      MuonSystem->cscSegClusterNChamber[MuonSystem->nCscSegClusters] =cscSegClusterNChamber[i];
-      MuonSystem->cscSegClusterMaxStation[MuonSystem->nCscSegClusters] = cscSegClusterMaxStation[i];
-      MuonSystem->cscSegClusterMaxStationRatio[MuonSystem->nCscSegClusters] = cscSegClusterMaxStationRatio[i];
-      MuonSystem->cscSegClusterNStation[MuonSystem->nCscSegClusters] = cscSegClusterNStation[i];
-      MuonSystem->cscSegClusterMe11Ratio[MuonSystem->nCscSegClusters] =cscSegClusterMe11Ratio[i];
-      MuonSystem->cscSegClusterMe12Ratio[MuonSystem->nCscSegClusters] = cscSegClusterMe12Ratio[i];
+        MuonSystem->cscSegClusterSize[MuonSystem->nCscSegClusters] = cscSegClusterSize[i];
+        MuonSystem->cscSegClusterMaxChamber[MuonSystem->nCscSegClusters] =cscSegClusterMaxChamber[i];
+        MuonSystem->cscSegClusterMaxChamberRatio[MuonSystem->nCscSegClusters] = cscSegClusterMaxChamberRatio[i];
+        MuonSystem->cscSegClusterNChamber[MuonSystem->nCscSegClusters] =cscSegClusterNChamber[i];
+        MuonSystem->cscSegClusterMaxStation[MuonSystem->nCscSegClusters] = cscSegClusterMaxStation[i];
+        MuonSystem->cscSegClusterMaxStationRatio[MuonSystem->nCscSegClusters] = cscSegClusterMaxStationRatio[i];
+        MuonSystem->cscSegClusterNStation[MuonSystem->nCscSegClusters] = cscSegClusterNStation[i];
+        MuonSystem->cscSegClusterMe11Ratio[MuonSystem->nCscSegClusters] =cscSegClusterMe11Ratio[i];
+        MuonSystem->cscSegClusterMe12Ratio[MuonSystem->nCscSegClusters] = cscSegClusterMe12Ratio[i];
 
-      MuonSystem->cscSegClusterNSegmentChamberPlus11[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus11[i];
-      MuonSystem->cscSegClusterNSegmentChamberPlus12[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus12[i];
-      MuonSystem->cscSegClusterNSegmentChamberPlus13[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus13[i];
-      MuonSystem->cscSegClusterNSegmentChamberPlus21[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus21[i];
-      MuonSystem->cscSegClusterNSegmentChamberPlus22[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus22[i];
-      MuonSystem->cscSegClusterNSegmentChamberPlus31[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus31[i];
-      MuonSystem->cscSegClusterNSegmentChamberPlus32[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus32[i];
-      MuonSystem->cscSegClusterNSegmentChamberPlus41[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus41[i];
-      MuonSystem->cscSegClusterNSegmentChamberPlus42[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus42[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus11[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus11[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus12[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus12[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus13[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus13[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus21[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus21[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus22[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus22[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus31[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus31[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus32[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus32[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus41[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus41[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus42[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberPlus42[i];
 
-      MuonSystem->cscSegClusterNSegmentChamberMinus11[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus11[i];
-      MuonSystem->cscSegClusterNSegmentChamberMinus12[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus12[i];
-      MuonSystem->cscSegClusterNSegmentChamberMinus13[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus13[i];
-      MuonSystem->cscSegClusterNSegmentChamberMinus21[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus21[i];
-      MuonSystem->cscSegClusterNSegmentChamberMinus22[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus22[i];
-      MuonSystem->cscSegClusterNSegmentChamberMinus31[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus31[i];
-      MuonSystem->cscSegClusterNSegmentChamberMinus32[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus32[i];
-      MuonSystem->cscSegClusterNSegmentChamberMinus41[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus41[i];
-      MuonSystem->cscSegClusterNSegmentChamberMinus42[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus42[i];
-      bool me1112_veto = MuonSystem->cscSegClusterMe11Ratio[MuonSystem->nCscSegClusters] == 0.0 && MuonSystem->cscSegClusterMe12Ratio[MuonSystem->nCscSegClusters] == 0.0;
-      if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT) MuonSystem->nCsc_JetVetoCluster0p4 += cscSegClusterSize[i];
-      if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT && MuonSystem->cscSegClusterMuonVetoPt[MuonSystem->nCscSegClusters] < MUON_PT_CUT) MuonSystem->nCsc_JetMuonVetoCluster0p4 += cscSegClusterSize[i];
-      if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT && me1112_veto) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= cscSegClusterSize[i];
-      if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT && MuonSystem->cscSegClusterMuonVetoPt[MuonSystem->nCscSegClusters] < MUON_PT_CUT && me1112_veto) MuonSystem->nCsc_JetMuonVetoCluster0p4_Me1112Veto+= cscSegClusterSize[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus11[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus11[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus12[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus12[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus13[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus13[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus21[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus21[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus22[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus22[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus31[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus31[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus32[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus32[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus41[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus41[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus42[MuonSystem->nCscSegClusters] = cscSegClusterNSegmentChamberMinus42[i];
+        bool me1112_veto = MuonSystem->cscSegClusterMe11Ratio[MuonSystem->nCscSegClusters] == 0.0 && MuonSystem->cscSegClusterMe12Ratio[MuonSystem->nCscSegClusters] == 0.0;
+        if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT) MuonSystem->nCsc_JetVetoCluster0p4 += cscSegClusterSize[i];
+        if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT && MuonSystem->cscSegClusterMuonVetoPt[MuonSystem->nCscSegClusters] < MUON_PT_CUT) MuonSystem->nCsc_JetMuonVetoCluster0p4 += cscSegClusterSize[i];
+        if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT && me1112_veto) MuonSystem->nCsc_JetVetoCluster0p4_Me1112Veto+= cscSegClusterSize[i];
+        if (MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] < JET_PT_CUT && MuonSystem->cscSegClusterMuonVetoPt[MuonSystem->nCscSegClusters] < MUON_PT_CUT && me1112_veto) MuonSystem->nCsc_JetMuonVetoCluster0p4_Me1112Veto+= cscSegClusterSize[i];
 
+        MuonSystem->cscSegClusterMet_dPhi[MuonSystem->nCscSegClusters] =  RazorAnalyzer::deltaPhi(MuonSystem->cscSegClusterPhi[MuonSystem->nCscSegClusters],MuonSystem->metPhi);
 
-      MuonSystem->nCscSegClusters++;
-    }*/
-    if(nCscRechitClusters == 0) continue;
+        MuonSystem->nCscSegClusters++;
+      }
+    }
+    else
+    {
+      for(int i = 0; i < nCscClusters; i++)
+      {
+        MuonSystem->cscSegClusterX[MuonSystem->nCscSegClusters] =cscClusterX[i];
+        MuonSystem->cscSegClusterY[MuonSystem->nCscSegClusters] =cscClusterY[i];
+        MuonSystem->cscSegClusterZ[MuonSystem->nCscSegClusters] =cscClusterZ[i];
+        MuonSystem->cscSegClusterTime[MuonSystem->nCscSegClusters] =cscClusterTime[i];
+        MuonSystem->cscSegClusterEta[MuonSystem->nCscSegClusters] =cscClusterEta[i];
+        MuonSystem->cscSegClusterPhi[MuonSystem->nCscSegClusters] =cscClusterPhi[i];
+        MuonSystem->cscSegClusterMajorAxis[MuonSystem->nCscSegClusters] =cscClusterMajorAxis[i];
+        MuonSystem->cscSegClusterMinorAxis[MuonSystem->nCscSegClusters] =cscClusterMinorAxis[i];
+        MuonSystem->cscSegClusterXSpread[MuonSystem->nCscSegClusters] =cscClusterXSpread[i];
+        MuonSystem->cscSegClusterYSpread[MuonSystem->nCscSegClusters] =cscClusterYSpread[i];
+        MuonSystem->cscSegClusterZSpread[MuonSystem->nCscSegClusters] =cscClusterZSpread[i];
+        MuonSystem->cscSegClusterEtaPhiSpread[MuonSystem->nCscSegClusters] =cscClusterEtaPhiSpread[i];
+        MuonSystem->cscSegClusterEtaSpread[MuonSystem->nCscSegClusters] =cscClusterEtaSpread[i];
+        MuonSystem->cscSegClusterPhiSpread[MuonSystem->nCscSegClusters] = cscClusterPhiSpread[i];
+        MuonSystem->cscSegClusterTimeSpread[MuonSystem->nCscSegClusters] =cscClusterTimeSpread[i];
+
+        MuonSystem->cscSegClusterJetVetoPt[MuonSystem->nCscSegClusters] =cscClusterJetVetoPt[i];
+        MuonSystem->cscSegClusterJetVetoE[MuonSystem->nCscSegClusters] =cscClusterJetVetoE[i];
+        MuonSystem->cscSegClusterMuonVetoPt[MuonSystem->nCscSegClusters] =cscClusterMuonVetoPt[i];
+        MuonSystem->cscSegClusterMuonVetoE[MuonSystem->nCscSegClusters] =cscClusterMuonVetoE[i];
+
+        MuonSystem->cscSegClusterSize[MuonSystem->nCscSegClusters] = cscClusterSize[i];
+        MuonSystem->cscSegClusterMaxChamber[MuonSystem->nCscSegClusters] =cscClusterMaxChamber[i];
+        MuonSystem->cscSegClusterMaxChamberRatio[MuonSystem->nCscSegClusters] = cscClusterMaxChamberRatio[i];
+        MuonSystem->cscSegClusterNChamber[MuonSystem->nCscSegClusters] =cscClusterNChamber[i];
+        MuonSystem->cscSegClusterMaxStation[MuonSystem->nCscSegClusters] = cscClusterMaxStation[i];
+        MuonSystem->cscSegClusterMaxStationRatio[MuonSystem->nCscSegClusters] = cscClusterMaxStationRatio[i];
+        MuonSystem->cscSegClusterNStation[MuonSystem->nCscSegClusters] = cscClusterNStation[i];
+        MuonSystem->cscSegClusterMe11Ratio[MuonSystem->nCscSegClusters] =cscClusterMe11Ratio[i];
+        MuonSystem->cscSegClusterMe12Ratio[MuonSystem->nCscSegClusters] = cscClusterMe12Ratio[i];
+
+        MuonSystem->cscSegClusterNSegmentChamberPlus11[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberPlus11[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus12[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberPlus12[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus13[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberPlus13[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus21[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberPlus21[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus22[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberPlus22[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus31[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberPlus31[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus32[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberPlus32[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus41[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberPlus41[i];
+        MuonSystem->cscSegClusterNSegmentChamberPlus42[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberPlus42[i];
+
+        MuonSystem->cscSegClusterNSegmentChamberMinus11[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberMinus11[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus12[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberMinus12[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus13[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberMinus13[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus21[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberMinus21[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus22[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberMinus22[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus31[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberMinus31[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus32[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberMinus32[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus41[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberMinus41[i];
+        MuonSystem->cscSegClusterNSegmentChamberMinus42[MuonSystem->nCscSegClusters] = cscClusterNSegmentChamberMinus42[i];
+
+        MuonSystem->cscSegClusterMet_dPhi[MuonSystem->nCscSegClusters] =  RazorAnalyzer::deltaPhi(MuonSystem->cscSegClusterPhi[MuonSystem->nCscSegClusters],MuonSystem->metPhi);
+
+        MuonSystem->nCscSegClusters++;
+      }
+    }
+    */
 
     for(int i = 0; i < nCscRechitClusters; i++)
     {
@@ -871,9 +961,12 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       // else{
       //   continue;
       // }
+      MuonSystem->cscRechitClusterMet_dPhi[MuonSystem->nCscRechitClusters] =  RazorAnalyzer::deltaPhi(MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters],MuonSystem->metPhi);
+
       MuonSystem->nCscRechitClusters++;
     }
-    if (MuonSystem->nCscRechitClusters == 0) continue;
+    
+
     MuonSystem->tree_->Fill();
   }
 
