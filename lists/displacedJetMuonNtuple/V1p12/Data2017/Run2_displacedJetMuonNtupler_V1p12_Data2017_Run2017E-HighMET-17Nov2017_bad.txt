@@ -1,0 +1,4 @@
+/mnt/hadoop//store/group/phys_exotica/delayedjets/displacedJetMuonNtuple/V1p12/Data2018/v1/sixie/Run2_displacedJetMuonNtupler_V1p12_Data2017_v2_MET_Run2017E-HighMET-17Nov2017-v1_v1/displacedJetMuon_ntuple_60.root
+/mnt/hadoop//store/group/phys_exotica/delayedjets/displacedJetMuonNtuple/V1p12/Data2018/v1/sixie/Run2_displacedJetMuonNtupler_V1p12_Data2017_v2_MET_Run2017E-HighMET-17Nov2017-v1_v1/displacedJetMuon_ntuple_88.root
+/mnt/hadoop//store/group/phys_exotica/delayedjets/displacedJetMuonNtuple/V1p12/Data2018/v1/sixie/Run2_displacedJetMuonNtupler_V1p12_Data2017_v2_MET_Run2017E-HighMET-17Nov2017-v1_v1/displacedJetMuon_ntuple_91.root
+/mnt/hadoop//store/group/phys_exotica/delayedjets/displacedJetMuonNtuple/V1p12/Data2018/v1/sixie/Run2_displacedJetMuonNtupler_V1p12_Data2017_v2_MET_Run2017E-HighMET-17Nov2017-v1_v1/displacedJetMuon_ntuple_93.root

@@ -1,16 +1,17 @@
 #!/bin/bash
-root_dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/displacedJetMuonNtuple/V1p7/MC_Summer16/v3/sixie/
-list_dir=$CMSSW_BASE/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p7/MC_Summer16/v3/sixie/
+version=displacedJetTimingNtuple/V1p13/MC_Summer16/v4/jmao/
+root_dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/${version}
+list_dir=$CMSSW_BASE/src/llp_analyzer/lists/${version}
 echo $list_dir
 mkdir -p $list_dir
 for sample in \
-WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
-WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8 \
-WminusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8 \
-WminusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8 \
-WplusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8 \
-WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8 \
-WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8
+ZJetsToNuNu_HT-100To200_13TeV-madgraph \
+ZJetsToNuNu_HT-1200To2500_13TeV-madgraph \
+ZJetsToNuNu_HT-200To400_13TeV-madgraph \
+ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph \
+ZJetsToNuNu_HT-400To600_13TeV-madgraph \
+ZJetsToNuNu_HT-600To800_13TeV-madgraph \
+ZJetsToNuNu_HT-800To1200_13TeV-madgraph
 do
         echo "${list_dir}${sample}.txt"
         rm -f ${list_dir}${sample}.txt

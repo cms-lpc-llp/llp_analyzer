@@ -1,0 +1,1 @@
+/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p9/MC_Summer16/v1/sixie/WplusH_HToSSTobbbb_WToLNu_MH-125_MS-40_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8/Run2_LLPNtupler_V1p9_MC_Summer16_RunIISummer16DR80Premix-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1_v1_v1/191018_191010/0000/llp_ntupler_1.root
