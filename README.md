@@ -55,7 +55,8 @@ Run  ```scripts/make_input_list_muonsystem_sig.sh```
  * Check the ```root_dir```, which is where the ntuples are
  * Check ```list_dir``` where you want the input list to be
 ##### Data
-Run ```scripts/make_input_list_muonsystem_data.py```
+First run ```lists/Json_from_crab_prod/run_and_lumis.py``` to copy all the processed json files from lxplus to t2
+Then run ```scripts/make_input_list_muonsystem_data.py```
 * The script checks if there are broken files in the ntuple directory and outputs a good file list, bad file list, and a lumi file that contains: good file lumi AND good lumi.
 * ```rootDir``` dictionary stores the location of the ntuples for each run period
 * ``` sampleName``` stores the sample name of the ntuples for each run period
