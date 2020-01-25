@@ -9,7 +9,7 @@ Setup
     cmsrel CMSSW_9_4_4
     cd CMSSW_9_4_4/src
     git clone git@github.com:cms-lpc-llp/llp_analyzer.git
-    cd RazorAnalyzer
+    cd llp_analyzer
     make
   
 Defining a new analysis
@@ -24,11 +24,11 @@ Running
 ------------
 After compiling, 
 
-    ./RazorRun <list of input files> <name of your analyzer> <options>
+    ./RazorRun_T2 <list of input files> <name of your analyzer> <options>
   
 Example: to execute a dummy analysis that does nothing,
 
-    ./RazorRun lists/TTJets_List_Test.txt DummyAnalyzer
+    ./RazorRun_T2 lists/TTJets_List_Test.txt DummyAnalyzer
 
 The "options" are the following:
     
@@ -40,31 +40,39 @@ The "options" are the following:
 
 
 ## Run the llp_analyzer
-    ./RazorRun_T2 <list of input files> llp_vH -d=${isData} -n=${option} -f=${outputfile} -l=${label}
+    ./RazorRun_T2 <list of input files> llp_vH -d=${isData} -n=${option} -f=${outputfile} -l=${tag}
+* ```isData``` is ```yes``` or ```no```
+* ```option``` is 1 if run on condor, else ```option``` can be any other number, if run interactively. (It just sets the directory of JEC parameters differently)
+* ```tag``` can be ```Razor2017_17Nov2017Rereco_EOY_RERECO```, ```Razor2016_07Aug2017Rereco```, ```Razor2018_17SeptEarlyReReco``` (different tag for each year, defined in ```src/RazorHelper.cc```)
+* list of input files are stored in ```lists/llpntuple/V1p0/MC_Summer16/v1/``` , same format as the llpntuple storage space in ```/mnt/hadoop/```
 
-* ```label``` can be ```wH```, ```zH```, or ```bkg```. (The purpose of this label is to separate the wH and zH signals from the vH ntupler samples)
-* ```option``` is 1 if run on condor, else ```option`` can be any other number, if run interactively. (It just sets the directory of JEC parameters differently)
-* list of input files are stored in ```lists/llpntuple/V1p0/MC_Summer16/v1/``` , same format as the llpntuple storage space in ```hadoop```
 
 
 
-## Submit condor jobs on tier2
+### Create input list
+##### Monte Carlo
+Run  ```scripts/make_input_list_muonsystem_sig.sh```
+ * Check the ```root_dir```, which is where the ntuples are
+ * Check ```list_dir``` where you want the input list to be
+##### Data
+Run ```scripts/make_input_list_muonsystem_data.py```
+* The script checks if there are broken files in the ntuple directory and outputs a good file list, bad file list, and a lumi file that contains: good file lumi AND good lumi.
+* ```rootDir``` dictionary stores the location of the ntuples for each run period
+* ``` sampleName``` stores the sample name of the ntuples for each run period
+* ```goldenLumi``` stores the good lumi list for each year
+
+### Submit condor jobs on tier2
 Before submitting jobs, make sure proxy and CMSSW environment is setup.
 
-* create the input_list files by running  ```scripts/make_input_list_muonsystem.sh```
-  * Check the ```root_dir```, which is where the ntuples are
-  * check ```list_dir``` where you want the input list to be
-* run the ```llp_MuonSystem``` analyzer for signal and bkg:
+* run the ```llp_MuonSystem``` analyzer for signal, bkg or data:
 	* ```scripts_condor/submit_llp_wH_muonsystem_bkg.sh```
 	* ```scripts_condor/submit_llp_wH_muonsystem_sig.sh```
+	* ```scripts_condor/submit_llp_wH_muonsystem_data*.sh```
 	* Check ```inputfilelist``` where the list you created in step 1 is stored, and ```output``` where you want the output do be stored
-* hadd & normalize the ntuples
-  * ```scripts_condor/submit_normalize_muonsystem_bkg.sh```
-  * ```scripts_condor/submit_normalize_muonsystem_sig.sh```
+* Normalize the ntuples
+  * ```scripts_condor/submit_normalize_muonsystem_*.sh```
   * Check ```outputDir``` and ```inputDir```
-* hadd signals (hadd WminusH and WplusH)
-	*  ```scripts/hadd_displaced.sh```
-
+  
 
 Normalizing the processed ntuples
 ------------
@@ -78,6 +86,20 @@ See lists/filestonormalize/testTTJets.txt for an example input file to be used w
 * Create input file list using ```scripts/create_normalize_txt.py```
 
 The script ```hadd_llp_bkg.sh``` automatically hadd and normalize the llp_analyzer ROOT files for the background samples.
+
+
+
+### Hadd ntuples
+* hadd signals (hadd WminusH and WplusH)
+	*  ```scripts/hadd_displaced.sh```
+* hadd different bins of QCD/ZJetstoNunu:
+	* ```hadd_qcd.sh``` or ```hadd_ZJetToNuNu.sh```
+* hadd different run periods in a particular year for Data:
+	* ```hadd_data*.sh```
+### Filter good lumi events for data
+
+https://github.com/RazorCMS/RazorCommon
+
 
 Fitting samples and setting limits
 -----------
