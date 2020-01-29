@@ -12,22 +12,22 @@ cd -
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
 filesPerJob=10
 
+#QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 for sample in \
-QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 do
 	echo "Sample " ${sample}
 	#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
 	version=/V1p9/MC_Summer16/v1/
-	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p12/MC_Summer16/v4/v4/${sample}
+	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p12/MC_Summer16/v4/v5/${sample}
 	echo ${output}
 	inputfilelist=/src/llp_analyzer/lists/llpntuple/${version}/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `

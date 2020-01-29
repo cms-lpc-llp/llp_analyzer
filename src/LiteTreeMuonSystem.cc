@@ -25,7 +25,7 @@ void LiteTreeMuonSystem::InitVariables()
   gHiggsPt = 0.; gHiggsPhi = 0.; gHiggsEta = 0.; gHiggsE = 0.;
   //CSC
   nCsc = 0;
-  // nCscSegClusters = 0;
+  nCscSegClusters = 0;
   nCscRechitClusters = 0;
   nCscClusters = 0;
   nCsc_JetMuonVetoRechitCluster0p4_Me1112Veto = 0;
@@ -121,7 +121,7 @@ void LiteTreeMuonSystem::InitVariables()
     // cscClusterVertexN10[i] = 0;
     // cscClusterVertexN15[i] = 0;
     // cscClusterVertexN20[i] = 0;
-    /*cscSegClusterSize[i] = -999;
+    cscSegClusterSize[i] = -999;
     cscSegClusterX[i] = -999.;
     cscSegClusterY[i] = -999.;
     cscSegClusterZ[i] = -999.;
@@ -169,7 +169,13 @@ void LiteTreeMuonSystem::InitVariables()
     cscSegClusterNSegmentChamberMinus31[i] = -999;
     cscSegClusterNSegmentChamberMinus32[i] = -999;
     cscSegClusterNSegmentChamberMinus41[i] = -999;
-    cscSegClusterNSegmentChamberMinus42[i] = -999;*/
+    cscSegClusterNSegmentChamberMinus42[i] = -999;
+    cscSegCluster_match_gParticle_id[i] = -999;
+    cscSegCluster_match_gParticle_index[i] = -999;
+    cscSegCluster_match_gParticle_minDeltaR[i] = -999.;
+
+
+
 
     cscRechitCluster_match_gLLP[i] = false;
     cscRechitCluster_match_gLLP_minDeltaR[i] = 999;
@@ -294,6 +300,7 @@ void LiteTreeMuonSystem::InitVariables()
     jetTime[i]   = -999.;
     // jetLoosePassId[i] = false;
     jetPassId[i] = false;
+
     ecalNRechits[i] = -999.;
     ecalRechitE[i] = -999.;
     jetChargedEMEnergyFraction[i] = -999.;
@@ -451,7 +458,7 @@ void LiteTreeMuonSystem::InitTree()
 
 
   // CSC CLUSTER
-  /*
+
   tree_->SetBranchAddress("nCscSegClusters",             &nCscSegClusters);
   // tree_->SetBranchAddress("nCsc_JetVetoSegCluster0p4",             &nCsc_JetVetoSegCluster0p4);
   // tree_->SetBranchAddress("nCsc_JetMuonVetoSegCluster0p4",             &nCsc_JetMuonVetoSegCluster0p4);
@@ -506,11 +513,17 @@ void LiteTreeMuonSystem::InitTree()
   tree_->SetBranchAddress("cscSegClusterNSegmentChamberMinus31",             cscSegClusterNSegmentChamberMinus31);
   tree_->SetBranchAddress("cscSegClusterNSegmentChamberMinus32",             cscSegClusterNSegmentChamberMinus32);
   tree_->SetBranchAddress("cscSegClusterNSegmentChamberMinus41",             cscSegClusterNSegmentChamberMinus41);
-  tree_->SetBranchAddress("cscSegClusterNSegmentChamberMinus42",             cscSegClusterNSegmentChamberMinus42);*/
+  tree_->SetBranchAddress("cscSegClusterNSegmentChamberMinus42",             cscSegClusterNSegmentChamberMinus42);
+  tree_->SetBranchAddress("cscSegCluster_match_gParticle_id",             &cscSegCluster_match_gParticle_id);
+  tree_->SetBranchAddress("cscSegCluster_match_gParticle_minDeltaR",             &cscSegCluster_match_gParticle_minDeltaR);
+  tree_->SetBranchAddress("cscSegCluster_match_gParticle_index",             &cscSegCluster_match_gParticle_index);
+
   // CSC CLUSTER
 
   tree_->SetBranchAddress("nCsc_JetMuonVetoRechitCluster0p4_Me1112Veto",             &nCsc_JetMuonVetoRechitCluster0p4_Me1112Veto);
   tree_->SetBranchAddress("nCscRechitClusters",             &nCscRechitClusters);
+  tree_->SetBranchAddress("cscRechitCluster_match_gParticle_id",             &cscRechitCluster_match_gParticle_id);
+
   tree_->SetBranchAddress("cscRechitCluster_match_gLLP",             &cscRechitCluster_match_gLLP);
   tree_->SetBranchAddress("cscRechitCluster_match_gLLP_index",             &cscRechitCluster_match_gLLP_index);
   tree_->SetBranchAddress("cscRechitCluster_match_gLLP_minDeltaR",             &cscRechitCluster_match_gLLP_minDeltaR);
@@ -771,7 +784,7 @@ void LiteTreeMuonSystem::CreateTree()
   tree_->Branch("cscT",             cscT,             "cscT[nCsc]/F");
   tree_->Branch("cscChi2",          cscChi2,          "cscChi2[nCsc]/F");
 
-  tree_->Branch("nCscClusters",             &nCscClusters, "nCscClusters/I");
+/*  tree_->Branch("nCscClusters",             &nCscClusters, "nCscClusters/I");
   tree_->Branch("cscCluster_match_gLLP",             cscCluster_match_gLLP, "cscCluster_match_gLLP[nCscClusters]/O");
   tree_->Branch("cscCluster_match_gLLP_index",             cscCluster_match_gLLP_index, "cscCluster_match_gLLP_index[nCscClusters]/I");
   tree_->Branch("cscCluster_match_gLLP_minDeltaR",             cscCluster_match_gLLP_minDeltaR, "cscCluster_match_gLLP_minDeltaR[nCscClusters]/I");
@@ -829,9 +842,9 @@ void LiteTreeMuonSystem::CreateTree()
   tree_->Branch("cscClusterNSegmentChamberMinus32",             cscClusterNSegmentChamberMinus32,             "cscClusterNSegmentChamberMinus32[nCscClusters]/I");
   tree_->Branch("cscClusterNSegmentChamberMinus41",             cscClusterNSegmentChamberMinus41,             "cscClusterNSegmentChamberMinus41[nCscClusters]/I");
   tree_->Branch("cscClusterNSegmentChamberMinus42",             cscClusterNSegmentChamberMinus42,             "cscClusterNSegmentChamberMinus42[nCscClusters]/I");
-
+*/
   // all csc SegClusters
-  /*
+
   tree_->Branch("nCscSegClusters",             &nCscSegClusters, "nCscSegClusters/I");
   // tree_->Branch("nCsc_JetVetoSegCluster0p4",             &nCsc_JetVetoSegCluster0p4, "nCsc_JetVetoSegCluster0p4/I");
   // tree_->Branch("nCsc_JetMuonVetoSegCluster0p4",             &nCsc_JetMuonVetoSegCluster0p4, "nCsc_JetMuonVetoSegCluster0p4/I");
@@ -886,7 +899,11 @@ void LiteTreeMuonSystem::CreateTree()
   tree_->Branch("cscSegClusterNSegmentChamberMinus32",             cscSegClusterNSegmentChamberMinus32,             "cscSegClusterNSegmentChamberMinus32[nCscSegClusters]/I");
   tree_->Branch("cscSegClusterNSegmentChamberMinus41",             cscSegClusterNSegmentChamberMinus41,             "cscSegClusterNSegmentChamberMinus41[nCscSegClusters]/I");
   tree_->Branch("cscSegClusterNSegmentChamberMinus42",             cscSegClusterNSegmentChamberMinus42,             "cscSegClusterNSegmentChamberMinus42[nCscSegClusters]/I");
-  */
+  tree_->Branch("cscSegCluster_match_gParticle_id",             cscSegCluster_match_gParticle_id,             "cscSegCluster_match_gParticle_id[nCscSegClusters]/I");
+  tree_->Branch("cscSegCluster_match_gParticle_minDeltaR",             cscSegCluster_match_gParticle_minDeltaR,             "cscSegCluster_match_gParticle_minDeltaR[nCscSegClusters]/F");
+  tree_->Branch("cscSegCluster_match_gParticle_index",             cscSegCluster_match_gParticle_index,             "cscSegCluster_match_gParticle_index[nCscSegClusters]/I");
+
+
     // all csc RechitClusters
 
     tree_->Branch("nCsc_JetMuonVetoRechitCluster0p4_Me1112Veto",             &nCsc_JetMuonVetoRechitCluster0p4_Me1112Veto, "nCsc_JetMuonVetoRechitCluster0p4_Me1112Veto/I");
@@ -894,6 +911,7 @@ void LiteTreeMuonSystem::CreateTree()
     tree_->Branch("cscRechitCluster_match_gLLP",             cscRechitCluster_match_gLLP,             "cscRechitCluster_match_gLLP[nCscRechitClusters]/O");
     tree_->Branch("cscRechitCluster_match_gLLP_minDeltaR",             cscRechitCluster_match_gLLP_minDeltaR,             "cscRechitCluster_match_gLLP_minDeltaR[nCscRechitClusters]/F");
     tree_->Branch("cscRechitCluster_match_gLLP_index",             cscRechitCluster_match_gLLP_index,             "cscRechitCluster_match_gLLP_index[nCscRechitClusters]/I");
+    tree_->Branch("cscRechitCluster_match_gParticle_id",             cscRechitCluster_match_gParticle_id,             "cscRechitCluster_match_gParticle_id[nCscRechitClusters]/O");
 
     tree_->Branch("cscRechitClusterX",             cscRechitClusterX,             "cscRechitClusterX[nCscRechitClusters]/F");
     tree_->Branch("cscRechitClusterY",             cscRechitClusterY,             "cscRechitClusterY[nCscRechitClusters]/F");

@@ -10,7 +10,7 @@ cd ../
 RazorAnalyzerDir=`pwd`
 cd -
 
-inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p12/MC_RunIIFall18/v3/v8/
+inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p12/MC_RunIIFall18/vBDT/v1/
 outputDir=${inputDir}normalized
 echo ${inputDir}
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh

@@ -54,6 +54,11 @@ public:
   float rho, weight;
   float pileupWeight, pileupWeightUp, pileupWeightDown;
   float met, metPhi, jetMet_dPhi, jetMet_dPhiMin,jetMet_dPhiMin4, metJESUp, metJESDown;
+  bool Flag_HBHENoiseFilter, Flag_HBHEIsoNoiseFilter, Flag_BadPFMuonFilter, Flag_CSCTightHaloFilter, Flag_goodVertices, Flag_ecalBadCalibFilter, Flag_all;
+
+
+
+
   int gLepId;
   float gLepPt, gLepPhi, gLepEta, gLepE;
   int nGenParticle;
@@ -166,8 +171,8 @@ public:
     int           cscClusterNSegmentChamberMinus32[N_MAX_CSC];
     int           cscClusterNSegmentChamberMinus41[N_MAX_CSC];
     int           cscClusterNSegmentChamberMinus42[N_MAX_CSC];
+    float         cscClusterMet_dPhi[N_MAX_CSC];
 
-/*
   int           nCscSegClusters;
   float         cscSegClusterX[N_MAX_CSC];   //[nCsc]
   float         cscSegClusterY[N_MAX_CSC];   //[nCsc]
@@ -228,13 +233,22 @@ public:
   int           cscSegClusterNSegmentChamberMinus32[N_MAX_CSC];
   int           cscSegClusterNSegmentChamberMinus41[N_MAX_CSC];
   int           cscSegClusterNSegmentChamberMinus42[N_MAX_CSC];
+
+
+  int           cscSegCluster_match_gParticle_id[N_MAX_CSC];
+  int           cscSegCluster_match_gParticle_index[N_MAX_CSC];
+  float         cscSegCluster_match_gParticle_minDeltaR[N_MAX_CSC];
+
   int           nCsc_JetVetoCluster0p4;
   int           nCsc_JetMuonVetoCluster0p4;
   int           nCsc_JetVetoCluster0p4_Me1112Veto;
   int           nCsc_JetMuonVetoCluster0p4_Me1112Veto;
-  */
+  float         cscSegClusterMet_dPhi[N_MAX_CSC];
+
   int           nCsc_JetMuonVetoRechitCluster0p4_Me1112Veto;
   int           nCscRechitClusters;
+  int           cscRechitCluster_match_gParticle_id[N_MAX_CSC];
+
   bool          cscRechitCluster_match_gLLP[N_MAX_CSC];
   int           cscRechitCluster_match_gLLP_index[N_MAX_CSC];
   float         cscRechitCluster_match_gLLP_minDeltaR[N_MAX_CSC];
@@ -297,6 +311,8 @@ public:
   int           cscRechitClusterNRechitChamberMinus32[N_MAX_CSC];
   int           cscRechitClusterNRechitChamberMinus41[N_MAX_CSC];
   int           cscRechitClusterNRechitChamberMinus42[N_MAX_CSC];
+  float         cscRechitClusterMet_dPhi[N_MAX_CSC];
+
   // //csc intime cluster
   // int           nCscITClusters;
   // float         cscITClusterJetVeto[N_MAX_CSC];   //[nCsc]
@@ -400,6 +416,7 @@ public:
   float jetNeutralEMEnergyFraction[N_MAX_JETS];
   float jetChargedHadronEnergyFraction[N_MAX_JETS];
   float jetNeutralHadronEnergyFraction[N_MAX_JETS];
+  bool jetPassMuFrac[N_MAX_JETS];
   float jet_match_genJet_minDeltaR[N_MAX_JETS];
   int jet_match_genJet_index[N_MAX_JETS];
   float jet_match_genJet_pt[N_MAX_JETS];

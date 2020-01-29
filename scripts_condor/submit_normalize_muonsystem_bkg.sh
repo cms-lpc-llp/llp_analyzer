@@ -12,33 +12,52 @@ cd -
 mode=bkg
 year=16
 
-if [ $year == '16' ]
-then
-	year=MC_Summer16
-	echo "year ${year}"
-	samples='WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8'
-elif  [ $year == '17' ] 
-then
-	year=MC_Fall17
-	echo "year ${year}"
-	samples='WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8'
-elif  [ $year == '18' ]
-then
-	year=MC_Autumn18
-	echo "year ${year}"
-	samples='WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8'
-else
-	echo "year invalid"
-	samples=''
-fi
+#if [ $year == '16' ]
+#then
+#	year=MC_Summer16
+#	echo "year ${year}"
+#	samples='WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8'
+#elif  [ $year == '17' ] 
+#then
+#	year=MC_Fall17
+#	echo "year ${year}"
+#	samples='WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8'
+#elif  [ $year == '18' ]
+#then
+#	year=MC_Autumn18
+#	echo "year ${year}"
+#	samples='WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8 WJetsToLNu_1J_TuneCP5_13TeV-amcatnloFXFX-pythia8 WJetsToLNu_2J_TuneCP5_13TeV-amcatnloFXFX-pythia8'
+#else
+#	echo "year invalid"
+#	samples=''
+#fi
 
-samples=DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
-inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p8/${year}/v2/v1/bkg/wH/
+inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p12/MC_Summer16/v4/v5/
 outputDir=${inputDir}normalized
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
+echo ${inputDir}
 
-
-for sample in ${samples}
+#TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#ZJetsToNuNu_HT-100To200_13TeV-madgraph \
+#ZJetsToNuNu_HT-1200To2500_13TeV-madgraph \
+#ZJetsToNuNu_HT-200To400_13TeV-madgraph \
+#ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph \
+#ZJetsToNuNu_HT-400To600_13TeV-madgraph \
+#ZJetsToNuNu_HT-600To800_13TeV-madgraph \
+#ZJetsToNuNu_HT-800To1200_13TeV-madgraph \
+#QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+for sample in \
+WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
 do
 	echo "Sample " ${sample}
 	analyzer=llp_MuonSystem
@@ -69,5 +88,5 @@ do
 	echo "when_to_transfer_output = ON_EXIT" >> ${jdl_file}
 	echo "Queue 1" >> ${jdl_file}
 	echo "condor_submit ${jdl_file}"
-	condor_submit ${jdl_file}
+	condor_submit ${jdl_file} -batch-name ${sample}
 done
