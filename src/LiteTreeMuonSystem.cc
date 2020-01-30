@@ -173,7 +173,7 @@ void LiteTreeMuonSystem::InitVariables()
     cscSegCluster_match_gParticle_id[i] = -999;
     cscSegCluster_match_gParticle_index[i] = -999;
     cscSegCluster_match_gParticle_minDeltaR[i] = -999.;
-
+    cscSegClusterMet_dPhi[i] = -999.;
 
 
 
@@ -460,6 +460,9 @@ void LiteTreeMuonSystem::InitTree()
   // CSC CLUSTER
 
   tree_->SetBranchAddress("nCscSegClusters",             &nCscSegClusters);
+  tree_->SetBranchAddress("cscSegClusterMet_dPhi",             &cscSegClusterMet_dPhi);
+
+
   // tree_->SetBranchAddress("nCsc_JetVetoSegCluster0p4",             &nCsc_JetVetoSegCluster0p4);
   // tree_->SetBranchAddress("nCsc_JetMuonVetoSegCluster0p4",             &nCsc_JetMuonVetoSegCluster0p4);
   // tree_->SetBranchAddress("nCsc_JetVetoSegCluster0p4_Me1112Veto",             &nCsc_JetVetoSegCluster0p4_Me1112Veto);
@@ -856,6 +859,7 @@ void LiteTreeMuonSystem::CreateTree()
   tree_->Branch("cscSegClusterTime",             cscSegClusterTime,             "cscSegClusterTime[nCscSegClusters]/F");
   tree_->Branch("cscSegClusterTimeSpread",             cscSegClusterTimeSpread,             "cscSegClusterTimeSpread[nCscSegClusters]/F");
   tree_->Branch("cscSegClusterGenMuonDeltaR",             cscSegClusterGenMuonDeltaR,             "cscSegClusterGenMuonDeltaR[nCscSegClusters]/F");
+  tree_->Branch("cscSegClusterMet_dPhi",             cscSegClusterMet_dPhi,             "cscSegClusterMet_dPhi[nCscSegClusters]/F");
 
   tree_->Branch("cscSegClusterMajorAxis",             cscSegClusterMajorAxis,             "cscSegClusterMajorAxis[nCscSegClusters]/F");
   tree_->Branch("cscSegClusterMinorAxis",             cscSegClusterMinorAxis,             "cscSegClusterMinorAxis[nCscSegClusters]/F");

@@ -287,7 +287,7 @@ public :
   Int_t           cscClusterVertexN20[2000];   //[ncscClusters]
   Int_t           cscClusterVertexN[2000];   //[ncscClusters]
 
-  /* Int_t           nCscRechitClusters;
+   Int_t           nCscRechitClusters;
    Int_t           cscRechitCluster_match_gParticle_id[2000];
    Float_t         cscRechitClusterX[2000];   //[nCscRechitClusters]
    Float_t         cscRechitClusterY[2000];   //[nCscRechitClusters]
@@ -346,9 +346,9 @@ public :
    Int_t           cscRechitClusterVertexN10[2000];   //[nCscRechitClusters]
    Int_t           cscRechitClusterVertexN15[2000];   //[nCscRechitClusters]
    Int_t           cscRechitClusterVertexN20[2000];   //[nCscRechitClusters]
-   Int_t           cscRechitClusterVertexN[2000];   //[nCscRechitClusters]*/
+   Int_t           cscRechitClusterVertexN[2000];   //[nCscRechitClusters]
 
-   Int_t           nCscSegClusters;
+   /*Int_t           nCscSegClusters;
    Float_t         cscSegClusterX[2000];   //[ncscSegClusters]
    Float_t         cscSegClusterY[2000];   //[ncscSegClusters]
    Float_t         cscSegClusterZ[2000];   //[ncscSegClusters]
@@ -407,7 +407,7 @@ public :
    Int_t           cscSegClusterVertexN15[2000];   //[ncscSegClusters]
    Int_t           cscSegClusterVertexN20[2000];   //[ncscSegClusters]
    Int_t           cscSegClusterVertexN[2000];   //[ncscSegClusters]
-
+   */
 
    Int_t           nCsc;
    Float_t         cscPhi[2000];   //[nCsc]
@@ -441,6 +441,7 @@ public :
    Float_t         dtDirZ[2000];   //[nDt]
    Float_t         dtT[2000];   //[nDt]
    Float_t         dtTError[2000];   //[nDt]
+
    Int_t           nCaloJets;
    Float_t         calojetE[2000];   //[nJets]
    Float_t         calojetPt[2000];   //[nJets]
@@ -846,7 +847,7 @@ public :
    TBranch        *b_cscClusterVertexN20;   //!
    TBranch        *b_cscClusterVertexN;   //!
 
-   /*TBranch        *b_nCscRechitClusters;   //!
+   TBranch        *b_nCscRechitClusters;   //!
    TBranch        *b_cscRechitCluster_match_gParticle_id;
    TBranch        *b_cscRechitClusterX;   //!
    TBranch        *b_cscRechitClusterY;   //!
@@ -906,7 +907,7 @@ public :
    TBranch        *b_cscRechitClusterVertexN15;   //!
    TBranch        *b_cscRechitClusterVertexN20;   //!
    TBranch        *b_cscRechitClusterVertexN;   //!
-*/
+   /*
    TBranch        *b_nCscSegClusters;   //!
    TBranch        *b_cscSegClusterX;   //!
    TBranch        *b_cscSegClusterY;   //!
@@ -966,6 +967,7 @@ public :
    TBranch        *b_cscSegClusterVertexN15;   //!
    TBranch        *b_cscSegClusterVertexN20;   //!
    TBranch        *b_cscSegClusterVertexN;   //!
+   */
    TBranch        *b_nCsc;   //!
    TBranch        *b_cscPhi;   //!
    TBranch        *b_cscEta;   //!
@@ -998,6 +1000,7 @@ public :
    TBranch        *b_dtDirZ;   //!
    TBranch        *b_dtT;   //!
    TBranch        *b_dtTError;   //!
+   
    TBranch        *b_nCaloJets;   //!
    TBranch        *b_calojetE;   //!
    TBranch        *b_calojetPt;   //!
@@ -1491,7 +1494,7 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("cscClusterVertexN20", cscClusterVertexN20, &b_cscClusterVertexN20);
    fChain->SetBranchAddress("cscClusterVertexN", cscClusterVertexN, &b_cscClusterVertexN);
 
-
+   /*
    fChain->SetBranchAddress("nCscSegClusters", &nCscSegClusters, &b_nCscSegClusters);
    fChain->SetBranchAddress("cscSegClusterX", cscSegClusterX, &b_cscSegClusterX);
    fChain->SetBranchAddress("cscSegClusterY", cscSegClusterY, &b_cscSegClusterY);
@@ -1551,8 +1554,8 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("cscSegClusterVertexN15", cscSegClusterVertexN15, &b_cscSegClusterVertexN15);
    fChain->SetBranchAddress("cscSegClusterVertexN20", cscSegClusterVertexN20, &b_cscSegClusterVertexN20);
    fChain->SetBranchAddress("cscSegClusterVertexN", cscSegClusterVertexN, &b_cscSegClusterVertexN);
-
-  /* fChain->SetBranchAddress("nCscRechitClusters", &nCscRechitClusters, &b_nCscRechitClusters);
+   */
+   fChain->SetBranchAddress("nCscRechitClusters", &nCscRechitClusters, &b_nCscRechitClusters);
    fChain->SetBranchAddress("cscRechitCluster_match_gParticle_id", &cscRechitCluster_match_gParticle_id, &b_cscRechitCluster_match_gParticle_id);
 
    fChain->SetBranchAddress("cscRechitClusterX", cscRechitClusterX, &b_cscRechitClusterX);
@@ -1613,7 +1616,7 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("cscRechitClusterVertexN15", cscRechitClusterVertexN15, &b_cscRechitClusterVertexN15);
    fChain->SetBranchAddress("cscRechitClusterVertexN20", cscRechitClusterVertexN20, &b_cscRechitClusterVertexN20);
    fChain->SetBranchAddress("cscRechitClusterVertexN", cscRechitClusterVertexN, &b_cscRechitClusterVertexN);
-   */
+
    fChain->SetBranchAddress("nCsc", &nCsc, &b_nCsc);
    fChain->SetBranchAddress("cscPhi", cscPhi, &b_cscPhi);
    fChain->SetBranchAddress("cscEta", cscEta, &b_cscEta);
@@ -1646,6 +1649,7 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("dtDirZ", dtDirZ, &b_dtDirZ);
    fChain->SetBranchAddress("dtT", dtT, &b_dtT);
    fChain->SetBranchAddress("dtTError", dtTError, &b_dtTError);
+
    fChain->SetBranchAddress("nCaloJets", &nCaloJets, &b_nCaloJets);
    fChain->SetBranchAddress("calojetE", calojetE, &b_calojetE);
    fChain->SetBranchAddress("calojetPt", calojetPt, &b_calojetPt);

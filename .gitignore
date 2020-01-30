@@ -1,6 +1,10 @@
 # Prerequisites
 *.d
 
+# local files
+*.root
+*.list
+*.txt
 # Compiled Object files
 *.slo
 *.lo
@@ -35,6 +39,9 @@
 normalized/*
 scripts_condor/log/*
 scripts_condor/submit/*
+scripts_condor/tarball/
 bin/*
+python/*.pyc
+src/Run*
 *.*~
 #*#

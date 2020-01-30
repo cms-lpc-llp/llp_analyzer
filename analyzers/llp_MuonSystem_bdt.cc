@@ -667,7 +667,7 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
     //-----------------------------
     //if(nCscClusters == 0) continue;
 
-    /*if(nCscRechitClusters == 0) continue;
+    if(nCscRechitClusters == 0) continue;
 
     for(int i = 0; i < nCscRechitClusters; i++)
     {
@@ -754,7 +754,7 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       MuonSystem->cscRechitClusterMet_dPhi[MuonSystem->nCscRechitClusters] =  RazorAnalyzer::deltaPhi(MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters],MuonSystem->metPhi);
 
       MuonSystem->nCscRechitClusters++;
-    }*/
+    }
 
     if (MuonSystem->nCscRechitClusters == 0) continue;
     MuonSystem->tree_->Fill();

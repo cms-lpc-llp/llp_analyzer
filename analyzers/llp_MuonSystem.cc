@@ -247,7 +247,6 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //std::cout << "deb0 " << jentry << std::endl;
     MuonSystem->InitVariables();
     //std::cout << "deb1 " << jentry << std::endl;
-
     if (isData)
     {
       NEvents->Fill(1);
@@ -753,7 +752,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     }*/
 
 
-    if (isData)
+    /*if (isData)
     {
       for(int i = 0; i < nCscSegClusters; i++)
       {
@@ -901,10 +900,10 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
         }
         MuonSystem->nCscSegClusters++;
       }
-    }
+    }*/
 
 
-    /*for(int i = 0; i < nCscRechitClusters; i++)
+   for(int i = 0; i < nCscRechitClusters; i++)
     {
       // if (cscRechitClusterTime[i] > -12.5) continue;
       MuonSystem->cscRechitClusterX[MuonSystem->nCscRechitClusters] =cscRechitClusterX[i];
@@ -989,7 +988,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       MuonSystem->cscRechitClusterMet_dPhi[MuonSystem->nCscRechitClusters] =  RazorAnalyzer::deltaPhi(MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters],MuonSystem->metPhi);
 
       MuonSystem->nCscRechitClusters++;
-    }*/
+    }
 
 
     MuonSystem->tree_->Fill();
