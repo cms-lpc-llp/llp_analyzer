@@ -418,8 +418,8 @@ public :
    Bool_t          Flag_BadChargedCandidateFilter;
    Bool_t          Flag_ecalBadCalibFilter;
    Bool_t          Flag_METFilters;
-   Bool_t          HLTDecision[601];
-   Int_t           HLTPrescale[601];
+   Bool_t          HLTDecision[602];
+   Int_t           HLTPrescale[602];
    Int_t           nGenJets;
    Float_t         genJetE[500];   //[nGenJets]
    Float_t         genJetPt[500];   //[nGenJets]

@@ -8,7 +8,7 @@
 #define N_MAX_LLP_GRAND_DAUGHTERS 4
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
-#define NTriggersMAX 601 //Number of trigger in the .dat file
+#define NTriggersMAX 602 //Number of trigger in the .dat file
 
 // Constructor
 SusyLLPTree::SusyLLPTree()
@@ -28,6 +28,7 @@ void SusyLLPTree::InitVariables()
     runNum=0; lumiSec=0; evtNum=0; category=0;
     npv=0; npu=0; rho=-1; weight=-1;
     met=-1; metPhi=-1;
+    jetMet_dPhi=-999.; jetMet_dPhiMin=999.; jetMet_dPhiMin4=999.;
 
     //leptons
     nLeptons = 0;
@@ -230,6 +231,8 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("rho",         &rho);
     tree_->SetBranchAddress("met",         &met);
     tree_->SetBranchAddress("metPhi",      &metPhi);
+    //tree_->SetBranchAddress("jetMet_dPhiMin",      &jetMet_dPhiMin);
+    //tree_->SetBranchAddress("jetMet_dPhiMin4",      &jetMet_dPhiMin4);
 
     //Leptons
     tree_->SetBranchAddress("nLeptons",    &nLeptons);
@@ -433,6 +436,9 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("rho",         &rho,        "rho/F");
     tree_->Branch("met",         &met,        "met/F");         // MET
     tree_->Branch("metPhi",      &metPhi,     "metPhi/F");      // phi(MET)
+    tree_->Branch("jetMet_dPhi",    &jetMet_dPhi,    "jetMet_dPhi/F");
+    tree_->Branch("jetMet_dPhiMin",    &jetMet_dPhiMin,    "jetMet_dPhiMin/F");
+    tree_->Branch("jetMet_dPhiMin4",    &jetMet_dPhiMin4,    "jetMet_dPhiMin4/F");
 
     //leptons
     tree_->Branch("nLeptons",  &nLeptons, "nLeptons/I");
@@ -519,7 +525,7 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("calojetRechitE", calojetRechitE, "calojetRechitE[nCaloJets]/F");
 
     //HLT
-    tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[601]/O"); //hardcoded
+    tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[602]/O"); //hardcoded
 
   //gLLP branches
   tree_->Branch("gLLP0_EB", &gLLP0_EB, "gLLP0_EB/O");

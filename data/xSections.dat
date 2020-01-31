@@ -117,6 +117,10 @@ x1n2_mchi_1325    1e-03*0.21
 
 #13 TeV Higgsino NLO-NLL Higgsino-like Cross Sections (fully-degenerate case) 
 #https://twiki.cern.ch/twiki/bin/view/LHCPhysics/SUSYCrossSections13TeVhino
+#n3n2_hbb_hbb_mchi_127 	1e-03*10314.76*0.5824*0.5824
+n3n2_hbb_hbb_mchi_127 	10.31*0.5824*0.5824
+n3n2_hbb_hbb_mchi_150 	1e-03*3832.31*0.5824*0.5824
+n3n2_hbb_hbb_mchi_175 	1e-03*2583.96*0.5824*0.5824
 n3n2_hbb_hbb_mchi_200 	1e-03*1335.62*0.5824*0.5824
 n3n2_hinc_hbb_mchi_200 	1e-03*1335.62*0.5824
 n3n2_zll_hbb_mchi_200 	1e-03*1335.62*0.067294*0.5824 #z->ee/mumu

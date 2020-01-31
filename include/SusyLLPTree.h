@@ -9,7 +9,7 @@
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
 #define N_MAX_CSC 2000
-#define NTriggersMAX 601 //Number of trigger in the .dat file
+#define NTriggersMAX 602 //Number of trigger in the .dat file
 #define N_CSC_CUT 20
 #define JET_PT_CUT 10
 #define MUON_PT_CUT 20
@@ -50,6 +50,9 @@ public:
   UInt_t  npv, npu;
   Float_t rho, weight;
   Float_t met, metPhi;
+  Float_t jetMet_dPhi;
+  Float_t jetMet_dPhiMin;
+  Float_t jetMet_dPhiMin4;
 
   //leptons
   int nLeptons;

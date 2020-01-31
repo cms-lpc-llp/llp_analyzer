@@ -13,8 +13,9 @@
 #include "TH1F.h"
 
 #define _debug 0
+#define _debug_met 0
 #define _debug_jet 0
-#define _debug_trg 1
+#define _debug_trg 0
 #define _debug_calojet 0
 
 #define N_MAX_LLP_DAUGHTERS 4
@@ -22,7 +23,7 @@
 #define N_MAX_LLPS 2
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
-#define NTriggersMAX 601 //Number of trigger in the .dat file
+#define NTriggersMAX 602 //Number of trigger in the .dat file
 using namespace std;
 
 struct leptons
@@ -208,6 +209,12 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 
 
+  if (label == "HH" || label == "bkg_HH" ){
+    NTrigger = 1;
+    muonPt_cut = 15;
+    elePt_cut = 15;
+    nLepton_cut = 0;
+    }
   if (label == "zH" || label == "bkg_zH" ){
     NTrigger = 4;
     muonPt_cut = 15;
@@ -236,6 +243,10 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     // trigger_paths[2] = 310;
     trigger_paths[2] = 87;
     trigger_paths[3] = 135;
+  }
+  else if (label == "HH" || label == "bkg_HH"){
+     wzId = 25;
+     trigger_paths[0] = 310;
   }
   //-----------------------------------------------
   //Set up Output File
@@ -313,7 +324,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     if(_debug) std::cout << "deb0 " << jentry << std::endl;
     llp_tree->InitVariables();
     if(_debug) std::cout << "deb1 " << jentry << std::endl;
-    if (label =="bkg_wH"|| label == "bkg_zH"){
+    if (label =="bkg_wH"|| label == "bkg_zH" || label == "bkg_HH"){
       if (isData)
       {
         NEvents->Fill(1);
@@ -339,7 +350,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     llp_tree->evtNum = eventNum;
     if(_debug) std::cout << "deb3 " << jentry << std::endl;
     if(_debug) std::cout << "nBunchXing " << nBunchXing << std::endl;
-    if (label == "zH" || label == "wH"){
+    if (label == "zH" || label == "wH" ){
       NEvents->Fill(1);
       bool wzFlag = false;
       for (int i=0; i < nGenParticle; ++i)
@@ -347,6 +358,20 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
         // if (abs(gParticleId[i]) == wzId && gParticleStatus[i] == 22)
         //if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
         if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] && abs(gParticleMotherId[i]) == wzId)
+        {
+          wzFlag = true;
+        }
+
+      }
+      if ( wzFlag == false ) continue;
+
+    }
+    else if (label == "HH"){
+      NEvents->Fill(1);
+      bool wzFlag = false;
+      for (int i=0; i < nGenParticle; ++i)
+      {
+        if ((abs(gParticleId[i]) == 5) && gParticleStatus[i] && abs(gParticleMotherId[i]) == wzId)
         {
           wzFlag = true;
         }
@@ -372,6 +397,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     llp_tree->npv = nPV;
     llp_tree->rho = fixedGridRhoFastjetAll;
     llp_tree->met = metType1Pt;
+    if(_debug_met) std::cout << "met " << llp_tree->met << std::endl;
+    if( llp_tree->met < 150. ) continue;
+    if(_debug_met) std::cout << "metType1Pt passed" << metType1Pt << std::endl;
     llp_tree->metPhi = metType1Phi;
     if(_debug) std::cout << "npv " << llp_tree->npv << std::endl;
 
@@ -384,9 +412,13 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     bool triggered = false;
     for(int i = 0; i < NTrigger; i++)
     {
+    if(_debug_trg) std::cout << "i " << i << ", NTrigger "<< NTrigger << std::endl;
+   
       int trigger_temp = trigger_paths[i];
+    if(_debug_trg) std::cout << "temp  " << trigger_paths[i] << ", triggered "<< triggered << std::endl;
 
       triggered = triggered || HLTDecision[trigger_temp];
+    if(_debug_trg) std::cout << "is triggered ?"<< triggered << std::endl;
 
     }
     if (triggered) trig->Fill(1);
@@ -593,7 +625,6 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
       // std::cout <<jetRechitT[i] << "," << jetRechitE[i] <<  "," << jetNRechits[i] << std::endl;
 
-
       jets tmpJet;
       tmpJet.jet    = thisJet;
       tmpJet.time   = jetRechitT[i];
@@ -722,6 +753,16 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     if (triggered) trig_lepId_dijet->Fill(1);
     sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
+    if (Jets.size()>0)
+    {
+      llp_tree->jetMet_dPhi = RazorAnalyzer::deltaPhi(jetPhi[0],metType1Phi);
+    }
+    else{
+      llp_tree->jetMet_dPhi = -999.;
+    }
+    float jetMet_dPhiMin_temp = 999 ; 
+    float jetMet_dPhiMin4_temp = 999 ; 
+
     for ( auto &tmp : Jets )
     {
       llp_tree->jetE[llp_tree->nJets] = tmp.jet.E();
@@ -765,9 +806,21 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
       // std::cout <<tmp.time << "," <<tmp.ecalRechitE <<  "," << tmp.ecalNRechits << llp_tree->nJets<<std::endl;
 
+      if(jetMet_dPhiMin4_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi)) && llp_tree->nJets < 4)
+      {
+        jetMet_dPhiMin4_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi));
+      }
+      if (jetMet_dPhiMin_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi)))
+      {
+        jetMet_dPhiMin_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi));
+      }     
+ 
       llp_tree->nJets++;
     }
     if(_debug) std::cout << "nJets in tree " << llp_tree->nJets << std::endl;
+    llp_tree-> jetMet_dPhiMin = jetMet_dPhiMin_temp;
+    llp_tree-> jetMet_dPhiMin4 = jetMet_dPhiMin4_temp;
+
     sort(caloJets.begin(), caloJets.end(), my_largest_pt_calojet);
 
     for ( auto &tmp : caloJets )
