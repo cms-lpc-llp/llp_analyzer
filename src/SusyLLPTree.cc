@@ -29,6 +29,7 @@ void SusyLLPTree::InitVariables()
     npv=0; npu=0; rho=-1; weight=-1;
     met=-1; metPhi=-1;
     jetMet_dPhi=-999.; jetMet_dPhiMin=999.; jetMet_dPhiMin4=999.;
+    jetMet_dPhiStar=-999.; jetMet_dPhiStarMin=999.; 
 
     //leptons
     nLeptons = 0;
@@ -231,8 +232,6 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("rho",         &rho);
     tree_->SetBranchAddress("met",         &met);
     tree_->SetBranchAddress("metPhi",      &metPhi);
-    //tree_->SetBranchAddress("jetMet_dPhiMin",      &jetMet_dPhiMin);
-    //tree_->SetBranchAddress("jetMet_dPhiMin4",      &jetMet_dPhiMin4);
 
     //Leptons
     tree_->SetBranchAddress("nLeptons",    &nLeptons);
@@ -437,7 +436,9 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("met",         &met,        "met/F");         // MET
     tree_->Branch("metPhi",      &metPhi,     "metPhi/F");      // phi(MET)
     tree_->Branch("jetMet_dPhi",    &jetMet_dPhi,    "jetMet_dPhi/F");
+    tree_->Branch("jetMet_dPhiStar",    &jetMet_dPhiStar,    "jetMet_dPhiStar/F");
     tree_->Branch("jetMet_dPhiMin",    &jetMet_dPhiMin,    "jetMet_dPhiMin/F");
+    tree_->Branch("jetMet_dPhiStarMin",    &jetMet_dPhiStarMin,    "jetMet_dPhiStarMin/F");
     tree_->Branch("jetMet_dPhiMin4",    &jetMet_dPhiMin4,    "jetMet_dPhiMin4/F");
 
     //leptons

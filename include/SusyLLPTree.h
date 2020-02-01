@@ -51,7 +51,9 @@ public:
   Float_t rho, weight;
   Float_t met, metPhi;
   Float_t jetMet_dPhi;
+  Float_t jetMet_dPhiStar;
   Float_t jetMet_dPhiMin;
+  Float_t jetMet_dPhiStarMin;
   Float_t jetMet_dPhiMin4;
 
   //leptons

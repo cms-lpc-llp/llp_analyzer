@@ -402,6 +402,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     if(_debug_met) std::cout << "metType1Pt passed" << metType1Pt << std::endl;
     llp_tree->metPhi = metType1Phi;
     if(_debug) std::cout << "npv " << llp_tree->npv << std::endl;
+    TLorentzVector t1PFMET = makeTLorentzVectorPtEtaPhiM( metType1Pt, 0, metType1Phi, 0 );
 
     //Triggers
     for(int i = 0; i < NTriggersMAX; i++){
@@ -756,11 +757,16 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     if (Jets.size()>0)
     {
       llp_tree->jetMet_dPhi = RazorAnalyzer::deltaPhi(jetPhi[0],metType1Phi);
+      //TLorentzVector t1PFMET = makeTLorentzVectorPtEtaPhiM( metType1Pt, 0, metType1Phi, 0 );
+      TLorentzVector jet0 = makeTLorentzVectorPtEtaPhiM( jetPt[0], 0, jetPhi[0], 0 );
+      llp_tree->jetMet_dPhiStar = RazorAnalyzer::deltaPhi(jetPhi[0],  (t1PFMET+jet0).Phi() );
     }
     else{
       llp_tree->jetMet_dPhi = -999.;
+      llp_tree->jetMet_dPhiStar = -999.;
     }
     float jetMet_dPhiMin_temp = 999 ; 
+    float jetMet_dPhiStarMin_temp = 999 ; 
     float jetMet_dPhiMin4_temp = 999 ; 
 
     for ( auto &tmp : Jets )
@@ -814,11 +820,17 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       {
         jetMet_dPhiMin_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi));
       }     
+      TLorentzVector jet_temp = makeTLorentzVectorPtEtaPhiM( tmp.jet.Pt(), 0, tmp.jet.Phi(), 0 );
+      if (jetMet_dPhiStarMin_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() )))
+      {
+        jetMet_dPhiStarMin_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() ));
+      }     
  
       llp_tree->nJets++;
     }
     if(_debug) std::cout << "nJets in tree " << llp_tree->nJets << std::endl;
     llp_tree-> jetMet_dPhiMin = jetMet_dPhiMin_temp;
+    llp_tree-> jetMet_dPhiStarMin = jetMet_dPhiStarMin_temp;
     llp_tree-> jetMet_dPhiMin4 = jetMet_dPhiMin4_temp;
 
     sort(caloJets.begin(), caloJets.end(), my_largest_pt_calojet);
