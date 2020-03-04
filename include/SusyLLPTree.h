@@ -50,6 +50,7 @@ public:
   UInt_t  npv, npu;
   Float_t rho, weight;
   Float_t met, metPhi;
+  Float_t HT;
   Float_t jetMet_dPhi;
   Float_t jetMet_dPhiStar;
   Float_t jetMet_dPhiMin;
@@ -78,8 +79,16 @@ public:
   int ZleptonIndex1;
   int ZleptonIndex2;
 
+  //h-candidate
+  float dr_max;
+  float dm_hh; 
+  float mh1; 
+  float mh2; 
+  float avg_mh; 
+
   //jets
   int nJets;
+  int nBJets;
   float jetE[N_MAX_JETS];
   float jetEt[N_MAX_JETS];
   float jetPt[N_MAX_JETS];
@@ -104,6 +113,8 @@ public:
   float jetPtAllTracks_wp[N_MAX_JETS];
   // bool jetLoosePassId[N_MAX_JETS];
   bool jetPassId[N_MAX_JETS];
+  bool jetCSVT[N_MAX_JETS];
+  float jetCISV[N_MAX_JETS];
   bool matched[N_MAX_JETS];
   bool jet_matched_gLLP0_daughter[N_MAX_JETS];
   bool jet_matched_gLLP1_daughter[N_MAX_JETS];
@@ -153,6 +164,12 @@ public:
    float         gLLP_eta[N_MAX_LLPS];
    float         gLLP_beta[N_MAX_LLPS];
    float         gLLP_phi[N_MAX_LLPS];
+   float         gLLP_dr;
+   float         gLLP_grandaughter_dr1;
+   float         gLLP_grandaughter_dr2;
+   float	 gLLP_grandaughter_matched_jet_dr1; 
+   float	 gLLP_grandaughter_matched_jet_dr2; 
+   float         gLLP_decay_vertex_r[N_MAX_LLPS];
    float         gLLP_decay_vertex_x[N_MAX_LLPS];
    float         gLLP_decay_vertex_y[N_MAX_LLPS];
    float         gLLP_decay_vertex_z[N_MAX_LLPS];

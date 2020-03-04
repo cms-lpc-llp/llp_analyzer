@@ -15,8 +15,10 @@
 #define _debug 0
 #define _debug_met 0
 #define _debug_jet 0
+#define _debug_match 1
 #define _debug_trg 0
 #define _debug_calojet 0
+#define _run_calojet_ 0
 
 #define N_MAX_LLP_DAUGHTERS 4
 #define N_MAX_LLP_GRAND_DAUGHTERS 4
@@ -46,7 +48,8 @@ struct jets
   // bool passLooseId;
   // bool passMediumId;
   // bool passTightId;
-  bool isCSVL;
+  bool isCSVT;
+  float CISV;
   bool matched;
   bool jet_matched_gLLP0_daughter;
   bool jet_matched_gLLP1_daughter;
@@ -79,7 +82,7 @@ struct calojets
   TLorentzVector calojet;
   float time;
   bool passId;
-  bool isCSVL;
+  bool isCSVT;
   bool matched;
   int ecalNRechits;
   float ecalRechitE;
@@ -194,7 +197,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
   const float ELE_MASS = 0.000511;
   const float MU_MASS  = 0.105658;
   const float Z_MASS   = 91.2;
+  const float H_MASS   = 125.0;
    
+  string dataset = "94X";
   //Analysis Tag
   //reference in RazorHelper
   if (analysisTag == ""){
@@ -377,7 +382,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
         }
 
       }
-      if ( wzFlag == false ) continue;
+    //if(_debug) std::cout << "wzFlag " << wzFlag << std::endl;
+      //if ( wzFlag == false ) continue;
 
     }
 
@@ -392,6 +398,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
         if(_debug) std::cout << "nPUmean[i] " << nPUmean[i] << std::endl;
       }
     }
+    if(_debug_met) std::cout << "npu " << llp_tree->npu << std::endl;
     if(_debug && llp_tree->npu != 0 ) std::cout << "npu " << llp_tree->npu << std::endl;
     //get NPU
     llp_tree->npv = nPV;
@@ -593,8 +600,13 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
   if(_debug_jet) std::cout << "jetChargedEMEnergyFraction 0 " << jetChargedEMEnergyFraction[0] << std::endl;
   if(_debug_jet) std::cout << "jetNeutralEMEnergyFraction 0 " << jetNeutralEMEnergyFraction[0] << std::endl;
   if(_debug_jet) std::cout << "jetGammaMax_ET 0 " << jetGammaMax_ET[0] << std::endl;
+
+  float ht = 0.;
+
   for(int i = 0; i < nJets; i++)
   {
+
+    ht += jetPt[i];
 
     //------------------------------------------------------------
     //exclude selected muons and electrons from the jet collection
@@ -629,19 +641,21 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       jets tmpJet;
       tmpJet.jet    = thisJet;
       tmpJet.time   = jetRechitT[i];
-      tmpJet.passId = jetPassIDLoose[i];
-      tmpJet.matched = jet_matched[i];
+      tmpJet.passId = jetPassIDTight[i]; //jetPassId Since the tight JetID efficiency is > 99% everywhere, loose is not recommended anymore. (94X)
+      //tmpJet.matched = jet_matched[i];
       tmpJet.jet_matched_gLLP0_daughter = jet_matched_gLLP0_daughter[i];
       tmpJet.jet_matched_gLLP1_daughter = jet_matched_gLLP1_daughter[i];
-      tmpJet.jet_matched_gLLP0_grandaughter = jet_matched_gLLP0_grandaughter[i];
-      tmpJet.jet_matched_gLLP1_grandaughter = jet_matched_gLLP1_grandaughter[i];
+      //tmpJet.jet_matched_gLLP0_grandaughter = jet_matched_gLLP0_grandaughter[i];
+      //tmpJet.jet_matched_gLLP1_grandaughter = jet_matched_gLLP1_grandaughter[i];
       tmpJet.energy_frac = jet_energy_frac[i];
       tmpJet.sig_et1 = jet_sig_et1[i];
       tmpJet.sig_et2 = jet_sig_et2[i];
       // std::cout<<tmpJet.sig_et1<<","<<jet_sig_et1[i]<<std::endl;
-      tmpJet.isCSVL = isCSVL(i);
-      //if (isCSVL(i)) NBJet20++;
-      //if (isCSVL(i) && thisJet.Pt() > 30) NBJet30++;
+      //tmpJet.isCSVT = isCSVT(i);
+      tmpJet.isCSVT = isCSVT(i, dataset);
+      tmpJet.CISV = jetCISV[i];
+      //if (isCSVT(i)) NBJet20++;
+      //if (isCSVT(i) && thisJet.Pt() > 30) NBJet30++;
       tmpJet.ecalNRechits = jetNRechits[i];
       tmpJet.ecalRechitE = jetRechitE[i];
       tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
@@ -669,6 +683,10 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       Jets.push_back(tmpJet);
 
     }
+    llp_tree->HT = ht;
+/*
+    if(_run_calojet_)
+    {
     std::vector<calojets> caloJets;
     //auto highest = [](auto a, auto b) { return a > b; };
 
@@ -709,10 +727,11 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
         calojets tmpJet;
         tmpJet.calojet    = thisJet;
         tmpJet.time   = calojetRechitT[i];
-        tmpJet.passId = calojetPassIDLoose[i];
-        tmpJet.isCSVL = isCSVL(i);
-        //if (isCSVL(i)) NBJet20++;
-        //if (isCSVL(i) && thisJet.Pt() > 30) NBJet30++;
+        tmpJet.passId = calojetPassIDTight[i]; //jetPassId Since the tight JetID efficiency is > 99% everywhere, loose is not recommended anymore. (94X)
+        //tmpJet.isCSVT = isCSVT(i);
+        tmpJet.isCSVT = isCSVT(i, dataset);
+        //if (isCSVT(i)) NBJet20++;
+        //if (isCSVT(i) && thisJet.Pt() > 30) NBJet30++;
         tmpJet.ecalNRechits = calojetNRechits[i];
         tmpJet.ecalRechitE = calojetRechitE[i];
 
@@ -736,6 +755,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
         caloJets.push_back(tmpJet);
 
       }
+      }
+*/
     //-----------------------------
     //Require at least 2 jets
     //-----------------------------
@@ -778,11 +799,13 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->jetPhi[llp_tree->nJets] = tmp.jet.Phi();
       llp_tree->jetTime[llp_tree->nJets] = tmp.time;
       llp_tree->jetPassId[llp_tree->nJets] = tmp.passId;
+      llp_tree->jetCSVT[llp_tree->nJets] = tmp.isCSVT;
+      llp_tree->jetCISV[llp_tree->nJets] = tmp.CISV;
       llp_tree->matched[llp_tree->nJets] = tmp.matched;
       llp_tree->jet_matched_gLLP0_daughter[llp_tree->nJets] = tmp.jet_matched_gLLP0_daughter;
       llp_tree->jet_matched_gLLP1_daughter[llp_tree->nJets] = tmp.jet_matched_gLLP1_daughter;
-      llp_tree->jet_matched_gLLP0_grandaughter[llp_tree->nJets] = tmp.jet_matched_gLLP0_grandaughter;
-      llp_tree->jet_matched_gLLP1_grandaughter[llp_tree->nJets] = tmp.jet_matched_gLLP1_grandaughter;
+      //llp_tree->jet_matched_gLLP0_grandaughter[llp_tree->nJets] = tmp.jet_matched_gLLP0_grandaughter;
+      //llp_tree->jet_matched_gLLP1_grandaughter[llp_tree->nJets] = tmp.jet_matched_gLLP1_grandaughter;
       llp_tree->jet_sig_et1[llp_tree->nJets] = tmp.sig_et1;
       llp_tree->jet_sig_et2[llp_tree->nJets] = tmp.sig_et2;
       llp_tree->jet_energy_frac[llp_tree->nJets] = tmp.energy_frac;
@@ -827,12 +850,172 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       }     
  
       llp_tree->nJets++;
+      if(tmp.CISV>0.9693) llp_tree->nBJets++;
     }
     if(_debug) std::cout << "nJets in tree " << llp_tree->nJets << std::endl;
-    llp_tree-> jetMet_dPhiMin = jetMet_dPhiMin_temp;
-    llp_tree-> jetMet_dPhiStarMin = jetMet_dPhiStarMin_temp;
-    llp_tree-> jetMet_dPhiMin4 = jetMet_dPhiMin4_temp;
+    llp_tree->jetMet_dPhiMin = jetMet_dPhiMin_temp;
+    llp_tree->jetMet_dPhiStarMin = jetMet_dPhiStarMin_temp;
+    llp_tree->jetMet_dPhiMin4 = jetMet_dPhiMin4_temp;
 
+
+    //reconstruct H(bb) mass
+    if(label=="HH"){
+
+    std::vector<jets> BJets = Jets;
+    // nominal hbb reconstruction based on mass close to H_MASS
+/*
+    if(BJets.size()>=2){ 
+    double HMass = -999;
+    double HPt = -999;
+    double tmpDistToHPole = 9999;
+    pair<uint,uint> HCandidateBJetsIndex;
+    bool foundH = false;
+    bool foundH2 = false;
+    TLorentzVector HCandidate;
+    if(_debug) std::cout << "BJets.size() " << BJets.size() << std::endl;
+    for( uint i = 0; i < BJets.size(); i++ )
+    {
+      for( uint j = 0; j < BJets.size(); j++ )
+      {
+        double tmpMass = (BJets[i].jet+BJets[j].jet).M();
+
+        //select the pair closest to H pole mass
+        if ( fabs( tmpMass - H_MASS) < tmpDistToHPole)
+        {
+          tmpDistToHPole = tmpMass;
+          HCandidateBJetsIndex = pair<int,int>(j,i);
+          HMass = tmpMass;
+          HPt = (BJets[i].jet+BJets[j].jet).Pt();
+          HCandidate = BJets[i].jet+BJets[j].jet;
+          foundH = true;
+        }
+      }
+    }
+    if(BJets.size()>=4){
+///
+    //H1
+    double H1Mass = -999;
+    double H1Pt = -999;
+    double tmpDistToH1Pole = 9999;
+    pair<uint,uint> H1CandidateBJetsIndex;
+    bool foundH1 = false;
+    TLorentzVector H1Candidate;
+///
+    //H2
+    double H2Mass = -999;
+    double H2Pt = -999;
+    double tmpDistToH2Pole = 9999;
+    pair<uint,uint> H2CandidateBJetsIndex;
+    TLorentzVector H2Candidate;
+    //deltaM = abs(M_H1-M_H2)
+    float deltaM = 999;
+    if(_debug) std::cout << "BJets.size() " << BJets.size() << std::endl;
+    //loops
+    for( uint i = 0; i < BJets.size(); i++ )
+    {
+      if(i==HCandidateBJetsIndex.first || i==HCandidateBJetsIndex.second) continue; //find another pair
+      for( uint j = 0; j < BJets.size(); j++ )
+      {
+        if(j==HCandidateBJetsIndex.first || j==HCandidateBJetsIndex.second) continue; //find another pair
+        //if(pair<int,int>(i,j)==HCandidateBJetsIndex || pair<int,int>(j,i)==HCandidateBJetsIndex) continue; //find another pair
+        //if(i==HCandidateBJetsIndex.first || i==HCandidateBJetsIndex.second || j==HCandidateBJetsIndex.first || j==HCandidateBJetsIndex.second) continue; //find another pair
+        double tmp2Mass = (BJets[i].jet+BJets[j].jet).M();
+
+        //select the pair closest to H pole mass
+        if ( fabs( tmp2Mass - H_MASS) < tmpDistToH2Pole)
+        {
+          tmpDistToH2Pole = tmp2Mass;
+          H2CandidateBJetsIndex = pair<int,int>(i,j);
+          H2Mass = tmp2Mass;
+          H2Pt = (BJets[i].jet+BJets[j].jet).Pt();
+          H2Candidate = BJets[i].jet+BJets[j].jet;
+          foundH2 = true;
+        }
+      }
+    }
+    deltaM = abs(HMass-H2Mass); //deltaM = abs(M_H1-M_H2)
+    if(foundH&&foundH2)std::cout << "deltaM = abs(M_H1-M_H2) " << deltaM <<", H1Mass = "<< HMass <<", H2Mass = " << H2Mass << std::endl;
+   }//second H
+    if(foundH&&!foundH2)std::cout << "H1Mass = "<< HMass << std::endl;
+   }//first H, as long as njets>=2
+*/
+  //4jets case only
+    if(BJets.size()==4){
+	//only 3 cases: [(0, 1), (2, 3)]; [(0, 2), (1, 3)]; [(0, 3), (2, 1)]; 
+	//only 6 masses
+        double tmpMass1 = (BJets[0].jet+BJets[1].jet).M();
+        double tmpMass2 = (BJets[2].jet+BJets[3].jet).M();
+
+        double tmpMass3 = (BJets[0].jet+BJets[2].jet).M();
+        double tmpMass4 = (BJets[1].jet+BJets[3].jet).M();
+
+        double tmpMass5 = (BJets[0].jet+BJets[3].jet).M();
+        double tmpMass6 = (BJets[2].jet+BJets[1].jet).M();
+
+	double tmpDM[3]; 
+	tmpDM[0] = abs(tmpMass1-tmpMass2);
+	tmpDM[1] = abs(tmpMass3-tmpMass4);
+	tmpDM[2] = abs(tmpMass5-tmpMass6);
+
+	double minDM = 999;
+	int DMIndex = -1;
+	for(uint i = 0; i < 3; i++){
+		if(tmpDM[i]<minDM){
+			minDM = tmpDM[i];
+			DMIndex = i;
+		}
+	}
+	//if(minDM>=40) continue;
+	if(_debug) std::cout << "DMIndex = "<<DMIndex<<" minDM = "<< minDM << std::endl;
+	double mH1 = 0;
+	double mH2 = 0;
+	double DrH1 = 0;
+	double DrH2 = 0;
+	if(DMIndex==0){
+		mH1=tmpMass1;
+		mH2=tmpMass2;
+		DrH1 = RazorAnalyzer::deltaR(BJets[0].jet.Eta(),BJets[0].jet.Phi(),BJets[1].jet.Eta(),BJets[1].jet.Phi()); 
+		DrH2 = RazorAnalyzer::deltaR(BJets[2].jet.Eta(),BJets[2].jet.Phi(),BJets[3].jet.Eta(),BJets[3].jet.Phi()); 
+	}else if(DMIndex==1){
+		mH1=tmpMass3;
+		mH2=tmpMass4;
+		DrH1 = RazorAnalyzer::deltaR(BJets[0].jet.Eta(),BJets[0].jet.Phi(),BJets[2].jet.Eta(),BJets[2].jet.Phi()); 
+		DrH2 = RazorAnalyzer::deltaR(BJets[1].jet.Eta(),BJets[1].jet.Phi(),BJets[3].jet.Eta(),BJets[3].jet.Phi()); 
+	}else if(DMIndex==2){
+		mH1=tmpMass5;
+		mH2=tmpMass6;
+		DrH1 = RazorAnalyzer::deltaR(BJets[0].jet.Eta(),BJets[0].jet.Phi(),BJets[3].jet.Eta(),BJets[3].jet.Phi());
+		DrH2 = RazorAnalyzer::deltaR(BJets[1].jet.Eta(),BJets[1].jet.Phi(),BJets[3].jet.Eta(),BJets[3].jet.Phi()); 
+	}
+	double avgH = (mH1+mH2)/2;
+	double maxDr = max(DrH1, DrH2);
+	//if(_debug) 
+	std::cout << "DMIndex = "<<DMIndex<<" avgH = "<< avgH <<" DrH1 = "<< DrH1<<" DrH2 = "<< DrH2<<" maxDr = "<< maxDr<< std::endl;
+	llp_tree->mh1 = mH1;	
+	llp_tree->mh2 = mH2;	
+	llp_tree->dm_hh = abs(mH1-mH2);	
+	llp_tree->avg_mh = avgH;	
+	llp_tree->dr_max = maxDr;
+/*		
+	int array[3][4] = {{0,1,2,3}, {0,2,1,3}, {0,3,2,1}};
+	double tmpMass1[3] = 0;
+	double tmpMass2[3] = 0;
+	double tmpDM[3] = 999;
+	for(uint i = 0; i < 3; i++){
+		for(uint j = 0; j < 4; j++){
+			//std::cout << "array["<<i<<"]["<<j<<"] = "<< array[i][j] << std::endl;
+			tmpMass1[i] = (BJets[array[i][j]].jet+BJets[].jet).M();
+
+		}
+	}
+*/
+	
+    }
+  }//reconstruct HbbHbb 
+
+/*
+   if(_run_calojet_)
+   {
     sort(caloJets.begin(), caloJets.end(), my_largest_pt_calojet);
 
     for ( auto &tmp : caloJets )
@@ -865,6 +1048,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->nCaloJets++;
     }
     if(_debug) std::cout << "nCaloJets in tree " << llp_tree->nCaloJets << std::endl;
+    }
+*/
     //std::cout << "deb fill: " << llp_tree->nLeptons << " " << jentry << endl;
     
     //gLLP
@@ -884,6 +1069,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
       //acceptance
       double decay_radius = sqrt( pow(gLLP_decay_vertex_x[i],2) + pow(gLLP_decay_vertex_y[i],2) );
+      llp_tree->gLLP_decay_vertex_r[i] = decay_radius;
       double decay_z = abs( gLLP_decay_vertex_z[i] );
       double decay_eta = abs( gLLP_eta[i] );
       //if(decay_eta != 666) std::cout << "deb gLLP decay radius " << decay_radius << " z " << decay_z  << " eta " << decay_eta << endl;
@@ -922,6 +1108,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 
     }
+
+    llp_tree->gLLP_dr = deltaR(gLLP_eta[0], gLLP_phi[0], gLLP_eta[1], gLLP_phi[1]);
 
     //gLLP daughters
     for(int i = 0; i <N_MAX_LLP_DAUGHTERS; i++){
@@ -979,11 +1167,40 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->gen_time_grandaughter_EB[i] = gen_time_grandaughter_EB[i];
       llp_tree->gen_time_grandaughter_ETL[i] = gen_time_grandaughter_ETL[i];
 
-      llp_tree->gLLP_grandaughter_match_jet_index[i] = gLLP_grandaughter_match_jet_index[i];
-      llp_tree->gLLP_grandaughter_match_calojet_index[i] = gLLP_grandaughter_match_calojet_index[i];
+      //llp_tree->gLLP_grandaughter_match_jet_index[i] = gLLP_grandaughter_match_jet_index[i];
+      if(_debug_match) std::cout << "evt: "<<llp_tree->evtNum <<" n_jet " << llp_tree->nJets << std::endl; 
+      double min_delta_r = 666.;
+      int match_jet_index = -666;
+      for ( int i_jet = 0; i_jet < llp_tree->nJets; i_jet++ )
+      {
+       double current_delta_r = deltaR(gLLP_grandaughter_eta_ecalcorr[i], gLLP_grandaughter_phi_ecalcorr[i], llp_tree->jetEta[i_jet], llp_tree->jetPhi[i_jet]);
+      if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r <<", current_delta_r "<< current_delta_r << std::endl;
+       if ( current_delta_r < min_delta_r )
+       {
+         min_delta_r = current_delta_r;
+         match_jet_index = i_jet;
+       }
+      if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
+      }//end matching to jets 
+      
+      //if ( min_delta_r < 0.4 )
+      if ( min_delta_r < 20 )
+      {
+      llp_tree->gLLP_grandaughter_match_jet_index[i] = match_jet_index;
+      llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = min_delta_r;
+      llp_tree->matched[match_jet_index] = true;
+      if(i<N_MAX_LLP_GRAND_DAUGHTERS/2) llp_tree->jet_matched_gLLP0_grandaughter[match_jet_index] = true;
+      else llp_tree->jet_matched_gLLP1_grandaughter[match_jet_index] = true;
+      if(_debug_match) std::cout << " i " << i << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
+      }
+      
+      //llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = gLLP_grandaughter_min_delta_r_match_jet[i];
 
-      llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = gLLP_grandaughter_min_delta_r_match_jet[i];
+      if(_debug_calojet)
+      {
+      llp_tree->gLLP_grandaughter_match_calojet_index[i] = gLLP_grandaughter_match_calojet_index[i];
       llp_tree->gLLP_grandaughter_min_delta_r_match_calojet[i] = gLLP_grandaughter_min_delta_r_match_calojet[i];
+      }
 
       llp_tree->gLLP_grandaughter_id[i] = gLLP_grandaughter_id[i];
       llp_tree->gLLP_grandaughter_mass[i] = gLLP_grandaughter_mass[i];
@@ -994,6 +1211,23 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->gLLP_grandaughter_eta_ecalcorr[i] = gLLP_grandaughter_eta_ecalcorr[i];
       llp_tree->gLLP_grandaughter_phi_ecalcorr[i] = gLLP_grandaughter_phi_ecalcorr[i];
     }
+    //dr
+    llp_tree->gLLP_grandaughter_dr1 = deltaR(gLLP_grandaughter_eta_ecalcorr[0], gLLP_grandaughter_phi_ecalcorr[0], gLLP_grandaughter_eta_ecalcorr[1], gLLP_grandaughter_phi_ecalcorr[1]);
+    llp_tree->gLLP_grandaughter_dr2 = deltaR(gLLP_grandaughter_eta_ecalcorr[2], gLLP_grandaughter_phi_ecalcorr[2], gLLP_grandaughter_eta_ecalcorr[3], gLLP_grandaughter_phi_ecalcorr[3]);
+    if(_debug_match) std::cout << " dr1(b1, b2) " << llp_tree->gLLP_grandaughter_dr1 << ", dr2(b1, b2) " << llp_tree->gLLP_grandaughter_dr2 << std::endl;
+    if(_debug_match) std::cout << " gLLP_grandaughter_match_jet_index " << gLLP_grandaughter_match_jet_index[0] << ", " << gLLP_grandaughter_match_jet_index[1] << ", " << gLLP_grandaughter_match_jet_index[2] << ", "  << gLLP_grandaughter_match_jet_index[3] << std::endl;
+
+    if(llp_tree->gLLP_grandaughter_match_jet_index[0]!=-666 && llp_tree->gLLP_grandaughter_match_jet_index[1]!=-666)
+    {
+	llp_tree->gLLP_grandaughter_matched_jet_dr1 = deltaR(llp_tree->jetEta[llp_tree->gLLP_grandaughter_match_jet_index[0]], llp_tree->jetPhi[llp_tree->gLLP_grandaughter_match_jet_index[0]], llp_tree->jetEta[llp_tree->gLLP_grandaughter_match_jet_index[1]], llp_tree->jetPhi[llp_tree->gLLP_grandaughter_match_jet_index[1]] ); 
+    }
+
+    if(llp_tree->gLLP_grandaughter_match_jet_index[2]!=-666 && llp_tree->gLLP_grandaughter_match_jet_index[3]!=-666)
+    {
+	llp_tree->gLLP_grandaughter_matched_jet_dr2 = deltaR(llp_tree->jetEta[llp_tree->gLLP_grandaughter_match_jet_index[2]], llp_tree->jetPhi[llp_tree->gLLP_grandaughter_match_jet_index[2]], llp_tree->jetEta[llp_tree->gLLP_grandaughter_match_jet_index[3]], llp_tree->jetPhi[llp_tree->gLLP_grandaughter_match_jet_index[3]] ); 
+    }
+    if(_debug_match) std::cout << " dr1(b1j, b2j) " << llp_tree->gLLP_grandaughter_matched_jet_dr1 << ", dr2(b1j, b2j) " << llp_tree->gLLP_grandaughter_matched_jet_dr2 << std::endl;
+
     if(_debug_trg) std::cout << "end: 310 " << HLTDecision[310] << std::endl;
     if(_debug_trg) std::cout << "end: 310 " << llp_tree->HLTDecision[310] << std::endl;
 

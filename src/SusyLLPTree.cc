@@ -28,6 +28,7 @@ void SusyLLPTree::InitVariables()
     runNum=0; lumiSec=0; evtNum=0; category=0;
     npv=0; npu=0; rho=-1; weight=-1;
     met=-1; metPhi=-1;
+    HT=-1;
     jetMet_dPhi=-999.; jetMet_dPhiMin=999.; jetMet_dPhiMin4=999.;
     jetMet_dPhiStar=-999.; jetMet_dPhiStarMin=999.; 
 
@@ -52,8 +53,12 @@ void SusyLLPTree::InitVariables()
     MT = -999.;
     ZleptonIndex1 = -999; ZleptonIndex2 = -999;
 
+    //HH-candidate
+    dr_max = 999; dm_hh = 999; mh1 = -1; mh2 = -1; avg_mh = -1;
+
     //jets
     nJets = 0;
+    nBJets = 0;
     nCaloJets = 0;
     for( int i = 0; i < N_MAX_JETS; i++ )
     {
@@ -65,6 +70,8 @@ void SusyLLPTree::InitVariables()
       jetTime[i]   = -999.;
       // jetLoosePassId[i] = false;
       jetPassId[i] = false;
+      jetCSVT[i] = false;
+      jetCISV[i] = -1.;
       matched[i] = false;
       jet_matched_gLLP0_daughter[i] = false;
       jet_matched_gLLP1_daughter[i] = false;
@@ -129,6 +136,7 @@ void SusyLLPTree::InitVariables()
       gLLP_eta[i] = -999.;
       gLLP_beta[i] = -999.;
       gLLP_phi[i] = -999.;
+      gLLP_decay_vertex_r[i] = -999.;
       gLLP_decay_vertex_x[i] = -999.;
       gLLP_decay_vertex_y[i] = -999.;
       gLLP_decay_vertex_z[i] = -999.;
@@ -137,6 +145,11 @@ void SusyLLPTree::InitVariables()
       gLLP_prod_vertex_z[i] = -999.;
 
     }
+      gLLP_dr = -999.;
+      gLLP_grandaughter_dr1 = -999.;
+      gLLP_grandaughter_dr2 = -999.;
+      gLLP_grandaughter_matched_jet_dr1 = -999.; 
+      gLLP_grandaughter_matched_jet_dr2 = -999.; 
 /*
     //gLLP daughters
     for(int i = 0; i <N_MAX_LLP_DAUGHTERS; i++){
@@ -177,10 +190,10 @@ void SusyLLPTree::InitVariables()
     gLLP_daughter_e[i] = -666.;
     gLLP_daughter_mass[i] = -666.;
 
-    gLLP_daughter_match_calojet_index[i] = 666;
-    gLLP_daughter_match_jet_index[i] = 666;
-    gLLP_daughter_min_delta_r_match_calojet[i] = -666.;
-    gLLP_daughter_min_delta_r_match_jet[i] = -666.;
+    gLLP_daughter_match_calojet_index[i] = -666;
+    gLLP_daughter_match_jet_index[i] = -666;
+    gLLP_daughter_min_delta_r_match_calojet[i] = 666.;
+    gLLP_daughter_min_delta_r_match_jet[i] = 666.;
     }
  //grandaughters
   for(int i = 0; i <N_MAX_LLP_GRAND_DAUGHTERS; i++)
@@ -206,10 +219,10 @@ void SusyLLPTree::InitVariables()
     gLLP_grandaughter_e[i] = -666.;
     gLLP_grandaughter_mass[i] = -666.;
 
-    gLLP_grandaughter_match_calojet_index[i] = 666;
-    gLLP_grandaughter_match_jet_index[i] = 666;
-    gLLP_grandaughter_min_delta_r_match_calojet[i] = -666.;
-    gLLP_grandaughter_min_delta_r_match_jet[i] = -666.;
+    gLLP_grandaughter_match_calojet_index[i] = -666;
+    gLLP_grandaughter_match_jet_index[i] = -666;
+    gLLP_grandaughter_min_delta_r_match_calojet[i] = 666.;
+    gLLP_grandaughter_min_delta_r_match_jet[i] = 666.;
 
   }
 
@@ -255,8 +268,16 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("ZleptonIndex2", &ZleptonIndex2);
     tree_->SetBranchAddress("MT", &MT);
 
+    //HH-candidate
+    tree_->SetBranchAddress("dr_max", &dr_max);
+    tree_->SetBranchAddress("dm_hh", &dm_hh);
+    tree_->SetBranchAddress("avg_mh", &avg_mh);
+    tree_->SetBranchAddress("mh1", &mh1);
+    tree_->SetBranchAddress("mh2", &mh2);
+
     //jets
     tree_->SetBranchAddress("nJets",     &nJets);
+    tree_->SetBranchAddress("nBJets",     &nBJets);
     tree_->SetBranchAddress("jetE",      jetE);
     tree_->SetBranchAddress("jetEt",      jetEt);
 
@@ -265,6 +286,8 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("jetPhi",    jetPhi);
     tree_->SetBranchAddress("jetTime",   jetTime);
     tree_->SetBranchAddress("jetPassId", jetPassId);
+    tree_->SetBranchAddress("jetCSVT", &jetCSVT);
+    tree_->SetBranchAddress("jetCISV", jetCISV);
     tree_->SetBranchAddress("matched", matched);
     tree_->SetBranchAddress("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter);
     tree_->SetBranchAddress("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter);
@@ -329,7 +352,7 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("gLLP_csc",    gLLP_csc);
     tree_->SetBranchAddress("gLLP_ctau",    gLLP_ctau);
   
-    //tree_->SetBranchAddress("gLLP_decay_vertex_r",    gLLP_decay_vertex_r);
+    tree_->SetBranchAddress("gLLP_decay_vertex_r",    gLLP_decay_vertex_r);
     tree_->SetBranchAddress("gLLP_decay_vertex_x",    gLLP_decay_vertex_x);
     tree_->SetBranchAddress("gLLP_decay_vertex_y",    gLLP_decay_vertex_y);
     tree_->SetBranchAddress("gLLP_decay_vertex_z",    gLLP_decay_vertex_z);
@@ -435,6 +458,7 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("rho",         &rho,        "rho/F");
     tree_->Branch("met",         &met,        "met/F");         // MET
     tree_->Branch("metPhi",      &metPhi,     "metPhi/F");      // phi(MET)
+    tree_->Branch("HT",    &HT,    "HT/F");
     tree_->Branch("jetMet_dPhi",    &jetMet_dPhi,    "jetMet_dPhi/F");
     tree_->Branch("jetMet_dPhiStar",    &jetMet_dPhiStar,    "jetMet_dPhiStar/F");
     tree_->Branch("jetMet_dPhiMin",    &jetMet_dPhiMin,    "jetMet_dPhiMin/F");
@@ -463,8 +487,16 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("ZleptonIndex1", &ZleptonIndex1, "ZleptonIndex1/I");
     tree_->Branch("ZleptonIndex2", &ZleptonIndex2, "ZleptonIndex2/I");
 
+    //hh-candidate
+    tree_->Branch("dr_max",      &dr_max,  "dr_max/F");
+    tree_->Branch("dm_hh",      &dm_hh,  "dm_hh/F");
+    tree_->Branch("avg_mh",      &avg_mh,  "avg_mh/F");
+    tree_->Branch("mh1",      &mh1,  "mh1/F");
+    tree_->Branch("mh2",      &mh2,  "mh2/F");
+    
     //jets
     tree_->Branch("nJets",     &nJets,    "nJets/I");
+    tree_->Branch("nBJets",     &nBJets,    "nBJets/I");
     tree_->Branch("jetE",      jetE,      "jetE[nJets]/F");
     tree_->Branch("jetEt",      jetEt,      "jetEt[nJets]/F");
     tree_->Branch("jetPt",     jetPt,     "jetPt[nJets]/F");
@@ -472,6 +504,8 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
     tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
     tree_->Branch("jetPassId", jetPassId, "jetPassId[nJets]/O");
+    tree_->Branch("jetCSVT", jetCSVT, "jetCSVT[nJets]/O");
+    tree_->Branch("jetCISV", jetCISV, "jetCISV[nJets]/F");
     tree_->Branch("matched", matched, "matched[nJets]/O");
     tree_->Branch("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter, "jet_matched_gLLP0_daughter[nJets]/O");
     tree_->Branch("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter, "jet_matched_gLLP1_daughter[nJets]/O");
@@ -541,8 +575,13 @@ void SusyLLPTree::CreateTree()
   tree_->Branch("gLLP_beta",          gLLP_beta,          "gLLP_beta[2]/F");
   tree_->Branch("gLLP_phi",          gLLP_phi,          "gLLP_phi[2]/F");
   tree_->Branch("gLLP_ctau",          gLLP_ctau,          "gLLP_ctau[2]/F");
+  tree_->Branch("gLLP_dr",          &gLLP_dr,          "gLLP_dr/F");
+  tree_->Branch("gLLP_grandaughter_dr1",          &gLLP_grandaughter_dr1,          "gLLP_grandaughter_dr1/F");
+  tree_->Branch("gLLP_grandaughter_dr2",          &gLLP_grandaughter_dr2,          "gLLP_grandaughter_dr2/F");
+  tree_->Branch("gLLP_grandaughter_matched_jet_dr1",          &gLLP_grandaughter_matched_jet_dr1,          "gLLP_grandaughter_matched_jet_dr1/F");
+  tree_->Branch("gLLP_grandaughter_matched_jet_dr2",          &gLLP_grandaughter_matched_jet_dr2,          "gLLP_grandaughter_matched_jet_dr2/F");
 
-  //tree_->Branch("gLLP_decay_vertex_r",          gLLP_decay_vertex_r,          "gLLP_decay_vertex_r[2]/F");
+  tree_->Branch("gLLP_decay_vertex_r",          gLLP_decay_vertex_r,          "gLLP_decay_vertex_r[2]/F");
   tree_->Branch("gLLP_decay_vertex_x",          gLLP_decay_vertex_x,          "gLLP_decay_vertex_x[2]/F");
   tree_->Branch("gLLP_decay_vertex_y",          gLLP_decay_vertex_y,          "gLLP_decay_vertex_y[2]/F");
   tree_->Branch("gLLP_decay_vertex_z",          gLLP_decay_vertex_z,          "gLLP_decay_vertex_z[2]/F");
