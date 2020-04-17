@@ -19,6 +19,8 @@
 #include "vector"
 #include "vector"
 
+#define OBJECTARRAYSIZE 100
+
 class llp_event {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
@@ -122,6 +124,17 @@ public :
    Float_t         ele_photonAndNeutralHadronMiniIso[2000];   //[nElectrons]
    Float_t         ele_chargedPileupMiniIso[2000];   //[nElectrons]
    Float_t         ele_activityMiniIsoAnnulus[2000];   //[nElectrons]
+   Bool_t 	   ele_passCutBasedIDVeto[2000];
+   Bool_t 	   ele_passCutBasedIDLoose[2000];
+   Bool_t 	   ele_passCutBasedIDMedium[2000];
+   Bool_t 	   ele_passCutBasedIDTight[2000];
+   Bool_t 	   ele_passMVAIsoIDWP80[2000];
+   Bool_t 	   ele_passMVAIsoIDWP90[2000];
+   Bool_t 	   ele_passMVAIsoIDWPHZZ[2000];
+   Bool_t 	   ele_passMVAIsoIDWPLoose[2000];
+   Bool_t 	   ele_passMVANoIsoIDWP80[2000];
+   Bool_t 	   ele_passMVANoIsoIDWP90[2000];
+   Bool_t 	   ele_passMVANoIsoIDWPLoose[2000];
    Bool_t          ele_passSingleEleTagFilter[2000];   //[nElectrons]
    Bool_t          ele_passTPOneTagFilter[2000];   //[nElectrons]
    Bool_t          ele_passTPTwoTagFilter[2000];   //[nElectrons]
@@ -203,6 +216,11 @@ public :
    Float_t         pho_superClusterZ[2000];   //[nPhotons]
    Bool_t          pho_hasPixelSeed[2000];   //[nPhotons]
    Bool_t          pho_passHLTFilter[2000][100];   //[nPhotons]
+   Bool_t	   pho_passCutBasedIDLoose[2000];
+   Bool_t	   pho_passCutBasedIDMedium[2000];
+   Bool_t	   pho_passCutBasedIDTight[2000];
+   Bool_t	   pho_passMVAIDWP80[2000];
+   Bool_t	   pho_passMVAIDWP90[2000];
    Int_t           pho_convType[2000];   //[nPhotons]
    Float_t         pho_convTrkZ[2000];   //[nPhotons]
    Float_t         pho_convTrkClusZ[2000];   //[nPhotons]
@@ -291,6 +309,7 @@ public :
    Float_t	   calojetMedianIP[2000];
    Float_t         calojet_EMEnergyFraction[2000];
    Float_t         calojet_HadronicEnergyFraction[2000];
+/*
    Int_t           nJets;
    Float_t         jetE[2000];   //[nJets]
    Float_t         jetPt[2000];   //[nJets]
@@ -357,6 +376,89 @@ public :
    Float_t         jetPtAllTracks_wp[2000];
    Float_t	   jetMedianTheta2D[2000];
    Float_t	   jetMedianIP[2000];
+*/
+ //AK4 Jets
+ int nJets;
+ float jetE[OBJECTARRAYSIZE];
+ float jetPt[OBJECTARRAYSIZE];
+ float jetEta[OBJECTARRAYSIZE];
+ float jetPhi[OBJECTARRAYSIZE];
+ float jetCSV[OBJECTARRAYSIZE];
+ float jetCISV[OBJECTARRAYSIZE];
+ float jetProbb[OBJECTARRAYSIZE];
+ float jetProbc[OBJECTARRAYSIZE];
+ float jetProbudsg[OBJECTARRAYSIZE];
+ float jetProbbb[OBJECTARRAYSIZE];
+ float jetMass[OBJECTARRAYSIZE];
+ float jetJetArea[OBJECTARRAYSIZE];
+ float jetPileupE[OBJECTARRAYSIZE];
+ float jetPileupId[OBJECTARRAYSIZE];
+ int   jetPileupIdFlag[OBJECTARRAYSIZE];
+ bool  jetPassIDLoose[OBJECTARRAYSIZE];
+ bool  jetPassIDTight[OBJECTARRAYSIZE];
+ bool  jetPassMuFrac[OBJECTARRAYSIZE];
+ bool  jetPassEleFrac[OBJECTARRAYSIZE];
+ int   jetPartonFlavor[OBJECTARRAYSIZE];
+ int   jetHadronFlavor[OBJECTARRAYSIZE];
+ float jetElectronEnergyFraction[OBJECTARRAYSIZE];
+ float jetPhotonEnergyFraction[OBJECTARRAYSIZE];
+ float jetChargedHadronEnergyFraction[OBJECTARRAYSIZE];
+ float jetNeutralHadronEnergyFraction[OBJECTARRAYSIZE];
+ float jetMuonEnergyFraction[OBJECTARRAYSIZE];
+ float jetHOEnergyFraction[OBJECTARRAYSIZE];
+ float jetHFHadronEnergyFraction[OBJECTARRAYSIZE];
+ float jetHFEMEnergyFraction[OBJECTARRAYSIZE];
+ int   jetChargedHadronMultiplicity[OBJECTARRAYSIZE];
+ int   jetNeutralHadronMultiplicity[OBJECTARRAYSIZE];
+ int   jetElectronMultiplicity[OBJECTARRAYSIZE];
+ int   jetPhotonMultiplicity[OBJECTARRAYSIZE];
+ int   jetMuonMultiplicity[OBJECTARRAYSIZE];
+ float jetAllMuonPt[OBJECTARRAYSIZE];
+ float jetAllMuonEta[OBJECTARRAYSIZE];
+ float jetAllMuonPhi[OBJECTARRAYSIZE];
+ float jetAllMuonM[OBJECTARRAYSIZE];
+ float jetPtWeightedDZ[OBJECTARRAYSIZE];
+ int   jetNRechits[OBJECTARRAYSIZE];
+ float jetRechitE[OBJECTARRAYSIZE];
+ float jetRechitT[OBJECTARRAYSIZE];
+ float jetRechitT_rms[OBJECTARRAYSIZE];
+ float jetRechitE_Error[OBJECTARRAYSIZE];
+ float jetRechitT_Error[OBJECTARRAYSIZE];
+
+ float jetGammaMax[OBJECTARRAYSIZE];
+ float jetGammaMax_ET[OBJECTARRAYSIZE];
+ float jetGammaMax_EM[OBJECTARRAYSIZE];
+ float jetGammaMax_Hadronic[OBJECTARRAYSIZE];
+ float jetAlphaMax[OBJECTARRAYSIZE];
+ float jetBetaMax[OBJECTARRAYSIZE];
+
+ float jetPtAllTracks[OBJECTARRAYSIZE];
+ float jetPtAllPVTracks[OBJECTARRAYSIZE];
+ float jetMedianTheta2D[OBJECTARRAYSIZE];
+ float jetMedianIP[OBJECTARRAYSIZE];
+ float jetMinDeltaRAllTracks[OBJECTARRAYSIZE];
+ float jetMinDeltaRPVTracks[OBJECTARRAYSIZE];
+
+ float jet_energy_frac[OBJECTARRAYSIZE];
+ float jet_sig_et1[OBJECTARRAYSIZE];
+ float jet_sig_et2[OBJECTARRAYSIZE];
+ bool jet_matched[OBJECTARRAYSIZE];
+ bool jet_matched_gLLP0_grandaughter[OBJECTARRAYSIZE];
+ bool jet_matched_gLLP1_grandaughter[OBJECTARRAYSIZE];
+
+ float jetGammaMax_wp[OBJECTARRAYSIZE];
+ float jetGammaMax_ET_wp[OBJECTARRAYSIZE];
+ float jetGammaMax_EM_wp[OBJECTARRAYSIZE];
+ float jetGammaMax_Hadronic_wp[OBJECTARRAYSIZE];
+ float jetAlphaMax_wp[OBJECTARRAYSIZE];
+ float jetBetaMax_wp[OBJECTARRAYSIZE];
+
+ float jetPtAllTracks_wp[OBJECTARRAYSIZE];
+ float jetPtAllPVTracks_wp[OBJECTARRAYSIZE];
+ float jetMedianTheta2D_wp[OBJECTARRAYSIZE];
+ float jetMedianIP_wp[OBJECTARRAYSIZE];
+ float jetMinDeltaRAllTracks_wp[OBJECTARRAYSIZE];
+ float jetMinDeltaRPVTracks_wp[OBJECTARRAYSIZE];
    UInt_t          nFatJets;
    Float_t         fatJetE[400];   //[nFatJets]
    Float_t         fatJetPt[400];   //[nFatJets]
@@ -418,6 +520,16 @@ public :
    Bool_t          Flag_BadChargedCandidateFilter;
    Bool_t          Flag_ecalBadCalibFilter;
    Bool_t          Flag_METFilters;
+   Bool_t	   Flag2_globalSuperTightHalo2016Filter;
+   Bool_t	   Flag2_globalTightHalo2016Filter;
+   Bool_t	   Flag2_goodVertices;
+   Bool_t	   Flag2_BadChargedCandidateFilter;
+   Bool_t	   Flag2_BadPFMuonFilter;
+   Bool_t	   Flag2_EcalDeadCellTriggerPrimitiveFilter;
+   Bool_t	   Flag2_HBHENoiseFilter;
+   Bool_t	   Flag2_HBHEIsoNoiseFilter;
+   Bool_t	   Flag2_ecalBadCalibFilter;
+   Bool_t	   Flag2_eeBadScFilter;
    Bool_t          HLTDecision[602];
    Int_t           HLTPrescale[602];
    Int_t           nGenJets;
@@ -629,6 +741,17 @@ public :
    TBranch        *b_ele_photonAndNeutralHadronMiniIso;   //!
    TBranch        *b_ele_chargedPileupMiniIso;   //!
    TBranch        *b_ele_activityMiniIsoAnnulus;   //!
+   TBranch 	  *b_ele_passCutBasedIDVetog;
+   TBranch 	  *b_ele_passCutBasedIDLooseg;
+   TBranch 	  *b_ele_passCutBasedIDMediumg;
+   TBranch 	  *b_ele_passCutBasedIDTightg;
+   TBranch 	  *b_ele_passMVAIsoIDWP80g;
+   TBranch 	  *b_ele_passMVAIsoIDWP90g;
+   TBranch 	  *b_ele_passMVAIsoIDWPHZZg;
+   TBranch 	  *b_ele_passMVAIsoIDWPLooseg;
+   TBranch 	  *b_ele_passMVANoIsoIDWP80g;
+   TBranch 	  *b_ele_passMVANoIsoIDWP90g;
+   TBranch 	  *b_ele_passMVANoIsoIDWPLooseg;
    TBranch        *b_ele_passSingleEleTagFilter;   //!
    TBranch        *b_ele_passTPOneTagFilter;   //!
    TBranch        *b_ele_passTPTwoTagFilter;   //!
@@ -710,6 +833,11 @@ public :
    TBranch        *b_pho_superClusterZ;   //!
    TBranch        *b_pho_hasPixelSeed;   //!
    TBranch        *b_pho_passHLTFilter;   //!
+   TBranch	  *b_pho_passCutBasedIDLoose;
+   TBranch	  *b_pho_passCutBasedIDMedium;
+   TBranch	  *b_pho_passCutBasedIDTight;
+   TBranch	  *b_pho_passMVAIDWP80;
+   TBranch	  *b_pho_passMVAIDWP90;
    TBranch        *b_pho_convType;   //!
    TBranch        *b_pho_convTrkZ;   //!
    TBranch        *b_pho_convTrkClusZ;   //!
@@ -798,6 +926,88 @@ public :
    TBranch	  *b_calojetMedianIP;
    TBranch        *b_calojet_EMEnergyFraction;
    TBranch        *b_calojet_HadronicEnergyFraction;
+   TBranch        *b_nJets;
+   TBranch        *b_jetE;
+   TBranch        *b_jetPt;
+   TBranch        *b_jetEta;
+   TBranch        *b_jetPhi;
+   TBranch        *b_jetCSV;
+   TBranch        *b_jetCISV;
+   TBranch        *b_jetProbb;
+   TBranch        *b_jetProbc;
+   TBranch        *b_jetProbudsg;
+   TBranch        *b_jetProbbb;
+   TBranch        *b_jetMass;
+   TBranch        *b_jetJetArea;
+   TBranch        *b_jetPileupE;
+   TBranch        *b_jetPileupId;
+   TBranch        *b_jetPileupIdFlag;
+   TBranch        *b_jetPassIDLoose;
+   TBranch        *b_jetPassIDTight;
+   TBranch        *b_jetPassMuFrac;
+   TBranch        *b_jetPassEleFrac;
+   TBranch        *b_jetPartonFlavor;
+   TBranch        *b_jetHadronFlavor;
+   TBranch        *b_jetElectronEnergyFraction;
+   TBranch        *b_jetPhotonEnergyFraction;
+   TBranch        *b_jetChargedHadronEnergyFraction;
+   TBranch        *b_jetNeutralHadronEnergyFraction;
+   TBranch        *b_jetMuonEnergyFraction;
+   TBranch        *b_jetHOEnergyFraction;
+   TBranch        *b_jetHFHadronEnergyFraction;
+   TBranch        *b_jetHFEMEnergyFraction;
+   TBranch        *b_jetChargedHadronMultiplicity;
+   TBranch        *b_jetNeutralHadronMultiplicity;
+   TBranch        *b_jetElectronMultiplicity;
+   TBranch        *b_jetPhotonMultiplicity;
+   TBranch        *b_jetMuonMultiplicity;
+   TBranch        *b_jetAllMuonPt;
+   TBranch        *b_jetAllMuonEta;
+   TBranch        *b_jetAllMuonPhi;
+   TBranch        *b_jetAllMuonM;
+   TBranch        *b_jetPtWeightedDZ;
+   TBranch        *b_jetNRechits;
+   TBranch        *b_jetRechitE;
+   TBranch        *b_jetRechitT;
+   TBranch        *b_jetRechitT_rms;
+   TBranch        *b_jetRechitE_Error;
+   TBranch        *b_jetRechitT_Error;
+
+   TBranch        *b_jetGammaMax;
+   TBranch        *b_jetGammaMax_ET;
+   TBranch        *b_jetGammaMax_EM;
+   TBranch        *b_jetGammaMax_Hadronic;
+   TBranch        *b_jetAlphaMax;
+   TBranch        *b_jetBetaMax;
+
+   TBranch        *b_jetPtAllTracks;
+   TBranch        *b_jetPtAllPVTracks;
+   TBranch        *b_jetMedianTheta2D;
+   TBranch        *b_jetMedianIP;
+   TBranch        *b_jetMinDeltaRAllTracks;
+   TBranch        *b_jetMinDeltaRPVTracks;
+
+   TBranch        *b_jet_energy_frac;
+   TBranch        *b_jet_sig_et1;
+   TBranch        *b_jet_sig_et2;
+   TBranch        *b_jet_matched;
+   TBranch        *b_jet_matched_gLLP0_grandaughter;
+   TBranch        *b_jet_matched_gLLP1_grandaughter;
+
+   TBranch        *b_jetGammaMax_wp;
+   TBranch        *b_jetGammaMax_ET_wp;
+   TBranch        *b_jetGammaMax_EM_wp;
+   TBranch        *b_jetGammaMax_Hadronic_wp;
+   TBranch        *b_jetAlphaMax_wp;
+   TBranch        *b_jetBetaMax_wp;
+
+   TBranch        *b_jetPtAllTracks_wp;
+   TBranch        *b_jetPtAllPVTracks_wp;
+   TBranch        *b_jetMedianTheta2D_wp;
+   TBranch        *b_jetMedianIP_wp;
+   TBranch        *b_jetMinDeltaRAllTracks_wp;
+   TBranch        *b_jetMinDeltaRPVTracks_wp;
+/*
    TBranch        *b_nJets;   //!
    TBranch        *b_jetE;   //!
    TBranch        *b_jetPt;   //!
@@ -864,6 +1074,7 @@ public :
    TBranch        *b_jetPtAllTracks_wp;
    TBranch	  *b_jetMedianTheta2D;
    TBranch	  *b_jetMedianIP;
+*/
    TBranch        *b_nFatJets;   //!
    TBranch        *b_fatJetE;   //!
    TBranch        *b_fatJetPt;   //!
@@ -925,6 +1136,16 @@ public :
    TBranch        *b_Flag_BadChargedCandidateFilter;   //!
    TBranch        *b_Flag_ecalBadCalibFilter;   //!
    TBranch        *b_Flag_METFilters;   //!
+   TBranch        *b_Flag2_globalSuperTightHalo2016Filter;
+   TBranch        *b_Flag2_globalTightHalo2016Filter;
+   TBranch        *b_Flag2_goodVertices;
+   TBranch        *b_Flag2_BadChargedCandidateFilter;
+   TBranch        *b_Flag2_BadPFMuonFilter;
+   TBranch        *b_Flag2_EcalDeadCellTriggerPrimitiveFilter;
+   TBranch        *b_Flag2_HBHENoiseFilter;
+   TBranch        *b_Flag2_HBHEIsoNoiseFilter;
+   TBranch        *b_Flag2_ecalBadCalibFilter;
+   TBranch        *b_Flag2_eeBadScFilter;
    TBranch        *b_HLTDecision;   //!
    TBranch        *b_HLTPrescale;   //!
    TBranch        *b_nGenJets;   //!
@@ -1220,6 +1441,17 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("ele_photonAndNeutralHadronMiniIso", ele_photonAndNeutralHadronMiniIso, &b_ele_photonAndNeutralHadronMiniIso);
    fChain->SetBranchAddress("ele_chargedPileupMiniIso", ele_chargedPileupMiniIso, &b_ele_chargedPileupMiniIso);
    fChain->SetBranchAddress("ele_activityMiniIsoAnnulus", ele_activityMiniIsoAnnulus, &b_ele_activityMiniIsoAnnulus);
+   fChain->SetBranchAddress("ele_passCutBasedIDVeto",    ele_passCutBasedIDVeto,      &b_ele_passCutBasedIDVetog); 
+   fChain->SetBranchAddress("ele_passCutBasedIDLoose",   ele_passCutBasedIDLoose,     &b_ele_passCutBasedIDLooseg); 
+   fChain->SetBranchAddress("ele_passCutBasedIDMedium",  ele_passCutBasedIDMedium,    &b_ele_passCutBasedIDMediumg); 
+   fChain->SetBranchAddress("ele_passCutBasedIDTight",   ele_passCutBasedIDTight,     &b_ele_passCutBasedIDTightg); 
+   fChain->SetBranchAddress("ele_passMVAIsoIDWP80",      ele_passMVAIsoIDWP80,        &b_ele_passMVAIsoIDWP80g); 
+   fChain->SetBranchAddress("ele_passMVAIsoIDWP90",      ele_passMVAIsoIDWP90,        &b_ele_passMVAIsoIDWP90g); 
+   fChain->SetBranchAddress("ele_passMVAIsoIDWPHZZ",     ele_passMVAIsoIDWPHZZ,       &b_ele_passMVAIsoIDWPHZZg); 
+   fChain->SetBranchAddress("ele_passMVAIsoIDWPLoose",   ele_passMVAIsoIDWPLoose,     &b_ele_passMVAIsoIDWPLooseg); 
+   fChain->SetBranchAddress("ele_passMVANoIsoIDWP80",    ele_passMVANoIsoIDWP80,      &b_ele_passMVANoIsoIDWP80g); 
+   fChain->SetBranchAddress("ele_passMVANoIsoIDWP90",    ele_passMVANoIsoIDWP90,      &b_ele_passMVANoIsoIDWP90g); 
+   fChain->SetBranchAddress("ele_passMVANoIsoIDWPLoose", ele_passMVANoIsoIDWPLoose,   &b_ele_passMVANoIsoIDWPLooseg); 
    fChain->SetBranchAddress("ele_passSingleEleTagFilter", ele_passSingleEleTagFilter, &b_ele_passSingleEleTagFilter);
    fChain->SetBranchAddress("ele_passTPOneTagFilter", ele_passTPOneTagFilter, &b_ele_passTPOneTagFilter);
    fChain->SetBranchAddress("ele_passTPTwoTagFilter", ele_passTPTwoTagFilter, &b_ele_passTPTwoTagFilter);
@@ -1301,6 +1533,11 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("pho_superClusterZ", pho_superClusterZ, &b_pho_superClusterZ);
    fChain->SetBranchAddress("pho_hasPixelSeed", pho_hasPixelSeed, &b_pho_hasPixelSeed);
    fChain->SetBranchAddress("pho_passHLTFilter", pho_passHLTFilter, &b_pho_passHLTFilter);
+   fChain->SetBranchAddress("pho_passCutBasedIDLoose",  pho_passCutBasedIDLoose,  &b_pho_passCutBasedIDLoose);
+   fChain->SetBranchAddress("pho_passCutBasedIDMedium", pho_passCutBasedIDMedium, &b_pho_passCutBasedIDMedium);
+   fChain->SetBranchAddress("pho_passCutBasedIDTight",  pho_passCutBasedIDTight,  &b_pho_passCutBasedIDTight);
+   fChain->SetBranchAddress("pho_passMVAIDWP80",  pho_passMVAIDWP80,  &b_pho_passMVAIDWP80);
+   fChain->SetBranchAddress("pho_passMVAIDWP90",  pho_passMVAIDWP90,  &b_pho_passMVAIDWP90);
    fChain->SetBranchAddress("pho_convType", pho_convType, &b_pho_convType);
    fChain->SetBranchAddress("pho_convTrkZ", pho_convTrkZ, &b_pho_convTrkZ);
    fChain->SetBranchAddress("pho_convTrkClusZ", pho_convTrkClusZ, &b_pho_convTrkClusZ);
@@ -1389,6 +1626,7 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("calojetMedianIP", calojetMedianIP, &b_calojetMedianIP);
    fChain->SetBranchAddress("calojet_EMEnergyFraction", calojet_EMEnergyFraction, &b_calojet_EMEnergyFraction);
    fChain->SetBranchAddress("calojet_HadronicEnergyFraction", calojet_HadronicEnergyFraction, &b_calojet_HadronicEnergyFraction);
+/*
    fChain->SetBranchAddress("nJets", &nJets, &b_nJets);
    fChain->SetBranchAddress("jetE", jetE, &b_jetE);
    fChain->SetBranchAddress("jetPt", jetPt, &b_jetPt);
@@ -1455,6 +1693,84 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("jetPtAllTracks_wp", jetPtAllTracks_wp, &b_jetPtAllTracks_wp);
    fChain->SetBranchAddress("jetMedianTheta2D", jetMedianTheta2D, &b_jetMedianTheta2D);
    fChain->SetBranchAddress("jetMedianIP", jetMedianIP, &b_jetMedianIP);
+*/  
+  fChain->SetBranchAddress("nJets", &nJets, &b_nJets);
+  fChain->SetBranchAddress("jetE", &jetE, &b_jetE);
+  fChain->SetBranchAddress("jetPt", &jetPt, &b_jetPt);
+  fChain->SetBranchAddress("jetEta", &jetEta, &b_jetEta);
+
+  fChain->SetBranchAddress("jetPhi", &jetPhi, &b_jetPhi);
+  fChain->SetBranchAddress("jetCSV", &jetCSV, &b_jetCSV);
+  fChain->SetBranchAddress("jetCISV", &jetCISV, &b_jetCISV);
+  fChain->SetBranchAddress("jetProbb", &jetProbb, &b_jetProbb);
+  fChain->SetBranchAddress("jetProbc", &jetProbc, &b_jetProbc);
+  fChain->SetBranchAddress("jetProbudsg", &jetProbudsg, &b_jetProbudsg);
+  fChain->SetBranchAddress("jetProbbb", &jetProbbb, &b_jetProbbb);
+  fChain->SetBranchAddress("jetMass", &jetMass, &b_jetMass);
+  fChain->SetBranchAddress("jetJetArea", &jetJetArea, &b_jetJetArea);
+  fChain->SetBranchAddress("jetPileupE", &jetPileupE, &b_jetPileupE);
+  fChain->SetBranchAddress("jetPileupId", &jetPileupId, &b_jetPileupId);
+  fChain->SetBranchAddress("jetPileupIdFlag", &jetPileupIdFlag, &b_jetPileupIdFlag);
+  fChain->SetBranchAddress("jetPassIDLoose", &jetPassIDLoose, &b_jetPassIDLoose);
+  fChain->SetBranchAddress("jetPassIDTight", &jetPassIDTight, &b_jetPassIDTight);
+  fChain->SetBranchAddress("jetPassMuFrac", &jetPassMuFrac, &b_jetPassMuFrac);
+  fChain->SetBranchAddress("jetPassEleFrac", &jetPassEleFrac, &b_jetPassEleFrac);
+  fChain->SetBranchAddress("jetPartonFlavor", &jetPartonFlavor, &b_jetPartonFlavor);
+  fChain->SetBranchAddress("jetHadronFlavor", &jetHadronFlavor, &b_jetHadronFlavor);
+  fChain->SetBranchAddress("jetElectronEnergyFraction", &jetElectronEnergyFraction, &b_jetElectronEnergyFraction);
+  fChain->SetBranchAddress("jetPhotonEnergyFraction", &jetPhotonEnergyFraction, &b_jetPhotonEnergyFraction);
+  fChain->SetBranchAddress("jetChargedHadronEnergyFraction", &jetChargedHadronEnergyFraction, &b_jetChargedHadronEnergyFraction);
+  fChain->SetBranchAddress("jetNeutralHadronEnergyFraction", &jetNeutralHadronEnergyFraction, &b_jetNeutralHadronEnergyFraction);
+  fChain->SetBranchAddress("jetMuonEnergyFraction", &jetMuonEnergyFraction, &b_jetMuonEnergyFraction);
+  fChain->SetBranchAddress("jetHOEnergyFraction", &jetHOEnergyFraction, &b_jetHOEnergyFraction);
+  fChain->SetBranchAddress("jetHFHadronEnergyFraction", &jetHFHadronEnergyFraction, &b_jetHFHadronEnergyFraction);
+  fChain->SetBranchAddress("jetHFEMEnergyFraction", &jetHFEMEnergyFraction, &b_jetHFEMEnergyFraction);
+  fChain->SetBranchAddress("jetChargedHadronMultiplicity", &jetChargedHadronMultiplicity, &b_jetChargedHadronMultiplicity);
+  fChain->SetBranchAddress("jetNeutralHadronMultiplicity", &jetNeutralHadronMultiplicity, &b_jetNeutralHadronMultiplicity);
+  fChain->SetBranchAddress("jetPhotonMultiplicity", &jetPhotonMultiplicity, &b_jetPhotonMultiplicity);
+  fChain->SetBranchAddress("jetElectronMultiplicity", &jetElectronMultiplicity, &b_jetElectronMultiplicity);
+  fChain->SetBranchAddress("jetMuonMultiplicity", &jetMuonMultiplicity, &b_jetMuonMultiplicity);
+  fChain->SetBranchAddress("jetAllMuonPt", &jetAllMuonPt, &b_jetAllMuonPt);
+  fChain->SetBranchAddress("jetAllMuonEta", &jetAllMuonEta, &b_jetAllMuonEta);
+  fChain->SetBranchAddress("jetAllMuonPhi", &jetAllMuonPhi, &b_jetAllMuonPhi);
+  fChain->SetBranchAddress("jetAllMuonM", &jetAllMuonM, &b_jetAllMuonM);
+  fChain->SetBranchAddress("jetPtWeightedDZ", &jetPtWeightedDZ, &b_jetPtWeightedDZ);
+  fChain->SetBranchAddress("jetNRechits", &jetNRechits, &b_jetNRechits);
+  fChain->SetBranchAddress("jetRechitE", &jetRechitE, &b_jetRechitE);
+  fChain->SetBranchAddress("jetRechitT", &jetRechitT, &b_jetRechitT);
+  fChain->SetBranchAddress("jetRechitT_rms", &jetRechitT_rms, &b_jetRechitT_rms);
+
+  fChain->SetBranchAddress("jetRechitE_Error", &jetRechitE_Error, &b_jetRechitE_Error);
+  fChain->SetBranchAddress("jetRechitT_Error", &jetRechitT_Error, &b_jetRechitT_Error);
+  fChain->SetBranchAddress("jetAlphaMax", &jetAlphaMax, &b_jetAlphaMax);
+  fChain->SetBranchAddress("jetBetaMax", &jetBetaMax, &b_jetBetaMax);
+  fChain->SetBranchAddress("jetGammaMax_ET", &jetGammaMax_ET, &b_jetGammaMax_ET);
+  fChain->SetBranchAddress("jetGammaMax_EM", &jetGammaMax_EM, &b_jetGammaMax_EM);
+  fChain->SetBranchAddress("jetGammaMax_Hadronic", &jetGammaMax_Hadronic, &b_jetGammaMax_Hadronic);
+  fChain->SetBranchAddress("jetGammaMax", &jetGammaMax, &b_jetGammaMax);
+  fChain->SetBranchAddress("jetPtAllTracks", &jetPtAllTracks, &b_jetPtAllTracks);
+  fChain->SetBranchAddress("jetPtAllPVTracks", &jetPtAllPVTracks, &b_jetPtAllPVTracks);
+  fChain->SetBranchAddress("jetMedianTheta2D", &jetMedianTheta2D, &b_jetMedianTheta2D);
+  fChain->SetBranchAddress("jetMedianIP", &jetMedianIP, &b_jetMedianIP);
+  fChain->SetBranchAddress("jetMinDeltaRAllTracks", &jetMinDeltaRAllTracks, &b_jetMinDeltaRAllTracks);
+  fChain->SetBranchAddress("jetMinDeltaRPVTracks", &jetMinDeltaRPVTracks, &b_jetMinDeltaRPVTracks);
+  fChain->SetBranchAddress("jet_sig_et1", &jet_sig_et1, &b_jet_sig_et1);
+  fChain->SetBranchAddress("jet_sig_et2", &jet_sig_et2, &b_jet_sig_et2);
+  fChain->SetBranchAddress("jet_energy_frac", &jet_energy_frac, &b_jet_energy_frac);
+
+  fChain->SetBranchAddress("jetAlphaMax_wp", &jetAlphaMax_wp, &b_jetAlphaMax_wp);
+  fChain->SetBranchAddress("jetBetaMax_wp", &jetBetaMax_wp, &b_jetBetaMax_wp);
+  fChain->SetBranchAddress("jetGammaMax_ET_wp", &jetGammaMax_ET_wp, &b_jetGammaMax_ET_wp);
+  fChain->SetBranchAddress("jetGammaMax_EM_wp", &jetGammaMax_EM_wp, &b_jetGammaMax_EM_wp);
+  fChain->SetBranchAddress("jetGammaMax_Hadronic_wp", &jetGammaMax_Hadronic_wp, &b_jetGammaMax_Hadronic_wp);
+  fChain->SetBranchAddress("jetGammaMax_wp", &jetGammaMax_wp, &b_jetGammaMax_wp);
+  fChain->SetBranchAddress("jetPtAllTracks_wp", &jetPtAllTracks_wp, &b_jetPtAllTracks_wp);
+  fChain->SetBranchAddress("jetPtAllPVTracks_wp", &jetPtAllPVTracks_wp, &b_jetPtAllPVTracks_wp);
+  fChain->SetBranchAddress("jetMedianTheta2D_wp", &jetMedianTheta2D_wp, &b_jetMedianTheta2D_wp);
+  fChain->SetBranchAddress("jetMedianIP_wp", &jetMedianIP_wp, &b_jetMedianIP_wp);
+  fChain->SetBranchAddress("jetMinDeltaRAllTracks_wp", &jetMinDeltaRAllTracks_wp, &b_jetMinDeltaRAllTracks_wp);
+  fChain->SetBranchAddress("jetMinDeltaRPVTracks_wp", &jetMinDeltaRPVTracks_wp, &b_jetMinDeltaRPVTracks_wp);
+
    fChain->SetBranchAddress("nFatJets", &nFatJets, &b_nFatJets);
    fChain->SetBranchAddress("fatJetE", &fatJetE, &b_fatJetE);
    fChain->SetBranchAddress("fatJetPt", &fatJetPt, &b_fatJetPt);
@@ -1516,6 +1832,16 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("Flag_BadChargedCandidateFilter", &Flag_BadChargedCandidateFilter, &b_Flag_BadChargedCandidateFilter);
    fChain->SetBranchAddress("Flag_ecalBadCalibFilter", &Flag_ecalBadCalibFilter, &b_Flag_ecalBadCalibFilter);
    fChain->SetBranchAddress("Flag_METFilters", &Flag_METFilters, &b_Flag_METFilters);
+    fChain->SetBranchAddress("Flag2_globalSuperTightHalo2016Filter",              &Flag2_globalSuperTightHalo2016Filter,            &b_Flag2_globalSuperTightHalo2016Filter);
+    fChain->SetBranchAddress("Flag2_globalTightHalo2016Filter",                   &Flag2_globalTightHalo2016Filter,                 &b_Flag2_globalTightHalo2016Filter);
+    fChain->SetBranchAddress("Flag2_goodVertices",                                &Flag2_goodVertices,                              &b_Flag2_goodVertices);
+    fChain->SetBranchAddress("Flag2_BadChargedCandidateFilter",                   &Flag2_BadChargedCandidateFilter,                 &b_Flag2_BadChargedCandidateFilter);
+    fChain->SetBranchAddress("Flag2_BadPFMuonFilter",                             &Flag2_BadPFMuonFilter,                           &b_Flag2_BadPFMuonFilter);
+    fChain->SetBranchAddress("Flag2_EcalDeadCellTriggerPrimitiveFilter",          &Flag2_EcalDeadCellTriggerPrimitiveFilter,        &b_Flag2_EcalDeadCellTriggerPrimitiveFilter);
+    fChain->SetBranchAddress("Flag2_HBHENoiseFilter",                             &Flag2_HBHENoiseFilter,                           &b_Flag2_HBHENoiseFilter);
+    fChain->SetBranchAddress("Flag2_HBHEIsoNoiseFilter",                          &Flag2_HBHEIsoNoiseFilter,                        &b_Flag2_HBHEIsoNoiseFilter);
+    fChain->SetBranchAddress("Flag2_ecalBadCalibFilter",                          &Flag2_ecalBadCalibFilter,                        &b_Flag2_ecalBadCalibFilter);
+    fChain->SetBranchAddress("Flag2_eeBadScFilter",                               &Flag2_eeBadScFilter,                             &b_Flag2_eeBadScFilter);
    fChain->SetBranchAddress("HLTDecision", HLTDecision, &b_HLTDecision);
    fChain->SetBranchAddress("HLTPrescale", HLTPrescale, &b_HLTPrescale);
    fChain->SetBranchAddress("nGenJets", &nGenJets, &b_nGenJets);

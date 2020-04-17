@@ -29,16 +29,16 @@ void RazorAnalyzer::EnableAll(){
     EnableElectrons();
     EnableTaus();
     EnablePhotons();
-    EnableCSC();
+    //EnableCSC();
     EnableJets();
-    EnableCaloJets();
+    //EnableCaloJets();
     EnableFatJets();
     EnableMet();
     EnablePileup();
     EnableMC();
     EnableGenParticles();
     EnableLLP();
-    EnableEcalRechits();
+    //EnableEcalRechits();
 }
 
 void RazorAnalyzer::EnableAllWithEcalRechits(){
@@ -167,6 +167,17 @@ void RazorAnalyzer::EnableElectrons(){
     fChain->SetBranchStatus("ele_photonAndNeutralHadronMiniIso", 1);
     fChain->SetBranchStatus("ele_chargedPileupMiniIso", 1);
     fChain->SetBranchStatus("ele_activityMiniIsoAnnulus", 1);
+    fChain->SetBranchStatus("ele_passCutBasedIDVeto", 1);
+    fChain->SetBranchStatus("ele_passCutBasedIDLoose", 1);
+    fChain->SetBranchStatus("ele_passCutBasedIDMedium", 1);
+    fChain->SetBranchStatus("ele_passCutBasedIDTight", 1);
+    fChain->SetBranchStatus("ele_passMVAIsoIDWP80", 1);
+    fChain->SetBranchStatus("ele_passMVAIsoIDWP90", 1);
+    fChain->SetBranchStatus("ele_passMVAIsoIDWPHZZ", 1);
+    fChain->SetBranchStatus("ele_passMVAIsoIDWPLoose", 1);
+    fChain->SetBranchStatus("ele_passMVANoIsoIDWP80", 1);
+    fChain->SetBranchStatus("ele_passMVANoIsoIDWP90", 1);
+    fChain->SetBranchStatus("ele_passMVANoIsoIDWPLoose", 1);
     fChain->SetBranchStatus("ele_passSingleEleTagFilter", 1);
     fChain->SetBranchStatus("ele_passTPOneTagFilter", 1);
     fChain->SetBranchStatus("ele_passTPTwoTagFilter", 1);
@@ -254,6 +265,11 @@ void RazorAnalyzer::EnablePhotons(){
     fChain->SetBranchStatus("pho_hasPixelSeed", 1);
     fChain->SetBranchStatus("pho_isStandardPhoton", 1);
     fChain->SetBranchStatus("pho_passHLTFilter", 1);
+    fChain->SetBranchStatus("pho_passCutBasedIDLoose", 1);
+    fChain->SetBranchStatus("pho_passCutBasedIDMedium", 1);
+    fChain->SetBranchStatus("pho_passCutBasedIDTight", 1);
+    fChain->SetBranchStatus("pho_passMVAIDWP80", 1);
+    fChain->SetBranchStatus("pho_passMVAIDWP90", 1);
     fChain->SetBranchStatus("pho_convType", 1);
     fChain->SetBranchStatus("pho_convTrkZ", 1);
     fChain->SetBranchStatus("pho_convTrkClusZ", 1);
@@ -279,6 +295,7 @@ void RazorAnalyzer::EnableCaloJets(){
 };
 
 void RazorAnalyzer::EnableJets(){
+/*
     fChain->SetBranchStatus("nJets", 1);
     fChain->SetBranchStatus("jetE", 1);
     fChain->SetBranchStatus("jetPt", 1);
@@ -330,6 +347,93 @@ void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("jetRechitT", 1);
     fChain->SetBranchStatus("jet_sig_et1", 1);
     fChain->SetBranchStatus("jet_sig_et2", 1);
+*/
+ fChain->SetBranchStatus("nTaus", 1);
+ fChain->SetBranchStatus("nMuons", 1);
+ fChain->SetBranchStatus("nPhotons", 1);
+ fChain->SetBranchStatus("nElectrons", 1);
+
+ fChain->SetBranchStatus("nJets", 1);
+ fChain->SetBranchStatus("jetE", 1);
+ fChain->SetBranchStatus("jetPt", 1);
+ fChain->SetBranchStatus("jetEta", 1);
+ fChain->SetBranchStatus("jetPhi", 1);
+ fChain->SetBranchStatus("jetCSV", 1);
+ fChain->SetBranchStatus("jetCISV", 1);
+ fChain->SetBranchStatus("jetProbb", 1);
+ fChain->SetBranchStatus("jetProbc", 1);
+ fChain->SetBranchStatus("jetProbudsg", 1);
+ fChain->SetBranchStatus("jetProbbb", 1);
+ fChain->SetBranchStatus("jetMass", 1);
+ fChain->SetBranchStatus("jetJetArea", 1);
+ fChain->SetBranchStatus("jetPileupE", 1);
+ fChain->SetBranchStatus("jetPileupId", 1);
+ fChain->SetBranchStatus("jetPileupIdFlag", 1);
+ fChain->SetBranchStatus("jetPassIDLoose", 1);
+ fChain->SetBranchStatus("jetPassIDTight", 1);
+ fChain->SetBranchStatus("jetPassMuFrac", 1);
+ fChain->SetBranchStatus("jetPassEleFrac", 1);
+ fChain->SetBranchStatus("jetPartonFlavor", 1);
+ fChain->SetBranchStatus("jetHadronFlavor", 1);
+ fChain->SetBranchStatus("jetElectronEnergyFraction", 1);
+ fChain->SetBranchStatus("jetPhotonEnergyFraction", 1);
+ fChain->SetBranchStatus("jetChargedHadronEnergyFraction", 1);
+ fChain->SetBranchStatus("jetNeutralHadronEnergyFraction", 1);
+ fChain->SetBranchStatus("jetMuonEnergyFraction", 1);
+ fChain->SetBranchStatus("jetHOEnergyFraction", 1);
+ fChain->SetBranchStatus("jetHFHadronEnergyFraction", 1);
+ fChain->SetBranchStatus("jetHFEMEnergyFraction", 1);
+ fChain->SetBranchStatus("jetChargedHadronMultiplicity", 1);
+ fChain->SetBranchStatus("jetNeutralHadronMultiplicity", 1);
+ fChain->SetBranchStatus("jetElectronMultiplicity", 1);
+ fChain->SetBranchStatus("jetPhotonMultiplicity", 1);
+ fChain->SetBranchStatus("jetMuonMultiplicity", 1);
+ fChain->SetBranchStatus("jetAllMuonPt", 1);
+ fChain->SetBranchStatus("jetAllMuonEta", 1);
+ fChain->SetBranchStatus("jetAllMuonPhi", 1);
+ fChain->SetBranchStatus("jetAllMuonM", 1);
+ fChain->SetBranchStatus("jetPtWeightedDZ", 1);
+ fChain->SetBranchStatus("jetNRechits", 1);
+ fChain->SetBranchStatus("jetRechitE", 1);
+ fChain->SetBranchStatus("jetRechitT", 1);
+ fChain->SetBranchStatus("jetRechitT_rms", 1);
+ fChain->SetBranchStatus("jetRechitE_Error", 1);
+ fChain->SetBranchStatus("jetRechitT_Error", 1);
+
+ fChain->SetBranchStatus("jetGammaMax", 1);
+ fChain->SetBranchStatus("jetGammaMax_ET", 1);
+ fChain->SetBranchStatus("jetGammaMax_EM", 1);
+ fChain->SetBranchStatus("jetGammaMax_Hadronic", 1);
+ fChain->SetBranchStatus("jetAlphaMax", 1);
+ fChain->SetBranchStatus("jetBetaMax", 1);
+
+ fChain->SetBranchStatus("jetPtAllTracks", 1);
+ fChain->SetBranchStatus("jetPtAllPVTracks", 1);
+ fChain->SetBranchStatus("jetMedianTheta2D", 1);
+ fChain->SetBranchStatus("jetMedianIP", 1);
+ fChain->SetBranchStatus("jetMinDeltaRAllTracks", 1);
+ fChain->SetBranchStatus("jetMinDeltaRPVTracks", 1);
+
+ fChain->SetBranchStatus("jet_energy_frac", 1);
+ fChain->SetBranchStatus("jet_sig_et1", 1);
+ fChain->SetBranchStatus("jet_sig_et2", 1);
+ fChain->SetBranchStatus("jet_matched", 1);
+ fChain->SetBranchStatus("jet_matched_gLLP0_grandaughter", 1);
+ fChain->SetBranchStatus("jet_matched_gLLP1_grandaughter", 1);
+
+ fChain->SetBranchStatus("jetGammaMax_wp", 1);
+ fChain->SetBranchStatus("jetGammaMax_ET_wp", 1);
+ fChain->SetBranchStatus("jetGammaMax_EM_wp", 1);
+ fChain->SetBranchStatus("jetGammaMax_Hadronic_wp", 1);
+ fChain->SetBranchStatus("jetAlphaMax_wp", 1);
+ fChain->SetBranchStatus("jetBetaMax_wp", 1);
+
+ fChain->SetBranchStatus("jetPtAllTracks_wp", 1);
+ fChain->SetBranchStatus("jetPtAllPVTracks_wp", 1);
+ fChain->SetBranchStatus("jetMedianTheta2D_wp", 1);
+ fChain->SetBranchStatus("jetMedianIP_wp", 1);
+ fChain->SetBranchStatus("jetMinDeltaRAllTracks_wp", 1);
+ fChain->SetBranchStatus("jetMinDeltaRPVTracks_wp", 1);
 };
 
 void RazorAnalyzer::EnableFatJets(){
@@ -399,6 +503,16 @@ void RazorAnalyzer::EnableMet(){
     fChain->SetBranchStatus("Flag_trkPOG_toomanystripclus53X", 1);
     fChain->SetBranchStatus("Flag_trkPOG_logErrorTooManyClusters", 1);
     fChain->SetBranchStatus("Flag_METFilters", 1);
+    fChain->SetBranchStatus("Flag2_globalSuperTightHalo2016Filter", 1);
+    fChain->SetBranchStatus("Flag2_globalTightHalo2016Filter", 1);
+    fChain->SetBranchStatus("Flag2_goodVertices", 1);
+    fChain->SetBranchStatus("Flag2_BadChargedCandidateFilter", 1);
+    fChain->SetBranchStatus("Flag2_BadPFMuonFilter", 1);
+    fChain->SetBranchStatus("Flag2_EcalDeadCellTriggerPrimitiveFilter", 1);
+    fChain->SetBranchStatus("Flag2_HBHENoiseFilter", 1);
+    fChain->SetBranchStatus("Flag2_HBHEIsoNoiseFilter", 1);
+    fChain->SetBranchStatus("Flag2_ecalBadCalibFilter", 1);
+    fChain->SetBranchStatus("Flag2_eeBadScFilter", 1);
     fChain->SetBranchStatus("Flag_ecalBadCalibFilter", 1);
 
     // fChain->SetBranchStatus("metType1PtJetResUp", 1);
