@@ -1,10 +1,10 @@
-dir=/store/group/phys_exotica/delayedjets/llp_analyzer/V1p6/MC_Summer16/v1/bkg/wH/normalized/
-#outputRoot=WJetsToLNu_Pt-100ToInf_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8_1pb_weighted.root
-
-outputRoot=ZJetsToNuNu_Zpt-100toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_1pb_weighted.root
+#!/bin/sh 
+outputRoot=ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_1pb_weighted.root
+dir=/store/group/phys_exotica/delayedjets/displacedJetTimingAnalyzer/V1p16/v1/MC_Summer16/normalized/
 eval `scram runtime -sh`
 
-hadd $outputRoot /mnt/hadoop/$dir/ZJetsToNuNu_Zpt-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_1pb_weighted.root /mnt/hadoop/$dir/ZJetsToNuNu_Zpt-200toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_1pb_weighted.root 
+
+hadd $outputRoot /mnt/hadoop/$dir/ZJetsToNuNu_HT-100To200_13TeV-madgraph_1pb_weighted.root /mnt/hadoop/$dir/ZJetsToNuNu_HT-1200To2500_13TeV-madgraph_1pb_weighted.root /mnt/hadoop/$dir/ZJetsToNuNu_HT-200To400_13TeV-madgraph_1pb_weighted.root /mnt/hadoop/$dir/ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph_1pb_weighted.root /mnt/hadoop/$dir/ZJetsToNuNu_HT-400To600_13TeV-madgraph_1pb_weighted.root /mnt/hadoop/$dir/ZJetsToNuNu_HT-600To800_13TeV-madgraph_1pb_weighted.root /mnt/hadoop/$dir/ZJetsToNuNu_HT-800To1200_13TeV-madgraph_1pb_weighted.root
 if [ -f $outputRoot ]
 then
 	echo "hadd done"
