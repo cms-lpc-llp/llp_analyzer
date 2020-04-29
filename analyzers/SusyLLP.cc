@@ -45,7 +45,7 @@ struct leptons
 struct jets
 {
   TLorentzVector jet;
-  //float time;
+  float time;
   int jetNeutralHadronMultiplicity;
   int jetChargedHadronMultiplicity;
   int jetMuonMultiplicity;
@@ -57,7 +57,11 @@ struct jets
   float jetElectronEnergyFraction;
   float jetPhotonEnergyFraction;
   float jetCSV;
+  int ecalNRechits;
+  float ecalRechitE;
 
+  float jetGammaMax_ET;
+  float jetMinDeltaRPVTracks;
 /*
  nJets;
  jetE;
@@ -607,7 +611,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
         {
           if (RazorAnalyzer::deltaR(eleEta[i],elePhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
         }
-        //if(overlap) continue;
+        if(overlap) continue;
         leptons tmpElectron;
         tmpElectron.lepton.SetPtEtaPhiM(elePt[i],eleEta[i], elePhi[i], ELE_MASS);
 
@@ -863,7 +867,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       double thisDR = RazorAnalyzer::deltaR(jetEta[i],jetPhi[i],lep.lepton.Eta(),lep.lepton.Phi());
       if(deltaR < 0 || thisDR < deltaR) deltaR = thisDR;
     }
-    //if(deltaR > 0 && deltaR < 0.4) continue; //jet matches a selected lepton
+    if(deltaR > 0 && deltaR < 0.4) continue; //jet matches a selected lepton
 
     //------------------------------------------------------------
     //Apply Jet Energy and Resolution Corrections
@@ -891,6 +895,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
       jets tmpJet;
       tmpJet.jet    = thisJet;
+      tmpJet.time   = jetRechitT[i];
+      tmpJet.ecalNRechits = jetNRechits[i];
+      tmpJet.ecalRechitE = jetRechitE[i];
       tmpJet.jetNeutralHadronMultiplicity = jetNeutralHadronMultiplicity[i];
       tmpJet.jetChargedHadronMultiplicity = jetChargedHadronMultiplicity[i];
       tmpJet.jetMuonMultiplicity = jetMuonMultiplicity[i];
@@ -902,6 +909,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       tmpJet.jetElectronEnergyFraction = jetElectronEnergyFraction[i];
       tmpJet.jetPhotonEnergyFraction = jetPhotonEnergyFraction[i];
       tmpJet.jetCSV = jetCISV[i];
+
+      tmpJet.jetGammaMax_ET = jetGammaMax_ET[i];
+      tmpJet.jetMinDeltaRPVTracks = jetMinDeltaRPVTracks[i];
 /*
       tmpJet.jet    = thisJet;
       tmpJet.time   = jetRechitT[i];
@@ -1072,8 +1082,30 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->jetEta[llp_tree->nJets] = tmp.jet.Eta();
       llp_tree->jetE[llp_tree->nJets] = tmp.jet.E();
       llp_tree->jetPhi[llp_tree->nJets] = tmp.jet.Phi();
+      llp_tree->jetTime[llp_tree->nJets] = tmp.time;
+      llp_tree->ecalNRechits[llp_tree->nJets] = tmp.ecalNRechits;
+      llp_tree->ecalRechitE[llp_tree->nJets] = tmp.ecalRechitE;
+
+      llp_tree->jetGammaMax_ET[llp_tree->nJets] = tmp.jetGammaMax_ET;
+      llp_tree->jetMinDeltaRPVTracks[llp_tree->nJets] = tmp.jetMinDeltaRPVTracks;
+
       //std::cout << "jetEta " << tmp.jet.Eta() << std::endl;
       //std::cout << "jetEta " << llp_tree->jetEta[llp_tree->nJets] << std::endl;
+      
+      if(jetMet_dPhiMin4_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi)) && llp_tree->nJets < 4)
+      {
+        jetMet_dPhiMin4_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi));
+      }
+      if (jetMet_dPhiMin_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi)))
+      {
+        jetMet_dPhiMin_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi));
+      }     
+      TLorentzVector jet_temp = makeTLorentzVectorPtEtaPhiM( tmp.jet.Pt(), 0, tmp.jet.Phi(), 0 );
+      if (jetMet_dPhiStarMin_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() )))
+      {
+        jetMet_dPhiStarMin_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() ));
+      }     
+ 
       llp_tree->nJets++;
 /*
       llp_tree->jetE[llp_tree->nJets] = tmp.jet.E();

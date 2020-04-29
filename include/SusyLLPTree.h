@@ -393,6 +393,9 @@ public:
  float jetMinDeltaRAllTracks_wp[N_MAX_JETS];
  float jetMinDeltaRPVTracks_wp[N_MAX_JETS];
 
+  float jetTime[N_MAX_JETS];
+  float ecalNRechits[N_MAX_JETS];
+  float ecalRechitE[N_MAX_JETS];
   /*
   int nJets;
   int nBJets;

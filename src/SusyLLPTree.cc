@@ -216,6 +216,10 @@ void SusyLLPTree::InitVariables()
     jetMedianIP_wp[i] = -99.0;
     jetMinDeltaRAllTracks_wp[i] =-99.0;
     jetMinDeltaRPVTracks_wp[i] = -99.0;
+
+      jetTime[i]   = -999.;
+      ecalNRechits[i] = -999;
+      ecalRechitE[i] = -999.;
 /*
       jetE[i]      = -999.;
       jetEt[i] = -999.;
@@ -585,6 +589,10 @@ void SusyLLPTree::InitTree()
   tree_->SetBranchAddress("jetMedianIP_wp",jetMedianIP_wp);
   tree_->SetBranchAddress("jetMinDeltaRAllTracks_wp",jetMinDeltaRAllTracks_wp);
   tree_->SetBranchAddress("jetMinDeltaRPVTracks_wp",jetMinDeltaRPVTracks_wp);
+
+    tree_->SetBranchAddress("jetTime",   jetTime);
+    tree_->SetBranchAddress("ecalNRechits",   ecalNRechits);
+    tree_->SetBranchAddress("ecalRechitE", ecalRechitE);
     /*
     tree_->SetBranchAddress("nJets",     &nJets);
     tree_->SetBranchAddress("nBJets",     &nBJets);
@@ -960,6 +968,10 @@ void SusyLLPTree::CreateTree()
   tree_->Branch("jetMedianIP_wp",jetMedianIP_wp,"jetMedianIP_wp[nJets]/F");
   tree_->Branch("jetMinDeltaRAllTracks_wp",jetMinDeltaRAllTracks_wp,"jetMinDeltaRAllTracks_wp[nJets]/F");
   tree_->Branch("jetMinDeltaRPVTracks_wp",jetMinDeltaRPVTracks_wp,"jetMinDeltaRPVTracks_wp[nJets]/F");
+
+    tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
+    tree_->Branch("ecalNRechits",   ecalNRechits,   "ecalNRechits[nJets]/F");
+    tree_->Branch("ecalRechitE", ecalRechitE, "ecalRechitE[nJets]/F");
 /*
     tree_->Branch("nJets",     &nJets,    "nJets/I");
     tree_->Branch("nBJets",     &nBJets,    "nBJets/I");
