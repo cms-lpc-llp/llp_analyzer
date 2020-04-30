@@ -8,6 +8,10 @@ mode=$1
 isData=$2
 sample=$3
 inputDir=$4/${sample}/
+if [ ${mode} == 'central' ] || [ ${mode} == 'central_bdt' ]
+then
+	inputDir=$4/${sample%_mx*}
+fi
 outputDir=$5
 currentDir=`pwd`
 CMSSW_BASE=$6
@@ -37,9 +41,30 @@ then
         echo "entering directory: ${runDir}"
 	
 	#hadd all the jobs for this sample
-	echo "/mnt/hadoop/${inputDir}/${sample}*_Job*.root"
-	hadd ${sample}.root /mnt/hadoop/${inputDir}/${sample}*_Job*.root
-	output=${sample}.root
+	if [ ${mode} == "central" ]
+	then
+		mx=${sample#*_mx}
+		mx=${mx%_ctau*}
+		ctau=${sample#*_ctau}
+		tune=${sample#*_MH-125_}
+		tune=${tune%_mx*}
+		output=${sample%_MH-125*}_MH-125_MS-${mx}_ctau-${ctau}_${tune}.root
+		echo "/mnt/hadoop/${inputDir}/*_Job*_${mx}_${ctau}.root"
+		hadd ${output} /mnt/hadoop/${inputDir}/*_Job*_${mx}_${ctau}.root
+	elif [ ${mode} == "central_bdt" ]
+	then
+		mx=${sample#*_mx}
+                tune=${sample#*_MH-125_}
+                tune=${tune%_mx*}
+                output=${sample%_MH-125*}_MH-125_MS-${mx}_${tune}.root
+                echo "/mnt/hadoop/${inputDir}/*_Job*_${mx}.root"
+                hadd ${output} /mnt/hadoop/${inputDir}/*_Job*_${mx}.root
+
+	else
+		echo "/mnt/hadoop/${inputDir}/${sample}*_Job*.root"
+		hadd ${sample}.root /mnt/hadoop/${inputDir}/*_Job*.root
+		output=${sample}.root
+	fi
 	if [ ${isData} == "no" ]
         then
 		eval `scramv1 runtime -sh`
@@ -57,6 +82,10 @@ then
 		if [ "$mode" == "bkg" ]
 		then
 			dataset=${sample}
+		elif [ "$mode" == 'central' ] ||  [ "$mode" == 'central_bdt' ]
+		then
+			#dataset=${output%.root*}
+			dataset=${sample%_MH-125*}_MH-125_${tune}
 		else
 			dataset=${sample/*_vh_/}
         		dataset=${dataset/_mx*/}
@@ -64,7 +93,7 @@ then
 		fi
 
 		echo "$dataset"
-		echo "${dataset} ${runDir}/${sample}.root" > $normalize_file
+		echo "${dataset} ${runDir}/${output}" > $normalize_file
 
 		if [ -f $normalize_file ]
 		then
@@ -80,7 +109,7 @@ then
 			echo "NormalizeNtuple not found"
 		fi
 		echo "Normalization done"
-		output=${sample}_1pb_weighted.root
+		output=${output%.root*}_1pb_weighted.root
 	fi
 	sleep 2
         echo "I slept for 2 second"
