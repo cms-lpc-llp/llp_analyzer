@@ -39,8 +39,8 @@ double getNormalizationWeight(string filename, string datasetName, double intLum
     return 0;
   }
 
-  //TH1F *hist = (TH1F*) file->Get("NEvents");
-  TH1F *hist = (TH1F*) file->Get("NEvents_genweight");
+  TH1F *hist = (TH1F*) file->Get("NEvents");
+  //TH1F *hist = (TH1F*) file->Get("NEvents_genweight");
   if (!hist) {
     cout << "Could not find histogram NEvents"
          << " in file " << filename << endl;
@@ -50,7 +50,7 @@ double getNormalizationWeight(string filename, string datasetName, double intLum
   }
   double NEvents = hist->GetBinContent(1);
   cout << "Original events in the sample: " << NEvents << endl;
-
+  //NEvents = 2000000;
   //Get CrossSection
   SimpleTable xstab("data/xSections.dat");
   double CrossSection = xstab.Get(datasetName.c_str());  

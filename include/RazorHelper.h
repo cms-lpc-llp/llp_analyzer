@@ -26,6 +26,11 @@ class RazorHelper {
         RazorHelper(std::string tag_, bool isData_, bool isFastsim_);
         virtual ~RazorHelper();
 
+        std::pair<double,double> METXYCorr_Met_MetPhi(double uncormet, double uncormet_phi, int runnb, int year, bool isMC, int npv);
+
+        double getHiggsPtWeight(float higgsPt);
+        double getHiggsPtWeightSys(float higgsPt, int sys_i);
+
         // retrieve pileup weights (nominal, up, and down versions)
         double getPileupWeight(int NPU);
         double getPileupWeightUp(int NPU);
@@ -162,6 +167,7 @@ class RazorHelper {
         void loadTag_Razor2018_17SeptEarlyReReco();
         void loadTag_Null(); // Default when tag is not provided
         void loadCMSSWPath();
+        void loadHiggsPt();
         double lookupPtEtaScaleFactor(TH2D *hist, double pt, double eta, double ptmin=10.01, double ptmax=199.9, bool useAbsEta=true);
         double lookupPtEtaScaleFactorError(TH2D *hist, double pt, double eta, double ptmin=10.01, double ptmax=199.9, bool useAbsEta=true);
         double lookupEtaPtScaleFactor(TH2D *hist, double pt, double eta, double ptmin=10.01, double ptmax=199.9, bool useAbsEta=true);
@@ -275,6 +281,9 @@ class RazorHelper {
         bool isFastsim;
         std::string cmsswPath;
 
+        TFile *higgsPtWeightFile;
+        TH1F *higgsPtWeightHist;
+        TH1F *higgsPtWeightSysHist [9];
         // for pileup reweighting
         TFile *pileupWeightFile;
         TH1F *pileupWeightHist;

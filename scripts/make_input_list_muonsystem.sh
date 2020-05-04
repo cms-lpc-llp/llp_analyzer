@@ -37,19 +37,34 @@
 #MC_Summer16 \
 #MC_Fall17 \
 for year in \
-MC_RunIIFall18
+MC_Summer16
 do
-	version=displacedJetMuonNtuple/V1p12/${year}/v3/
+	version=displacedJetMuonNtuple/V1p16/${year}/v1/sixie/
 	root_dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/${version}/
 	list_dir=$CMSSW_BASE/src/llp_analyzer/lists/${version}
 	echo $list_dir
 	mkdir -p $list_dir
+	
+	#ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18	
+	#n3n2-n1-hbb-hbb_mh127_pl1000_ev100000 \
+	#n3n2-n1-hbb-hbb_mh200_pl1000_ev100000 \
+	#n3n2-n1-hbb-hbb_mh400_pl1000_ev100000 \
+	#n3n2-n1-hinc-hgg_mh200_pl100_ev100000
+	#WplusH_HToSSTobbbb_ms55_pl10000_ev150000 \
+	#WminusH_HToSSTobbbb_ms55_pl10000_ev150000
+	#WH_HToSSTobbbb_CSCDecayFilter_ms55_pl100000_ev150000 \
 	for sample in \
-	ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18	
+	ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch1 \
+	ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch3 \
+	ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch4 \
+	ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch1 \
+	ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch3 \
+	ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch4
 	do
 	        echo "${list_dir}${sample}.txt"
 	        rm -f ${list_dir}${sample}.txt
-	        find ${root_dir}${sample} -name "*.root" -size +1000c >> ${list_dir}${sample}.txt
+		sample=${sample%.txt}
+	        find ${root_dir}${sample%_batch*}/*${sample##*ev150000_}*/ -name "*.root" -size +1000c >> ${list_dir}${sample}.txt
 	        sed -i '/failed/d' ${list_dir}${sample}.txt
 	        echo "input list created for $sample"
 	done

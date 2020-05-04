@@ -37,19 +37,32 @@
 #MC_Summer16 \
 #MC_Fall17 \
 for year in \
-MC_RunIIFall18
+MC_Fall18 \
+MC_Fall17 \
+MC_Summer16
 do
-	version=displacedJetMuonNtuple/V1p12/${year}/v3/
+	version=displacedJetMuonNtuple/V1p15/${year}/v3/sixie/
 	root_dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/${version}/
 	list_dir=$CMSSW_BASE/src/llp_analyzer/lists/${version}
 	echo $list_dir
 	mkdir -p $list_dir
+	#ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18	
+	if [ ${year} == "MC_Summer16" ]
+	then
+		tune=TuneCUETP8M1
+	else
+		tune=TuneCP5
+	fi
+	#ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8 \
+	#VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8
 	for sample in \
-	ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18	
+        VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
+        ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
+        ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
 	do
 	        echo "${list_dir}${sample}.txt"
 	        rm -f ${list_dir}${sample}.txt
-	        find ${root_dir}${sample} -name "*.root" -size +1000c >> ${list_dir}${sample}.txt
+	        find ${root_dir}${sample}/ -name "*.root" -size +1000c >> ${list_dir}${sample}.txt
 	        sed -i '/failed/d' ${list_dir}${sample}.txt
 	        echo "input list created for $sample"
 	done

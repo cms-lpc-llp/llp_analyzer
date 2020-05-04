@@ -462,9 +462,15 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
     // eventNum == 83056980 || eventNum == 4325526 || eventNum == 593372604 || eventNum == 704776501 || eventNum == 2105752624 || eventNum == 2165046124 ||
     // eventNum == 255458933 || eventNum == 354792156 || eventNum == 1224149306 || eventNum == 64618353 || eventNum == 1069480720 || eventNum == 453016592 ||
     // eventNum == 1270945645 || eventNum == 96810985 || eventNum == 1362289194 || eventNum == 133669729;
-    //
-    //     if (!choose)continue;
 
+
+
+    bool choose = eventNum == 100543182 || eventNum == 952719763 || eventNum == 1451893272 || eventNum == 816983307 || eventNum == 490853685
+    || eventNum == 225725803 || eventNum == 476534769 || eventNum == 426365350 || eventNum == 1670944854 || eventNum == 631780136
+    || eventNum == 83056980 || eventNum == 304638627 || eventNum == 289348625 || eventNum == 593372604 || eventNum == 704776501
+    || eventNum == 602262988 || eventNum == 1667434810 || eventNum == 352616181 || eventNum == 182247249 || eventNum == 198364713
+    || eventNum == 354792156 || eventNum == 1224149306|| eventNum == 1069480720 || eventNum == 96810985 || eventNum == 1362289194;
+    if (!choose)continue;
 
 
 
@@ -934,16 +940,16 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
     for (int i = 0; i < ncscRechits; i++) {
       // if (cscRechitsQuality[i]!=1) continue;
       // if (cscRechitsQuality[i]>2) cout<<cscRechitsQuality[i]<<endl;
-      // MuonSystem->cscRechitsPhi[MuonSystem->nCscRechits]           = cscRechitsPhi[i];   //[nCsc]
-      // MuonSystem->cscRechitsEta[MuonSystem->nCscRechits]           = cscRechitsEta[i];   //[nCsc]
-      // MuonSystem->cscRechitsX[MuonSystem->nCscRechits]             = cscRechitsX[i];   //[nCsc]
-      // MuonSystem->cscRechitsY[MuonSystem->nCscRechits]             = cscRechitsY[i];   //[nCsc]
-      // MuonSystem->cscRechitsZ[MuonSystem->nCscRechits]             = cscRechitsZ[i];   //[nCsc]
-      // MuonSystem->cscRechitsTpeak[MuonSystem->nCscRechits] = cscRechitsTpeak[i];
-      // MuonSystem->cscRechitsTwire[MuonSystem->nCscRechits] = cscRechitsTwire[i];
-      // MuonSystem->cscRechitsQuality[MuonSystem->nCscRechits] = cscRechitsQuality[i];
-      // MuonSystem->cscRechitsStation[MuonSystem->nCscRechits] = cscRechitsStation[i];
-      // MuonSystem->cscRechitsChamber[MuonSystem->nCscRechits] = cscRechitsChamber[i];
+      MuonSystem->cscRechitsPhi[MuonSystem->nCscRechits]           = cscRechitsPhi[i];   //[nCsc]
+      MuonSystem->cscRechitsEta[MuonSystem->nCscRechits]           = cscRechitsEta[i];   //[nCsc]
+      MuonSystem->cscRechitsX[MuonSystem->nCscRechits]             = cscRechitsX[i];   //[nCsc]
+      MuonSystem->cscRechitsY[MuonSystem->nCscRechits]             = cscRechitsY[i];   //[nCsc]
+      MuonSystem->cscRechitsZ[MuonSystem->nCscRechits]             = cscRechitsZ[i];   //[nCsc]
+      MuonSystem->cscRechitsTpeak[MuonSystem->nCscRechits] = cscRechitsTpeak[i];
+      MuonSystem->cscRechitsTwire[MuonSystem->nCscRechits] = cscRechitsTwire[i];
+      MuonSystem->cscRechitsQuality[MuonSystem->nCscRechits] = cscRechitsQuality[i];
+      MuonSystem->cscRechitsStation[MuonSystem->nCscRechits] = cscRechitsStation[i];
+      MuonSystem->cscRechitsChamber[MuonSystem->nCscRechits] = cscRechitsChamber[i];
       // static int station(int index) { return ((index >> START_STATION) & MASK_STATION); }
       // cout<<cscRechitsStation[i]<<", " << ((cscRechitsDetId[i] >> 12) & 07)<<","<<((cscRechitsDetId[i] >> 3) & 077)<<endl;
 
@@ -1058,10 +1064,10 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
 
         MuonSystem->cscRechitCluster2Me11Ratio[MuonSystem->nCscRechitClusters2] = tmp.Me11Ratio;
         MuonSystem->cscRechitCluster2Me12Ratio[MuonSystem->nCscRechitClusters2] = tmp.Me12Ratio;
-       //  for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
-       // {
-       //   MuonSystem->cscRechitsCluster2Id[tmp.segment_id[j]] = MuonSystem->nCscRechitClusters2;
-       // }
+        for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
+       {
+         MuonSystem->cscRechitsCluster2Id[tmp.segment_id[j]] = MuonSystem->nCscRechitClusters2;
+       }
 
         //Jet veto/ muon veto
         MuonSystem->cscRechitCluster2JetVetoPt[MuonSystem->nCscRechitClusters2] = 0.0;

@@ -4,7 +4,6 @@
 # local files
 *.root
 *.list
-*.txt
 # Compiled Object files
 *.slo
 *.lo
@@ -43,5 +42,7 @@ scripts_condor/tarball/
 bin/*
 python/*.pyc
 src/Run*
+data/JEC/
 *.*~
+
 #*#

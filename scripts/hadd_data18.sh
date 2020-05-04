@@ -1,9 +1,11 @@
-outputRoot=Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018-HighMET-17Sep2018.root
-dir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p12/Data2018/vBDT/v1/normalized/
+ver=V1p15
+outputRoot=Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018-HighMET-17Sep2018.root
+#outputRoot=Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018CD-HighMET-17Sep2018.root
+dir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/Data2018/v1/v9/normalized/
 eval `scram runtime -sh`
 
 
-hadd $outputRoot /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018B-HighMET-17Sep2018.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018C-HighMET-17Sep2018.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018D-HighMET-PromptReco.root
+hadd $outputRoot /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018B-HighMET-17Sep2018.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018C-HighMET-17Sep2018.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018D-HighMET-PromptReco.root
 
 
 

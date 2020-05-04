@@ -30,6 +30,8 @@ void RazorAnalyzer::EnableAll(){
     // EnableTaus();
     // EnablePhotons();
     EnableCSC();
+    EnableDT();
+
     EnableJets();
     EnableCaloJets();
     // EnableFatJets();
@@ -49,6 +51,7 @@ void RazorAnalyzer::EnableAllWithEcalRechits(){
     EnableTaus();
     EnablePhotons();
     EnableCSC();
+    EnableDT();
     EnableJets();
     EnableFatJets();
     EnableMet();
@@ -78,6 +81,8 @@ void RazorAnalyzer::EnableEventInfo(){
     fChain->SetBranchStatus("fixedGridRhoFastjetCentralNeutral", 1);
     fChain->SetBranchStatus("HLTDecision", 1);
     fChain->SetBranchStatus("HLTPrescale", 1);
+    fChain->SetBranchStatus("lheComments", 1);
+
 }
 
 void RazorAnalyzer::EnablePVAll() {
@@ -365,6 +370,7 @@ void RazorAnalyzer::EnableMet(){
     fChain->SetBranchStatus("Flag_badGlobalMuonFilter", 1);
     fChain->SetBranchStatus("Flag_duplicateMuonFilter", 1);
     fChain->SetBranchStatus("Flag_CSCTightHaloFilter", 1);
+    fChain->SetBranchStatus("Flag_globalSuperTightHalo2016Filter", 1);
     fChain->SetBranchStatus("Flag_hcalLaserEventFilter", 1);
     fChain->SetBranchStatus("Flag_EcalDeadCellTriggerPrimitiveFilter", 1);
     fChain->SetBranchStatus("Flag_EcalDeadCellBoundaryEnergyFilter", 1);
@@ -378,6 +384,16 @@ void RazorAnalyzer::EnableMet(){
     fChain->SetBranchStatus("Flag_trkPOG_logErrorTooManyClusters", 1);
     fChain->SetBranchStatus("Flag_METFilters", 1);
     fChain->SetBranchStatus("Flag_ecalBadCalibFilter", 1);
+
+    fChain->SetBranchStatus("Flag2_HBHENoiseFilter", 1);
+    fChain->SetBranchStatus("Flag2_HBHEIsoNoiseFilter", 1);
+    fChain->SetBranchStatus("Flag2_BadPFMuonFilter", 1);
+    fChain->SetBranchStatus("Flag2_globalSuperTightHalo2016Filter", 1);
+    fChain->SetBranchStatus("Flag2_globalTightHalo2016Filter", 1);
+    fChain->SetBranchStatus("Flag2_BadChargedCandidateFilter", 1);
+    fChain->SetBranchStatus("Flag2_EcalDeadCellTriggerPrimitiveFilter", 1);
+    fChain->SetBranchStatus("Flag2_ecalBadCalibFilter", 1);
+    fChain->SetBranchStatus("Flag2_eeBadScFilter", 1);
 
     // fChain->SetBranchStatus("metType1PtJetResUp", 1);
     // fChain->SetBranchStatus("metType1PtJetResDown", 1);
@@ -413,23 +429,55 @@ void RazorAnalyzer::EnableRazor()
 {
 
 };
+void RazorAnalyzer::EnableDT()
+{
+  fChain->SetBranchStatus("nDtRechits", 1);
+  fChain->SetBranchStatus("dtRechitStation", 1);
+  fChain->SetBranchStatus("dtRechitWheel", 1);
+  fChain->SetBranchStatus("dtRechitX", 1);
+  fChain->SetBranchStatus("dtRechitY", 1);
+  fChain->SetBranchStatus("dtRechitZ", 1);
+  fChain->SetBranchStatus("dtRechitEta", 1);
+  fChain->SetBranchStatus("dtRechitPhi", 1);
+  fChain->SetBranchStatus("dtRechitTime", 1);
+  
+  fChain->SetBranchStatus("nRpc", 1);
+  fChain->SetBranchStatus("rpcPhi", 1);
+  fChain->SetBranchStatus("rpcEta", 1);
+  fChain->SetBranchStatus("rpcX", 1);
+  fChain->SetBranchStatus("rpcY", 1);
+  fChain->SetBranchStatus("rpcZ", 1);
+  fChain->SetBranchStatus("rpcT", 1);
+  fChain->SetBranchStatus("rpcBx", 1);
+  fChain->SetBranchStatus("rpcTError", 1);
 
+};
 void RazorAnalyzer::EnableCSC()
 {
-    fChain->SetBranchStatus("nCsc", 1);
-    fChain->SetBranchStatus("cscPhi", 1);
-    fChain->SetBranchStatus("cscEta", 1);
-    fChain->SetBranchStatus("cscX", 1);
-    fChain->SetBranchStatus("cscY", 1);
-    fChain->SetBranchStatus("cscZ", 1);
+    fChain->SetBranchStatus("ncscRechits", 1);
+    fChain->SetBranchStatus("cscRechitsPhi", 1);
+    fChain->SetBranchStatus("cscRechitsEta", 1);
+    fChain->SetBranchStatus("cscRechitsQuality", 1);
+
+    fChain->SetBranchStatus("cscRechitsX", 1);
+    fChain->SetBranchStatus("cscRechitsY", 1);
+    fChain->SetBranchStatus("cscRechitsZ", 1);
     fChain->SetBranchStatus("cscDirectionX", 1);
     fChain->SetBranchStatus("cscDirectionY", 1);
     fChain->SetBranchStatus("cscDirectionZ", 1);
     fChain->SetBranchStatus("cscNRecHits", 1);
     fChain->SetBranchStatus("cscNRecHits_flag", 1);
-    fChain->SetBranchStatus("cscT", 1);
-    fChain->SetBranchStatus("cscChi2", 1);
+    fChain->SetBranchStatus("cscRechitsStation", 1);
+    fChain->SetBranchStatus("cscRechitsChamber", 1);
+    fChain->SetBranchStatus("cscRechitsTwire", 1);
+    fChain->SetBranchStatus("cscRechitsTpeak", 1);
+    fChain->SetBranchStatus("cscRechitsDetId", 1);
 
+
+    fChain->SetBranchStatus("cscT", 1);
+
+    fChain->SetBranchStatus("cscChi2", 1);
+    /*
     fChain->SetBranchStatus("nCscClusters", 1);
     fChain->SetBranchStatus("cscClusterX", 1);
     fChain->SetBranchStatus("cscClusterY", 1);
@@ -489,9 +537,9 @@ void RazorAnalyzer::EnableCSC()
     fChain->SetBranchStatus("cscClusterVertexN15", 1);
     fChain->SetBranchStatus("cscClusterVertexN20", 1);
     fChain->SetBranchStatus("cscClusterVertexN", 1);
-
-
-    /*fChain->SetBranchStatus("nCscSegClusters", 1);
+    */
+    /*
+    fChain->SetBranchStatus("nCscSegClusters", 1);
     fChain->SetBranchStatus("cscSegClusterX", 1);
     fChain->SetBranchStatus("cscSegClusterY", 1);
     fChain->SetBranchStatus("cscSegClusterZ", 1);
@@ -549,8 +597,8 @@ void RazorAnalyzer::EnableCSC()
     fChain->SetBranchStatus("cscSegClusterVertexN10", 1);
     fChain->SetBranchStatus("cscSegClusterVertexN15", 1);
     fChain->SetBranchStatus("cscSegClusterVertexN20", 1);
-    fChain->SetBranchStatus("cscSegClusterVertexN", 1);*/
-
+    fChain->SetBranchStatus("cscSegClusterVertexN", 1);
+    */
 
 
     fChain->SetBranchStatus("nCscRechitClusters", 1);

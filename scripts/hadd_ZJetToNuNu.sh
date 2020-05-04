@@ -1,5 +1,5 @@
 #!/bin/sh 
-dir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p12/MC_Summer16/v4/v3/normalized/
+dir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p16/MC_Summer16/v1/v5/normalized/
 outputRoot=ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_1pb_weighted.root
 eval `scram runtime -sh`
 

@@ -62,7 +62,8 @@ do
 	        then
 	                maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 	        fi
-		event_list=lists/EventPick/event_pick_Run2_displacedJetMuonNtupler_V1p15_Data2016_Data2017_Data2018-HighMET_goodLumi_oot_highBDT_timeSpread20.txt
+		#event_list=lists/EventPick/event_pick_Run2_displacedJetMuonNtupler_V1p15_Data2016_Data2017_Data2018-HighMET_goodLumi_oot_highBDT_timeSpread20.txt
+		event_list=list/EventPick/event_pick_Run2_displacedJetMuonNtupler_V1p15_Data2016_Data2017_Data2018-HighMET_goodLumi_intime0p20p7_binD.txt
 		analyzer=EventPick
 		rm -f submit/${analyzer}_${sample}*
 		rm -f log/${analyzer}_${sample}*

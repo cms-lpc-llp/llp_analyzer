@@ -5,7 +5,7 @@
 #include "JetCorrectionUncertainty.h"
 #include "BTagCalibrationStandalone.h"
 #include "EnergyScaleCorrection_class.hh"
-// #include "DBSCAN.h"
+#include "DBSCAN.h"
 //C++ includes
 #include "assert.h"
 
@@ -113,13 +113,14 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
   cout << "options = " << options << "\n";
 
   //---------------------------
-  int option;
-  if (options == 1){
-    option = 1; // used when running condor
-  }
-  else{
-    option = 0;// used when running locally
-  }
+  //---------------------------
+  //options format: MH/MX/ctau/condor: 1000/300/0/1
+  // mh can be 3-4 digits, mx is always 3 digits, ctau is one digit(number of zeros), last digit is condor option
+  // mh can be 3-4 digits, mx is always 3 digits, ctau is 6 digit last digit is condor option
+
+  bool signalScan = int(options/10) == 1;
+  int option = options%10;
+
 
 
   if( isData )
@@ -130,7 +131,14 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
   {
     std::cout << "[INFO]: running on MC with option: " << option << std::endl;
   }
-
+  if( signalScan )
+  {
+    std::cout << "[INFO]: running with Signal scan" << std::endl;
+  }
+  else
+  {
+    std::cout << "[INFO]: running without Signal scan " << option << std::endl;
+  }
   const float ELE_MASS = 0.000511;
   const float MU_MASS  = 0.105658;
   const float Z_MASS   = 91.2;
@@ -165,9 +173,17 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
   //-----------------------------------------------
   //Set up Output File
   //-----------------------------------------------
+  map<pair<int,int>, TFile*> Files2D;
+  map<pair<int,int>, TTree*> Trees2D;
+  map<pair<int,int>, TH1F*> NEvents2D;
+  // map<int, TFile*> Files2D;
+  // map<int, TTree*> Trees2D;
+  // map<int, TH1F*> NEvents2D;
+
   string outfilename = outputfilename;
   if (outfilename == "") outfilename = "MuonSystem_Tree.root";
-  TFile *outFile = new TFile(outfilename.c_str(), "RECREATE");
+  TFile *outFile;
+  if (isData || !signalScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
   LiteTreeMuonSystem *MuonSystem = new LiteTreeMuonSystem;
   MuonSystem->CreateTree();
   MuonSystem->tree_->SetAutoFlush(0);
@@ -198,8 +214,8 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
   //Initialize helper
   //--------------------------------
   RazorHelper *helper = 0;
-  if (analysisTag == "Razor2018_17SeptEarlyReReco") helper = new RazorHelper("Razor2018_17SeptEarlyReReco", isData, false);
-  else helper = new RazorHelper(analysisTag, isData, false);
+  // if (analysisTag == "Razor2018_17SeptEarlyReReco") helper = new RazorHelper("Razor2018_17SeptEarlyReReco", isData, false);
+  helper = new RazorHelper(analysisTag, isData, false);
 
 
 
@@ -247,7 +263,49 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
     //std::cout << "deb0 " << jentry << std::endl;
     MuonSystem->InitVariables();
     //std::cout << "deb1 " << jentry << std::endl;
+    if (!isData && signalScan)
+    {
 
+      string mh_substring = lheComments->substr(lheComments->find("MH-")+3);
+      int mh = stoi(mh_substring.substr(0,mh_substring.find('_')));
+      string mx_substring = lheComments->substr(lheComments->find("MS-")+3);
+      int mx = stoi(mx_substring.substr(0,mx_substring.find('_')));
+      string ctau_substring = lheComments->substr(lheComments->find("ctauS-")+6);
+      int ctau = stoi(ctau_substring.substr(0,ctau_substring.find('_')));
+      MuonSystem->mH = mh;
+      MuonSystem->mX = mx;
+      MuonSystem->ctau = ctau;
+
+      // if (mh2 != mh || mx2!=mx || ctau2!=ctau) continue;
+      // cout<<*lheComments<<endl;
+
+      pair<int,int> signalPair = make_pair(mx, ctau);
+
+      // if (Files2D.count(mx) == 0){ //create file and tree
+      if (Files2D.count(signalPair) == 0){
+        //format file name
+        string thisFileName = outfilename;
+        thisFileName.erase(thisFileName.end()-5, thisFileName.end());
+        // thisFileName += "_" + to_string(mx)  + ".root";
+        // Files2D[mx] = new TFile(thisFileName.c_str(), "recreate");
+        // Trees2D[mx] =  MuonSystem->tree_->CloneTree(0);
+        // NEvents2D[mx] = new TH1F(Form("NEvents%d", mx), "NEvents", 1,0.5,1.5);
+        thisFileName += "_" + to_string(mx) + "_" + to_string(ctau) + ".root";
+
+        Files2D[signalPair] = new TFile(thisFileName.c_str(), "recreate");
+        Trees2D[signalPair] =  MuonSystem->tree_->CloneTree(0);
+        NEvents2D[signalPair] = new TH1F(Form("NEvents%d%d", mx, ctau), "NEvents", 1,0.5,1.5);
+
+
+        cout << "Created new output file " << thisFileName << endl;
+      }
+          //Fill NEvents hist
+      // NEvents2D[mx]->Fill(1.0, genWeight);
+
+      NEvents2D[signalPair]->Fill(1.0, genWeight);
+
+
+    }
     if (isData)
     {
       NEvents->Fill(1);
@@ -257,8 +315,8 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
     {
       //NEvents->Fill(genWeight);
       MuonSystem->weight = genWeight;
-      NEvents->Fill(1);
-      NEvents_genweight->Fill(1, genWeight);
+      NEvents->Fill(1, genWeight);
+      // NEvents_genweight->Fill(1);
     }
 
 
@@ -320,7 +378,7 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
         MuonSystem->genJetPt[MuonSystem->nGenJets] = genJetPt[i];
         MuonSystem->genJetEta[MuonSystem->nGenJets] = genJetEta[i];
         MuonSystem->genJetPhi[MuonSystem->nGenJets] = genJetPhi[i];
-        MuonSystem->genJetMET[MuonSystem->nGenJets] = genJetMET[i];
+        // MuonSystem->genJetMET[MuonSystem->nGenJets] = genJetMET[i];
         MuonSystem->nGenJets++;
       }
       MuonSystem->genMetPtTrue = genMetPtTrue;
@@ -372,14 +430,36 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       MuonSystem->HLTDecision[i] = HLTDecision[i];
     }
     // flags
-    MuonSystem->Flag_HBHENoiseFilter = Flag_HBHENoiseFilter;
-    MuonSystem->Flag_HBHEIsoNoiseFilter = Flag_HBHEIsoNoiseFilter;
-    MuonSystem->Flag_BadPFMuonFilter = Flag_BadPFMuonFilter;
-    MuonSystem->Flag_CSCTightHaloFilter = Flag_CSCTightHaloFilter;
-    MuonSystem->Flag_goodVertices = Flag_goodVertices;
-    MuonSystem->Flag_ecalBadCalibFilter = Flag_ecalBadCalibFilter;
-    MuonSystem->Flag_all = Flag_goodVertices && Flag_HBHEIsoNoiseFilter && Flag_BadPFMuonFilter && Flag_CSCTightHaloFilter && Flag_goodVertices && Flag_ecalBadCalibFilter;
-    if (isData && ! MuonSystem->Flag_all) continue;
+    // MuonSystem->Flag_HBHENoiseFilter = Flag_HBHENoiseFilter;
+    // MuonSystem->Flag_HBHEIsoNoiseFilter = Flag_HBHEIsoNoiseFilter;
+    // MuonSystem->Flag_BadPFMuonFilter = Flag_BadPFMuonFilter;
+    // MuonSystem->Flag_CSCTightHaloFilter = Flag_CSCTightHaloFilter;
+    // MuonSystem->Flag_goodVertices = Flag_goodVertices;
+    // MuonSystem->Flag_ecalBadCalibFilter = Flag_ecalBadCalibFilter;
+    // MuonSystem->Flag_all = Flag_goodVertices && Flag_HBHEIsoNoiseFilter && Flag_BadPFMuonFilter && Flag_CSCTightHaloFilter && Flag_goodVertices && Flag_ecalBadCalibFilter;
+
+
+    MuonSystem->Flag2_HBHENoiseFilter = Flag2_HBHENoiseFilter;
+    MuonSystem->Flag2_HBHEIsoNoiseFilter = Flag2_HBHEIsoNoiseFilter;
+    MuonSystem->Flag2_BadPFMuonFilter = Flag2_BadPFMuonFilter;
+    MuonSystem->Flag2_globalSuperTightHalo2016Filter = Flag2_globalSuperTightHalo2016Filter;
+    MuonSystem->Flag2_globalTightHalo2016Filter = Flag2_globalTightHalo2016Filter;
+    MuonSystem->Flag2_BadChargedCandidateFilter =Flag2_BadChargedCandidateFilter;
+    // Flag2_goodVertices = Flag2_goodVertices;
+    MuonSystem->Flag2_EcalDeadCellTriggerPrimitiveFilter = Flag2_EcalDeadCellTriggerPrimitiveFilter;
+    MuonSystem->Flag2_ecalBadCalibFilter = Flag2_ecalBadCalibFilter;
+    MuonSystem->Flag2_eeBadScFilter = Flag2_eeBadScFilter;
+    MuonSystem->Flag2_all = Flag2_HBHENoiseFilter && Flag2_HBHEIsoNoiseFilter && Flag2_BadPFMuonFilter && Flag2_globalSuperTightHalo2016Filter && Flag2_EcalDeadCellTriggerPrimitiveFilter;
+    if (isData) MuonSystem->Flag2_all = MuonSystem->Flag2_all && Flag_eeBadScFilter;
+
+    if (analysisTag!="Razor2016_07Aug2017Rereco")
+    {
+      MuonSystem->Flag2_all = MuonSystem->Flag2_all && Flag2_ecalBadCalibFilter;
+    }
+
+
+    if (!MuonSystem->Flag2_all) continue;
+
     //*************************************************************************
     //Start Object Selection
     //*************************************************************************
@@ -665,15 +745,298 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
     //-----------------------------
     // CSC INFO
     //-----------------------------
-    //if(nCscClusters == 0) continue;
+    vector<Point> points;
+    points.clear();
+    MuonSystem->nCscRechits  = 0;
+    cout<<"number of rechits "<<ncscRechits<<endl;
+    int nCscRechitsChamberPlus11(0), nCscRechitsChamberPlus12(0), nCscRechitsChamberPlus13(0), nCscRechitsChamberPlus21(0), nCscRechitsChamberPlus22(0),
+    nCscRechitsChamberPlus31(0), nCscRechitsChamberPlus32(0), nCscRechitsChamberPlus41(0), nCscRechitsChamberPlus42(0),
+    nCscRechitsChamberMinus11(0), nCscRechitsChamberMinus12(0), nCscRechitsChamberMinus13(0), nCscRechitsChamberMinus21(0), nCscRechitsChamberMinus22(0),
+    nCscRechitsChamberMinus31(0), nCscRechitsChamberMinus32(0), nCscRechitsChamberMinus41(0), nCscRechitsChamberMinus42(0);
+    for (int i = 0; i < ncscRechits; i++) {
 
-    if(nCscRechitClusters == 0) continue;
+      Point p;
+      p.phi = cscRechitsPhi[i];
+      p.eta = cscRechitsEta[i];
+      p.x = cscRechitsX[i];
+      p.y = cscRechitsY[i];
+      p.z = cscRechitsZ[i];
+      p.t = cscRechitsTpeak[i];
+      p.twire = cscRechitsTwire[i];
+      p.station = cscRechitsStation[i];
+      p.chamber = cscRechitsChamber[i];
+      p.clusterID = UNCLASSIFIED;
+      points.push_back(p);
+      if (cscRechitsChamber[i] == 11) nCscRechitsChamberPlus11++;
+      if (cscRechitsChamber[i] == 12) nCscRechitsChamberPlus12++;
+      if (cscRechitsChamber[i] == 13) nCscRechitsChamberPlus13++;
+      if (cscRechitsChamber[i] == 21) nCscRechitsChamberPlus21++;
+      if (cscRechitsChamber[i] == 22) nCscRechitsChamberPlus22++;
+      if (cscRechitsChamber[i] == 31) nCscRechitsChamberPlus31++;
+      if (cscRechitsChamber[i] == 32) nCscRechitsChamberPlus32++;
+      if (cscRechitsChamber[i] == 41) nCscRechitsChamberPlus41++;
+      if (cscRechitsChamber[i] == 42) nCscRechitsChamberPlus42++;
+      if (cscRechitsChamber[i] == -11) nCscRechitsChamberMinus11++;
+      if (cscRechitsChamber[i] == -12) nCscRechitsChamberMinus12++;
+      if (cscRechitsChamber[i] == -13) nCscRechitsChamberMinus13++;
+      if (cscRechitsChamber[i] == -21) nCscRechitsChamberMinus21++;
+      if (cscRechitsChamber[i] == -22) nCscRechitsChamberMinus22++;
+      if (cscRechitsChamber[i] == -31) nCscRechitsChamberMinus31++;
+      if (cscRechitsChamber[i] == -32) nCscRechitsChamberMinus32++;
+      if (cscRechitsChamber[i] == -41) nCscRechitsChamberMinus41++;
+      if (cscRechitsChamber[i] == -42) nCscRechitsChamberMinus42++;
+
+
+
+
+    }
+    if (nCscRechitsChamberPlus11 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberPlus12 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberPlus13 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberPlus21 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberPlus22 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberPlus31 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberPlus32 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberPlus41 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberPlus42 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberMinus11 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberMinus12 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberMinus13 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberMinus21 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberMinus22 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberMinus31 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberMinus32 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberMinus41 > 50) MuonSystem->nCscRings++;
+    if (nCscRechitsChamberMinus42 > 50) MuonSystem->nCscRings++;
+    int nDTRechitsChamberMinus12(0),nDTRechitsChamberMinus11(0),nDTRechitsChamber10(0),nDTRechitsChamberPlus11(0),nDTRechitsChamberPlus12(0),nDTRechitsChamberMinus22(0),
+    nDTRechitsChamberMinus21(0),nDTRechitsChamber20(0),nDTRechitsChamberPlus21(0),nDTRechitsChamberPlus22(0),nDTRechitsChamberMinus32(0),nDTRechitsChamberMinus31(0),
+    nDTRechitsChamber30(0),nDTRechitsChamberPlus31(0),nDTRechitsChamberPlus32(0),nDTRechitsChamberMinus42(0),nDTRechitsChamberMinus41(0),
+    nDTRechitsChamber40(0),nDTRechitsChamberPlus41(0),nDTRechitsChamberPlus42(0);
+    for (int i = 0; i < nDtRechits; i++) {
+
+
+      if (dtRechitStation[i] == 1 && dtRechitWheel[i] == -2) nDTRechitsChamberMinus12++;
+      if (dtRechitStation[i] == 1 && dtRechitWheel[i] == -1) nDTRechitsChamberMinus11++;
+      if (dtRechitStation[i] == 1 && dtRechitWheel[i] == 0) nDTRechitsChamber10++;
+      if (dtRechitStation[i] == 1 && dtRechitWheel[i] == 1) nDTRechitsChamberPlus11++;
+      if (dtRechitStation[i] == 1 && dtRechitWheel[i] == 2) nDTRechitsChamberPlus12++;
+      if (dtRechitStation[i] == 2 && dtRechitWheel[i] == -2) nDTRechitsChamberMinus22++;
+      if (dtRechitStation[i] == 2 && dtRechitWheel[i] == -1) nDTRechitsChamberMinus21++;
+      if (dtRechitStation[i] == 2 && dtRechitWheel[i] == 0) nDTRechitsChamber20++;
+      if (dtRechitStation[i] == 2 && dtRechitWheel[i] == 1) nDTRechitsChamberPlus21++;
+      if (dtRechitStation[i] == 2 && dtRechitWheel[i] == 2) nDTRechitsChamberPlus22++;
+      if (dtRechitStation[i] == 3 && dtRechitWheel[i] == -2) nDTRechitsChamberMinus32++;
+      if (dtRechitStation[i] == 3 && dtRechitWheel[i] == -1) nDTRechitsChamberMinus31++;
+      if (dtRechitStation[i] == 3 && dtRechitWheel[i] == 0) nDTRechitsChamber30++;
+      if (dtRechitStation[i] == 3 && dtRechitWheel[i] == 1) nDTRechitsChamberPlus31++;
+      if (dtRechitStation[i] == 3 && dtRechitWheel[i] == 2) nDTRechitsChamberPlus32++;
+      if (dtRechitStation[i] == 4 && dtRechitWheel[i] == -2) nDTRechitsChamberMinus42++;
+      if (dtRechitStation[i] == 4 && dtRechitWheel[i] == -1) nDTRechitsChamberMinus41++;
+      if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 0) nDTRechitsChamber40++;
+      if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 1) nDTRechitsChamberPlus41++;
+      if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 2) nDTRechitsChamberPlus42++;
+    }
+    if (nDTRechitsChamberMinus12 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberMinus11 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamber10 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberPlus11 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberPlus12 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberMinus22 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberMinus21 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamber20 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberPlus21 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberPlus22 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberMinus32 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberMinus31 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamber30 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberPlus31 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberPlus32 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberMinus42 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberMinus41 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamber40 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberPlus41 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberPlus42 > 50) MuonSystem->nDTRings++;
+
+    if (MuonSystem->nDTRings+MuonSystem->nCscRings > 10) continue;
+    //Do DBSCAN Clustering
+    int min_point = 50;  //minimum number of segments to call it a cluster
+    float epsilon = 0.2; //cluster radius parameter
+    DBSCAN ds(min_point, epsilon, points);
+    ds.run();
+    ds.result();
+    ds.clusterMoments();
+    ds.sort_clusters();
+    //Save cluster information
+    MuonSystem->nCscRechitClusters = 0;
+    for ( auto &tmp : ds.CscCluster ) {
+        if (isData && tmp.tTotal > -12.5)continue;
+
+        if(tmp.nCscSegmentChamberPlus11 != 0)continue;
+        if(tmp.nCscSegmentChamberPlus12 != 0)continue;
+        if(tmp.nCscSegmentChamberMinus11 != 0)continue;
+        if(tmp.nCscSegmentChamberMinus12 != 0)continue;
+        if(abs(tmp.eta)>=2.1) continue;
+        MuonSystem->cscRechitClusterX[MuonSystem->nCscRechitClusters] =tmp.x;
+        MuonSystem->cscRechitClusterY[MuonSystem->nCscRechitClusters] =tmp.y;
+        MuonSystem->cscRechitClusterZ[MuonSystem->nCscRechitClusters] =tmp.z;
+        MuonSystem->cscRechitClusterTime[MuonSystem->nCscRechitClusters] = tmp.t;
+        MuonSystem->cscRechitClusterTimeTotal[MuonSystem->nCscRechitClusters] = tmp.tTotal;
+        MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters] =tmp.eta;
+        MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters] = tmp.phi;
+        MuonSystem->cscRechitClusterMajorAxis[MuonSystem->nCscRechitClusters] =tmp.MajorAxis;
+        MuonSystem->cscRechitClusterMinorAxis[MuonSystem->nCscRechitClusters] =tmp.MinorAxis;
+        MuonSystem->cscRechitClusterXSpread[MuonSystem->nCscRechitClusters] =tmp.XSpread;
+        MuonSystem->cscRechitClusterYSpread[MuonSystem->nCscRechitClusters] =tmp.YSpread;
+        MuonSystem->cscRechitClusterZSpread[MuonSystem->nCscRechitClusters] =tmp.ZSpread;
+        MuonSystem->cscRechitClusterEtaPhiSpread[MuonSystem->nCscRechitClusters] =tmp.EtaPhiSpread;
+        MuonSystem->cscRechitClusterXYSpread[MuonSystem->nCscRechitClusters] =tmp.XYSpread;
+
+        MuonSystem->cscRechitClusterEtaSpread[MuonSystem->nCscRechitClusters] =tmp.EtaSpread;
+        MuonSystem->cscRechitClusterPhiSpread[MuonSystem->nCscRechitClusters] = tmp.PhiSpread;
+        MuonSystem->cscRechitClusterTimeSpread[MuonSystem->nCscRechitClusters] = tmp.TSpread;
+        MuonSystem->cscRechitClusterSize[MuonSystem->nCscRechitClusters] = tmp.nCscSegments;
+
+        MuonSystem->cscRechitClusterNRechitChamberPlus11[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus11;
+        MuonSystem->cscRechitClusterNRechitChamberPlus12[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus12;
+        MuonSystem->cscRechitClusterNRechitChamberPlus13[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus13;
+        MuonSystem->cscRechitClusterNRechitChamberPlus21[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus21;
+        MuonSystem->cscRechitClusterNRechitChamberPlus22[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus22;
+        MuonSystem->cscRechitClusterNRechitChamberPlus31[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus31;
+        MuonSystem->cscRechitClusterNRechitChamberPlus32[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus32;
+        MuonSystem->cscRechitClusterNRechitChamberPlus41[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus41;
+        MuonSystem->cscRechitClusterNRechitChamberPlus42[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus42;
+        MuonSystem->cscRechitClusterNRechitChamberMinus11[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberMinus11;
+        MuonSystem->cscRechitClusterNRechitChamberMinus12[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberMinus12;
+        MuonSystem->cscRechitClusterNRechitChamberMinus13[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberMinus13;
+        MuonSystem->cscRechitClusterNRechitChamberMinus21[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberMinus21;
+        MuonSystem->cscRechitClusterNRechitChamberMinus22[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberMinus22;
+        MuonSystem->cscRechitClusterNRechitChamberMinus31[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberMinus31;
+        MuonSystem->cscRechitClusterNRechitChamberMinus32[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberMinus32;
+        MuonSystem->cscRechitClusterNRechitChamberMinus41[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberMinus41;
+        MuonSystem->cscRechitClusterNRechitChamberMinus42[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberMinus42;
+        MuonSystem->cscRechitClusterMaxChamber[MuonSystem->nCscRechitClusters] = tmp.maxChamber;
+        MuonSystem->cscRechitClusterMaxChamberRatio[MuonSystem->nCscRechitClusters] = 1.0*tmp.maxChamberSegment/tmp.nCscSegments;
+        MuonSystem->cscRechitClusterNChamber[MuonSystem->nCscRechitClusters] = tmp.nChamber;
+        MuonSystem->cscRechitClusterMaxStation[MuonSystem->nCscRechitClusters] = tmp.maxStation;
+        MuonSystem->cscRechitClusterMaxStationRatio[MuonSystem->nCscRechitClusters] = 1.0*tmp.maxStationSegment/tmp.nCscSegments;
+        MuonSystem->cscRechitClusterNStation[MuonSystem->nCscRechitClusters] = tmp.nStation;
+
+        MuonSystem->cscRechitClusterMe11Ratio[MuonSystem->nCscRechitClusters] = tmp.Me11Ratio;
+        MuonSystem->cscRechitClusterMe12Ratio[MuonSystem->nCscRechitClusters] = tmp.Me12Ratio;
+        for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
+       {
+         MuonSystem->cscRechitsCluster2Id[tmp.segment_id[j]] = MuonSystem->nCscRechitClusters;
+       }
+
+        //Jet veto/ muon veto
+        MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] = 0.0;
+        MuonSystem->cscRechitClusterJetVetoE[MuonSystem->nCscRechitClusters] = 0.0;
+        MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] = 0.0;
+        MuonSystem->cscRechitClusterMuonVetoE[MuonSystem->nCscRechitClusters] = 0.0;
+        MuonSystem->cscRechitClusterGenMuonVetoPt[MuonSystem->nCscRechitClusters] = 0.0;
+        MuonSystem->cscRechitClusterGenMuonVetoE[MuonSystem->nCscRechitClusters] = 0.0;
+
+        // jet veto
+        for(int i = 0; i < nJets; i++)
+        {
+          if (fabs(jetEta[i]>3.0)) continue;
+          if (RazorAnalyzer::deltaR(jetEta[i], jetPhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 && jetPt[i] > MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] ) {
+            MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters]  = jetPt[i];
+          }
+          if (RazorAnalyzer::deltaR(jetEta[i], jetPhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters], MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 && jetE[i] > MuonSystem->cscRechitClusterJetVetoE[MuonSystem->nCscRechitClusters] ) {
+            MuonSystem->cscRechitClusterJetVetoE[MuonSystem->nCscRechitClusters]  = jetE[i];
+          }
+        }
+
+        for(int i = 0; i < nCscRechitClusters; i++)
+        {
+          if (fabs(jetEta[i]>3.0)) continue;
+          if (RazorAnalyzer::deltaR(cscRechitClusterEta[i], cscRechitClusterPhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 && cscRechitClusterJetVetoPt[i] > MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] ) {
+            MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters]  = cscRechitClusterJetVetoPt[i];
+          }
+          if (RazorAnalyzer::deltaR(cscRechitClusterEta[i], cscRechitClusterPhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters], MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 && cscRechitClusterJetVetoE[i] > MuonSystem->cscRechitClusterJetVetoE[MuonSystem->nCscRechitClusters] ) {
+            MuonSystem->cscRechitClusterJetVetoE[MuonSystem->nCscRechitClusters]  = cscRechitClusterJetVetoE[i];
+          }
+        }
+        for(int i = 0; i < nMuons; i++)
+        {
+          if (fabs(muonEta[i]>3.0)) continue;
+          if (RazorAnalyzer::deltaR(muonEta[i], muonPhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 && muonPt[i] > MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] ) {
+            MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters]  = muonPt[i];
+          }
+          if (RazorAnalyzer::deltaR(muonEta[i], muonPhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 && muonE[i] > MuonSystem->cscRechitClusterMuonVetoE[MuonSystem->nCscRechitClusters] ) {
+            MuonSystem->cscRechitClusterMuonVetoE[MuonSystem->nCscRechitClusters]  = muonE[i];
+          }
+        }
+        // match to gen-level muon
+        if(!isData)
+        {
+          for(int i = 0; i < nGenParticle; i++)
+          {
+            if (abs(gParticleId[i])!=13) continue;
+
+            // if (fabs(muonEta[i]>3.0)) continue;
+            if (RazorAnalyzer::deltaR(gParticleEta[i], gParticlePhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 && muonPt[i] > MuonSystem->cscRechitClusterGenMuonVetoPt[MuonSystem->nCscRechitClusters] ) {
+              MuonSystem->cscRechitClusterGenMuonVetoPt[MuonSystem->nCscRechitClusters]  = gParticlePt[i];
+            }
+            if (RazorAnalyzer::deltaR(gParticleEta[i], gParticlePhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 && muonE[i] > MuonSystem->cscRechitClusterGenMuonVetoE[MuonSystem->nCscRechitClusters] ) {
+              MuonSystem->cscRechitClusterGenMuonVetoE[MuonSystem->nCscRechitClusters]  = gParticleE[i];
+            }
+          }
+
+        }
+
+        // match to gen level LLP
+        float min_deltaR = 15.;
+        int index = 999;
+        for(int j = 0; j < 2;j++)
+        {
+
+          double current_delta_r = RazorAnalyzer::deltaR(MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters], MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters], gLLP_eta[j], gLLP_phi[j]);
+          if (current_delta_r < min_deltaR)
+          {
+            min_deltaR = current_delta_r;
+            index = j;
+          }
+        }
+        if (min_deltaR < 0.4)
+        {
+          MuonSystem->cscRechitCluster_match_gLLP[MuonSystem->nCscRechitClusters] = true;
+          MuonSystem->cscRechitCluster_match_gLLP_minDeltaR[MuonSystem->nCscRechitClusters] = min_deltaR;
+          MuonSystem->cscRechitCluster_match_gLLP_index[MuonSystem->nCscRechitClusters] = index;
+          MuonSystem->cscRechitCluster_match_gLLP_eta[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_eta[index];
+          MuonSystem->cscRechitCluster_match_gLLP_phi[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_phi[index];
+          MuonSystem->cscRechitCluster_match_gLLP_decay_r[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_decay_vertex_r[index];
+          MuonSystem->cscRechitCluster_match_gLLP_decay_x[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_decay_vertex_x[index];
+          MuonSystem->cscRechitCluster_match_gLLP_decay_y[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_decay_vertex_y[index];
+          MuonSystem->cscRechitCluster_match_gLLP_decay_z[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_decay_vertex_z[index];
+          MuonSystem->cscRechitCluster_match_gLLP_ctau[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_ctau[index];
+          MuonSystem->cscRechitCluster_match_gLLP_beta[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_beta[index];
+          MuonSystem->cscRechitCluster_match_gLLP_csc[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_csc[index];
+          if(!isData && !MuonSystem->gLLP_csc[index]) continue;
+        }
+        else{
+          if (!isData) continue;
+        }
+        MuonSystem->cscRechitClusterMet_dPhi[MuonSystem->nCscRechitClusters] =  RazorAnalyzer::deltaPhi(MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters],MuonSystem->metPhi);
+
+        MuonSystem->nCscRechitClusters++;
+    }
+
+    if (MuonSystem->nCscRechitClusters == 0) continue;
+    /*if(nCscRechitClusters == 0) continue;
 
     for(int i = 0; i < nCscRechitClusters; i++)
     {
-      if (isData && cscRechitClusterTime[i] > -12.5)continue;
-      if (abs(cscRechitClusterMaxChamber[i]) <= 12) continue;
+      // if (isData && cscRechitClusterTime[i] > -12.5)continue;
+      if (cscRechitClusterTime[i] > -12.5) continue;
 
+      // if (abs(cscRechitClusterMaxChamber[i]) <= 12) continue;
+      // if(!cscRechitClusterNRechitChamberPlus11[i] == 0)continue;
+      // if(!cscRechitClusterNRechitChamberPlus12[i] == 0)continue;
+      // if(!cscRechitClusterNRechitChamberMinus11[i] == 0)continue;
+      // if(!cscRechitClusterNRechitChamberMinus12[i] == 0)continue;
+      // if(abs(cscRechitClusterEta[i])>=2.1) continue;
       MuonSystem->cscRechitClusterX[MuonSystem->nCscRechitClusters] =cscRechitClusterX[i];
       MuonSystem->cscRechitClusterY[MuonSystem->nCscRechitClusters] =cscRechitClusterY[i];
       MuonSystem->cscRechitClusterZ[MuonSystem->nCscRechitClusters] =cscRechitClusterZ[i];
@@ -747,21 +1110,65 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
         MuonSystem->cscRechitCluster_match_gLLP[MuonSystem->nCscRechitClusters] = true;
         MuonSystem->cscRechitCluster_match_gLLP_minDeltaR[MuonSystem->nCscRechitClusters] = min_deltaR;
         MuonSystem->cscRechitCluster_match_gLLP_index[MuonSystem->nCscRechitClusters] = index;
+        // MuonSystem->cscRechitCluster_match_gLLP_pt[MuonSystem->nCscRechitClusters] = index;
+        // MuonSystem->cscRechitCluster_match_gLLP_pt[MuonSystem->nCscRechitClusters] = index;
+
+        MuonSystem->cscRechitCluster_match_gLLP_eta[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_eta[index];
+        MuonSystem->cscRechitCluster_match_gLLP_phi[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_phi[index];
+        MuonSystem->cscRechitCluster_match_gLLP_decay_r[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_decay_vertex_r[index];
+        MuonSystem->cscRechitCluster_match_gLLP_decay_x[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_decay_vertex_x[index];
+        MuonSystem->cscRechitCluster_match_gLLP_decay_y[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_decay_vertex_y[index];
+        MuonSystem->cscRechitCluster_match_gLLP_decay_z[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_decay_vertex_z[index];
+        MuonSystem->cscRechitCluster_match_gLLP_ctau[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_ctau[index];
+        MuonSystem->cscRechitCluster_match_gLLP_beta[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_beta[index];
+        MuonSystem->cscRechitCluster_match_gLLP_csc[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_csc[index];
+
+        // if(!isData && !MuonSystem->gLLP_csc[index]) continue;
+
       }
-      else{
-        if (!isData) continue;
-      }
+      // else{
+      //   if (!isData) continue;
+      // }
       MuonSystem->cscRechitClusterMet_dPhi[MuonSystem->nCscRechitClusters] =  RazorAnalyzer::deltaPhi(MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters],MuonSystem->metPhi);
 
       MuonSystem->nCscRechitClusters++;
     }
-
     if (MuonSystem->nCscRechitClusters == 0) continue;
-    MuonSystem->tree_->Fill();
+    */
+
+    if(!isData && signalScan)
+    {
+      // Trees2D[MuonSystem->mX]->Fill();
+      pair<int,int> smsPair = make_pair(MuonSystem->mX, MuonSystem->ctau);
+      Trees2D[smsPair]->Fill();
+    }
+    else
+    {
+      MuonSystem->tree_->Fill();
+    }
   }
 
+  if(!isData && signalScan)
+  {
+    for(auto &filePtr : Files2D)
+     {
+       cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
+       filePtr.second->cd();
+       Trees2D[filePtr.first]->Write();
+       NEvents2D[filePtr.first]->Write("NEvents");
+       filePtr.second->Close();
+
+     }
+  }
+  else
+  {
     cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
     cout << "Writing output trees..." << endl;
-    outFile->Write();
+    outFile->cd();
+    MuonSystem->tree_->Write();
+
+    NEvents->Write();
+
     outFile->Close();
+  }
 }

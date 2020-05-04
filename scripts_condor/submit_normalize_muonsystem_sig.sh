@@ -10,11 +10,10 @@ cd ../
 RazorAnalyzerDir=`pwd`
 cd -
 
-inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p12/MC_RunIIFall18/vBDT/v1/
+inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p16/MC_Summer16/v1/v8/
 outputDir=${inputDir}normalized
 echo ${inputDir}
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
-
 #DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
 #QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
@@ -26,9 +25,24 @@ job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 #QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
+#ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18
+#for sample in \
+#WplusH_HToSSTobbbb_ms55_pl10000_ev150000 \
+#WminusH_HToSSTobbbb_ms55_pl10000_ev150000
+#do
 for sample in \
-ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch1 \
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch3 \
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch4 \
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch1 \
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch3 \
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch4
 do
+#ZH_HToSSTobbbb_ms55_pl10000_ev150000 \
+#ZH_HToSSTobbbb_ms55_pl1000_ev150000
+#for sample in \
+#WH_HToSSTobbbb_CSCDecayFilter_ms55_pl100000_ev150000
+#do
 	echo "Sample " ${sample}
 	analyzer=llp_MuonSystem
 	rm -f submit/${analyzer}_normalize_${sample}*.jdl

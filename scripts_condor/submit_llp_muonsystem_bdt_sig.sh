@@ -19,7 +19,7 @@ do
 	#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
 	year=Fall18
 	version=/V1p12/MC_RunII${year}/
-	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/vBDT/v1/${sample}
+	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/vBDT/v2/${sample}
 	echo ${output}
 	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/v3/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `

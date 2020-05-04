@@ -14,14 +14,20 @@
 using namespace std;
 struct cscCluster
 {
-  float x, y, z, t, eta, phi;
+  float x, y, z, t, tTotal, eta, phi;
   int nCscSegments;
   float jetVeto, calojetVeto, muonVeto;
   int maxChamber, maxChamberSegment, nChamber;
   int maxStation, maxStationSegment, nStation;
+  int nCscSegmentChamberPlus11, nCscSegmentChamberPlus12, nCscSegmentChamberPlus13, nCscSegmentChamberPlus21, nCscSegmentChamberPlus22, nCscSegmentChamberPlus31, nCscSegmentChamberPlus32, nCscSegmentChamberPlus41, nCscSegmentChamberPlus42;
+  int nCscSegmentChamberMinus11, nCscSegmentChamberMinus12, nCscSegmentChamberMinus13, nCscSegmentChamberMinus21, nCscSegmentChamberMinus22, nCscSegmentChamberMinus31, nCscSegmentChamberMinus32, nCscSegmentChamberMinus41, nCscSegmentChamberMinus42;
+
   float Me11Ratio, Me12Ratio;
-  float MajorAxis, MinorAxis, EtaSpread, PhiSpread, EtaPhiSpread;
-  float XSpread, YSpread, ZSpread, TSpread;
+  float MajorAxis, MinorAxis, EtaSpread, PhiSpread, EtaPhiSpread, XYSpread;
+  float XSpread, YSpread, ZSpread, TSpread, RSpread;
+
+  float XSpread_phi0p5, YSpread_phi0p5, XYSpread_phi0p5, PhiSpread_phi0p5, EtaPhiSpread_phi0p5;
+
   float vertex_r, vertex_z, vertex_dis, vertex_chi2;
   int vertex_n, vertex_n1, vertex_n5, vertex_n10, vertex_n15, vertex_n20;
   vector<int>segment_id;
@@ -34,7 +40,7 @@ struct cscCluster
 
 typedef struct Point_
 {
-    float x, y, z, t;  // X, Y, Z position
+    float x, y, z, t, twire;  // X, Y, Z position
     float eta,phi;
     float dirX, dirY, dirZ;
     int station, chamber;
@@ -59,15 +65,26 @@ public:
     vector<float>clusterY;
     vector<float>clusterZ;
     vector<float>clusterTime;
+    vector<float>clusterTimeTotal;
     vector<float>clusterMajorAxis;
     vector<float>clusterMinorAxis;
     vector<float>clusterXSpread;
     vector<float>clusterYSpread;
+    vector<float>clusterXYSpread;
+    vector<float>clusterRSpread;
+
     vector<float>clusterZSpread;
     vector<float>clusterTimeSpread;
     vector<float>clusterEtaPhiSpread;
     vector<float>clusterEtaSpread;
     vector<float>clusterPhiSpread;
+
+
+    vector<float>clusterXSpread_phi0p5;
+    vector<float>clusterYSpread_phi0p5;
+    vector<float>clusterXYSpread_phi0p5;
+    vector<float>clusterPhiSpread_phi0p5;
+    vector<float>clusterEtaPhiSpread_phi0p5;
 
     vector<float>clusterVertexR;
     vector<float>clusterVertexZ;

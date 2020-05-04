@@ -10,18 +10,37 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=10
+filesPerJob=20
 
+#ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18
+#ggH_HToSSTobbbb_ms55_pl1000 \
+#ggH_HToSSTobbbb_ms55_pl10000
+#n3n2-n1-hbb-hbb_mh127_pl1000_ev100000 \
+#n3n2-n1-hbb-hbb_mh200_pl1000_ev100000 \
+#n3n2-n1-hbb-hbb_mh400_pl1000_ev100000 \
+#n3n2-n1-hinc-hgg_mh200_pl100_ev100000
 for sample in \
-ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch1 \
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch3 \
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch4 \
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch1 \
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch3 \
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch4
 do
+#for sample in \
+#WplusH_HToSSTobbbb_ms55_pl10000_ev150000 \
+#WminusH_HToSSTobbbb_ms55_pl10000_ev150000
+#do
+#for sample in \
+#WH_HToSSTobbbb_CSCDecayFilter_ms55_pl100000_ev150000
+#do
 	echo "Sample " ${sample}
-	#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
-	year=Fall18
-	version=/V1p12/MC_RunII${year}/v3/
+	year=Summer16
+	#year=Fall18
+	version=/V1p16/MC_${year}/v1/
 	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v8/${sample}
 	echo ${output}
-	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/${sample}.txt
+	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
         maxjob=`python -c "print int($nfiles.0/$filesPerJob)+1"`
         mod=`python -c "print int($nfiles.0%$filesPerJob)"`
@@ -29,14 +48,22 @@ do
         then
                 maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
         fi
-	analyzer=llp_MuonSystem
+	analyzer=llp_MuonSystem_cluster
 	if [ ${year} == "Fall18" ]
-	then
-		echo "Fall18 condition" 
-		analyzerTag=Razor2018_17SeptEarlyReReco
-	else
-		echo "ERROR: NEED TO SET CORRECT YEAR"
-	fi
+        then
+                echo ${year}
+                analyzerTag=Razor2018_17SeptEarlyReReco
+        elif [ ${year} == "Fall17" ]
+        then
+                echo ${year}
+                analyzerTag=Razor2017_17Nov2017Rereco
+        elif [ ${year} == 'Summer16' ]
+        then
+                echo ${year}
+                analyzerTag=Razor2016_07Aug2017Rereco
+        else
+                echo "ERROR: NEED TO SET CORRECT YEAR"
+        fi
 	rm -f submit/${analyzer}_${sample}_Job*.jdl
 	rm -f log/${analyzer}_${sample}_Job*
 
@@ -44,7 +71,7 @@ do
 	jdl_file=submit/${analyzer}_${sample}_${maxjob}.jdl
 	echo "Universe = vanilla" > ${jdl_file}
 	echo "Executable = ${job_script}" >> ${jdl_file}
-	echo "Arguments = ${analyzer} ${inputfilelist} no 1 ${filesPerJob} \$(ProcId) ${maxjob} ${output} ${analyzerTag} ${CMSSW_BASE} ${HOME}/" >> ${jdl_file}
+	echo "Arguments = ${analyzer} ${inputfilelist} no 01 ${filesPerJob} \$(ProcId) ${maxjob} ${output} ${analyzerTag} ${CMSSW_BASE} ${HOME}/" >> ${jdl_file}
 
 	# option should always be 1, when running condor
 	echo "Log = log/${analyzer}_${sample}_Job\$(ProcId)_Of_${maxjob}_PC.log" >> ${jdl_file}
@@ -68,5 +95,5 @@ do
 	echo "when_to_transfer_output = ON_EXIT" >> ${jdl_file}
 	echo "Queue ${maxjob}" >> ${jdl_file}
 	echo "condor_submit ${jdl_file}"
-	condor_submit ${jdl_file}
+	condor_submit ${jdl_file} --batch-name ${sample}
 done

@@ -19,12 +19,51 @@ zH_withISR_mh2000								 7.639E-06
 #privately produced ggH
 #https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt13TeV#ZHllH_H_l_e_or_Process
 ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18   					4.858E+01
+ggH_HToSSTobbbb_ms55_pl1000							4.858E+01
+ggH_HToSSTobbbb_ms55_pl10000							4.858E+01
 ZH_HToSSTobbbb_ms55_pl1000							0.08946
 ZH_HToSSTobbbb_ms55_pl10000							0.08946
+ZH_HToSSTobbbb_ms55_pl10000_ev150000						0.08946
+ZH_HToSSTobbbb_ms55_pl1000_ev150000						0.08946
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch1                                            0.08946
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch1                                     0.08946
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch3                                            0.08946
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch3                                             0.08946
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch4                                            0.08946
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch4                                             0.08946
 WminusH_HToSSTobbbb_ms55_pl10000						5.983E-02*3
 WplusH_HToSSTobbbb_ms55_pl10000						        9.426E-02*3
+WH_HToSSTobbbb_CSCDecayFilter_ms55_pl100000_ev150000				5.983E-02*3+9.426E-02*3
+WplusH_HToSSTobbbb_ms55_pl10000_ev150000					9.426E-02*3
+WminusH_HToSSTobbbb_ms55_pl10000_ev150000					5.983E-02*3
+#Matthew Citron's signal
+signal_1000_450_10m						4.858E+01
+signal_1000_450_1m						4.858E+01
+signal_125_12_10m						4.858E+01
+signal_125_12_1m						4.858E+01
+signal_125_25_10m						4.858E+01
+signal_125_25_1m						4.858E+01
+signal_125_55_10m						4.858E+01
+signal_125_55_1m						4.858E+01
+
+# GMSB Higgsino
+n3n2-n1-hbb-hbb_mh127_pl1000_ev100000				10.31*0.5824*0.5824
+n3n2-n1-hbb-hbb_mh200_pl1000_ev100000				1e-03*1335.62*0.5824*0.5824
+n3n2-n1-hbb-hbb_mh400_pl1000_ev100000				1e-03*88.7372*0.5824*0.5824
+
+# ggH centrally produced
+ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8 		4.858E+01
+ggH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	4.858E+01
+ggH_HToSSTo4Tau_MH-125_TuneCP5_13TeV-powheg-pythia8		4.858E+01
+ggH_HToSSTo4Tau_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8    	4.858E+01
+ggH_HToSSTodddd_MH-125_TuneCP5_13TeV-powheg-pythia8		4.858E+01
+ggH_HToSSTodddd_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	4.858E+01
 
 
+VBFH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8		3.78E+00
+VBFH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	3.78E+00
+VBFH_HToSSTo4Tau_MH-125_TuneCP5_13TeV-powheg-pythia8		3.78E+00
+VBFH_HToSSTo4Tau_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	3.78E+00
 #13 TeV signals from displaced analysis
 WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324  
 WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8 	5.328E-01*0.324
@@ -221,6 +260,7 @@ TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                            
 TTJets_SingleLeptFromT_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8                  146.34
 TTJets_SingleLeptFromTbar_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8               146.34
 TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8                            70.14
+TTJets_SingleLeptFromTbar_genMET-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8	   5.936
 TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8                            87.31 
 TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8                      320.1
 ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1                    3.36
