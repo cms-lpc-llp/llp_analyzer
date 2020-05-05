@@ -220,6 +220,9 @@ void SusyLLPTree::InitVariables()
       jetTime[i]   = -999.;
       ecalNRechits[i] = -999;
       ecalRechitE[i] = -999.;
+
+      jetChargedEMEnergyFraction[i] = -999.;
+      jetNeutralEMEnergyFraction[i] = -999.;
 /*
       jetE[i]      = -999.;
       jetEt[i] = -999.;
@@ -593,6 +596,9 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("jetTime",   jetTime);
     tree_->SetBranchAddress("ecalNRechits",   ecalNRechits);
     tree_->SetBranchAddress("ecalRechitE", ecalRechitE);
+
+    tree_->SetBranchAddress("jetChargedEMEnergyFraction", jetChargedEMEnergyFraction);
+    tree_->SetBranchAddress("jetNeutralEMEnergyFraction", jetNeutralEMEnergyFraction);
     /*
     tree_->SetBranchAddress("nJets",     &nJets);
     tree_->SetBranchAddress("nBJets",     &nBJets);
@@ -972,6 +978,9 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
     tree_->Branch("ecalNRechits",   ecalNRechits,   "ecalNRechits[nJets]/F");
     tree_->Branch("ecalRechitE", ecalRechitE, "ecalRechitE[nJets]/F");
+
+    tree_->Branch("jetChargedEMEnergyFraction",   jetChargedEMEnergyFraction,   "jetChargedEMEnergyFraction[nJets]/F");
+    tree_->Branch("jetNeutralEMEnergyFraction",   jetNeutralEMEnergyFraction,   "jetNeutralEMEnergyFraction[nJets]/F");
 /*
     tree_->Branch("nJets",     &nJets,    "nJets/I");
     tree_->Branch("nBJets",     &nBJets,    "nBJets/I");

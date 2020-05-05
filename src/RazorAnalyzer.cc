@@ -434,6 +434,9 @@ void RazorAnalyzer::EnableJets(){
  fChain->SetBranchStatus("jetMedianIP_wp", 1);
  fChain->SetBranchStatus("jetMinDeltaRAllTracks_wp", 1);
  fChain->SetBranchStatus("jetMinDeltaRPVTracks_wp", 1);
+
+    fChain->SetBranchStatus("jetChargedEMEnergyFraction", 1);
+    fChain->SetBranchStatus("jetNeutralEMEnergyFraction", 1);
 };
 
 void RazorAnalyzer::EnableFatJets(){

@@ -396,6 +396,9 @@ public:
   float jetTime[N_MAX_JETS];
   float ecalNRechits[N_MAX_JETS];
   float ecalRechitE[N_MAX_JETS];
+
+  float jetChargedEMEnergyFraction[N_MAX_JETS];
+  float jetNeutralEMEnergyFraction[N_MAX_JETS];
   /*
   int nJets;
   int nBJets;

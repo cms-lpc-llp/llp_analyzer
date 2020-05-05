@@ -459,6 +459,9 @@ public :
  float jetMedianIP_wp[OBJECTARRAYSIZE];
  float jetMinDeltaRAllTracks_wp[OBJECTARRAYSIZE];
  float jetMinDeltaRPVTracks_wp[OBJECTARRAYSIZE];
+
+ float jetChargedEMEnergyFraction[OBJECTARRAYSIZE];
+ float jetNeutralEMEnergyFraction[OBJECTARRAYSIZE];
    UInt_t          nFatJets;
    Float_t         fatJetE[400];   //[nFatJets]
    Float_t         fatJetPt[400];   //[nFatJets]
@@ -1007,6 +1010,9 @@ public :
    TBranch        *b_jetMedianIP_wp;
    TBranch        *b_jetMinDeltaRAllTracks_wp;
    TBranch        *b_jetMinDeltaRPVTracks_wp;
+
+   TBranch        *b_jetChargedEMEnergyFraction;   //!
+   TBranch        *b_jetNeutralEMEnergyFraction;   //!
 /*
    TBranch        *b_nJets;   //!
    TBranch        *b_jetE;   //!
@@ -1770,6 +1776,9 @@ void llp_event::Init(TTree *tree)
   fChain->SetBranchAddress("jetMedianIP_wp", &jetMedianIP_wp, &b_jetMedianIP_wp);
   fChain->SetBranchAddress("jetMinDeltaRAllTracks_wp", &jetMinDeltaRAllTracks_wp, &b_jetMinDeltaRAllTracks_wp);
   fChain->SetBranchAddress("jetMinDeltaRPVTracks_wp", &jetMinDeltaRPVTracks_wp, &b_jetMinDeltaRPVTracks_wp);
+
+   fChain->SetBranchAddress("jetChargedEMEnergyFraction", jetChargedEMEnergyFraction, &b_jetChargedEMEnergyFraction);
+   fChain->SetBranchAddress("jetNeutralEMEnergyFraction", jetNeutralEMEnergyFraction, &b_jetNeutralEMEnergyFraction);
 
    fChain->SetBranchAddress("nFatJets", &nFatJets, &b_nFatJets);
    fChain->SetBranchAddress("fatJetE", &fatJetE, &b_fatJetE);
