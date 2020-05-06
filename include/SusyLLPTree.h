@@ -3,9 +3,9 @@
 #ifndef SusyLLPTree_H
 #define SusyLLPTree_H
 
-#define N_MAX_LLPS 2
-#define N_MAX_LLP_DAUGHTERS 4
-#define N_MAX_LLP_GRAND_DAUGHTERS 4
+#define LLP_ARRAY_SIZE 2
+#define LLP_DAUGHTER_ARRAY_SIZE 4
+#define LLP_GRAND_DAUGHTER_ARRAY_SIZE 4
 #define N_MAX_LEPTONS 100
 #define N_MAX_JETS 100
 #define N_MAX_CSC 2000
@@ -13,7 +13,20 @@
 #define N_CSC_CUT 20
 #define JET_PT_CUT 10
 #define MUON_PT_CUT 20
+
 #define OBJECTARRAYSIZE 100
+#define CSCRECHITARRAYSIZE 100000
+#define RECHITARRAYSIZE 20000
+#define HORECHITARRAYSIZE 2000
+#define GENPARTICLEARRAYSIZE 2000
+#define MAX_NPV 1000
+#define MAX_NPFCAND 5000
+#define MAX_NPU 1000
+#define MAX_NBX 1000
+#define LLP_ARRAY_SIZE 2
+#define LLP_DAUGHTER_ARRAY_SIZE 4
+#define LLP_GRAND_DAUGHTER_ARRAY_SIZE 4
+#define STRIP_DIGI_THRESHOLD 13.3
 
 #include <iostream>
 #include <string>
@@ -440,30 +453,6 @@ public:
   float jet_sig_et1[N_MAX_JETS];
   float jet_sig_et2[N_MAX_JETS];
 */
-/*
-  //calojet
-  int nCaloJets;
-  float calojetE[N_MAX_JETS];
-  float calojetEt[N_MAX_JETS];
-  float calojetPt[N_MAX_JETS];
-  float calojetEta[N_MAX_JETS];
-  float calojetPhi[N_MAX_JETS];
-  float calojetTime[N_MAX_JETS];
-  float calojetNRechits[N_MAX_JETS];
-  float calojetRechitE[N_MAX_JETS];
-  //float calojetChargedEMEnergyFraction[N_MAX_JETS];
-  //float calojetNeutralEMEnergyFraction[N_MAX_JETS];
-  //float calojetChargedHadronEnergyFraction[N_MAX_JETS];
-  //float calojetNeutralHadronEnergyFraction[N_MAX_JETS];
-  float calojet_EMEnergyFraction[N_MAX_JETS];
-  float calojet_HadronicEnergyFraction[N_MAX_JETS];
-  float calojetGammaMax_ET[N_MAX_JETS];
-  float calojetMinDeltaRPVTracks[N_MAX_JETS];
-  float calojetPtAllPVTracks[N_MAX_JETS];
-  // bool jetLoosePassId[N_MAX_JETS];
-  bool calojetPassId[N_MAX_JETS];
-  // // bool jetTightPassId[N_MAX_JETS];
-*/
 
   // met filters
    bool Flag2_globalSuperTightHalo2016Filter;
@@ -477,101 +466,109 @@ public:
    bool Flag2_ecalBadCalibFilter;
    bool Flag2_eeBadScFilter;
 
-  //gLLP
-  float gLLP_csc[N_MAX_LLPS];
-  float gLLP_ctau[N_MAX_LLPS];
- 
-   //gLLP
-   bool          gLLP0_EB;
-   bool          gLLP1_EB;
-   bool          gLLP0_EE;
-   bool          gLLP1_EE;
-
-   float         gLLP_travel_time[N_MAX_LLPS];
-   float         gLLP_e[N_MAX_LLPS];
-   float         gLLP_pt[N_MAX_LLPS];
-   float         gLLP_eta[N_MAX_LLPS];
-   float         gLLP_beta[N_MAX_LLPS];
-   float         gLLP_phi[N_MAX_LLPS];
-   float         gLLP_dr;
-   float         gLLP_grandaughter_dr1;
-   float         gLLP_grandaughter_dr2;
-   float	 gLLP_grandaughter_matched_jet_dr1; 
-   float	 gLLP_grandaughter_matched_jet_dr2; 
-   float         gLLP_decay_vertex_r[N_MAX_LLPS];
-   float         gLLP_decay_vertex_x[N_MAX_LLPS];
-   float         gLLP_decay_vertex_y[N_MAX_LLPS];
-   float         gLLP_decay_vertex_z[N_MAX_LLPS];
-   float         gLLP_prod_vertex_x[N_MAX_LLPS];
-   float         gLLP_prod_vertex_y[N_MAX_LLPS];
-   float         gLLP_prod_vertex_z[N_MAX_LLPS];
+   //MC
+   int nGenJets;
+   float genJetE[OBJECTARRAYSIZE];
+   float genJetPt[OBJECTARRAYSIZE];
+   float genJetEta[OBJECTARRAYSIZE];
+   float genJetPhi[OBJECTARRAYSIZE];
+   float genJetMET[OBJECTARRAYSIZE];
+   float genMetPtCalo;
+   float genMetPhiCalo;
+   float genMetPtTrue;
+   float genMetPhiTrue;
+   float genVertexX;
+   float genVertexY;
+   float genVertexZ;
+   float genVertexT;
+   float genWeight;
 /*
-   //gLLP_daughter
-   float         gen_time[N_MAX_LLP_DAUGHTERS];
-   float         photon_travel_time[N_MAX_LLP_DAUGHTERS];
-   float         gLLP_daughter_travel_time[N_MAX_LLP_DAUGHTERS];
-   float         gLLP_daughter_e[N_MAX_LLP_DAUGHTERS];
-   float         gLLP_daughter_pt[N_MAX_LLP_DAUGHTERS];
-   float         gLLP_daughter_eta[N_MAX_LLP_DAUGHTERS];
-   float         gLLP_daughter_phi[N_MAX_LLP_DAUGHTERS];
-   float         gLLP_daughter_eta_ecalcorr[N_MAX_LLP_DAUGHTERS];
-   float         gLLP_daughter_phi_ecalcorr[N_MAX_LLP_DAUGHTERS];
-   float         gLLP_min_delta_r_match_jet[N_MAX_LLP_DAUGHTERS];
-   unsigned int          gLLP_daughter_match_jet_index[N_MAX_LLP_DAUGHTERS];
+   unsigned int genSignalProcessID;
+   float genQScale;
+   float genAlphaQCD;
+   float genAlphaQED;
+   string lheComments;
+   vector<float> *scaleWeights;
+   vector<float> *pdfWeights;
+   vector<float> *alphasWeights;
+  
+   int firstPdfWeight;
+   int lastPdfWeight;
+   int firstAlphasWeight;
+   int lastAlphasWeight;
 */
- //daughters
- bool gLLP_daughter_EB[N_MAX_LLP_DAUGHTERS]; 
- bool gLLP_daughter_ETL[N_MAX_LLP_DAUGHTERS];
-
- float gLLP_daughter_photon_travel_time_EB[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_photon_travel_time_ETL[N_MAX_LLP_DAUGHTERS];
-
- float gLLP_daughter_travel_time_EB[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_travel_time_ETL[N_MAX_LLP_DAUGHTERS];
-
- float gen_time_daughter_EB[N_MAX_LLP_DAUGHTERS];
- float gen_time_daughter_ETL[N_MAX_LLP_DAUGHTERS];
-
- int   gLLP_daughter_id[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_pt[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_eta[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_phi[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_eta_ecalcorr[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_phi_ecalcorr[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_e[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_mass[N_MAX_LLP_DAUGHTERS];
-
- unsigned int gLLP_daughter_match_jet_index[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_min_delta_r_match_jet[N_MAX_LLP_DAUGHTERS];
- unsigned int gLLP_daughter_match_calojet_index[N_MAX_LLP_DAUGHTERS];
- float gLLP_daughter_min_delta_r_match_calojet[N_MAX_LLP_DAUGHTERS];
-
- //grandaughters
- bool gLLP_grandaughter_EB[N_MAX_LLP_GRAND_DAUGHTERS]; 
- bool gLLP_grandaughter_ETL[N_MAX_LLP_GRAND_DAUGHTERS];
-
- float gLLP_grandaughter_photon_travel_time_EB[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_photon_travel_time_ETL[N_MAX_LLP_GRAND_DAUGHTERS];
-
- float gLLP_grandaughter_travel_time_EB[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_travel_time_ETL[N_MAX_LLP_GRAND_DAUGHTERS];
-
- float gen_time_grandaughter_EB[N_MAX_LLP_GRAND_DAUGHTERS];
- float gen_time_grandaughter_ETL[N_MAX_LLP_GRAND_DAUGHTERS];
-
- int   gLLP_grandaughter_id[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_pt[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_eta[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_phi[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_eta_ecalcorr[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_phi_ecalcorr[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_e[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_mass[N_MAX_LLP_GRAND_DAUGHTERS];
-
- unsigned int gLLP_grandaughter_match_jet_index[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_min_delta_r_match_jet[N_MAX_LLP_GRAND_DAUGHTERS];
- unsigned int gLLP_grandaughter_match_calojet_index[N_MAX_LLP_GRAND_DAUGHTERS];
- float gLLP_grandaughter_min_delta_r_match_calojet[N_MAX_LLP_GRAND_DAUGHTERS];
+   //gen info
+   int nGenParticle;
+   int gParticleMotherId[GENPARTICLEARRAYSIZE];
+   int gParticleMotherIndex[GENPARTICLEARRAYSIZE];
+   int gParticleId[GENPARTICLEARRAYSIZE];
+   int gParticleStatus[GENPARTICLEARRAYSIZE];
+   float gParticleE[GENPARTICLEARRAYSIZE];
+   float gParticlePt[GENPARTICLEARRAYSIZE];
+   float gParticlePx[GENPARTICLEARRAYSIZE];
+   float gParticlePy[GENPARTICLEARRAYSIZE];
+   float gParticlePz[GENPARTICLEARRAYSIZE];
+   float gParticleEta[GENPARTICLEARRAYSIZE];
+   float gParticlePhi[GENPARTICLEARRAYSIZE];
+  
+   float gParticleProdVertexX[GENPARTICLEARRAYSIZE];
+   float gParticleProdVertexY[GENPARTICLEARRAYSIZE];
+   float gParticleProdVertexZ[GENPARTICLEARRAYSIZE];
+  
+   float gParticleDecayVertexX[GENPARTICLEARRAYSIZE];
+   float gParticleDecayVertexY[GENPARTICLEARRAYSIZE];
+   float gParticleDecayVertexZ[GENPARTICLEARRAYSIZE];
+   float gLLP_prod_vertex_x[LLP_ARRAY_SIZE];
+   float gLLP_prod_vertex_y[LLP_ARRAY_SIZE];
+   float gLLP_prod_vertex_z[LLP_ARRAY_SIZE];
+   float gLLP_decay_vertex_x[LLP_ARRAY_SIZE];
+   float gLLP_decay_vertex_y[LLP_ARRAY_SIZE];
+   float gLLP_decay_vertex_z[LLP_ARRAY_SIZE];
+   float gLLP_beta[LLP_ARRAY_SIZE];
+   float gLLP_travel_time[LLP_ARRAY_SIZE];
+   float gLLP_pt[LLP_ARRAY_SIZE];
+   float gLLP_e[LLP_ARRAY_SIZE];
+   float gLLP_eta[LLP_ARRAY_SIZE];
+   float gLLP_phi[LLP_ARRAY_SIZE];
+   bool gLLP_csc[LLP_ARRAY_SIZE];
+   bool gLLP_dt[LLP_ARRAY_SIZE];
+  
+   float photon_travel_time[LLP_DAUGHTER_ARRAY_SIZE];
+   float photon_travel_time_pv[LLP_DAUGHTER_ARRAY_SIZE];
+  
+   float gen_time[LLP_DAUGHTER_ARRAY_SIZE];
+   float gen_time_pv[LLP_DAUGHTER_ARRAY_SIZE];
+   float gLLP_daughter_travel_time[LLP_DAUGHTER_ARRAY_SIZE];
+   int   gLLP_daughter_id[LLP_DAUGHTER_ARRAY_SIZE];
+   float gLLP_daughter_pt[LLP_DAUGHTER_ARRAY_SIZE];
+   float gLLP_daughter_eta[LLP_DAUGHTER_ARRAY_SIZE];
+   float gLLP_daughter_phi[LLP_DAUGHTER_ARRAY_SIZE];
+   float gLLP_daughter_eta_ecalcorr[LLP_DAUGHTER_ARRAY_SIZE];
+   float gLLP_daughter_phi_ecalcorr[LLP_DAUGHTER_ARRAY_SIZE];
+   float gLLP_daughter_e[LLP_DAUGHTER_ARRAY_SIZE];
+   float gLLP_daughter_mass[LLP_DAUGHTER_ARRAY_SIZE];
+  
+    //grandaughters
+   bool gLLP_grandaughter_EB[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   bool gLLP_grandaughter_ETL[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+  
+   float gLLP_grandaughter_photon_travel_time_EB[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   float gLLP_grandaughter_photon_travel_time_ETL[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+  
+   float gLLP_grandaughter_travel_time_EB[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   float gLLP_grandaughter_travel_time_ETL[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+  
+   float gen_time_grandaughter_EB[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   float gen_time_grandaughter_ETL[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+  
+   int   gLLP_grandaughter_id[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   float gLLP_grandaughter_pt[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   float gLLP_grandaughter_eta[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   float gLLP_grandaughter_phi[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   float gLLP_grandaughter_eta_ecalcorr[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   float gLLP_grandaughter_phi_ecalcorr[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   float gLLP_grandaughter_e[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+   float gLLP_grandaughter_mass[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
 
   //MET
  float metType1Pt;

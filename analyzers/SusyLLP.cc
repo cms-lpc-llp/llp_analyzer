@@ -20,8 +20,6 @@
 #define _debug_match 0
 #define _debug_avgH 0
 #define _debug_trg 0
-#define _debug_calojet 0
-#define _run_calojet_ 0
 
 #define N_MAX_LLP_DAUGHTERS 4
 #define N_MAX_LLP_GRAND_DAUGHTERS 4
@@ -68,23 +66,6 @@ struct jets
   float jetNeutralEMEnergyFraction;
 };
 
-struct calojets
-{
-  TLorentzVector calojet;
-  float time;
-  bool passId;
-  bool isCSVT;
-  bool matched;
-  int ecalNRechits;
-  float ecalRechitE;
-  float calojet_EMEnergyFraction;
-  float calojet_HadronicEnergyFraction;
-  float calojetGammaMax_ET;
-  float calojetMinDeltaRPVTracks;
-  float calojetPtAllPVTracks;
-
-};
-
 //pt comparison
 //not used so far
 struct greater_than_pt
@@ -103,12 +84,6 @@ struct largest_pt_jet
 {
   inline bool operator() (const jets& p1, const jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
 } my_largest_pt_jet;
-
-//calojet highest pt comparator
-struct largest_pt_calojet
-{
-  inline bool operator() (const calojets& p1, const calojets& p2){return p1.calojet.Pt() > p2.calojet.Pt();}
-} my_largest_pt_calojet;
 
 //Analyze
 //void SusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag)
@@ -389,6 +364,21 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
     if(!isData)
     {
+/*
+      for(int i=0; i < nGenJets; i++)
+      {
+        llp_tree->genJetE[llp_tree->nGenJets] = genJetE[i];
+        llp_tree->genJetPt[llp_tree->nGenJets] = genJetPt[i];
+        llp_tree->genJetEta[llp_tree->nGenJets] = genJetEta[i];
+        llp_tree->genJetPhi[llp_tree->nGenJets] = genJetPhi[i];
+        // llp_tree->nGenJets++;
+      }
+*/
+      llp_tree->genMetPtTrue = genMetPtTrue;
+      llp_tree->genMetPhiTrue = genMetPhiTrue;
+      llp_tree->genMetPtCalo = genMetPtCalo;
+      llp_tree->genMetPhiCalo = genMetPhiCalo;
+
     if(_debug) std::cout << "nBunchXing " << nBunchXing << std::endl;
       for (int i=0; i < nBunchXing; i++)
       {
@@ -730,11 +720,6 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       if( Jets.size() < 1 ) continue;
 
     }
-    else
-    {
-      if( caloJets.size() < 1 ) continue;
-
-    }
 */
     if (triggered) trig_lepId_dijet->Fill(1);
     sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
@@ -808,7 +793,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 
     
-    //gLLP
+/*    //gLLP
     for(int i = 0; i <N_MAX_LLPS; i++){
       llp_tree->gLLP_travel_time[i] = gLLP_travel_time[i];
       llp_tree->gLLP_e[i] = gLLP_e[i];
@@ -869,7 +854,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
     //gLLP daughters
     for(int i = 0; i <N_MAX_LLP_DAUGHTERS; i++){
-/*
+*
       llp_tree->gen_time[i] = gen_time[i];
       llp_tree->photon_travel_time[i] = photon_travel_time[i];
       llp_tree->gLLP_daughter_travel_time[i] = gLLP_daughter_travel_time[i];
@@ -880,7 +865,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->gLLP_daughter_eta_ecalcorr[i] = gLLP_daughter_eta_ecalcorr[i];
       llp_tree->gLLP_min_delta_r_match_jet[i] = gLLP_min_delta_r_match_jet[i];
       llp_tree->gLLP_daughter_match_jet_index[i] = gLLP_daughter_match_jet_index[i];
-*/
+*
       llp_tree->gLLP_daughter_EB[i] = gLLP_daughter_EB[i];
       llp_tree->gLLP_daughter_ETL[i] = gLLP_daughter_ETL[i];
 
@@ -894,10 +879,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       llp_tree->gen_time_daughter_ETL[i] = gen_time_daughter_ETL[i];
 
       llp_tree->gLLP_daughter_match_jet_index[i] = gLLP_daughter_match_jet_index[i];
-      llp_tree->gLLP_daughter_match_calojet_index[i] = gLLP_daughter_match_calojet_index[i];
 
       llp_tree->gLLP_daughter_min_delta_r_match_jet[i] = gLLP_daughter_min_delta_r_match_jet[i];
-      llp_tree->gLLP_daughter_min_delta_r_match_calojet[i] = gLLP_daughter_min_delta_r_match_calojet[i];
 
       llp_tree->gLLP_daughter_id[i] = gLLP_daughter_id[i];
       llp_tree->gLLP_daughter_mass[i] = gLLP_daughter_mass[i];
@@ -952,11 +935,6 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       
       //llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = gLLP_grandaughter_min_delta_r_match_jet[i];
 
-      if(_debug_calojet)
-      {
-      llp_tree->gLLP_grandaughter_match_calojet_index[i] = gLLP_grandaughter_match_calojet_index[i];
-      llp_tree->gLLP_grandaughter_min_delta_r_match_calojet[i] = gLLP_grandaughter_min_delta_r_match_calojet[i];
-      }
 
       llp_tree->gLLP_grandaughter_id[i] = gLLP_grandaughter_id[i];
       llp_tree->gLLP_grandaughter_mass[i] = gLLP_grandaughter_mass[i];
@@ -983,7 +961,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	llp_tree->gLLP_grandaughter_matched_jet_dr2 = deltaR(llp_tree->jetEta[llp_tree->gLLP_grandaughter_match_jet_index[2]], llp_tree->jetPhi[llp_tree->gLLP_grandaughter_match_jet_index[2]], llp_tree->jetEta[llp_tree->gLLP_grandaughter_match_jet_index[3]], llp_tree->jetPhi[llp_tree->gLLP_grandaughter_match_jet_index[3]] ); 
     }
     if(_debug_match) std::cout << " dr1(b1j, b2j) " << llp_tree->gLLP_grandaughter_matched_jet_dr1 << ", dr2(b1j, b2j) " << llp_tree->gLLP_grandaughter_matched_jet_dr2 << std::endl;
-
+*/
     if(_debug_trg) std::cout << "end: 310 " << HLTDecision[310] << std::endl;
     if(_debug_trg) std::cout << "end: 310 " << llp_tree->HLTDecision[310] << std::endl;
 

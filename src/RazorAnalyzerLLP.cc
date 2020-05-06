@@ -48,7 +48,7 @@ void RazorAnalyzerLLP::EnableAllWithEcalRechits(){
     EnableElectrons();
     EnableTaus();
     EnablePhotons();
-    EnableCSC();
+    //EnableCSC();
     EnableJets();
     EnableFatJets();
     EnableMet();

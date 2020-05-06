@@ -5,21 +5,10 @@ if [ "$1" == "" ] || [ "$2" == "" ]; then
 else
     cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/bin/Run$2 .
 
-    #cp /mnt/hadoop/store/user/jmao/AllUNeed4Razor.tgz ./
-    #cp /mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/SusyEwkHgg/Aux/RazorRunAuxFiles_Expanded.tar.gz ./
-    #cp /mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/SusyEwkHgg/Aux/ElectronEffFastsimToFullsimCorrectionFactors.2016.root ./
-    #cp /mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/ScaleFactors_07Aug2017Rereco_2016data.tgz ./
-   
-    #tar vxzf ScaleFactors_07Aug2017Rereco_2016data.tgz
-   
-    #tar vxzf RazorRunAuxFiles_Expanded.tar.gz
-    #tar vxzf AllUNeed4Razor.tgz
-    #tar vxzf JEC_Summer16_23Sep2016V3.tgz
-    #tar vxzf JEC_Summer16_23Sep2016V4.tgz
-    #tar vxzf Fall17_17Nov2017_V6_DATA_V8_MC.tgz
-    #tar vxzf Fall17_17Nov2017_V32_DATA_MC.tgz
-    #tar vxzf Spring16_FastSimV1.tgz
-    #cp RazorRunAuxFiles_Expanded/* .
+    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Summer16_2016_calo.root ./
+    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_QCD_HT50toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016_calo.root ./
+    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016_calo.root ./
+    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_WJetsToLNu_HT-70ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016_calo.root ./
 
     ./Run$2 $1 ${@:3}
     rm Run$2
