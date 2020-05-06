@@ -101,7 +101,7 @@ do
 	echo "Sample " ${sample}
 	#outputDir=/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/${sample} 
 	#outputDir=/store/group/phys_exotica/delayedjets/displacedJetTimingAnalyzer/V1p17/v2/Data2016/${sample} 
-	outputDir=/store/group/phys_exotica/delayedjets/displacedJetTimingAnalyzer/V1p16/v1/MC_Summer16/${sample} 
+	outputDir=/store/group/phys_exotica/delayedjets/displacedJetTimingAnalyzer/V1p16/v2/MC_Summer16/${sample} 
 	#inputfilelist=/src/cms_lpc_llp/llp_analyzer/lists/displacedJetTimingNtuple/V1p13/Data_2016/${sample}.txt
 	#inputfilelist=/src/cms_lpc_llp/llp_analyzer/lists/displacedJetMuonNtuple/V1p16/MC_Fall17/${sample}.txt
 	inputfilelist=/src/cms_lpc_llp/llp_analyzer/lists/displacedJetMuonNtuple/V1p16/MC_Summer16/${sample}.txt
@@ -127,7 +127,7 @@ do
 	#bkg no 161
 	#signal no 151
 	#data yes 161 
-	echo "Arguments = ${analyzer} ${inputfilelist} yes 161 ${filesPerJob} \$(ProcId) ${maxjob} ${outputDir} ${analyzerTag} ${CMSSW_BASE} ${HOME}" >> ${jdl_file}
+	echo "Arguments = ${analyzer} ${inputfilelist} no 161 ${filesPerJob} \$(ProcId) ${maxjob} ${outputDir} ${analyzerTag} ${CMSSW_BASE} ${HOME}" >> ${jdl_file}
 
 	# option should always be 1, when running condor
 	echo "Log = log/${analyzer}_${sample}_Job\$(ProcId)_Of_${maxjob}_PC.log" >> ${jdl_file}

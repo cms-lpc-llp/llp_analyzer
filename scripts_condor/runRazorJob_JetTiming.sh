@@ -3,7 +3,7 @@
 hostname
 echo "Job started"
 date
-start_time=`date +%s`
+
 analysisType=$1
 inputfilelist=$2
 isData=$3
@@ -13,20 +13,18 @@ jobnumber=$6
 outputfile=$7
 outputDirectory=$8
 code_dir_suffix=$9
-CMSSW_BASE=${10}
-homeDir=${11}
-currentDir=`pwd`
-user=${homeDir#*/data/}
-runDir=${currentDir}/${user}_${code_dir_suffix}/
 
+currentDir=`pwd`
+homeDir=/data/jmao/
+runDir=${currentDir}/jmao_${code_dir_suffix}/
 rm -rf ${runDir}
 mkdir -p ${runDir}
 
 if [ -f /cvmfs/cms.cern.ch/cmsset_default.sh ]
 then
+
 	#setup cmssw
-	#cd $CMSSW_BASE/src/
-	cd ${CMSSW_BASE}/src/
+	cd ${homeDir}/CMSSW_9_4_4/src/
 	workDir=`pwd`
 	echo "entering directory: ${workDir}"
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -37,12 +35,11 @@ then
 
 	cd ${runDir}
 	echo "entering directory: ${runDir}"
-	echo "${CMSSW_BASE}/src/llp_analyzer/RazorRun_T2"
-	if [ -f ${CMSSW_BASE}/src/llp_analyzer/RazorRun_T2 ]
+	if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/RazorRun_T2 ]
 	then
-		cp $CMSSW_BASE/src/llp_analyzer/RazorRun_T2 ./
+		cp $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/RazorRun_T2 ./
 		mkdir -p JEC
-		cp -r $CMSSW_BASE/src/llp_analyzer/data/JEC/Summer16_23Sep2016V3_MC/ JEC/Summer16_23Sep2016V3_MC
+		cp -r $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/JEC/Summer16_23Sep2016V3_MC/ JEC/Summer16_23Sep2016V3_MC
 		if [ -d JEC/Summer16_23Sep2016V3_MC ]
 		then
 			echo "copied JEC parameters"
@@ -51,9 +48,17 @@ then
 		fi	
 		#get grid proxy
 		export X509_USER_PROXY=${homeDir}x509_proxy
-		echo "${homeDir}x509_proxy"
-		voms-proxy-info
 
+		#copy pedestal file
+                if [ ${isData} == "yes" ]
+                then
+			date
+			echo "copying pedestal file to local directory ========="
+                        #hadoop fs -get /store/group/phys_susy/razor/Run2Analysis/EcalTiming/EcalPedestals_Legacy2016_time_v1/tree_EcalPedestals_Legacy2016_time_v1_G12rmsonly.root ./
+                        cp /mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/EcalTiming/EcalPedestals_Legacy2016_time_v1/tree_EcalPedestals_Legacy2016_time_v1_G12rmsonly.root ./
+			echo "done with copying pedestal file to local directory ========="
+			date
+                fi
 
 		#run the job
 		cat ${CMSSW_BASE}${inputfilelist} | awk "NR > (${jobnumber}*${filePerJob}) && NR <= ((${jobnumber}+1)*${filePerJob})" > inputfilelistForThisJob_${jobnumber}.txt
@@ -82,14 +87,11 @@ then
 		then
 			eval `scram unsetenv -sh`
 			gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}
-			gfal-copy --checksum-mode=both ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
-			#mkdir -p ${outputDirectory}
-			#cp ${outputfile} ${outputDirectory}/${outputfile}
+			gfal-copy -f ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
 		else
 			echo "output doesn't exist"
 		fi
 		if [ -f /mnt/hadoop/${outputDirectory}/${outputfile} ]
-		#if [ -f /${outputDirectory}/${outputfile} ]
 		then
 			echo "ZZZZAAAA ============ good news, job finished successfully "
 		else
@@ -107,6 +109,3 @@ cd ${currentDir}
 #rm -rf ${runDir}
 echo "Job finished"
 date
-end_time=`date +%s`
-runtime=$((end_time-start_time))
-echo ${runtime}

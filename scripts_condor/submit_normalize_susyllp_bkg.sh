@@ -12,7 +12,7 @@ cd -
 mode=bkg
 isData=no
 #inputDir=/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/
-inputDir=/store/group/phys_exotica/delayedjets/displacedJetTimingAnalyzer/V1p16/v1/MC_Summer16/
+inputDir=/store/group/phys_exotica/delayedjets/displacedJetTimingAnalyzer/V1p16/v2/MC_Summer16/
 outputDir=${inputDir}normalized
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 
@@ -26,15 +26,7 @@ WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #WJetsToLNu_HT-70To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#ZJetsToNuNu_HT-100To200_13TeV-madgraph \
-#ZJetsToNuNu_HT-200To400_13TeV-madgraph \
-#ZJetsToNuNu_HT-400To600_13TeV-madgraph \
-#ZJetsToNuNu_HT-600To800_13TeV-madgraph \
-#ZJetsToNuNu_HT-800To1200_13TeV-madgraph \
-#ZJetsToNuNu_HT-1200To2500_13TeV-madgraph \
-#ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph \
-#TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#TTJets_SingleLeptFromTbar_genMET-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+
 #QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
@@ -44,6 +36,16 @@ WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 #QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+
+#ZJetsToNuNu_HT-100To200_13TeV-madgraph \
+#ZJetsToNuNu_HT-200To400_13TeV-madgraph \
+#ZJetsToNuNu_HT-400To600_13TeV-madgraph \
+#ZJetsToNuNu_HT-600To800_13TeV-madgraph \
+#ZJetsToNuNu_HT-800To1200_13TeV-madgraph \
+#ZJetsToNuNu_HT-1200To2500_13TeV-madgraph \
+#ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph \
+#TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+#TTJets_SingleLeptFromTbar_genMET-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
 
 #WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
 

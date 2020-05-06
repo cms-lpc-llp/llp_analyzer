@@ -1,0 +1,9 @@
+hadd QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1.root /mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1//*.root
+hadd QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1.root /mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1//*.root
+hadd QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1.root /mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1//*.root
+hadd QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1.root /mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1//*.root
+hadd QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1.root /mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1//*.root
+hadd QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1.root /mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1//*.root
+hadd QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1.root /mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1//*.root
+hadd QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1.root /mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1//*.root
+hadd QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1.root /mnt/hadoop/store/group/phys_exotica/jmao/susy_llp/llp_analyzer/QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1//*.root

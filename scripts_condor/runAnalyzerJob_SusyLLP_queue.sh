@@ -3,30 +3,35 @@
 hostname
 echo "Job started"
 date
-start_time=`date +%s`
+
 analysisType=$1
 inputfilelist=$2
 isData=$3
 option=$4
 filePerJob=$5
 jobnumber=$6
-outputfile=$7
+maxjob=$7
+sample=${inputfilelist##*/}
+sample=${sample%.txt}
+outputfile=${sample}_Job${jobnumber}_of_${maxjob}.root
 outputDirectory=$8
-code_dir_suffix=$9
+analyzerTag=$9
 CMSSW_BASE=${10}
 homeDir=${11}
-currentDir=`pwd`
-user=${homeDir#*/data/}
-runDir=${currentDir}/${user}_${code_dir_suffix}/
 
+
+currentDir=`pwd`
+user=${homeDir#*/storage/user/}
+runDir=${currentDir}/${user}_${analyzerTag}/
 rm -rf ${runDir}
 mkdir -p ${runDir}
 
 if [ -f /cvmfs/cms.cern.ch/cmsset_default.sh ]
 then
+
 	#setup cmssw
-	#cd $CMSSW_BASE/src/
 	cd ${CMSSW_BASE}/src/
+	#cd ${homeDir}/login-1/jmao/CMSSW_9_4_4/src/
 	workDir=`pwd`
 	echo "entering directory: ${workDir}"
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
@@ -37,12 +42,12 @@ then
 
 	cd ${runDir}
 	echo "entering directory: ${runDir}"
-	echo "${CMSSW_BASE}/src/llp_analyzer/RazorRun_T2"
-	if [ -f ${CMSSW_BASE}/src/llp_analyzer/RazorRun_T2 ]
+	echo "CMSSW base: ${CMSSW_BASE}"
+	if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/RazorRun_T2_JM ]
 	then
-		cp $CMSSW_BASE/src/llp_analyzer/RazorRun_T2 ./
+		cp $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/RazorRun_T2_JM ./
 		mkdir -p JEC
-		cp -r $CMSSW_BASE/src/llp_analyzer/data/JEC/Summer16_23Sep2016V3_MC/ JEC/Summer16_23Sep2016V3_MC
+		cp -r $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/JEC/Summer16_23Sep2016V3_MC/ JEC/Summer16_23Sep2016V3_MC
 		if [ -d JEC/Summer16_23Sep2016V3_MC ]
 		then
 			echo "copied JEC parameters"
@@ -50,8 +55,7 @@ then
 			echo "didn't copy JEC parameters"
 		fi	
 		#get grid proxy
-		export X509_USER_PROXY=${homeDir}x509_proxy
-		echo "${homeDir}x509_proxy"
+		export X509_USER_PROXY=${homeDir}/x509_proxy
 		voms-proxy-info
 
 
@@ -64,13 +68,14 @@ then
 		echo "************************************"
 		echo ""
 		echo " "; echo "Starting razor run job now"; echo " ";
-		echo ./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile}
-		./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${label}
+		echo ./RazorRun_T2_JM inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile}
+		./RazorRun_T2_JM inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${label}
+		#./RazorRun_T2_JM inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${label}
 		echo ${outputfile}
 		echo ${outputDirectory}
 
 		##^_^##
-		echo "RazorRun_T2 finished"
+		echo "RazorRun_T2_JM finished"
 		date
 
 		sleep 2
@@ -81,15 +86,17 @@ then
 		if [ -f ${outputfile} ]
 		then
 			eval `scram unsetenv -sh`
+			voms-proxy-info
+			echo "gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}"
 			gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}
-			gfal-copy --checksum-mode=both ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
-			#mkdir -p ${outputDirectory}
-			#cp ${outputfile} ${outputDirectory}/${outputfile}
+			echo "mkdir done, start copying"
+			ls
+			pwd
+			gfal-copy -f ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
 		else
 			echo "output doesn't exist"
 		fi
 		if [ -f /mnt/hadoop/${outputDirectory}/${outputfile} ]
-		#if [ -f /${outputDirectory}/${outputfile} ]
 		then
 			echo "ZZZZAAAA ============ good news, job finished successfully "
 		else
@@ -104,9 +111,6 @@ else
 fi
 
 cd ${currentDir}
-#rm -rf ${runDir}
+rm -rf ${runDir}
 echo "Job finished"
 date
-end_time=`date +%s`
-runtime=$((end_time-start_time))
-echo ${runtime}
