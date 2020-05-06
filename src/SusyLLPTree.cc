@@ -31,6 +31,7 @@ void SusyLLPTree::InitVariables()
     //evnt info
     runNum=0; lumiSec=0; evtNum=0; category=0;
     npv=0; npu=0; rho=-1; weight=-1;
+    pileupWeight = 1; pileupWeightUp = 1; pileupWeightDown = 1;
     met=-1; metPhi=-1;
     HT=-1;
     jetMet_dPhi=-999.; jetMet_dPhiMin=999.; jetMet_dPhiMin4=999.;
@@ -406,6 +407,9 @@ void SusyLLPTree::InitTree()
     tree_->SetBranchAddress("category",    &category);
     tree_->SetBranchAddress("npv",         &npv);
     tree_->SetBranchAddress("npu",         &npu);
+    tree_->SetBranchAddress("pileupWeight",      &pileupWeight);
+    tree_->SetBranchAddress("pileupWeightUp",      &pileupWeightUp);
+    tree_->SetBranchAddress("pileupWeightDown",      &pileupWeightDown);
     tree_->SetBranchAddress("weight",      &weight);
     tree_->SetBranchAddress("rho",         &rho);
     tree_->SetBranchAddress("met",         &met);
@@ -780,6 +784,9 @@ void SusyLLPTree::CreateTree()
     tree_->Branch("category",    &category,   "category/i");    // dilepton category
     tree_->Branch("npv",         &npv,        "npv/i");         // number of primary vertices
     tree_->Branch("npu",         &npu,        "npu/i");         // number of in-time PU events (MC)
+    tree_->Branch("pileupWeight",      &pileupWeight,     "pileupWeight/F");
+    tree_->Branch("pileupWeightUp",      &pileupWeightUp,     "pileupWeightUp/F");
+    tree_->Branch("pileupWeightDown",      &pileupWeightDown,     "pileupWeightDown/F");
     tree_->Branch("weight",      &weight,     "weight/F");
     tree_->Branch("rho",         &rho,        "rho/F");
     tree_->Branch("met",         &met,        "met/F");         // MET

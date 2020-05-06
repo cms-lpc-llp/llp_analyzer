@@ -13,6 +13,7 @@
 #include "TH1F.h"
 
 #define _debug 0
+#define _debug_npu 0
 #define _debug_sync 0
 #define _debug_met 0
 #define _debug_jet 0
@@ -110,7 +111,8 @@ struct largest_pt_calojet
 } my_largest_pt_calojet;
 
 //Analyze
-void SusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag)
+//void SusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag)
+void SusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag, string process)
 {
   //initialization: create one TTree for each analysis box
   cout << "Initializing..." << endl;
@@ -194,8 +196,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
   //reference in RazorHelper
   if (analysisTag == ""){
     analysisTag = "Razor2016_80X";
-
   }
+
   int wzId;
   int NTrigger;//Number of trigger in trigger paths
   int elePt_cut = 0;
@@ -281,8 +283,16 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
   //Initialize helper
   //--------------------------------
   RazorHelper *helper = 0;
+  if (process == ""){
+    process = "ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Summer16_2016";
+  }
+
   if (analysisTag == "Razor2015_76X") helper = new RazorHelper("Razor2015_76X", isData, false);
   else if (analysisTag == "Razor2016_MoriondRereco") helper = new RazorHelper("Razor2016_MoriondRereco", isData, false);
+  //else if (analysisTag == "CT2016_07Aug2017Rereco") helper = new RazorHelper("CT2016_07Aug2017Rereco", isData, false);
+  else if (analysisTag == "CT2016_07Aug2017Rereco") helper = new RazorHelper("CT2016_07Aug2017Rereco", isData, false, process.c_str());
+  //else if (analysisTag == "CT2016_07Aug2017Rereco") helper = new RazorHelper("CT2016_07Aug2017Rereco", isData, false, "QCD_HT50toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016");
+  //else if (analysisTag == "CT2016_07Aug2017Rereco") helper = new RazorHelper("CT2016_07Aug2017Rereco", isData, false, "ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Summer16_2016");
   else helper = new RazorHelper(analysisTag, isData, false);
 
   //----------
@@ -377,17 +387,33 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
     }
 
-    if(_debug) std::cout << "nBunchXing " << nBunchXing << std::endl;
-    for (int i=0; i < nBunchXing; ++i)
+    if(!isData)
     {
-      if(_debug) std::cout << "BunchXing[i] " << BunchXing[i] << std::endl;
-      if (BunchXing[i] == 0)
+    if(_debug) std::cout << "nBunchXing " << nBunchXing << std::endl;
+      for (int i=0; i < nBunchXing; i++)
       {
-        llp_tree->npu = int(nPUmean[i]);
-        if(_debug) std::cout << "BunchXing[i] " << BunchXing[i] << std::endl;
-        if(_debug) std::cout << "nPUmean[i] " << nPUmean[i] << std::endl;
+        if (BunchXing[i] == 0)
+        {
+          llp_tree->npu = int(nPUmean[i]);
+      if(_debug_npu) 
+      {
+	std::cout << "npu " << llp_tree->npu << std::endl;
+        std::cout << "nPUmean[i] " << nPUmean[i] << std::endl;
+      }
+        }
+      }
+
+      llp_tree->pileupWeight = 1;
+      llp_tree->pileupWeight = helper->getPileupWeight(llp_tree->npu);
+      llp_tree->pileupWeightUp = helper->getPileupWeightUp(llp_tree->npu) / llp_tree->pileupWeight;
+      llp_tree->pileupWeightDown = helper->getPileupWeightDown(llp_tree->npu) / llp_tree->pileupWeight;
+      if(_debug_npu) 
+      {
+        std::cout << "pileupWeightUp " << llp_tree->pileupWeightUp << std::endl;
+	std::cout << "pileupWeightDown " << llp_tree->pileupWeightDown << std::endl;
       }
     }
+
     if(_debug_met) std::cout << "npu " << llp_tree->npu << std::endl;
     if(_debug && llp_tree->npu != 0 ) std::cout << "npu " << llp_tree->npu << std::endl;
     //get NPU
@@ -473,7 +499,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
         bool overlap = false;
         for(auto& lep : Leptons)
         {
-          if (RazorAnalyzer::deltaR(muonEta[i],muonPhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
+          if (RazorAnalyzerLLP::deltaR(muonEta[i],muonPhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
         }
         //if(overlap) continue;
 
@@ -519,7 +545,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
         bool overlap = false;
         for(auto& lep : Leptons)
         {
-          if (RazorAnalyzer::deltaR(eleEta[i],elePhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
+          if (RazorAnalyzerLLP::deltaR(eleEta[i],elePhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
         }
         if(overlap) continue;
         leptons tmpElectron;
@@ -640,7 +666,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
     //------------------------------------------------------------
     double deltaR = -1;
     for(auto& lep : Leptons){
-      double thisDR = RazorAnalyzer::deltaR(jetEta[i],jetPhi[i],lep.lepton.Eta(),lep.lepton.Phi());
+      double thisDR = RazorAnalyzerLLP::deltaR(jetEta[i],jetPhi[i],lep.lepton.Eta(),lep.lepton.Phi());
       if(deltaR < 0 || thisDR < deltaR) deltaR = thisDR;
     }
     if(deltaR > 0 && deltaR < 0.4) continue; //jet matches a selected lepton
@@ -715,10 +741,10 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
     if (Jets.size()>0)
     {
-      llp_tree->jetMet_dPhi = RazorAnalyzer::deltaPhi(jetPhi[0],metType1Phi);
+      llp_tree->jetMet_dPhi = RazorAnalyzerLLP::deltaPhi(jetPhi[0],metType1Phi);
       //TLorentzVector t1PFMET = makeTLorentzVectorPtEtaPhiM( metType1Pt, 0, metType1Phi, 0 );
       TLorentzVector jet0 = makeTLorentzVectorPtEtaPhiM( jetPt[0], 0, jetPhi[0], 0 );
-      llp_tree->jetMet_dPhiStar = RazorAnalyzer::deltaPhi(jetPhi[0],  (t1PFMET+jet0).Phi() );
+      llp_tree->jetMet_dPhiStar = RazorAnalyzerLLP::deltaPhi(jetPhi[0],  (t1PFMET+jet0).Phi() );
     }
     else{
       llp_tree->jetMet_dPhi = -999.;
@@ -759,18 +785,18 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
       //std::cout << "jetEta " << tmp.jet.Eta() << std::endl;
       //std::cout << "jetEta " << llp_tree->jetEta[llp_tree->nJets] << std::endl;
       
-      if(jetMet_dPhiMin4_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi)) && llp_tree->nJets < 4)
+      if(jetMet_dPhiMin4_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),metType1Phi)) && llp_tree->nJets < 4)
       {
-        jetMet_dPhiMin4_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi));
+        jetMet_dPhiMin4_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),metType1Phi));
       }
-      if (jetMet_dPhiMin_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi)))
+      if (jetMet_dPhiMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),metType1Phi)))
       {
-        jetMet_dPhiMin_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(),metType1Phi));
+        jetMet_dPhiMin_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),metType1Phi));
       }     
       TLorentzVector jet_temp = makeTLorentzVectorPtEtaPhiM( tmp.jet.Pt(), 0, tmp.jet.Phi(), 0 );
-      if (jetMet_dPhiStarMin_temp > abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() )))
+      if (jetMet_dPhiStarMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() )))
       {
-        jetMet_dPhiStarMin_temp = abs(RazorAnalyzer::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() ));
+        jetMet_dPhiStarMin_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() ));
       }     
  
       llp_tree->nJets++;

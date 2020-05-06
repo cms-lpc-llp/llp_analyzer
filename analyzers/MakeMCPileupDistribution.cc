@@ -31,21 +31,14 @@ void MakeMCPileupDistribution::Analyze(bool isData, int option, string outputFil
     outputFileName = "MCPileupDistribution.root";
   }
   //---------------------------
-  if( isData )
-  {
-    std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << std::endl;
-  }
-  else
-  {
-    std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << std::endl;
-  }
-  TFile outFile(outputFileName.c_str(), "UPDATE");
+
+  TFile outFile(outputFileName.c_str(), "RECREATE");
 
   string Label = label;
   if (label != "") Label = "_"+label;
-
   TH1F* histPUMean =  new TH1F( ("PUMean"+Label).c_str(),";nPUMean;Number of Events", 200, -0.5, 199.5);
-  TH1F* histPU =  new TH1F( ("PU"+Label).c_str(),";nPU;Number of Events", 200, -0.5, 199.5);
+
+  // TH1F* histPUMean =  new TH1F( ("PUMean"+Label).c_str(),";nPUMean;Number of Events", 200, 0, 200);
 
   //begin loop
   if (fChain == 0) return;
@@ -60,30 +53,23 @@ void MakeMCPileupDistribution::Analyze(bool isData, int option, string outputFil
     Long64_t ientry = LoadTree(jentry);
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
-
-
     //find in-time pileup
-    int intime_PU = 0;
     float intime_PUmean = 0;
     for (int i=0; i<nBunchXing; ++i) {
       if (BunchXing[i] == 0) {
-	intime_PU = nPU[i];
-	intime_PUmean = nPUmean[i];
+	       intime_PUmean = nPUmean[i];
       }
     }
 
     //fill normalization histogram
     histPUMean->Fill(intime_PUmean);
-    histPU->Fill(intime_PU);
 
   }//end of event loop
 
   //Normalize the histograms
   NormalizeHist(histPUMean);
-  NormalizeHist(histPU);
 
   cout << "Writing output ..." << endl;
   outFile.WriteTObject(histPUMean, ("PUMean"+Label).c_str(), "WriteDelete");
-  outFile.WriteTObject(histPU, ("PU"+Label).c_str(), "WriteDelete");
   outFile.Close();
 }

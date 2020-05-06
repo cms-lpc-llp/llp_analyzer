@@ -26,9 +26,9 @@
 #include <TRandom3.h> 
 #include <TLatex.h> 
 
-#include "RazorAnalyzer/include/ControlSampleEvents.h"
-#include "RazorAnalyzer/macros/tdrstyle.C"
-#include "RazorAnalyzer/macros/CMS_lumi.C"
+#include "cms_lpc_llp/llp_analyzer/include/ControlSampleEvents.h"
+#include "cms_lpc_llp/llp_analyzer/macros/tdrstyle.C"
+#include "cms_lpc_llp/llp_analyzer/macros/CMS_lumi.C"
 
 #endif
 
@@ -52,22 +52,23 @@ TH1F* NormalizeHist(TH1F *originalHist) {
 
 
 
-void MakePileupReweight(int option = 0) {
+void MakePileupReweight(int option = 0, int year = 2016, string process = "ZJetsToNuNu_HT-100ToInf_13TeV-madgraph") {
 
 
   TFile *pileupTargetFile = 0;
   TFile *pileupSourceFile = 0;
   TFile *file = 0 ;
 
+/*
   //For 2016 Data
-  // pileupSourceFile = new TFile("RazorAnalyzer/data/PileupWeights/PileupSource_MC80X_Summer16.root", "READ");
-  // if (option == 0) pileupTargetFile = new TFile("RazorAnalyzer/data/PileupWeights/PileupTarget_2016_36p2ifb.root", "READ");
-  // else if (option == 1) pileupTargetFile = new TFile("RazorAnalyzer/data/PileupWeights/PileupTarget_2016_36p2ifb_SysUp.root", "READ");
-  // else if (option == 2) pileupTargetFile = new TFile("RazorAnalyzer/data/PileupWeights/PileupTarget_2016_36p2ifb_SysDown.root", "READ");
-  // else {
-  //   return;
-  // }
-  // file = TFile::Open("PileupReweight_Summer16_2016_36p2ifb.root", "UPDATE");
+   pileupSourceFile = new TFile("RazorAnalyzer/data/PileupWeights/PileupSource_MC80X_Summer16.root", "READ");
+   if (option == 0) pileupTargetFile = new TFile("RazorAnalyzer/data/PileupWeights/PileupTarget_2016_36p2ifb.root", "READ");
+   else if (option == 1) pileupTargetFile = new TFile("RazorAnalyzer/data/PileupWeights/PileupTarget_2016_36p2ifb_SysUp.root", "READ");
+   else if (option == 2) pileupTargetFile = new TFile("RazorAnalyzer/data/PileupWeights/PileupTarget_2016_36p2ifb_SysDown.root", "READ");
+   else {
+     return;
+   }
+   file = TFile::Open("PileupReweight_Summer16_2016_36p2ifb.root", "UPDATE");
 
   //For 2017 Data
   pileupSourceFile = new TFile("RazorAnalyzer/data/PileupWeights/PileupSource_MC_Fall2017.root", "READ");
@@ -79,6 +80,24 @@ void MakePileupReweight(int option = 0) {
     return;
   }
   file = TFile::Open("PileupReweight_2017Rereco_41p2ifb.root", "UPDATE");
+*/
+
+  //For calo timing analysis
+  string campaign = "Summer16";
+  if (year==2016) campaign = "Summer16";
+  else if (year==2017) campaign = "Fall17";
+  else if (year==2018) campaign = "Autumn18";
+
+  string pathname = getenv("CMSSW_BASE");
+
+   pileupSourceFile = new TFile(Form("%s/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupSource_%s_%s_%d_calo.root", pathname.c_str(), process.c_str(), campaign.c_str(), year), "READ");
+   if (option == 0) pileupTargetFile = new TFile(Form("%s/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupTarget_%d_calo.root", pathname.c_str(), year), "READ");
+   else if (option == 1) pileupTargetFile = new TFile(Form("%s/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupTarget_%d_calo_sysUp.root", pathname.c_str(), year), "READ");
+   else if (option == 2) pileupTargetFile = new TFile(Form("%s/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupTarget_%d_calo_sysDown.root", pathname.c_str(), year), "READ");
+   else {
+     return;
+   }
+   file = TFile::Open(Form("%s/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_%s_%s_%d_calo.root", pathname.c_str(), process.c_str(), campaign.c_str(), year), "UPDATE");
 
 
   TH1F *pileupTargetHist = (TH1F*)pileupTargetFile->Get("pileup");
@@ -86,8 +105,8 @@ void MakePileupReweight(int option = 0) {
   std::cout << "pileupTargetHist " << pileupTargetHist->Integral() << std::endl;
 
   //TH1F *pileupSourceHist = (TH1F*)pileupSourceFile->Get("PileupSourceHist");
-  //TH1F *pileupSourceHist = (TH1F*)pileupSourceFile->Get("PUMean"); 
-  TH1F *pileupSourceHist = (TH1F*)pileupSourceFile->Get("PUMean_Razor2017_92X"); 
+  TH1F *pileupSourceHist = (TH1F*)pileupSourceFile->Get("PUMean"); 
+  //TH1F *pileupSourceHist = (TH1F*)pileupSourceFile->Get("PUMean_Razor2017_92X"); 
   assert(pileupSourceHist);
   std::cout << "pileupSourceFile " << pileupSourceHist->Integral() << std::endl;
   std::cout << "FILES RETRIEVED" << std::endl;

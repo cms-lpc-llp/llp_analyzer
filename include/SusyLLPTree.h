@@ -49,6 +49,7 @@ public:
   UInt_t  runNum, lumiSec, evtNum;
   UInt_t  category;
   UInt_t  npv, npu;
+  Float_t pileupWeight, pileupWeightUp, pileupWeightDown;
   Float_t rho, weight;
   Float_t met, metPhi;
   Float_t HT;

@@ -17,6 +17,9 @@ if analyzer.find("Run1") > 0:
 if analyzer.find("UpgradeTiming") > 0:
 	inNames = ['include/AnalyzerTemplateUpgradeTiming.txt','src/RunAnalyzerTemplateUpgradeTiming.txt']
 
+if analyzer.find("LLP") > 0:
+	inNames = ['include/AnalyzerTemplateLLP.txt','src/RunAnalyzerTemplateLLP.txt']
+
 for i in range(len(inNames)):
     with open(inNames[i]) as inF:
         with open(outNames[i],'w') as outF:

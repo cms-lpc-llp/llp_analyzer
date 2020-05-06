@@ -32,6 +32,99 @@ RazorHelper::RazorHelper(std::string tag_, bool isData_, bool isFastsim_):
         loadTag_Razor2016_07Aug2017Rereco();
     }
 
+    // tag for 2016 17Aug2017 Rereco
+    else if (tag == "CT2016_07Aug2017Rereco"){
+        loadTag_CT2016_07Aug2017Rereco();
+    }
+
+    // tag for 2016 80X Moriond Rereco
+    else if (tag == "Razor2016_MoriondRereco") {
+        loadTag_Razor2016_MoriondRereco();
+    }
+
+    // tag for 2016 80X 03Feb2017 Rereco
+    else if (tag == "Razor2016_03Feb2017Rereco") {
+        loadTag_Razor2016_03Feb2017Rereco();
+    }
+
+    // tag for 2016G 80X data
+    else if (tag == "Razor2016G_80X") {
+        loadTag_Razor2016G_80X();
+    }
+
+    // tag for 2016G unblinded 80X data
+    else if (tag == "Razor2016G_SUSYUnblind_80X") {
+      //eleVetoEffSFMinPt = 15.01;
+      //muVetoEffSFMinPt = 15.01;
+      loadTag_Razor2016G_SUSYUnblind_80X();
+    }
+
+    // tag for 2016 ICHEP 80X data
+    else if (tag == "Razor2016_ICHEP_80X") {
+        loadTag_Razor2016_ICHEP_80X();
+    }
+
+    // tag for 2017 Prompt Reco
+    else if (tag == "Razor2017_92X") {
+        loadTag_Razor2017_92X();
+    }
+
+    // tag for 2017 17Nov2017 Rereco
+    else if (tag == "Razor2017_17Nov2017Rereco") {
+        loadTag_Razor2017_17Nov2017Rereco();
+    }
+
+    // tag for 2017 31Mar2018 Rereco
+    else if (tag == "Razor2017_31Mar2018Rereco") {
+        loadTag_Razor2017_31Mar2018Rereco();
+    }
+
+   // tag not found
+    else {
+        std::cout << "Error in RazorHelper::RazorHelper : specified tag " << tag << " is not supported!" << std::endl;
+        loadTag_Null();
+        return;
+    }
+
+}
+
+//add process
+RazorHelper::RazorHelper(std::string tag_, bool isData_, bool isFastsim_, std::string process_):
+        tag(tag_), isData(isData_), isFastsim(isFastsim_), process(process_) {
+    std::cout << "RazorHelper initializing with tag " << tag << std::endl;
+
+    eleVetoEffSFMinPt = -1;
+    eleLooseEffSFMinPt = -1;
+    muVetoEffSFMinPt = -1;
+    muLooseEffSFMinPt = -1;
+
+    // check that CMSSW is set up
+    loadCMSSWPath();
+    if (cmsswPath == "") {
+        loadTag_Null();
+        return;
+    }
+
+    // tag for 2015 data
+    else if (tag == "Razor2015") {
+        loadTag_Razor2015();
+    }
+
+    // tag for 2015 76X ReReco data
+    else if (tag == "Razor2015_76X") {
+        loadTag_Razor2015_76X();
+    }
+
+    // tag for 2016 17Aug2017 Rereco
+    else if (tag == "Razor2016_07Aug2017Rereco"){
+        loadTag_Razor2016_07Aug2017Rereco();
+    }
+
+    // tag for 2016 17Aug2017 Rereco
+    else if (tag == "CT2016_07Aug2017Rereco"){
+        loadTag_CT2016_07Aug2017Rereco();
+    }
+
     // tag for 2016 80X Moriond Rereco
     else if (tag == "Razor2016_MoriondRereco") {
         loadTag_Razor2016_MoriondRereco();
@@ -587,6 +680,53 @@ void RazorHelper::loadJECs_Razor2015_76X() {
 ////  2016 17Aug2017 Rereco
 //////////////////////////////////////////////////
 
+/////Calo Timing //////
+void RazorHelper::loadTag_CT2016_07Aug2017Rereco() {
+    loadPileup_CT2016_07Aug2017Rereco(process);
+    //loadPileup_CT2016_07Aug2017Rereco();
+    //loadLepton_Razor2016_MoriondRereco();
+    //loadPhoton_Razor2016_07Aug2017Rereco_DelayedPhoton();
+    //loadBTag_Razor2016_MoriondRereco();
+    //loadTrigger_Razor2016_07Aug2017Rereco_DelayedPhoton();
+    //loadJECs_Razor2016_07Aug2017Rereco();
+    //loadAK8JetTag_Razor2016_MoriondRereco();
+}
+
+void RazorHelper::loadPileup_CT2016_07Aug2017Rereco(std::string process) {
+    // pileup weights
+    // LAST UPDATED: 5 May 2020
+    std::cout << "RazorHelper: loading pileup weight histograms" << std::endl;
+
+    pileupWeightFile = TFile::Open(Form("PileupReweight_%s_calo.root", process.c_str()), "READ");
+    pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+    pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+    pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+    std::cout << "PileupReweight_"<<process.c_str() <<"_calo.root\n";
+
+}
+
+void RazorHelper::loadPileup_CT2016_07Aug2017Rereco() {
+    // pileup weights
+    // LAST UPDATED: 5 May 2020
+    std::cout << "RazorHelper: loading pileup weight histograms" << std::endl;
+
+    if (!isFastsim) {
+      pileupWeightFile = TFile::Open("PileupReweight_ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Summer16_2016_calo.root");
+      pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+      pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+      pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+      std::cout << "PileupReweight_Summer16_2016_calo.root\n";
+    } else {
+      pileupWeightFile = TFile::Open("PileupReweight_ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Summer16_2016_calo.root");
+      pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+      pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+      pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+      std::cout << "PileupReweight_Summer16_2016_calo.root\n";
+    }
+
+}
+
+//////Razor //////
 void RazorHelper::loadTag_Razor2016_07Aug2017Rereco() {
     loadPileup_Razor2016_MoriondRereco();
     loadLepton_Razor2016_MoriondRereco();

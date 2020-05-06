@@ -24,6 +24,7 @@ class RazorHelper {
     public:
         // constructor takes a string specifying which set of files to load.
         RazorHelper(std::string tag_, bool isData_, bool isFastsim_);
+        RazorHelper(std::string tag_, bool isData_, bool isFastsim_, std::string process_);
         virtual ~RazorHelper();
 
         // retrieve pileup weights (nominal, up, and down versions)
@@ -151,6 +152,8 @@ class RazorHelper {
         void loadTag_Razor2015(); // Final set of files used in 2015
         void loadTag_Razor2015_76X(); // Configuration for 2015 ReReco
         void loadTag_Razor2016_07Aug2017Rereco(); // Configuration for 2016 Rereco
+        void loadTag_CT2016_07Aug2017Rereco(std::string process); // Configuration for 2016 Rereco
+        void loadTag_CT2016_07Aug2017Rereco(); // Configuration for 2016 Rereco
         void loadTag_Razor2016_MoriondRereco(); // Configuration for 2016 Rereco
         void loadTag_Razor2016_03Feb2017Rereco(); // Configuration for 2016 03Feb2017 Rereco
         void loadTag_Razor2016G_80X(); // Special configuration for Run2016G
@@ -246,6 +249,10 @@ class RazorHelper {
         void loadBTag_Razor2016G_SUSYUnblind();
         void loadTrigger_Razor2016G_SUSYUnblind();
 
+	// for CT2016_07Aug2017Rereco
+        void loadPileup_CT2016_07Aug2017Rereco();
+        void loadPileup_CT2016_07Aug2017Rereco(std::string process);
+
         // for Razor2017 92X tag
         void loadPileup_Razor2017_92X();
         void loadTrigger_Razor2017_92X();
@@ -267,6 +274,7 @@ class RazorHelper {
         bool isData;
         bool isFastsim;
         std::string cmsswPath;
+        std::string process;
 
         // for pileup reweighting
         TFile *pileupWeightFile;
