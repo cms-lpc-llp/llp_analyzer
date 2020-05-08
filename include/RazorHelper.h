@@ -27,6 +27,9 @@ class RazorHelper {
         RazorHelper(std::string tag_, bool isData_, bool isFastsim_, std::string process_);
         virtual ~RazorHelper();
 
+	// met correction
+        std::pair<double,double> METXYCorr_Met_MetPhi(double uncormet, double uncormet_phi, int runnb, int year, bool isMC, int npv);
+
         // retrieve pileup weights (nominal, up, and down versions)
         double getPileupWeight(int NPU);
         double getPileupWeightUp(int NPU);
@@ -161,7 +164,12 @@ class RazorHelper {
         void loadTag_Razor2016_ICHEP_80X();
         void loadTag_Razor2017_92X(); // Configuration for 2017 92X
         void loadTag_Razor2017_17Nov2017Rereco(); // Configuration for 2017 92X
+        void loadTag_CT2017_17Nov2017Rereco(); // Configuration for 2017 92X
+        void loadTag_CT2017_17Nov2017Rereco(std::string process); // Configuration for 2017 92X
         void loadTag_Razor2017_31Mar2018Rereco(); // Configuration for 2017 94X
+        void loadTag_Razor2018_17SeptEarlyReReco();
+        void loadTag_CT2018_17Sep2018Rereco();
+        void loadTag_CT2018_17Sep2018Rereco(std::string process);
         void loadTag_Null(); // Default when tag is not provided
         void loadCMSSWPath();
         double lookupPtEtaScaleFactor(TH2D *hist, double pt, double eta, double ptmin=10.01, double ptmax=199.9, bool useAbsEta=true);
@@ -252,6 +260,7 @@ class RazorHelper {
 	// for CT2016_07Aug2017Rereco
         void loadPileup_CT2016_07Aug2017Rereco();
         void loadPileup_CT2016_07Aug2017Rereco(std::string process);
+        void loadJECs_CT2016_07Aug2017Rereco();
 
         // for Razor2017 92X tag
         void loadPileup_Razor2017_92X();
@@ -264,10 +273,22 @@ class RazorHelper {
         void loadLepton_Razor2017_17Nov2017Rereco();
         void loadJECs_Razor2017_17Nov2017Rereco();
 
+	// for CT2017 17Nov2017 Rereco
+        void loadJECs_CT2017_17Nov2017Rereco();
+
 	// for Razor2017 31Mar2018 Rereco
         void loadPhoton_Razor2017_31Mar2018Rereco();
         void loadLepton_Razor2017_31Mar2018Rereco();
         void loadJECs_Razor2017_31Mar2018Rereco();
+
+        //for Razor Razor2018
+        void loadPileup_Razor2018_17SeptEarlyReReco();
+        // void loadTrigger_Razor2018_17SeptEarlyReReco();
+        // void loadLepton_Razor2018();
+        void loadJECs_Razor2018_17SeptEarlyReReco();
+
+        //for CT2018 17Sep2018
+        void loadJECs_CT2018_17Sep2018Rereco();
 
         // member data
         std::string tag;

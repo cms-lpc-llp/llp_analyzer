@@ -5,10 +5,23 @@ if [ "$1" == "" ] || [ "$2" == "" ]; then
 else
     cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/bin/Run$2 .
 
-    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Summer16_2016_calo.root ./
-    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_QCD_HT50toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016_calo.root ./
-    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016_calo.root ./
-    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_WJetsToLNu_HT-70ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016_calo.root ./
+    #pileup rewight 2016 bkg mc
+    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Summer16_2016_calo.root .
+    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_QCD_HT50toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016_calo.root .
+    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016_calo.root .
+    cp ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/PileupWeights/PileupReweight_WJetsToLNu_HT-70ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016_calo.root .
+
+    #JEC
+    mkdir -p JEC
+    cp -r ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/JEC/Summer16_07Aug2017BCD_V11_DATA JEC/
+    cp -r ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/JEC/Summer16_07Aug2017EF_V11_DATA JEC/
+    cp -r ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/JEC/Summer16_07Aug2017GH_V11_DATA JEC/
+    cp -r ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/JEC/Summer16_07Aug2017_V11_MC JEC/
+    cp -r ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/JEC/Fall17_17Nov2017_V32_DATA JEC/
+    cp -r ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/JEC/Fall17_17Nov2017_V32_MC JEC/
+    cp -r ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/JEC/Autumn18_RunsABCD_V19_DATA JEC/
+    cp -r ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/JEC/Autumn18_V19_MC JEC/
+    cp -r ${CMSSW_BASE}/src/cms_lpc_llp/llp_analyzer/data/JEC/JetResolutionInputAK5PF.txt JEC/
 
     ./Run$2 $1 ${@:3}
     rm Run$2
