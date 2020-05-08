@@ -64,6 +64,21 @@ struct jets
 
 	float jetChargedEMEnergyFraction;
 	float jetNeutralEMEnergyFraction;
+
+	//int   jetNSV;
+	//int   jetNSVCand;
+	int   jetNVertexTracks;
+	int   jetNSelectedTracks;
+	float jetDRSVJet;
+	//float jetFlightDist2D;
+	//float jetFlightDist2DError;
+	//float jetFlightDist3D;
+	//float jetFlightDist3DError;
+	//float jetSV_x;
+	//float jetSV_y;
+	//float jetSV_z;
+	//int   jetSVNTracks;
+	float jetSVMass;
 };
 
 //pt comparison
@@ -718,6 +733,12 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
 			tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
+
+			tmpJet.jetNVertexTracks = jetNVertexTracks[i];
+			tmpJet.jetNSelectedTracks = jetNSelectedTracks[i];
+			tmpJet.jetDRSVJet = jetDRSVJet[i];
+			tmpJet.jetSVMass = jetSVMass[i];
+
 			Jets.push_back(tmpJet);
 
 		}
@@ -780,6 +801,11 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			llp_tree->jetEcalE[llp_tree->nJets] = tmp.jet.E()*(tmp.jetElectronEnergyFraction+tmp.jetPhotonEnergyFraction);
 			llp_tree->jetHcalE[llp_tree->nJets] = tmp.jet.E()*(tmp.jetNeutralHadronEnergyFraction+tmp.jetChargedHadronEnergyFraction);
+
+			llp_tree->jetNVertexTracks[llp_tree->nJets] = tmp.jetNVertexTracks;
+			llp_tree->jetNSelectedTracks[llp_tree->nJets] = tmp.jetNSelectedTracks;
+			llp_tree->jetDRSVJet[llp_tree->nJets] = tmp.jetDRSVJet;
+			llp_tree->jetSVMass[llp_tree->nJets] = tmp.jetSVMass;
 
 			//std::cout << "jetEta " << tmp.jet.Eta() << std::endl;
 			//std::cout << "jetEta " << llp_tree->jetEta[llp_tree->nJets] << std::endl;
