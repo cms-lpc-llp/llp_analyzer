@@ -31,6 +31,7 @@ void RazorAnalyzer::EnableAll(){
 	EnableTaus();
 	EnablePhotons();
 	//EnableCSC();
+	EnableTracks();
 	EnableJets();
 	//EnableCaloJets();
 	EnableFatJets();
@@ -50,6 +51,7 @@ void RazorAnalyzer::EnableAllWithEcalRechits(){
 	EnableTaus();
 	EnablePhotons();
 	EnableCSC();
+	EnableTracks();
 	EnableJets();
 	EnableFatJets();
 	EnableMet();
@@ -228,6 +230,26 @@ void RazorAnalyzer::EnableIsoPFCandidates(){
 	// fChain->SetBranchStatus("isoPFCandidatePdgId", 1);
 }
 
+void RazorAnalyzer::EnableTracks(){
+	fChain->SetBranchStatus("nTracks", 1);
+	fChain->SetBranchStatus("track_Pt", 1);
+	fChain->SetBranchStatus("track_Eta", 1);
+	fChain->SetBranchStatus("track_Phi", 1);
+	fChain->SetBranchStatus("track_charge", 1);
+	fChain->SetBranchStatus("track_bestVertexIndex", 1);
+	fChain->SetBranchStatus("track_nMissingInnerHits", 1);
+	fChain->SetBranchStatus("track_nMissingOuterHits", 1);
+	fChain->SetBranchStatus("track_nPixelHits", 1);
+	fChain->SetBranchStatus("track_nHits", 1);
+	fChain->SetBranchStatus("track_angle", 1);
+	fChain->SetBranchStatus("track_dxyToBS", 1);
+	fChain->SetBranchStatus("track_dxyErr", 1);
+	fChain->SetBranchStatus("track_dzToPV", 1);
+	fChain->SetBranchStatus("track_dzErr", 1);
+	fChain->SetBranchStatus("track_chi2", 1);
+	fChain->SetBranchStatus("track_ndof", 1);
+};
+
 void RazorAnalyzer::EnablePhotons(){
 	fChain->SetBranchStatus("nPhotons", 1);
 	fChain->SetBranchStatus("phoE", 1);
@@ -296,59 +318,6 @@ void RazorAnalyzer::EnableCaloJets(){
 };
 
 void RazorAnalyzer::EnableJets(){
-	/*
-	   fChain->SetBranchStatus("nJets", 1);
-	   fChain->SetBranchStatus("jetE", 1);
-	   fChain->SetBranchStatus("jetPt", 1);
-	   fChain->SetBranchStatus("jetEta", 1);
-	   fChain->SetBranchStatus("jetPhi", 1);
-	   fChain->SetBranchStatus("jetCSV", 1);
-	   fChain->SetBranchStatus("jetCISV", 1);
-	   fChain->SetBranchStatus("jetMass", 1);
-	   fChain->SetBranchStatus("jet_matched", 1);
-	   fChain->SetBranchStatus("jet_matched_gLLP0_daughter", 1);
-	   fChain->SetBranchStatus("jet_matched_gLLP1_daughter", 1);
-	   fChain->SetBranchStatus("jet_matched_gLLP0_grandaughter", 1);
-	   fChain->SetBranchStatus("jet_matched_gLLP1_grandaughter", 1);
-	   fChain->SetBranchStatus("jetJetArea", 1);
-	   fChain->SetBranchStatus("jetPileupE", 1);
-	   fChain->SetBranchStatus("jetPileupId", 1);
-	   fChain->SetBranchStatus("jetPileupIdFlag", 1);
-	   fChain->SetBranchStatus("jetPassIDLoose", 1);
-	   fChain->SetBranchStatus("jetPassIDTight", 1);
-	   fChain->SetBranchStatus("jetPassMuFrac", 1);
-	   fChain->SetBranchStatus("jetPassEleFrac", 1);
-	   fChain->SetBranchStatus("jetPartonFlavor", 1);
-	   fChain->SetBranchStatus("jetHadronFlavor", 1);
-	   fChain->SetBranchStatus("jetChargedEMEnergyFraction", 1);
-	   fChain->SetBranchStatus("jetNeutralEMEnergyFraction", 1);
-	   fChain->SetBranchStatus("jetChargedHadronEnergyFraction", 1);
-	   fChain->SetBranchStatus("jetNeutralHadronEnergyFraction", 1);
-	   fChain->SetBranchStatus("jetGammaMax_ET", 1);
-	   fChain->SetBranchStatus("jetMinDeltaRPVTracks", 1);
-	   fChain->SetBranchStatus("jetPtAllPVTracks", 1);
-	   fChain->SetBranchStatus("jetMinDeltaRAllTracks", 1);
-	   fChain->SetBranchStatus("jetPtAllTracks", 1);
-	   fChain->SetBranchStatus("jetGammaMax_ET_wp", 1);
-	   fChain->SetBranchStatus("jetMinDeltaRPVTracks_wp", 1);
-	   fChain->SetBranchStatus("jetPtAllPVTracks_wp", 1);
-	   fChain->SetBranchStatus("jetMinDeltaRAllTracks_wp", 1);
-	   fChain->SetBranchStatus("jetPtAllTracks_wp", 1);
-	   fChain->SetBranchStatus("jetMuonEnergyFraction", 1);
-	   fChain->SetBranchStatus("jetHOEnergyFraction", 1);
-	   fChain->SetBranchStatus("jetHFHadronEnergyFraction", 1);
-	   fChain->SetBranchStatus("jetHFEMEnergyFraction", 1);
-	   fChain->SetBranchStatus("jetAllMuonPt", 1);
-	   fChain->SetBranchStatus("jetAllMuonEta", 1);
-	   fChain->SetBranchStatus("jetAllMuonPhi", 1);
-	   fChain->SetBranchStatus("jetAllMuonM", 1);
-	   fChain->SetBranchStatus("jetPtWeightedDZ", 1);
-	   fChain->SetBranchStatus("jetNRechits", 1);
-	   fChain->SetBranchStatus("jetRechitE", 1);
-	   fChain->SetBranchStatus("jetRechitT", 1);
-	   fChain->SetBranchStatus("jet_sig_et1", 1);
-	   fChain->SetBranchStatus("jet_sig_et2", 1);
-	   */
 	fChain->SetBranchStatus("nTaus", 1);
 	fChain->SetBranchStatus("nMuons", 1);
 	fChain->SetBranchStatus("nPhotons", 1);

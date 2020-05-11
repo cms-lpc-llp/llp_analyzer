@@ -37,6 +37,7 @@ class RazorAnalyzer: public llp_event {
         void EnableIsoPFCandidates();
         void EnablePhotons();
         void EnableJets();
+	void EnableTracks();
         void EnableCaloJets();
         void EnableFatJets();
         void EnableMet();

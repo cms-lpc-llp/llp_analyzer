@@ -30,6 +30,7 @@ void RazorAnalyzerLLP::EnableAll(){
     EnableTaus();
     EnablePhotons();
     //EnableCSC();
+    EnableTracks();
     EnableJets();
     //EnableCaloJets();
     EnableFatJets();
@@ -49,6 +50,7 @@ void RazorAnalyzerLLP::EnableAllWithEcalRechits(){
     EnableTaus();
     EnablePhotons();
     //EnableCSC();
+    EnableTracks();
     EnableJets();
     EnableFatJets();
     EnableMet();
@@ -96,6 +98,26 @@ void RazorAnalyzerLLP::EnablePileup(){
     fChain->SetBranchStatus("nPU", 1);
     fChain->SetBranchStatus("nPUmean", 1);
 }
+
+void RazorAnalyzerLLP::EnableTracks(){
+	fChain->SetBranchStatus("nTracks", 1);
+	fChain->SetBranchStatus("track_Pt", 1);
+	fChain->SetBranchStatus("track_Eta", 1);
+	fChain->SetBranchStatus("track_Phi", 1);
+	fChain->SetBranchStatus("track_charge", 1);
+	fChain->SetBranchStatus("track_bestVertexIndex", 1);
+	fChain->SetBranchStatus("track_nMissingInnerHits", 1);
+	fChain->SetBranchStatus("track_nMissingOuterHits", 1);
+	fChain->SetBranchStatus("track_nPixelHits", 1);
+	fChain->SetBranchStatus("track_nHits", 1);
+	fChain->SetBranchStatus("track_angle", 1);
+	fChain->SetBranchStatus("track_dxyToBS", 1);
+	fChain->SetBranchStatus("track_dxyErr", 1);
+	fChain->SetBranchStatus("track_dzToPV", 1);
+	fChain->SetBranchStatus("track_dzErr", 1);
+	fChain->SetBranchStatus("track_chi2", 1);
+	fChain->SetBranchStatus("track_ndof", 1);
+};
 
 void RazorAnalyzerLLP::EnableMuons(){
     fChain->SetBranchStatus("nMuons", 1);

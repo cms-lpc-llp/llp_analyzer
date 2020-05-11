@@ -231,49 +231,41 @@ void SusyLLPTree::InitVariables()
 
 		jetEcalE[i] = -999.;
 		jetHcalE[i] = -999.;
-		/*
-		   jetE[i]      = -999.;
-		   jetEt[i] = -999.;
-		   jetPt[i]     = -999.;
-		   jetEta[i]    = -999.;
-		   jetPhi[i]    = -999.;
-		   jetTime[i]   = -999.;
-		// jetLoosePassId[i] = false;
-		jetPassId[i] = false;
-		jetCSVT[i] = false;
-		jetCISV[i] = -1.;
-		matched[i] = false;
-		jet_matched_gLLP0_daughter[i] = false;
-		jet_matched_gLLP1_daughter[i] = false;
-		jet_matched_gLLP0_grandaughter[i] = false;
-		jet_matched_gLLP1_grandaughter[i] = false;
-		jet_energy_frac[i] = -999.;
-		jet_sig_et1[i] = -999.;
-		jet_sig_et2[i] = -999.;
-		ecalNRechits[i] = -999;
-		ecalRechitE[i] = -999.;
-		jetChargedEMEnergyFraction[i] = -999.;
-		jetNeutralEMEnergyFraction[i] = -999.;
-		jetChargedHadronEnergyFraction[i] = -999.;
-		jetNeutralHadronEnergyFraction[i] = -999.;
-		jetHoverE[i] = -999.;
-		jetGammaMax_ET[i] = -999.;
-		jetMinDeltaRPVTracks[i] = -999.;
-		jetPtAllPVTracks[i] = -999.;
-		jetMinDeltaRAllTracks[i] = -999.;
-		jetPtAllTracks[i] = -999.;
 
-		jetGammaMax_ET_wp[i] = -999.;
-		jetMinDeltaRPVTracks_wp[i] = -999.;
-		jetPtAllPVTracks_wp[i] = -999.;
-		jetMinDeltaRAllTracks_wp[i] = -999.;
-		jetPtAllTracks_wp[i] = -999.;
-		*/
+		jetChargedMultiplicity[i] = 0;
+		//jetNHits[i] = 0;
+		//jetNPixelHits[i] = 0;
+		jetNPixelHitsMedian[i] = 0;
+		jetNHitsMedian[i] = 0;
 	}
 
 	//triggers
 	for(int i = 0; i <NTriggersMAX; i++){
 		HLTDecision[i] = false;
+	}
+
+	//Tracks
+	nTracks=0;
+	for(int i = 0; i <RECHITARRAYSIZE; i++){
+		track_Pt[i] = -999;
+		track_Eta[i] = -999;
+		track_Phi[i] = -999;
+
+		track_charge[i] = 0;
+		track_bestVertexIndex[i] = 0;
+		track_nMissingInnerHits[i] = 0;
+		track_nMissingOuterHits[i] = 0;
+		track_nPixelHits[i] = 0;
+		track_nHits[i] = 0; 
+
+		track_angle[i] = -999;
+		track_dxyToBS[i] = -999;
+		track_dxyErr[i] = -999;
+		track_dzToPV[i] = -999;
+		track_dzErr[i] = -999;
+		track_chi2[i] = -999;
+
+		track_ndof[i] = 0;
 	}
 
 	//MC
@@ -623,46 +615,12 @@ void SusyLLPTree::InitTree()
 
 	tree_->SetBranchAddress("jetChargedEMEnergyFraction", jetChargedEMEnergyFraction);
 	tree_->SetBranchAddress("jetNeutralEMEnergyFraction", jetNeutralEMEnergyFraction);
-	/*
-	   tree_->SetBranchAddress("nJets",     &nJets);
-	   tree_->SetBranchAddress("nBJets",     &nBJets);
-	   tree_->SetBranchAddress("jetE",      jetE);
-	   tree_->SetBranchAddress("jetEt",      jetEt);
 
-	   tree_->SetBranchAddress("jetPt",     jetPt);
-	   tree_->SetBranchAddress("jetEta",    jetEta);
-	   tree_->SetBranchAddress("jetPhi",    jetPhi);
-	   tree_->SetBranchAddress("jetTime",   jetTime);
-	   tree_->SetBranchAddress("jetPassId", jetPassId);
-	   tree_->SetBranchAddress("jetCSVT", &jetCSVT);
-	   tree_->SetBranchAddress("jetCISV", jetCISV);
-	   tree_->SetBranchAddress("matched", matched);
-	   tree_->SetBranchAddress("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter);
-	   tree_->SetBranchAddress("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter);
-	   tree_->SetBranchAddress("jet_matched_gLLP0_grandaughter", jet_matched_gLLP0_grandaughter);
-	   tree_->SetBranchAddress("jet_matched_gLLP1_grandaughter", jet_matched_gLLP1_grandaughter);
-	   tree_->SetBranchAddress("jet_energy_frac", jet_energy_frac);
-	   tree_->SetBranchAddress("jet_sig_et1", jet_sig_et1);
-	   tree_->SetBranchAddress("jet_sig_et2", jet_sig_et2);
-
-	   tree_->SetBranchAddress("ecalNRechits",   ecalNRechits);
-	   tree_->SetBranchAddress("ecalRechitE", ecalRechitE);
-	   tree_->SetBranchAddress("jetChargedEMEnergyFraction", jetChargedEMEnergyFraction);
-	   tree_->SetBranchAddress("jetNeutralEMEnergyFraction", jetNeutralEMEnergyFraction);
-	   tree_->SetBranchAddress("jetChargedHadronEnergyFraction", jetChargedHadronEnergyFraction);
-	   tree_->SetBranchAddress("jetNeutralHadronEnergyFraction", jetNeutralHadronEnergyFraction);
-	   tree_->SetBranchAddress("jetGammaMax_ET", jetGammaMax_ET);
-	   tree_->SetBranchAddress("jetMinDeltaRPVTracks", jetMinDeltaRPVTracks);
-	   tree_->SetBranchAddress("jetPtAllPVTracks", jetPtAllPVTracks);
-	   tree_->SetBranchAddress("jetMinDeltaRAllTracks", jetMinDeltaRAllTracks);
-	   tree_->SetBranchAddress("jetPtAllTracks", jetPtAllTracks);
-
-	   tree_->SetBranchAddress("jetGammaMax_ET_wp", jetGammaMax_ET_wp);
-	   tree_->SetBranchAddress("jetMinDeltaRPVTracks_wp", jetMinDeltaRPVTracks_wp);
-	   tree_->SetBranchAddress("jetPtAllPVTracks_wp", jetPtAllPVTracks_wp);
-	   tree_->SetBranchAddress("jetMinDeltaRAllTracks_wp", jetMinDeltaRAllTracks_wp);
-	   tree_->SetBranchAddress("jetPtAllTracks_wp", jetPtAllTracks_wp);
-	   */
+	tree_->SetBranchAddress("jetChargedMultiplicity",   jetChargedMultiplicity);
+	//tree_->SetBranchAddress("jetNHits",   jetNHits);
+	//tree_->SetBranchAddress("jetNPixelHits",   jetNPixelHits);
+	tree_->SetBranchAddress("jetNPixelHitsMedian",   jetNPixelHitsMedian);
+	tree_->SetBranchAddress("jetNHitsMedian",   jetNHitsMedian);
 	// tree_->SetBranchAddress("jetLoosePassId", jetLoosePassId);
 	// tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
 
@@ -675,6 +633,24 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("genMetPtCalo",      &genMetPtCalo);
 	tree_->SetBranchAddress("genMetPhiCalo",      &genMetPhiCalo);
 
+	//Tracks
+	tree_->SetBranchAddress("nTracks", &nTracks);
+	tree_->SetBranchAddress("track_Pt", track_Pt);
+	tree_->SetBranchAddress("track_Eta", track_Eta);
+	tree_->SetBranchAddress("track_Phi", track_Phi);
+	tree_->SetBranchAddress("track_charge", track_charge);
+	tree_->SetBranchAddress("track_bestVertexIndex", track_bestVertexIndex);
+	tree_->SetBranchAddress("track_nMissingInnerHits", track_nMissingInnerHits);
+	tree_->SetBranchAddress("track_nMissingOuterHits", track_nMissingOuterHits);
+	tree_->SetBranchAddress("track_nPixelHits", track_nPixelHits);
+	tree_->SetBranchAddress("track_nHits", track_nHits); 
+	tree_->SetBranchAddress("track_angle", track_angle);
+	tree_->SetBranchAddress("track_dxyToBS", track_dxyToBS);
+	tree_->SetBranchAddress("track_dxyErr", track_dxyErr);
+	tree_->SetBranchAddress("track_dzToPV", track_dzToPV);
+	tree_->SetBranchAddress("track_dzErr", track_dzErr);
+	tree_->SetBranchAddress("track_chi2", track_chi2);
+	tree_->SetBranchAddress("track_ndof", track_ndof);
 	/*
 	   tree_->SetBranchAddress("nGenParticle",      &nGenParticle);
 	   tree_->SetBranchAddress("gParticleId",      &gParticleId);
@@ -1035,53 +1011,34 @@ void SusyLLPTree::CreateTree()
 
 	tree_->Branch("jetChargedEMEnergyFraction",   jetChargedEMEnergyFraction,   "jetChargedEMEnergyFraction[nJets]/F");
 	tree_->Branch("jetNeutralEMEnergyFraction",   jetNeutralEMEnergyFraction,   "jetNeutralEMEnergyFraction[nJets]/F");
-	/*
-	   tree_->Branch("nJets",     &nJets,    "nJets/I");
-	   tree_->Branch("nBJets",     &nBJets,    "nBJets/I");
-	   tree_->Branch("jetE",      jetE,      "jetE[nJets]/F");
-	   tree_->Branch("jetEt",      jetEt,      "jetEt[nJets]/F");
-	   tree_->Branch("jetPt",     jetPt,     "jetPt[nJets]/F");
-	   tree_->Branch("jetEta",    jetEta,    "jetEta[nJets]/F");
-	   tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
-	   tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
-	   tree_->Branch("jetPassId", jetPassId, "jetPassId[nJets]/O");
-	   tree_->Branch("jetCSVT", jetCSVT, "jetCSVT[nJets]/O");
-	   tree_->Branch("jetCISV", jetCISV, "jetCISV[nJets]/F");
-	   tree_->Branch("matched", matched, "matched[nJets]/O");
-	   tree_->Branch("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter, "jet_matched_gLLP0_daughter[nJets]/O");
-	   tree_->Branch("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter, "jet_matched_gLLP1_daughter[nJets]/O");
-	   tree_->Branch("jet_matched_gLLP0_grandaughter", jet_matched_gLLP0_grandaughter, "jet_matched_gLLP0_grandaughter[nJets]/O");
-	   tree_->Branch("jet_matched_gLLP1_grandaughter", jet_matched_gLLP1_grandaughter, "jet_matched_gLLP1_grandaughter[nJets]/O");
-	   tree_->Branch("jet_energy_frac", jet_energy_frac, "jet_energy_frac[nJets]/F");
-	   tree_->Branch("jet_sig_et1", jet_sig_et1, "jet_sig_et1[nJets]/F");
-	   tree_->Branch("jet_sig_et2", jet_sig_et2, "jet_sig_et2[nJets]/F");
 
-
-	   tree_->Branch("jetGammaMax_ET", jetGammaMax_ET, "jetGammaMax_ET[nJets]/F");
-	   tree_->Branch("jetMinDeltaRPVTracks", jetMinDeltaRPVTracks, "jetMinDeltaRPVTracks[nJets]/F");
-	   tree_->Branch("jetPtAllPVTracks", jetPtAllPVTracks, "jetPtAllPVTracks[nJets]/F");
-	   tree_->Branch("jetMinDeltaRAllTracks", jetMinDeltaRAllTracks, "jetMinDeltaRAllTracks[nJets]/F");
-	   tree_->Branch("jetPtAllTracks", jetPtAllTracks, "jetPtAllTracks[nJets]/F");
-
-	   tree_->Branch("jetGammaMax_ET_wp", jetGammaMax_ET_wp, "jetGammaMax_ET_wp[nJets]/F");
-	   tree_->Branch("jetMinDeltaRPVTracks_wp", jetMinDeltaRPVTracks_wp, "jetMinDeltaRPVTracks_wp[nJets]/F");
-	   tree_->Branch("jetPtAllPVTracks_wp", jetPtAllPVTracks_wp, "jetPtAllPVTracks_wp[nJets]/F");
-	   tree_->Branch("jetMinDeltaRAllTracks_wp", jetMinDeltaRAllTracks_wp, "jetMinDeltaRAllTracks_wp[nJets]/F");
-	   tree_->Branch("jetPtAllTracks_wp", jetPtAllTracks_wp, "jetPtAllTracks_wp[nJets]/F");
-
-	   tree_->Branch("ecalNRechits",   ecalNRechits,   "ecalNRechits[nJets]/F");
-	   tree_->Branch("ecalRechitE", ecalRechitE, "ecalRechitE[nJets]/F");
-	   tree_->Branch("jetChargedEMEnergyFraction",   jetChargedEMEnergyFraction,   "jetChargedEMEnergyFraction[nJets]/F");
-	   tree_->Branch("jetNeutralEMEnergyFraction",   jetNeutralEMEnergyFraction,   "jetNeutralEMEnergyFraction[nJets]/F");
-	   tree_->Branch("jetChargedHadronEnergyFraction",   jetChargedHadronEnergyFraction,   "jetChargedHadronEnergyFraction[nJets]/F");
-	   tree_->Branch("jetNeutralHadronEnergyFraction",   jetNeutralHadronEnergyFraction,   "jetNeutralHadronEnergyFraction[nJets]/F");
-	   tree_->Branch("jetHoverE",   &jetHoverE,   "jetHoverE[nJets]/F");
-	// tree_->Branch("jetLoosePassId", jetLoosePassId, "jetLoosePassId[nJets]/O");
-	// tree_->Branch("jetTightPassId", jetTightPassId, "jetTightPassId[nJets]/O");
-	*/
+	tree_->Branch("jetChargedMultiplicity",   jetChargedMultiplicity,   "jetChargedMultiplicity[nJets]/I");
+	//tree_->Branch("jetNPixelHits",   jetNPixelHits,   "jetNPixelHits[nJets]/I");
+	//tree_->Branch("jetNHits",   jetNHits,   "jetNHits[nJets]/I");
+	tree_->Branch("jetNPixelHitsMedian",   jetNPixelHitsMedian,   "jetNPixelHitsMedian[nJets]/F");
+	tree_->Branch("jetNHitsMedian",   jetNHitsMedian,   "jetNHitsMedian[nJets]/F");
 
 	//HLT
 	tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[602]/O"); //hardcoded
+
+	//Tracks
+	tree_->Branch("nTracks", &nTracks,"nTracks/I");
+	/*tree_->Branch("track_Pt", track_Pt,"track_Pt[nTracks]/F");
+	tree_->Branch("track_Eta", track_Eta,"track_Eta[nTracks]/F");
+	tree_->Branch("track_Phi", track_Phi,"track_Phi[nTracks]/F");
+	tree_->Branch("track_charge", track_charge,"track_charge[nTracks]/I");
+	tree_->Branch("track_bestVertexIndex", track_bestVertexIndex,"track_bestVertexIndex[nTracks]/I");
+	tree_->Branch("track_nMissingInnerHits", track_nMissingInnerHits,"track_nMissingInnerHits[nTracks]/I");
+	tree_->Branch("track_nMissingOuterHits", track_nMissingOuterHits,"track_nMissingOuterHits[nTracks]/I");
+	tree_->Branch("track_nPixelHits", track_nPixelHits,"track_nPixelHits[nTracks]/I");
+	tree_->Branch("track_nHits", track_nHits,"track_nHits[nTracks]/I");
+	tree_->Branch("track_dxyToBS", track_dxyToBS,"track_dxyToBS[nTracks]/F");
+	tree_->Branch("track_dxyErr", track_dxyErr,"track_dxyErr[nTracks]/F");
+	tree_->Branch("track_dzToPV", track_dzToPV,"track_dzToPV[nTracks]/F");
+	tree_->Branch("track_dzErr", track_dzErr,"track_dzErr[nTracks]/F");
+	tree_->Branch("track_chi2", track_chi2,"track_chi2[nTracks]/F");
+	tree_->Branch("track_ndof", track_ndof,"track_ndof[nTracks]/I");
+*/
 
 	//MC
 	/*

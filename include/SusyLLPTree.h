@@ -437,46 +437,12 @@ class SusyLLPTree
 
 		float jetEcalE[N_MAX_JETS];
 		float jetHcalE[N_MAX_JETS];
-		/*
-		   int nJets;
-		   int nBJets;
-		   float jetE[N_MAX_JETS];
-		   float jetEt[N_MAX_JETS];
-		   float jetPt[N_MAX_JETS];
-		   float jetEta[N_MAX_JETS];
-		   float jetPhi[N_MAX_JETS];
-		   float jetTime[N_MAX_JETS];
-		   float ecalNRechits[N_MAX_JETS];
-		   float ecalRechitE[N_MAX_JETS];
-		   float jetChargedEMEnergyFraction[N_MAX_JETS];
-		   float jetNeutralEMEnergyFraction[N_MAX_JETS];
-		   float jetChargedHadronEnergyFraction[N_MAX_JETS];
-		   float jetNeutralHadronEnergyFraction[N_MAX_JETS];
-		   float jetHoverE[N_MAX_JETS];
-		   float jetGammaMax_ET[N_MAX_JETS];
-		   float jetMinDeltaRPVTracks[N_MAX_JETS];
-		   float jetPtAllPVTracks[N_MAX_JETS];
-		   float jetMinDeltaRAllTracks[N_MAX_JETS];
-		   float jetPtAllTracks[N_MAX_JETS];
-		   float jetGammaMax_ET_wp[N_MAX_JETS];
-		   float jetMinDeltaRPVTracks_wp[N_MAX_JETS];
-		   float jetPtAllPVTracks_wp[N_MAX_JETS];
-		   float jetMinDeltaRAllTracks_wp[N_MAX_JETS];
-		   float jetPtAllTracks_wp[N_MAX_JETS];
-		// bool jetLoosePassId[N_MAX_JETS];
-		bool jetPassId[N_MAX_JETS];
-		bool jetCSVT[N_MAX_JETS];
-		float jetCISV[N_MAX_JETS];
-		bool matched[N_MAX_JETS];
-		bool jet_matched_gLLP0_daughter[N_MAX_JETS];
-		bool jet_matched_gLLP1_daughter[N_MAX_JETS];
-		bool jet_matched_gLLP0_grandaughter[N_MAX_JETS];
-		bool jet_matched_gLLP1_grandaughter[N_MAX_JETS];
-		// bool jetTightPassId[N_MAX_JETS];
-		float jet_energy_frac[N_MAX_JETS];
-		float jet_sig_et1[N_MAX_JETS];
-		float jet_sig_et2[N_MAX_JETS];
-		*/
+
+		int jetChargedMultiplicity[N_MAX_JETS];
+		//int jetNHits[N_MAX_JETS];
+		//int jetNPixelHits[N_MAX_JETS];
+		float jetNPixelHitsMedian[N_MAX_JETS];
+		float jetNHitsMedian[N_MAX_JETS];
 
 		// met filters
 		bool Flag2_globalSuperTightHalo2016Filter;
@@ -603,6 +569,25 @@ class SusyLLPTree
 
 		//HLT 
 		bool HLTDecision[NTriggersMAX];
+
+		//Tracks
+		int nTracks;
+		float track_Pt[RECHITARRAYSIZE];
+		float track_Eta[RECHITARRAYSIZE];
+		float track_Phi[RECHITARRAYSIZE];
+		int   track_charge[RECHITARRAYSIZE];
+		int   track_bestVertexIndex[RECHITARRAYSIZE];
+		int   track_nMissingInnerHits[RECHITARRAYSIZE];
+		int   track_nMissingOuterHits[RECHITARRAYSIZE];
+		int   track_nPixelHits[RECHITARRAYSIZE];
+		int   track_nHits[RECHITARRAYSIZE]; 
+		float track_angle[RECHITARRAYSIZE];
+		float track_dxyToBS[RECHITARRAYSIZE];
+		float track_dxyErr[RECHITARRAYSIZE];
+		float track_dzToPV[RECHITARRAYSIZE];
+		float track_dzErr[RECHITARRAYSIZE];
+		float track_chi2[RECHITARRAYSIZE];
+		int   track_ndof[RECHITARRAYSIZE];
 
 		UInt_t wzevtNum,trig, trig_lepId, trig_lepId_dijet; //number of events that pass each criteria
 

@@ -17,6 +17,7 @@
 #define _debug_sync 0
 #define _debug_met 0
 #define _debug_jet 0
+#define _debug_trk 0
 #define _debug_match 0
 #define _debug_avgH 0
 #define _debug_trg 0
@@ -44,6 +45,7 @@ struct leptons
 struct jets
 {
 	TLorentzVector jet;
+	//pat::Jet jet;
 	float time;
 	int jetNeutralHadronMultiplicity;
 	int jetChargedHadronMultiplicity;
@@ -64,6 +66,12 @@ struct jets
 
 	float jetChargedEMEnergyFraction;
 	float jetNeutralEMEnergyFraction;
+
+	int jetChargedMultiplicity;
+	//int jetNHits;
+	//int jetNPixelHits;
+	float jetNPixelHitsMedian;
+	float jetNHitsMedian;
 
 	//int   jetNSV;
 	//int   jetNSVCand;
@@ -739,10 +747,44 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			tmpJet.jetDRSVJet = jetDRSVJet[i];
 			tmpJet.jetSVMass = jetSVMass[i];
 
+			if(_debug_trk) std::cout << "nTracks" << nTracks << std::endl;
+			std::vector<int> nPixelHits;
+			std::vector<int> nHits;
+			for(int iTrack=0; iTrack<nTracks; iTrack++)
+			{
+				double thisDR_trk = RazorAnalyzerLLP::deltaR(jetEta[i],jetPhi[i],track_Eta[iTrack], track_Phi[iTrack]);
+				if(thisDR_trk<0.4)
+				{
+					tmpJet.jetChargedMultiplicity++;
+
+					nPixelHits.push_back(track_nPixelHits[iTrack]);
+					nHits.push_back(track_nHits[iTrack]);
+				}
+
+			}
+
+			std::sort(nPixelHits.begin(), nPixelHits.end());
+			float nPixelHitsMedian = 0;
+			if (nPixelHits.size() > 0) {
+				if (nPixelHits.size() % 2 ==0) nPixelHitsMedian = ((nPixelHits[nPixelHits.size()/2 -1] + nPixelHits[nPixelHits.size()/2]) /2);
+				else nPixelHitsMedian = nPixelHits[nPixelHits.size()/2];
+			}    
+			std::sort(nHits.begin(), nHits.end());
+			float nHitsMedian = 0;
+			if (nHits.size() > 0) {
+				if (nHits.size() % 2 ==0) nHitsMedian = ((nHits[nHits.size()/2 -1] + nHits[nHits.size()/2]) /2);
+				else nHitsMedian = nHits[nHits.size()/2];
+			}
+
+			tmpJet.jetNPixelHitsMedian = nPixelHitsMedian;
+			tmpJet.jetNHitsMedian = nHitsMedian;
+
 			Jets.push_back(tmpJet);
 
 		}
 		llp_tree->HT = ht;
+
+
 		//-----------------------------
 		//Require at least 2 jets
 		//-----------------------------
@@ -807,6 +849,17 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->jetDRSVJet[llp_tree->nJets] = tmp.jetDRSVJet;
 			llp_tree->jetSVMass[llp_tree->nJets] = tmp.jetSVMass;
 
+			llp_tree->jetChargedMultiplicity[llp_tree->nJets] = tmp.jetChargedMultiplicity;
+			llp_tree->jetNPixelHitsMedian[llp_tree->nJets] = tmp.jetNPixelHitsMedian;
+			llp_tree->jetNHitsMedian[llp_tree->nJets] = tmp.jetNHitsMedian;
+
+			/*
+			   int jetChargedMultiplicity;
+			   int jetNHits;
+			   int jetNPixelHits;
+			   float jetNPixelHitsMedian;
+			   float jetNHitsMedian;
+			   */
 			//std::cout << "jetEta " << tmp.jet.Eta() << std::endl;
 			//std::cout << "jetEta " << llp_tree->jetEta[llp_tree->nJets] << std::endl;
 

@@ -31,6 +31,7 @@ class RazorAnalyzerLLP: public llp_event {
 
         void EnableEventInfo();
         void EnablePVAll();
+        void EnableTracks();
         void EnableMuons();
         void EnableElectrons();
         void EnableTaus();
