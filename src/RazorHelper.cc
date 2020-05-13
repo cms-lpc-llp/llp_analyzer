@@ -2217,12 +2217,46 @@ void RazorHelper::loadPhoton_Razor2017_92X(){
 ////////////////////////////////////////////////
 /////Calo Timing //////
 void RazorHelper::loadTag_CT2017_17Nov2017Rereco() {
-  //loadPileup_Razor2017_17Nov2017Rereco();
+  loadPileup_CT2017_17Nov2017Rereco(process);
   //loadLepton_Razor2017_17Nov2017Rereco();
   //loadPhoton_Razor2017_92X();
   //loadBTag_Razor2017_17Nov2017Rereco();
   //loadTrigger_Razor2017_92X();
   loadJECs_CT2017_17Nov2017Rereco();
+}
+
+void RazorHelper::loadPileup_CT2017_17Nov2017Rereco(std::string process) {
+    // pileup weights
+    // LAST UPDATED: 12 May 2020
+    std::cout << "RazorHelper: loading pileup weight histograms" << std::endl;
+
+    pileupWeightFile = TFile::Open(Form("PileupReweight_%s_calo.root", process.c_str()), "READ");
+    pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+    pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+    pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+    std::cout << "PileupReweight_"<<process.c_str() <<"_calo.root\n";
+
+}
+
+void RazorHelper::loadPileup_CT2017_17Nov2017Rereco() {
+    // pileup weights
+    // LAST UPDATED: 12 May 2020
+    std::cout << "RazorHelper: loading pileup weight histograms" << std::endl;
+
+    if (!isFastsim) {
+      pileupWeightFile = TFile::Open("PileupReweight_ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Fall17_2017_calo.root");
+      pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+      pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+      pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+      std::cout << "PileupReweight_Fall17_2017_calo.root\n";
+    } else {
+      pileupWeightFile = TFile::Open("PileupReweight_ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Fall17_2017_calo.root");
+      pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+      pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+      pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+      std::cout << "PileupReweight_Fall17_2017_calo.root\n";
+    }
+
 }
 
 void RazorHelper::loadJECs_CT2017_17Nov2017Rereco() {

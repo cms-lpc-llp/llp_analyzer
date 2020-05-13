@@ -274,6 +274,8 @@ class RazorHelper {
         void loadJECs_Razor2017_17Nov2017Rereco();
 
 	// for CT2017 17Nov2017 Rereco
+        void loadPileup_CT2017_17Nov2017Rereco();
+        void loadPileup_CT2017_17Nov2017Rereco(std::string process);
         void loadJECs_CT2017_17Nov2017Rereco();
 
 	// for Razor2017 31Mar2018 Rereco
