@@ -254,6 +254,17 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		wzId = 25;
 		trigger_paths[0] = 310;
 	}
+
+	//--------------------------------
+	//Initialize helper
+	//--------------------------------
+	RazorHelper *helper = 0;
+	if (process == ""){
+		process = "ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Summer16_2016";
+	}
+
+	helper = new RazorHelper(analysisTag, isData, false, process.c_str());
+
 	//-----------------------------------------------
 	//Set up Output File
 	//-----------------------------------------------
@@ -267,64 +278,6 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	llp_tree->InitTree();
 	//histogram containing total number of processed events (for normalization)
 	TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
-	//TH1F *generatedEvents = new TH1F("generatedEvents", "generatedEvents", 1, 1, 2);
-	//TH1F *trig = new TH1F("trig", "trig", 1, 1, 2);
-	//TH1F *trig_lepId = new TH1F("trig_lepId", "trig_lepId", 1, 1, 2);
-	//TH1F *trig_lepId_dijet = new TH1F("trig_lepId_dijet", "trig_lepId_dijet", 1, 1, 2);
-
-	//instead, getting JEC from helper
-	//char* cmsswPath;
-	//cmsswPath = getenv("CMSSW_BASE");
-	//string pathname;
-	//if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/cms_lpc_llp/llp_analyzer/data/JEC/";
-	//if(cmsswPath != NULL and option == 1) pathname = "JEC/"; //run on condor if option == 1
-
-	//cout << "Getting JEC parameters from " << pathname << endl;
-
-	//std::vector<JetCorrectorParameters> correctionParameters;
-	//correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L1FastJet_AK4PFchs.txt", pathname.c_str())));
-	//correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L2Relative_AK4PFchs.txt", pathname.c_str())));
-	//correctionParameters.push_back(JetCorrectorParameters(Form("%s/Summer16_23Sep2016V3_MC/Summer16_23Sep2016V3_MC_L3Absolute_AK4PFchs.txt", pathname.c_str())));
-
-	//FactorizedJetCorrector *JetCorrector = new FactorizedJetCorrector(correctionParameters);
-
-	//--------------------------------
-	//Initialize helper
-	//--------------------------------
-	RazorHelper *helper = 0;
-	if (process == ""){
-		process = "ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Summer16_2016";
-	}
-
-	helper = new RazorHelper(analysisTag, isData, false, process.c_str());
-
-	//if (analysisTag == "Razor2015_76X") helper = new RazorHelper("Razor2015_76X", isData, false);
-	//else if (analysisTag == "Razor2016_MoriondRereco") helper = new RazorHelper("Razor2016_MoriondRereco", isData, false);
-	//else if (analysisTag == "CT2016_07Aug2017Rereco") helper = new RazorHelper("CT2016_07Aug2017Rereco", isData, false);
-	//else if (analysisTag == "CT2016_07Aug2017Rereco") helper = new RazorHelper("CT2016_07Aug2017Rereco", isData, false, process.c_str());
-	//else if (analysisTag == "CT2016_07Aug2017Rereco") helper = new RazorHelper("CT2016_07Aug2017Rereco", isData, false, "QCD_HT50toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_Summer16_2016");
-	//else if (analysisTag == "CT2016_07Aug2017Rereco") helper = new RazorHelper("CT2016_07Aug2017Rereco", isData, false, "ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Summer16_2016");
-	//else helper = new RazorHelper(analysisTag, isData, false);
-
-	//--------------------------------
-	//get JEC from helper
-	//--------------------------------
-	//JEC applied at ntupler
-	//std::vector<FactorizedJetCorrector*> JetCorrector = helper->getJetCorrector();
-	//std::vector<std::pair<int,int> > JetCorrectorIOV = helper->getJetCorrectionsIOV();
-
-	//----------
-	//pu histo
-	//----------
-	//TH1D* puhisto = new TH1D("pileup", "", 50, 0, 50);
-	//histogram containing total number of processed events (for normalization)
-	//TH1F *histNPV = new TH1F("NPV", "NPV", 2, -0.5, 1.5);
-	//TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
-	//TH1F *SumWeights = new TH1F("SumWeights", "SumWeights", 1, 0.5, 1.5);
-	//TH1F *SumScaleWeights = new TH1F("SumScaleWeights", "SumScaleWeights", 6, -0.5, 5.5);
-	//TH1F *SumPdfWeights = new TH1F("SumPdfWeights", "SumPdfWeights", NUM_PDF_WEIGHTS, -0.5, NUM_PDF_WEIGHTS-0.5);
-
-
 
 	//*************************************************************************
 	//Look over Input File Events
@@ -411,16 +364,16 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 		if(!isData)
 		{
-			/*
-			   for(int i=0; i < nGenJets; i++)
-			   {
-			   llp_tree->genJetE[llp_tree->nGenJets] = genJetE[i];
-			   llp_tree->genJetPt[llp_tree->nGenJets] = genJetPt[i];
-			   llp_tree->genJetEta[llp_tree->nGenJets] = genJetEta[i];
-			   llp_tree->genJetPhi[llp_tree->nGenJets] = genJetPhi[i];
-			// llp_tree->nGenJets++;
-			}
-			*/
+			
+			//   for(int i=0; i < nGenJets; i++)
+			//   {
+			//   llp_tree->genJetE[llp_tree->nGenJets] = genJetE[i];
+			//   llp_tree->genJetPt[llp_tree->nGenJets] = genJetPt[i];
+			//   llp_tree->genJetEta[llp_tree->nGenJets] = genJetEta[i];
+			//   llp_tree->genJetPhi[llp_tree->nGenJets] = genJetPhi[i];
+			//// llp_tree->nGenJets++;
+			//}
+			
 			llp_tree->genMetPtTrue = genMetPtTrue;
 			llp_tree->genMetPhiTrue = genMetPhiTrue;
 			llp_tree->genMetPtCalo = genMetPtCalo;
@@ -562,6 +515,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			llp_tree->nMuons++;
 		}
+		if(_debug) std::cout << "nMuons " << llp_tree->nMuons << std::endl;
 
 		//-------------------------------
 		//Electrons
@@ -602,6 +556,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			llp_tree->nElectrons++;
 		}
+		if(_debug) std::cout << "nElectrons " << llp_tree->nElectrons << std::endl;
 
 		std::vector<taus> Taus;
 		//-------------------------------
@@ -650,6 +605,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			llp_tree->nTaus++;
 		}
+		if(_debug) std::cout << "nTaus " << llp_tree->nTaus << std::endl;
 
 		std::vector<photons> Photons;
 		//-------------------------------
@@ -705,6 +661,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			llp_tree->nPhotons++;
 		}
+		if(_debug) std::cout << "nPhotons " << llp_tree->nPhotons << std::endl;
 
 		//-------------------------------
 		//Leptons
@@ -731,6 +688,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->MT = sqrt(2*(llp_tree->met)*lepp4.Pt()*(1-cos(dPhi)));
 		if(_debug_lep) std::cout<<"MT "<<llp_tree->MT<<std::endl;
 		//if (triggered) trig_lepId->Fill(1);
+		if(_debug) std::cout << "nLeptons " << llp_tree->nLeptons << std::endl;
 
 
 		//-----------------------------------------------
@@ -742,6 +700,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//auto highest = [](auto a, auto b) { return a > b; };
 		//cout <<"nJets :" << nJets << std::endl;
 
+		if(_debug) std::cout << "nJets " << nJets << std::endl;
 		if(_debug_jet) std::cout << "nJets " << nJets << std::endl;
 		if(_debug_jet) std::cout << "jetE 0 " << jetE[0] << std::endl;
 		//if(_debug_jet) std::cout << "jetChargedEMEnergyFraction 0 " << jetChargedEMEnergyFraction[0] << std::endl;
@@ -792,15 +751,15 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			TLorentzVector thisJet = makeTLorentzVector( jetPt[i], jetEta[i], jetPhi[i], jetE[i] );
 			//double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
 			//		fixedGridRhoFastjetAll, jetJetArea[i] , JetCorrector);
-		/*
-			double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
-					fixedGridRhoFastjetAll, jetJetArea[i],
-					runNum,
-					JetCorrectorIOV,JetCorrector);
-			//cout <<"JEC :" << JEC << std::endl;
+		
+			//double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
+			//		fixedGridRhoFastjetAll, jetJetArea[i],
+			//		runNum,
+			//		JetCorrectorIOV,JetCorrector);
+			////cout <<"JEC :" << JEC << std::endl;
 
-			TLorentzVector thisJet = makeTLorentzVector( jetPt[i]*JEC, jetEta[i], jetPhi[i], jetE[i]*JEC );
-		*/
+			//TLorentzVector thisJet = makeTLorentzVector( jetPt[i]*JEC, jetEta[i], jetPhi[i], jetE[i]*JEC );
+		
 			if( thisJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
 			//if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
 			if( fabs( thisJet.Eta() ) >= 2.4 ) continue;
@@ -886,13 +845,13 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//-----------------------------
 		//Require at least 2 jets
 		//-----------------------------
-		/*
-		   if(pf)
-		   {
-		   if( Jets.size() < 1 ) continue;
+		///
+		//   if(pf)
+		//   {
+		//   if( Jets.size() < 1 ) continue;
 
-		   }
-		   */
+		//   }
+		//   /
 		//if (triggered) trig_lepId_dijet->Fill(1);
 		sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
@@ -977,189 +936,18 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 
 
-		/*    //gLLP
-		      for(int i = 0; i <N_MAX_LLPS; i++){
-		      llp_tree->gLLP_travel_time[i] = gLLP_travel_time[i];
-		      llp_tree->gLLP_e[i] = gLLP_e[i];
-		      llp_tree->gLLP_pt[i] = gLLP_pt[i];
-		      llp_tree->gLLP_eta[i] = gLLP_eta[i];
-		      llp_tree->gLLP_beta[i] = gLLP_beta[i];
-		      llp_tree->gLLP_phi[i] = gLLP_phi[i];
-		      llp_tree->gLLP_decay_vertex_x[i] = gLLP_decay_vertex_x[i];
-		      llp_tree->gLLP_decay_vertex_y[i] = gLLP_decay_vertex_y[i];
-		      llp_tree->gLLP_decay_vertex_z[i] = gLLP_decay_vertex_z[i];
-		      llp_tree->gLLP_prod_vertex_x[i] = gLLP_prod_vertex_x[i];
-		      llp_tree->gLLP_prod_vertex_y[i] = gLLP_prod_vertex_y[i];
-		      llp_tree->gLLP_prod_vertex_z[i] = gLLP_prod_vertex_z[i];
-
-		//acceptance
-		double decay_radius = sqrt( pow(gLLP_decay_vertex_x[i],2) + pow(gLLP_decay_vertex_y[i],2) );
-		llp_tree->gLLP_decay_vertex_r[i] = decay_radius;
-		double decay_z = abs( gLLP_decay_vertex_z[i] );
-		double decay_eta = abs( gLLP_eta[i] );
-		//if(decay_eta != 666) std::cout << "deb gLLP decay radius " << decay_radius << " z " << decay_z  << " eta " << decay_eta << endl;
-
-		// barrel, 30 cm < r < 1.84 m, |z| < 3.76m  ( ecal outter edge )
-		// EB_z = 268.36447217; // cm 129*sinh(1.479)
-		bool inEB = false;
-		if(decay_radius > 30. && decay_radius < 184. && decay_z < 376. && decay_eta != 666)
-		{
-		if(i==0)
-		{
-		inEB = true;
-		llp_tree->gLLP0_EB = inEB;
-		}
-		else
-		{
-		llp_tree->gLLP1_EB = true;
-		}
-		}
-		//if(decay_eta != 666 && i==0) std::cout << "deb gLLP EB: " << jentry << " evtNum " << llp_tree->evtNum  << " index of llp " << i << " ; 0  " << llp_tree->gLLP0_EB  << " 1 " << llp_tree->gLLP1_EB << endl;
-
-		// endcap, 1.5 < |eta| < 2.6, 1 m < |z| <  3.9 m
-		bool inEE = false;
-		if(decay_eta > 1.5 && decay_eta < 2.6 && decay_z > 100. && decay_z < 390. && decay_eta != 666)
-		{
-		if(i==0)
-		{
-		inEE = true;
-		llp_tree->gLLP0_EE = inEE;
-		}
-		else
-		{
-		llp_tree->gLLP1_EE = true;
-		}
-		}
-
-
-		}
-
-		llp_tree->gLLP_dr = deltaR(gLLP_eta[0], gLLP_phi[0], gLLP_eta[1], gLLP_phi[1]);
-
-		//gLLP daughters
-		for(int i = 0; i <N_MAX_LLP_DAUGHTERS; i++){
-		 *
-		 llp_tree->gen_time[i] = gen_time[i];
-		 llp_tree->photon_travel_time[i] = photon_travel_time[i];
-		 llp_tree->gLLP_daughter_travel_time[i] = gLLP_daughter_travel_time[i];
-		 llp_tree->gLLP_daughter_e[i] = gLLP_daughter_e[i];
-		 llp_tree->gLLP_daughter_pt[i] = gLLP_daughter_pt[i];
-		 llp_tree->gLLP_daughter_eta[i] = gLLP_daughter_eta[i];
-		 llp_tree->gLLP_daughter_phi[i] = gLLP_daughter_phi[i];
-		 llp_tree->gLLP_daughter_eta_ecalcorr[i] = gLLP_daughter_eta_ecalcorr[i];
-		 llp_tree->gLLP_min_delta_r_match_jet[i] = gLLP_min_delta_r_match_jet[i];
-		llp_tree->gLLP_daughter_match_jet_index[i] = gLLP_daughter_match_jet_index[i];
-		*
-			llp_tree->gLLP_daughter_EB[i] = gLLP_daughter_EB[i];
-		llp_tree->gLLP_daughter_ETL[i] = gLLP_daughter_ETL[i];
-
-		llp_tree->gLLP_daughter_photon_travel_time_EB[i] = gLLP_daughter_photon_travel_time_EB[i];
-		llp_tree->gLLP_daughter_photon_travel_time_ETL[i] = gLLP_daughter_photon_travel_time_ETL[i];
-
-		llp_tree->gLLP_daughter_travel_time_EB[i] = gLLP_daughter_travel_time_EB[i];
-		llp_tree->gLLP_daughter_travel_time_ETL[i] = gLLP_daughter_travel_time_ETL[i];
-
-		llp_tree->gen_time_daughter_EB[i] = gen_time_daughter_EB[i];
-		llp_tree->gen_time_daughter_ETL[i] = gen_time_daughter_ETL[i];
-
-		llp_tree->gLLP_daughter_match_jet_index[i] = gLLP_daughter_match_jet_index[i];
-
-		llp_tree->gLLP_daughter_min_delta_r_match_jet[i] = gLLP_daughter_min_delta_r_match_jet[i];
-
-		llp_tree->gLLP_daughter_id[i] = gLLP_daughter_id[i];
-		llp_tree->gLLP_daughter_mass[i] = gLLP_daughter_mass[i];
-		llp_tree->gLLP_daughter_e[i] = gLLP_daughter_e[i];
-		llp_tree->gLLP_daughter_pt[i] = gLLP_daughter_pt[i];
-		llp_tree->gLLP_daughter_eta[i] = gLLP_daughter_eta[i];
-		llp_tree->gLLP_daughter_phi[i] = gLLP_daughter_phi[i];
-		llp_tree->gLLP_daughter_eta_ecalcorr[i] = gLLP_daughter_eta_ecalcorr[i];
-		llp_tree->gLLP_daughter_phi_ecalcorr[i] = gLLP_daughter_phi_ecalcorr[i];
-	}
-
-	//gLLP grandaughters
-	for(int i = 0; i <N_MAX_LLP_GRAND_DAUGHTERS; i++){
-		llp_tree->gLLP_grandaughter_EB[i] = gLLP_grandaughter_EB[i];
-		llp_tree->gLLP_grandaughter_ETL[i] = gLLP_grandaughter_ETL[i];
-
-		llp_tree->gLLP_grandaughter_photon_travel_time_EB[i] = gLLP_grandaughter_photon_travel_time_EB[i];
-		llp_tree->gLLP_grandaughter_photon_travel_time_ETL[i] = gLLP_grandaughter_photon_travel_time_ETL[i];
-
-		llp_tree->gLLP_grandaughter_travel_time_EB[i] = gLLP_grandaughter_travel_time_EB[i];
-		llp_tree->gLLP_grandaughter_travel_time_ETL[i] = gLLP_grandaughter_travel_time_ETL[i];
-
-		llp_tree->gen_time_grandaughter_EB[i] = gen_time_grandaughter_EB[i];
-		llp_tree->gen_time_grandaughter_ETL[i] = gen_time_grandaughter_ETL[i];
-
-		//llp_tree->gLLP_grandaughter_match_jet_index[i] = gLLP_grandaughter_match_jet_index[i];
-		if(_debug_match) std::cout << "evt: "<<llp_tree->evtNum <<" n_jet " << llp_tree->nJets << std::endl; 
-		double min_delta_r = 666.;
-		int match_jet_index = -666;
-		for ( int i_jet = 0; i_jet < llp_tree->nJets; i_jet++ )
-		{
-			double current_delta_r = deltaR(gLLP_grandaughter_eta_ecalcorr[i], gLLP_grandaughter_phi_ecalcorr[i], llp_tree->jetEta[i_jet], llp_tree->jetPhi[i_jet]);
-			if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r <<", current_delta_r "<< current_delta_r << std::endl;
-			if ( current_delta_r < min_delta_r )
-			{
-				min_delta_r = current_delta_r;
-				match_jet_index = i_jet;
-			}
-			if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
-		}//end matching to jets 
-
-		if ( min_delta_r < 0.4 )
-			//if ( min_delta_r < 20 )
-		{
-			llp_tree->gLLP_grandaughter_match_jet_index[i] = match_jet_index;
-			llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = min_delta_r;
-			//llp_tree->matched[match_jet_index] = true;
-			if(i<N_MAX_LLP_GRAND_DAUGHTERS/2) llp_tree->jet_matched_gLLP0_grandaughter[match_jet_index] = true;
-			else llp_tree->jet_matched_gLLP1_grandaughter[match_jet_index] = true;
-			if(_debug_match) std::cout << " i " << i << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
-		}
-
-		//llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = gLLP_grandaughter_min_delta_r_match_jet[i];
-
-
-		llp_tree->gLLP_grandaughter_id[i] = gLLP_grandaughter_id[i];
-		llp_tree->gLLP_grandaughter_mass[i] = gLLP_grandaughter_mass[i];
-		llp_tree->gLLP_grandaughter_e[i] = gLLP_grandaughter_e[i];
-		llp_tree->gLLP_grandaughter_pt[i] = gLLP_grandaughter_pt[i];
-		llp_tree->gLLP_grandaughter_eta[i] = gLLP_grandaughter_eta[i];
-		llp_tree->gLLP_grandaughter_phi[i] = gLLP_grandaughter_phi[i];
-		llp_tree->gLLP_grandaughter_eta_ecalcorr[i] = gLLP_grandaughter_eta_ecalcorr[i];
-		llp_tree->gLLP_grandaughter_phi_ecalcorr[i] = gLLP_grandaughter_phi_ecalcorr[i];
-	}
-	//dr
-	llp_tree->gLLP_grandaughter_dr1 = deltaR(gLLP_grandaughter_eta_ecalcorr[0], gLLP_grandaughter_phi_ecalcorr[0], gLLP_grandaughter_eta_ecalcorr[1], gLLP_grandaughter_phi_ecalcorr[1]);
-	llp_tree->gLLP_grandaughter_dr2 = deltaR(gLLP_grandaughter_eta_ecalcorr[2], gLLP_grandaughter_phi_ecalcorr[2], gLLP_grandaughter_eta_ecalcorr[3], gLLP_grandaughter_phi_ecalcorr[3]);
-	if(_debug_match) std::cout << " dr1(b1, b2) " << llp_tree->gLLP_grandaughter_dr1 << ", dr2(b1, b2) " << llp_tree->gLLP_grandaughter_dr2 << std::endl;
-	if(_debug_match) std::cout << " gLLP_grandaughter_match_jet_index " << gLLP_grandaughter_match_jet_index[0] << ", " << gLLP_grandaughter_match_jet_index[1] << ", " << gLLP_grandaughter_match_jet_index[2] << ", "  << gLLP_grandaughter_match_jet_index[3] << std::endl;
-
-	if(llp_tree->gLLP_grandaughter_match_jet_index[0]!=-666 && llp_tree->gLLP_grandaughter_match_jet_index[1]!=-666)
-	{
-		llp_tree->gLLP_grandaughter_matched_jet_dr1 = deltaR(llp_tree->jetEta[llp_tree->gLLP_grandaughter_match_jet_index[0]], llp_tree->jetPhi[llp_tree->gLLP_grandaughter_match_jet_index[0]], llp_tree->jetEta[llp_tree->gLLP_grandaughter_match_jet_index[1]], llp_tree->jetPhi[llp_tree->gLLP_grandaughter_match_jet_index[1]] ); 
-	}
-
-	if(llp_tree->gLLP_grandaughter_match_jet_index[2]!=-666 && llp_tree->gLLP_grandaughter_match_jet_index[3]!=-666)
-	{
-		llp_tree->gLLP_grandaughter_matched_jet_dr2 = deltaR(llp_tree->jetEta[llp_tree->gLLP_grandaughter_match_jet_index[2]], llp_tree->jetPhi[llp_tree->gLLP_grandaughter_match_jet_index[2]], llp_tree->jetEta[llp_tree->gLLP_grandaughter_match_jet_index[3]], llp_tree->jetPhi[llp_tree->gLLP_grandaughter_match_jet_index[3]] ); 
-	}
-	if(_debug_match) std::cout << " dr1(b1j, b2j) " << llp_tree->gLLP_grandaughter_matched_jet_dr1 << ", dr2(b1j, b2j) " << llp_tree->gLLP_grandaughter_matched_jet_dr2 << std::endl;
-	*/
-	//if(_debug_trg) std::cout << "end: 310 " << HLTDecision[310] << std::endl;
-	//if(_debug_trg) std::cout << "end: 310 " << llp_tree->HLTDecision[310] << std::endl;
-
 	llp_tree->tree_->Fill();
+	if(_debug) std::cout << "nJets in tree " << llp_tree->nJets << std::endl;
 	}
 
 	cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
 	outFile->cd();
 	cout << "Writing output trees..." << endl;
-	//llp_tree->tree_->Write();
+	llp_tree->tree_->Write();
 	cout << "Writing output NEvents..." << endl;
 	NEvents->Write();
 	cout << "Closing output trees..." << endl;
-	//outFile->Write();
+	outFile->Write();
 	outFile->Close();
 
 	delete helper;
