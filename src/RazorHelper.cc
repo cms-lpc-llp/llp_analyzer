@@ -663,7 +663,7 @@ void RazorHelper::loadTag_CT2016_07Aug2017Rereco() {
     //loadPhoton_Razor2016_07Aug2017Rereco_DelayedPhoton();
     //loadBTag_Razor2016_MoriondRereco();
     //loadTrigger_Razor2016_07Aug2017Rereco_DelayedPhoton();
-    loadJECs_CT2016_07Aug2017Rereco();
+    //loadJECs_CT2016_07Aug2017Rereco();
     //loadAK8JetTag_Razor2016_MoriondRereco();
 }
 
@@ -2222,7 +2222,7 @@ void RazorHelper::loadTag_CT2017_17Nov2017Rereco() {
   //loadPhoton_Razor2017_92X();
   //loadBTag_Razor2017_17Nov2017Rereco();
   //loadTrigger_Razor2017_92X();
-  loadJECs_CT2017_17Nov2017Rereco();
+  //loadJECs_CT2017_17Nov2017Rereco();
 }
 
 void RazorHelper::loadPileup_CT2017_17Nov2017Rereco(std::string process) {
@@ -2975,8 +2975,43 @@ void RazorHelper::loadJECs_Razor2017_31Mar2018Rereco() {
 
 /////Calo Timing //////
 void RazorHelper::loadTag_CT2018_17Sep2018Rereco() {
+  loadPileup_CT2018_17Sep2018Rereco(process);
   //loadJECs_CT2018_17Sep2018Rereco();
-  loadJECs_Razor2018_17SeptEarlyReReco();
+  //loadJECs_Razor2018_17SeptEarlyReReco();
+}
+
+void RazorHelper::loadPileup_CT2018_17Sep2018Rereco(std::string process) {
+    // pileup weights
+    // LAST UPDATED: 14 June 2020
+    std::cout << "RazorHelper: loading pileup weight histograms" << std::endl;
+
+    pileupWeightFile = TFile::Open(Form("PileupReweight_%s_calo.root", process.c_str()), "READ");
+    pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+    pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+    pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+    std::cout << "PileupReweight_"<<process.c_str() <<"_calo.root\n";
+
+}
+
+void RazorHelper::loadPileup_CT2018_17Sep2018Rereco() {
+    // pileup weights
+    // LAST UPDATED: 14 June 2020
+    std::cout << "RazorHelper: loading pileup weight histograms" << std::endl;
+
+    if (!isFastsim) {
+      pileupWeightFile = TFile::Open("PileupReweight_ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Fall18_2018_calo.root");
+      pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+      pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+      pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+      std::cout << "PileupReweight_Fall18_2018_calo.root\n";
+    } else {
+      pileupWeightFile = TFile::Open("PileupReweight_ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Fall18_2018_calo.root");
+      pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+      pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+      pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+      std::cout << "PileupReweight_Fall18_2018_calo.root\n";
+    }
+
 }
 
 

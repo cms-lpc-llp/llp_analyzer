@@ -235,22 +235,22 @@ do
 		if echo ${sample} | grep -q "Data"
 		then
 			isData=yes
-			process=ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Fall17_2017
+			process=ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Fall18_2018
 		elif echo ${sample} | grep -q "QCD"
 		then
-			process=QCD_HT50toInf_TuneCP5_13TeV-madgraph-pythia8_Fall17_2017
+			process=QCD_HT50toInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall18_2018
 			isData=no
 		elif echo ${sample} | grep -q "WJetsToLNu"
 		then
-			process=WJetsToLNu_HT-70ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_2017
+			process=WJetsToLNu_HT-70ToInf_TuneCP5_13TeV-madgraphMLM-pythia8_Fall18_2018
 			isData=no
 		elif echo ${sample} | grep -q "ZJetsToNuNu"
 		then
-			process=ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Fall17_2017
+			process=ZJetsToNuNu_HT-100ToInf_13TeV-madgraph_Fall18_2018
 			isData=no
 		elif echo ${sample} | grep -q "TTJets"
 		then
-			process=TTJets_TuneCP5_13TeV-madgraphMLM-pythia8_Fall17_2017
+			process=TTJets_TuneCP5_13TeV-madgraphMLM-pythia8_Fall18_2018
 			isData=no
 		fi
 	fi

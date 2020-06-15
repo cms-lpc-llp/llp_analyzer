@@ -290,6 +290,8 @@ class RazorHelper {
         void loadJECs_Razor2018_17SeptEarlyReReco();
 
         //for CT2018 17Sep2018
+        void loadPileup_CT2018_17Sep2018Rereco();
+        void loadPileup_CT2018_17Sep2018Rereco(std::string process);
         void loadJECs_CT2018_17Sep2018Rereco();
 
         // member data
