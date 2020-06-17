@@ -30,6 +30,9 @@ void RazorAnalyzer::EnableAll(){
     // EnableTaus();
     // EnablePhotons();
     EnableCSC();
+    EnableDT();
+    EnableRPC();
+    EnableHO();
     EnableJets();
     EnableCaloJets();
     // EnableFatJets();
@@ -78,6 +81,7 @@ void RazorAnalyzer::EnableEventInfo(){
     fChain->SetBranchStatus("fixedGridRhoFastjetCentralNeutral", 1);
     fChain->SetBranchStatus("HLTDecision", 1);
     fChain->SetBranchStatus("HLTPrescale", 1);
+    fChain->SetBranchStatus("lheComments", 1);
 }
 
 void RazorAnalyzer::EnablePVAll() {
@@ -365,6 +369,7 @@ void RazorAnalyzer::EnableMet(){
     fChain->SetBranchStatus("Flag_badGlobalMuonFilter", 1);
     fChain->SetBranchStatus("Flag_duplicateMuonFilter", 1);
     fChain->SetBranchStatus("Flag_CSCTightHaloFilter", 1);
+    fChain->SetBranchStatus("Flag_globalSuperTightHalo2016Filter", 1);
     fChain->SetBranchStatus("Flag_hcalLaserEventFilter", 1);
     fChain->SetBranchStatus("Flag_EcalDeadCellTriggerPrimitiveFilter", 1);
     fChain->SetBranchStatus("Flag_EcalDeadCellBoundaryEnergyFilter", 1);
@@ -378,6 +383,15 @@ void RazorAnalyzer::EnableMet(){
     fChain->SetBranchStatus("Flag_trkPOG_logErrorTooManyClusters", 1);
     fChain->SetBranchStatus("Flag_METFilters", 1);
     fChain->SetBranchStatus("Flag_ecalBadCalibFilter", 1);
+    fChain->SetBranchStatus("Flag2_HBHENoiseFilter", 1);
+    fChain->SetBranchStatus("Flag2_HBHEIsoNoiseFilter", 1);
+    fChain->SetBranchStatus("Flag2_BadPFMuonFilter", 1);
+    fChain->SetBranchStatus("Flag2_globalSuperTightHalo2016Filter", 1);
+    fChain->SetBranchStatus("Flag2_globalTightHalo2016Filter", 1);
+    fChain->SetBranchStatus("Flag2_BadChargedCandidateFilter", 1);
+    fChain->SetBranchStatus("Flag2_EcalDeadCellTriggerPrimitiveFilter", 1);
+    fChain->SetBranchStatus("Flag2_ecalBadCalibFilter", 1);
+    fChain->SetBranchStatus("Flag2_eeBadScFilter", 1);
 
     // fChain->SetBranchStatus("metType1PtJetResUp", 1);
     // fChain->SetBranchStatus("metType1PtJetResDown", 1);
@@ -618,6 +632,234 @@ void RazorAnalyzer::EnableCSC()
 
 
 };
+
+void RazorAnalyzer::EnableDT()
+{
+    fChain->SetBranchStatus("nDt", 1);
+    fChain->SetBranchStatus("dtPhi", 1);
+    fChain->SetBranchStatus("dtEta", 1);
+    fChain->SetBranchStatus("dtX", 1);
+    fChain->SetBranchStatus("dtY", 1);
+    fChain->SetBranchStatus("dtZ", 1);
+    fChain->SetBranchStatus("dtDirectionX", 1);
+    fChain->SetBranchStatus("dtDirectionY", 1);
+    fChain->SetBranchStatus("dtDirectionZ", 1);
+    fChain->SetBranchStatus("dtNRecHits", 1);
+    fChain->SetBranchStatus("dtNRecHits_flag", 1);
+    fChain->SetBranchStatus("dtT", 1);
+    fChain->SetBranchStatus("dtChi2", 1);
+    fChain->SetBranchStatus("nDtClusters", 1);
+    fChain->SetBranchStatus("dtClusterX", 1);
+    fChain->SetBranchStatus("dtClusterY", 1);
+    fChain->SetBranchStatus("dtClusterZ", 1);
+    fChain->SetBranchStatus("dtClusterTime", 1);
+    fChain->SetBranchStatus("dtClusterTimeSpread", 1);
+    fChain->SetBranchStatus("dtClusterGenMuonDeltaR", 1);
+    fChain->SetBranchStatus("dtClusterMajorAxis", 1);
+    fChain->SetBranchStatus("dtClusterMinorAxis", 1);
+    fChain->SetBranchStatus("dtClusterEtaPhiSpread",1);
+    fChain->SetBranchStatus("dtClusterPhiSpread", 1);
+    fChain->SetBranchStatus("dtClusterEtaSpread", 1);
+    fChain->SetBranchStatus("dtClusterXSpread", 1);
+    fChain->SetBranchStatus("dtClusterYSpread", 1);
+    fChain->SetBranchStatus("dtClusterZSpread", 1);
+    fChain->SetBranchStatus("dtClusterPhi", 1);
+    fChain->SetBranchStatus("dtClusterEta", 1);
+    fChain->SetBranchStatus("dtClusterJetVetoPt", 1);
+    fChain->SetBranchStatus("dtClusterJetVetoE", 1);
+    fChain->SetBranchStatus("dtClusterMuonVetoPt", 1);
+    fChain->SetBranchStatus("dtClusterMuonVetoE", 1);
+    fChain->SetBranchStatus("dtClusterCaloJetVeto", 1);
+    fChain->SetBranchStatus("dtClusterSize", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberPlus11", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberPlus12", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberPlus13", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberPlus21", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberPlus22", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberPlus31", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberPlus32", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberPlus41", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberPlus42", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberMinus11", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberMinus12", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberMinus13", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberMinus21", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberMinus22", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberMinus31", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberMinus32", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberMinus41", 1);
+    fChain->SetBranchStatus("dtClusterNSegmentChamberMinus42", 1);
+    fChain->SetBranchStatus("dtClusterMe11Ratio", 1);
+    fChain->SetBranchStatus("dtClusterMe12Ratio", 1);
+    fChain->SetBranchStatus("dtClusterNStation", 1);
+    fChain->SetBranchStatus("dtClusterMaxStation",1);
+    fChain->SetBranchStatus("dtClusterMaxStationRatio", 1);
+    fChain->SetBranchStatus("dtClusterNChamber", 1);
+    fChain->SetBranchStatus("dtClusterMaxChamber", 1);
+    fChain->SetBranchStatus("dtClusterMaxChamberRatio", 1);
+    fChain->SetBranchStatus("dtClusterVertexR", 1);
+    fChain->SetBranchStatus("dtClusterVertexZ", 1);
+    fChain->SetBranchStatus("dtClusterVertexDis", 1);
+    fChain->SetBranchStatus("dtClusterVertexChi2",1);
+    fChain->SetBranchStatus("dtClusterVertexN1", 1);
+    fChain->SetBranchStatus("dtClusterVertexN5", 1);
+    fChain->SetBranchStatus("dtClusterVertexN10", 1);
+    fChain->SetBranchStatus("dtClusterVertexN15", 1);
+    fChain->SetBranchStatus("dtClusterVertexN20", 1);
+    fChain->SetBranchStatus("dtClusterVertexN", 1);
+    /*fChain->SetBranchStatus("nDtSegClusters", 1);
+    fChain->SetBranchStatus("dtSegClusterX", 1);
+    fChain->SetBranchStatus("dtSegClusterY", 1);
+    fChain->SetBranchStatus("dtSegClusterZ", 1);
+    fChain->SetBranchStatus("dtSegClusterTime", 1);
+    fChain->SetBranchStatus("dtSegClusterTimeSpread", 1);
+    fChain->SetBranchStatus("dtSegClusterGenMuonDeltaR", 1);
+    fChain->SetBranchStatus("dtSegClusterMajorAxis", 1);
+    fChain->SetBranchStatus("dtSegClusterMinorAxis", 1);
+    fChain->SetBranchStatus("dtSegClusterEtaPhiSpread",1);
+    fChain->SetBranchStatus("dtSegClusterPhiSpread", 1);
+    fChain->SetBranchStatus("dtSegClusterEtaSpread", 1);
+    fChain->SetBranchStatus("dtSegClusterXSpread", 1);
+    fChain->SetBranchStatus("dtSegClusterYSpread", 1);
+    fChain->SetBranchStatus("dtSegClusterZSpread", 1);
+    fChain->SetBranchStatus("dtSegClusterPhi", 1);
+    fChain->SetBranchStatus("dtSegClusterEta", 1);
+    fChain->SetBranchStatus("dtSegClusterJetVetoPt", 1);
+    fChain->SetBranchStatus("dtSegClusterJetVetoE", 1);
+    fChain->SetBranchStatus("dtSegClusterMuonVetoPt", 1);
+    fChain->SetBranchStatus("dtSegClusterMuonVetoE", 1);
+    fChain->SetBranchStatus("dtSegClusterCaloJetVeto", 1);
+    fChain->SetBranchStatus("dtSegClusterSize", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberPlus11", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberPlus12", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberPlus13", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberPlus21", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberPlus22", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberPlus31", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberPlus32", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberPlus41", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberPlus42", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberMinus11", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberMinus12", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberMinus13", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberMinus21", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberMinus22", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberMinus31", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberMinus32", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberMinus41", 1);
+    fChain->SetBranchStatus("dtSegClusterNSegmentChamberMinus42", 1);
+    fChain->SetBranchStatus("dtSegClusterMe11Ratio", 1);
+    fChain->SetBranchStatus("dtSegClusterMe12Ratio", 1);
+    fChain->SetBranchStatus("dtSegClusterNStation", 1);
+    fChain->SetBranchStatus("dtSegClusterMaxStation",1);
+    fChain->SetBranchStatus("dtSegClusterMaxStationRatio", 1);
+    fChain->SetBranchStatus("dtSegClusterNChamber", 1);
+    fChain->SetBranchStatus("dtSegClusterMaxChamber", 1);
+    fChain->SetBranchStatus("dtSegClusterMaxChamberRatio", 1);
+    fChain->SetBranchStatus("dtSegClusterVertexR", 1);
+    fChain->SetBranchStatus("dtSegClusterVertexZ", 1);
+    fChain->SetBranchStatus("dtSegClusterVertexDis", 1);
+    fChain->SetBranchStatus("dtSegClusterVertexChi2",1);
+    fChain->SetBranchStatus("dtSegClusterVertexN1", 1);
+    fChain->SetBranchStatus("dtSegClusterVertexN5", 1);
+    fChain->SetBranchStatus("dtSegClusterVertexN10", 1);
+    fChain->SetBranchStatus("dtSegClusterVertexN15", 1);
+    fChain->SetBranchStatus("dtSegClusterVertexN20", 1);
+    fChain->SetBranchStatus("dtSegClusterVertexN", 1);
+    */
+
+    fChain->SetBranchStatus("nDtRechitClusters", 1);
+    fChain->SetBranchStatus("dtRechitClusterX", 1);
+    fChain->SetBranchStatus("dtRechitClusterY", 1);
+    fChain->SetBranchStatus("dtRechitClusterZ", 1);
+    fChain->SetBranchStatus("dtRechitClusterTime", 1);
+    fChain->SetBranchStatus("dtRechitClusterTimeSpread", 1);
+    fChain->SetBranchStatus("dtRechitClusterGenMuonDeltaR", 1);
+    fChain->SetBranchStatus("dtRechitClusterMajorAxis", 1);
+    fChain->SetBranchStatus("dtRechitClusterMinorAxis", 1);
+    fChain->SetBranchStatus("dtRechitClusterEtaPhiSpread",1);
+    fChain->SetBranchStatus("dtRechitClusterPhiSpread", 1);
+    fChain->SetBranchStatus("dtRechitClusterEtaSpread", 1);
+    fChain->SetBranchStatus("dtRechitClusterXSpread", 1);
+    fChain->SetBranchStatus("dtRechitClusterYSpread", 1);
+    fChain->SetBranchStatus("dtRechitClusterZSpread", 1);
+    fChain->SetBranchStatus("dtRechitClusterPhi", 1);
+    fChain->SetBranchStatus("dtRechitClusterEta", 1);
+    fChain->SetBranchStatus("dtRechitClusterJetVetoPt", 1);
+    fChain->SetBranchStatus("dtRechitClusterJetVetoE", 1);
+    fChain->SetBranchStatus("dtRechitClusterMuonVetoPt", 1);
+    fChain->SetBranchStatus("dtRechitClusterMuonVetoE", 1);
+    fChain->SetBranchStatus("dtRechitClusterCaloJetVeto", 1);
+    fChain->SetBranchStatus("dtRechitClusterSize", 1);
+    /*fChain->SetBranchStatus("dtRechitClusterNRechitChamberPlus11", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberPlus12", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberPlus13", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberPlus21", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberPlus22", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberPlus31", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberPlus32", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberPlus41", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberPlus42", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberMinus11", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberMinus12", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberMinus13", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberMinus21", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberMinus22", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberMinus31", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberMinus32", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberMinus41", 1);
+    fChain->SetBranchStatus("dtRechitClusterNRechitChamberMinus42", 1);
+    fChain->SetBranchStatus("dtRechitClusterMe11Ratio", 1);
+    fChain->SetBranchStatus("dtRechitClusterMe12Ratio", 1);*/
+    fChain->SetBranchStatus("dtRechitClusterNStation", 1);
+    fChain->SetBranchStatus("dtRechitClusterMaxStation",1);
+    fChain->SetBranchStatus("dtRechitClusterMaxStationRatio", 1);
+    fChain->SetBranchStatus("dtRechitClusterNChamber", 1);
+    fChain->SetBranchStatus("dtRechitClusterMaxChamber", 1);
+    fChain->SetBranchStatus("dtRechitClusterMaxChamberRatio", 1);
+    fChain->SetBranchStatus("dtRechitClusterNSegmentStation1", 1);
+    fChain->SetBranchStatus("dtRechitClusterNSegmentStation2", 1);
+    fChain->SetBranchStatus("dtRechitClusterNSegmentStation3", 1);
+    fChain->SetBranchStatus("dtRechitClusterNSegmentStation4", 1);
+    /*fChain->SetBranchStatus("dtRechitClusterVertexR", 1);
+    fChain->SetBranchStatus("dtRechitClusterVertexZ", 1);
+    fChain->SetBranchStatus("dtRechitClusterVertexDis", 1);
+    fChain->SetBranchStatus("dtRechitClusterVertexChi2",1);
+    fChain->SetBranchStatus("dtRechitClusterVertexN1", 1);
+    fChain->SetBranchStatus("dtRechitClusterVertexN5", 1);
+    fChain->SetBranchStatus("dtRechitClusterVertexN10", 1);
+    fChain->SetBranchStatus("dtRechitClusterVertexN15", 1);
+    fChain->SetBranchStatus("dtRechitClusterVertexN20", 1);
+    fChain->SetBranchStatus("dtRechitClusterVertexN", 1);*/
+
+    fChain->SetBranchStatus("nDtRechits",1);
+    fChain->SetBranchStatus("dtRechitX",1);
+    fChain->SetBranchStatus("dtRechitY",1);
+    fChain->SetBranchStatus("dtRechitZ",1);
+    fChain->SetBranchStatus("dtRechitEta",1);
+    fChain->SetBranchStatus("dtRechitPhi",1);
+};
+
+void RazorAnalyzer::EnableRPC(){
+  fChain->SetBranchStatus("nRpc", 1);
+  fChain->SetBranchStatus("rpcPhi", 1);
+  fChain->SetBranchStatus("rpcEta", 1);
+  fChain->SetBranchStatus("rpcX", 1);
+  fChain->SetBranchStatus("rpcY", 1);
+  fChain->SetBranchStatus("rpcZ", 1);
+  fChain->SetBranchStatus("rpcBx", 1);
+}
+
+void RazorAnalyzer::EnableHO(){
+  fChain->SetBranchStatus("nHORechits", 1);
+  fChain->SetBranchStatus("hoRechit_Phi", 1);
+  fChain->SetBranchStatus("hoRechit_Eta", 1);
+  fChain->SetBranchStatus("hoRechit_X", 1);
+  fChain->SetBranchStatus("hoRechit_Y", 1);
+  fChain->SetBranchStatus("hoRechit_Z", 1);
+  fChain->SetBranchStatus("hoRechit_T", 1);
+  fChain->SetBranchStatus("hoRechit_E", 1);
+}
 
 void RazorAnalyzer::EnableMC(){
     fChain->SetBranchStatus("nGenJets", 1);

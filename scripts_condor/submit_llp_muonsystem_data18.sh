@@ -12,19 +12,19 @@ cd -
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
 filesPerJob=50
 
-#Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018 \
 for sample in \
-Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018B-HighMET-17Sep2018 \
-Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018C-HighMET-17Sep2018 \
-Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018D-HighMET-PromptReco
+Run2_displacedJetMuonNtupler_V1p15_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018 \
+Run2_displacedJetMuonNtupler_V1p15_Data2018_17Sept2018_Run2018B-HighMET-17Sep2018 \
+Run2_displacedJetMuonNtupler_V1p15_Data2018_17Sept2018_Run2018C-HighMET-17Sep2018 \
+Run2_displacedJetMuonNtupler_V1p15_Data2018_17Sept2018_Run2018D-HighMET-PromptReco
 do
 	echo "Sample " ${sample}
 	#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
 	year=Data2018
-	version=/V1p12/${year}/v4/
-	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v3/${sample}
+	version=/V1p15/${year}/v4/v4/
+	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/driftTube/${version}/${sample}
 	echo ${output}
-	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p12/${year}/${sample}.txt
+	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p15/${year}/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
         maxjob=`python -c "print int($nfiles.0/$filesPerJob)+1"`
 	mod=`python -c "print int($nfiles.0%$filesPerJob)"`

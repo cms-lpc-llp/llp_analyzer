@@ -16,24 +16,24 @@ filesPerJob=50
 #Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018D-HighMET-PromptReco
 
 for sample in \
-Run2_displacedJetMuonNtupler_V1p12_Data2016_Run2016B-HighMET-07Aug17_ver1 \
-Run2_displacedJetMuonNtupler_V1p12_Data2016_Run2016B-HighMET-07Aug17_ver2 \
-Run2_displacedJetMuonNtupler_V1p12_Data2016_Run2016C-HighMET-07Aug17 \
-Run2_displacedJetMuonNtupler_V1p12_Data2016_Run2016D-HighMET-07Aug17 \
-Run2_displacedJetMuonNtupler_V1p12_Data2016_Run2016E-HighMET-07Aug17 \
-Run2_displacedJetMuonNtupler_V1p12_Data2016_Run2016F-HighMET-07Aug17 \
-Run2_displacedJetMuonNtupler_V1p12_Data2016_Run2016G-HighMET-07Aug17 \
-Run2_displacedJetMuonNtupler_V1p12_Data2016_Run2016H-HighMET-07Aug17
+Run2_displacedJetMuonNtupler_V1p15_Data2016_Run2016B-HighMET-07Aug17_ver1 \
+Run2_displacedJetMuonNtupler_V1p15_Data2016_Run2016B-HighMET-07Aug17_ver2 \
+Run2_displacedJetMuonNtupler_V1p15_Data2016_Run2016C-HighMET-07Aug17 \
+Run2_displacedJetMuonNtupler_V1p15_Data2016_Run2016D-HighMET-07Aug17 \
+Run2_displacedJetMuonNtupler_V1p15_Data2016_Run2016E-HighMET-07Aug17 \
+Run2_displacedJetMuonNtupler_V1p15_Data2016_Run2016F-HighMET-07Aug17 \
+Run2_displacedJetMuonNtupler_V1p15_Data2016_Run2016G-HighMET-07Aug17 \
+Run2_displacedJetMuonNtupler_V1p15_Data2016_Run2016H-HighMET-07Aug17
 do
 	echo "Sample " ${sample}
-	#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
 	year=Data2016
-	version=/V1p12/${year}/v4/
-	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v3/${sample}
+	version=/V1p15/${year}/v4/v4/
+	output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/driftTube/${version}/${sample}
 	echo ${output}
-	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p12/${year}/${sample}.txt
+	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p15/${year}/${sample}.txt
 	nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
         maxjob=`python -c "print int($nfiles.0/$filesPerJob)+1"`
+	#maxjob=`python -c "print int(0)+1"`
 	mod=`python -c "print int($nfiles.0%$filesPerJob)"`
         if [ ${mod} -eq 0 ]
         then

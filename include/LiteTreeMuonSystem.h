@@ -4,13 +4,17 @@
 #define LiteTreeMuonSystem_H
 
 #define N_MAX_LEPTONS 100
+#define N_MAX_MUONS 100
 #define N_MAX_JETS 100
 #define N_MAX_CSC 2000
+#define N_MAX_DT 2000
+#define N_MAX_HO 1000
 #define NTriggersMAX 601 //Number of trigger in the .dat file
 #define N_CSC_CUT 20
 #define JET_PT_CUT 10
 #define MUON_PT_CUT 20
 #define N_MAX_GPARTICLES 2000
+#define N_MAX_RPC 2000
 
 #include <iostream>
 #include <string>
@@ -52,12 +56,19 @@ public:
   UInt_t  category;
   UInt_t  npv, npu;
   float rho, weight;
+  float higgsPtWeight;
+  float higgsPtWeightSys[9];
+  float sf_facScaleUp, sf_facScaleDown, sf_renScaleUp, sf_renScaleDown, sf_facRenScaleUp, sf_facRenScaleDown;
   float pileupWeight, pileupWeightUp, pileupWeightDown;
-  float met, metPhi, jetMet_dPhi, jetMet_dPhiMin,jetMet_dPhiMin4, metJESUp, metJESDown;
-  bool Flag_HBHENoiseFilter, Flag_HBHEIsoNoiseFilter, Flag_BadPFMuonFilter, Flag_CSCTightHaloFilter, Flag_goodVertices, Flag_ecalBadCalibFilter, Flag_all;
+  float met, metPhi, HT, jetMet_dPhi, jetMet_dPhiMin,jetMet_dPhiMin4, metJESUp, metJESDown;
+  float metXYCorr, metPhiXYCorr;
+  bool Flag_HBHENoiseFilter, Flag_HBHEIsoNoiseFilter, Flag_BadPFMuonFilter, Flag_globalSuperTightHalo2016Filter,
+    Flag_CSCTightHaloFilter, Flag_BadChargedCandidateFilter, Flag_eeBadScFilter, Flag_goodVertices, Flag_ecalBadCalibFilter, Flag_all;
+  int mH, mX, ctau;
 
-
-
+  bool Flag2_HBHENoiseFilter, Flag2_HBHEIsoNoiseFilter, Flag2_BadPFMuonFilter, Flag2_globalSuperTightHalo2016Filter,
+    Flag2_globalTightHalo2016Filter, Flag2_BadChargedCandidateFilter, Flag2_EcalDeadCellTriggerPrimitiveFilter,
+    Flag2_ecalBadCalibFilter, Flag2_eeBadScFilter, Flag2_all;
 
   int gLepId;
   float gLepPt, gLepPhi, gLepEta, gLepE;
@@ -92,7 +103,6 @@ public:
   int           cscITLabels[N_MAX_CSC];
   int           cscStation[N_MAX_CSC];
   int           cscChamber[N_MAX_CSC];
-
   float         cscPhi[N_MAX_CSC];   //[nCsc]
   float         cscEta[N_MAX_CSC];   //[nCsc]
   float         cscX[N_MAX_CSC];   //[nCsc]
@@ -107,6 +117,23 @@ public:
   float         cscNRecHits_jetveto0p8[N_MAX_CSC];   //[nCsc]
   float         cscT[N_MAX_CSC];   //[nCsc]
   float         cscChi2[N_MAX_CSC];   //[nCsc]
+
+  int           nRpc;
+  float         rpcPhi[N_MAX_RPC];   //[nRpc]
+  float         rpcEta[N_MAX_RPC];   //[nRpc]
+  float         rpcX[N_MAX_RPC];   //[nRpc]
+  float         rpcY[N_MAX_RPC];   //[nRpc]
+  float         rpcZ[N_MAX_RPC];   //[nRpc]
+  int           rpcBx[N_MAX_RPC];   //[nRpc]
+
+  int           nHORechits;
+  float         hoRechit_Phi[N_MAX_HO];   //[nHORechits]
+  float         hoRechit_Eta[N_MAX_HO];   //[nHORechits]
+  float         hoRechit_X[N_MAX_HO];   //[nHORechits]
+  float         hoRechit_Y[N_MAX_HO];   //[nHORechits]
+  float         hoRechit_Z[N_MAX_HO];   //[nHORechits]
+  float         hoRechit_T[N_MAX_HO];   //[nHORechits]
+  float         hoRechit_E[N_MAX_HO];   //[nHORechits]
 
     int           nCscClusters;
     bool          cscCluster_match_gLLP[N_MAX_CSC];
@@ -312,7 +339,238 @@ public:
   int           cscRechitClusterNRechitChamberMinus41[N_MAX_CSC];
   int           cscRechitClusterNRechitChamberMinus42[N_MAX_CSC];
   float         cscRechitClusterMet_dPhi[N_MAX_CSC];
+  
+  //dt
+  int           nDt;
+  int           dtLabels[N_MAX_DT];
+  int           dtITLabels[N_MAX_DT];
+  int           dtStation[N_MAX_DT];
+  int           dtChamber[N_MAX_DT];
 
+  float         dtPhi[N_MAX_DT];   //[nDt]
+  float         dtEta[N_MAX_DT];   //[nDt]
+  float         dtX[N_MAX_DT];   //[nDt]
+  float         dtY[N_MAX_DT];   //[nDt]
+  float         dtZ[N_MAX_DT];   //[nDt]
+  float         dtDirectionX[N_MAX_DT];   //[nDt]
+  float         dtDirectionY[N_MAX_DT];   //[nDt]
+  float         dtDirectionZ[N_MAX_DT];   //[nDt]
+  float         dtNRecHits[N_MAX_DT];   //[nDt]
+  float         dtNRecHits_flag[N_MAX_DT];   //[nDt]
+  float         dtNRecHits_jetveto0p4[N_MAX_DT];   //[nDt]
+  float         dtNRecHits_jetveto0p8[N_MAX_DT];   //[nDt]
+  float         dtT[N_MAX_DT];   //[nDt]
+  float         dtChi2[N_MAX_DT];   //[nDt]
+
+  int           nDtRechits;
+  int           dtRechitStation[N_MAX_DT];   //[nDtRechits]
+  int           dtRechitWheel[N_MAX_DT];   //[nDtRechits]
+  float         dtRechitPhi[N_MAX_DT];   //[nDtRechits]
+  float         dtRechitEta[N_MAX_DT];   //[nDtRechits]
+  float         dtRechitX[N_MAX_DT];   //[nDtRechits]
+  float         dtRechitY[N_MAX_DT];   //[nDtRechits]
+  float         dtRechitZ[N_MAX_DT];   //[nDtRechits]
+
+    int           nDtClusters;
+    bool          dtCluster_match_gLLP[N_MAX_DT];
+    int           dtCluster_match_gLLP_index[N_MAX_DT];
+    int           dtCluster_match_gLLP_minDeltaR[N_MAX_DT];
+    float         dtClusterX[N_MAX_DT];   //[nDt]
+    float         dtClusterY[N_MAX_DT];   //[nDt]
+    float         dtClusterZ[N_MAX_DT];   //[nDt]
+    float         dtClusterTime[N_MAX_DT];   //[nDt]
+    float         dtClusterTimeSpread[N_MAX_DT];
+    float         dtClusterGenMuonDeltaR[N_MAX_DT];
+    float         dtClusterMajorAxis[N_MAX_DT];
+    float         dtClusterMinorAxis[N_MAX_DT];
+    float         dtClusterXSpread[N_MAX_DT];   //[nDt]
+    float         dtClusterYSpread[N_MAX_DT];   //[nDt]
+    float         dtClusterZSpread[N_MAX_DT];   //[nDt]
+    float         dtClusterEtaPhiSpread[N_MAX_DT];   //[nDt]
+    float         dtClusterEtaSpread[N_MAX_DT];   //[nDt]
+    float         dtClusterPhiSpread[N_MAX_DT];   //[nDt]
+    float         dtClusterEta[N_MAX_DT];   //[nDt]
+    float         dtClusterPhi[N_MAX_DT];   //[nDt]
+    int           dtClusterSize[N_MAX_DT];
+    float         dtClusterMe11Ratio[N_MAX_DT];
+    float         dtClusterMe12Ratio[N_MAX_DT];
+
+    float         dtClusterVertexR[N_MAX_DT];   //[nDt]
+    float         dtClusterVertexZ[N_MAX_DT];   //[nDt]
+    int           dtClusterVertexN[N_MAX_DT];   //[nDt]
+    int           dtClusterVertexN1[N_MAX_DT];   //[nDt]
+    int           dtClusterVertexN5[N_MAX_DT];   //[nDt]
+    int           dtClusterVertexN10[N_MAX_DT];   //[nDt]
+    int           dtClusterVertexN15[N_MAX_DT];   //[nDt]
+    int           dtClusterVertexN20[N_MAX_DT];   //[nDt]
+    float         dtClusterVertexChi2[N_MAX_DT];   //[nDt]
+    float         dtClusterVertexDis[N_MAX_DT];   //[nDt]
+    float         dtClusterMaxStationRatio[N_MAX_DT];   //[nDt]
+    int           dtClusterMaxStation[N_MAX_DT];   //[nDt]
+    int           dtClusterNStation[N_MAX_DT];
+    float         dtClusterMaxChamberRatio[N_MAX_DT];   //[nDt]
+    int           dtClusterMaxChamber[N_MAX_DT];   //[nDt]
+    int           dtClusterNChamber[N_MAX_DT];
+    float         dtClusterJetVetoPt[N_MAX_DT];
+    float         dtClusterJetVetoE[N_MAX_DT];
+    float         dtClusterMuonVetoPt[N_MAX_DT];
+    float         dtClusterMuonVetoE[N_MAX_DT];
+    int           dtClusterNSegmentChamberPlus11[N_MAX_DT];
+    int           dtClusterNSegmentChamberPlus12[N_MAX_DT];
+    int           dtClusterNSegmentChamberPlus13[N_MAX_DT];
+    int           dtClusterNSegmentChamberPlus21[N_MAX_DT];
+    int           dtClusterNSegmentChamberPlus22[N_MAX_DT];
+    int           dtClusterNSegmentChamberPlus31[N_MAX_DT];
+    int           dtClusterNSegmentChamberPlus32[N_MAX_DT];
+    int           dtClusterNSegmentChamberPlus41[N_MAX_DT];
+    int           dtClusterNSegmentChamberPlus42[N_MAX_DT];
+
+    int           dtClusterNSegmentChamberMinus11[N_MAX_DT];
+    int           dtClusterNSegmentChamberMinus12[N_MAX_DT];
+    int           dtClusterNSegmentChamberMinus13[N_MAX_DT];
+    int           dtClusterNSegmentChamberMinus21[N_MAX_DT];
+    int           dtClusterNSegmentChamberMinus22[N_MAX_DT];
+    int           dtClusterNSegmentChamberMinus31[N_MAX_DT];
+    int           dtClusterNSegmentChamberMinus32[N_MAX_DT];
+    int           dtClusterNSegmentChamberMinus41[N_MAX_DT];
+    int           dtClusterNSegmentChamberMinus42[N_MAX_DT];
+
+  int           nDtSegClusters;
+  float         dtSegClusterX[N_MAX_DT];   //[nDt]
+  float         dtSegClusterY[N_MAX_DT];   //[nDt]
+  float         dtSegClusterZ[N_MAX_DT];   //[nDt]
+  float         dtSegClusterTime[N_MAX_DT];   //[nDt]
+  float         dtSegClusterTimeSpread[N_MAX_DT];
+  float         dtSegClusterGenMuonDeltaR[N_MAX_DT];
+  float         dtSegClusterMajorAxis[N_MAX_DT];
+  float         dtSegClusterMinorAxis[N_MAX_DT];
+  float         dtSegClusterXSpread[N_MAX_DT];   //[nDt]
+  float         dtSegClusterYSpread[N_MAX_DT];   //[nDt]
+  float         dtSegClusterZSpread[N_MAX_DT];   //[nDt]
+  float         dtSegClusterEtaPhiSpread[N_MAX_DT];   //[nDt]
+  float         dtSegClusterEtaSpread[N_MAX_DT];   //[nDt]
+  float         dtSegClusterPhiSpread[N_MAX_DT];   //[nDt]
+  float         dtSegClusterEta[N_MAX_DT];   //[nDt]
+  float         dtSegClusterPhi[N_MAX_DT];   //[nDt]
+  int           dtSegClusterSize[N_MAX_DT];
+  float         dtSegClusterMe11Ratio[N_MAX_DT];
+  float         dtSegClusterMe12Ratio[N_MAX_DT];
+
+  float         dtSegClusterVertexR[N_MAX_DT];   //[nDt]
+  float         dtSegClusterVertexZ[N_MAX_DT];   //[nDt]
+  int           dtSegClusterVertexN[N_MAX_DT];   //[nDt]
+  int           dtSegClusterVertexN1[N_MAX_DT];   //[nDt]
+  int           dtSegClusterVertexN5[N_MAX_DT];   //[nDt]
+  int           dtSegClusterVertexN10[N_MAX_DT];   //[nDt]
+  int           dtSegClusterVertexN15[N_MAX_DT];   //[nDt]
+  int           dtSegClusterVertexN20[N_MAX_DT];   //[nDt]
+  float         dtSegClusterVertexChi2[N_MAX_DT];   //[nDt]
+  float         dtSegClusterVertexDis[N_MAX_DT];   //[nDt]
+  float         dtSegClusterMaxStationRatio[N_MAX_DT];   //[nDt]
+  int           dtSegClusterMaxStation[N_MAX_DT];   //[nDt]
+  int           dtSegClusterNStation[N_MAX_DT];
+  float         dtSegClusterMaxChamberRatio[N_MAX_DT];   //[nDt]
+  int           dtSegClusterMaxChamber[N_MAX_DT];   //[nDt]
+  int           dtSegClusterNChamber[N_MAX_DT];
+  float         dtSegClusterJetVetoPt[N_MAX_DT];
+  float         dtSegClusterJetVetoE[N_MAX_DT];
+  float         dtSegClusterMuonVetoPt[N_MAX_DT];
+  float         dtSegClusterMuonVetoE[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberPlus11[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberPlus12[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberPlus13[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberPlus21[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberPlus22[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberPlus31[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberPlus32[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberPlus41[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberPlus42[N_MAX_DT];
+
+  int           dtSegClusterNSegmentChamberMinus11[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberMinus12[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberMinus13[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberMinus21[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberMinus22[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberMinus31[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberMinus32[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberMinus41[N_MAX_DT];
+  int           dtSegClusterNSegmentChamberMinus42[N_MAX_DT];
+  int           nDt_JetVetoCluster0p4;
+  int           nDt_JetMuonVetoCluster0p4;
+  int           nDt_JetVetoCluster0p4_Me1112Veto;
+  int           nDt_JetMuonVetoCluster0p4_Me1112Veto;
+
+  int           nDtRechitClusters;
+
+  float         dtRechitCluster_match_gParticle_minDeltaR[N_MAX_DT];
+  int           dtRechitCluster_match_gParticle_index[N_MAX_DT];
+  int           dtRechitCluster_match_gParticle_id[N_MAX_DT];
+  float         dtRechitClusterX[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterY[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterZ[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterTime[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterTimeSpread[N_MAX_DT];
+  float         dtRechitClusterGenMuonDeltaR[N_MAX_DT];
+  float         dtRechitClusterMajorAxis[N_MAX_DT];
+  float         dtRechitClusterMinorAxis[N_MAX_DT];
+  float         dtRechitClusterXSpread[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterYSpread[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterZSpread[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterEtaPhiSpread[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterEtaSpread[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterPhiSpread[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterEta[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterPhi[N_MAX_DT];   //[nDt]
+  int           dtRechitClusterSize[N_MAX_DT];
+  //float         dtRechitClusterMe11Ratio[N_MAX_DT];
+  //float         dtRechitClusterMe12Ratio[N_MAX_DT];
+
+  //float         dtRechitClusterVertexR[N_MAX_DT];   //[nDt]
+  //float         dtRechitClusterVertexZ[N_MAX_DT];   //[nDt]
+  //int           dtRechitClusterVertexN[N_MAX_DT];   //[nDt]
+  //int           dtRechitClusterVertexN1[N_MAX_DT];   //[nDt]
+  //int           dtRechitClusterVertexN5[N_MAX_DT];   //[nDt]
+  //int           dtRechitClusterVertexN10[N_MAX_DT];   //[nDt]
+  //int           dtRechitClusterVertexN15[N_MAX_DT];   //[nDt]
+  //int           dtRechitClusterVertexN20[N_MAX_DT];   //[nDt]
+  //float         dtRechitClusterVertexChi2[N_MAX_DT];   //[nDt]
+  //float         dtRechitClusterVertexDis[N_MAX_DT];   //[nDt]
+  float         dtRechitClusterMaxStationRatio[N_MAX_DT];   //[nDt]
+  int           dtRechitClusterMaxStation[N_MAX_DT];   //[nDt]
+  int           dtRechitClusterNStation[N_MAX_DT];
+  float         dtRechitClusterMaxChamberRatio[N_MAX_DT];   //[nDt]
+  int           dtRechitClusterMaxChamber[N_MAX_DT];   //[nDt]
+  int           dtRechitClusterNChamber[N_MAX_DT];
+  float         dtRechitClusterJetVetoPt[N_MAX_DT];
+  float         dtRechitClusterJetVetoE[N_MAX_DT];
+  float         dtRechitClusterMuonVetoPt[N_MAX_DT];
+  float         dtRechitClusterMuonVetoE[N_MAX_DT];
+  float         dtRechitClusterCaloJetVeto[N_MAX_DT];
+
+  int           dtRechitClusterNSegmentStation1[N_MAX_DT];
+  int           dtRechitClusterNSegmentStation2[N_MAX_DT];
+  int           dtRechitClusterNSegmentStation3[N_MAX_DT];
+  int           dtRechitClusterNSegmentStation4[N_MAX_DT];
+/*int           dtRechitClusterNRechitChamberPlus11[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberPlus12[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberPlus13[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberPlus21[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberPlus22[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberPlus31[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberPlus32[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberPlus41[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberPlus42[N_MAX_DT];
+
+  int           dtRechitClusterNRechitChamberMinus11[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberMinus12[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberMinus13[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberMinus21[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberMinus22[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberMinus31[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberMinus32[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberMinus41[N_MAX_DT];
+  int           dtRechitClusterNRechitChamberMinus42[N_MAX_DT];
+  */
   // //csc intime cluster
   // int           nCscITClusters;
   // float         cscITClusterJetVeto[N_MAX_CSC];   //[nCsc]
@@ -369,6 +627,7 @@ public:
   float gLLP_eta[2];
   float gLLP_phi[2];
   float gLLP_csc[2];
+  float gLLP_dt[2];
   float gLLP_beta[2];
   float gLLP_ctau[2];
   float gLLP_decay_vertex_r[2];
@@ -379,6 +638,13 @@ public:
   float gHiggsEta;
   float gHiggsPhi;
   float gHiggsE;
+
+  //leptons
+  int nMuons;
+  float muonE[N_MAX_MUONS];
+  float muonPt[N_MAX_MUONS];
+  float muonEta[N_MAX_MUONS];
+  float muonPhi[N_MAX_MUONS];
 
   //leptons
   int nLeptons;

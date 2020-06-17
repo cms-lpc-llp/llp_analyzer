@@ -11,16 +11,16 @@ cd -
 
 mode=bkg
 year=Data2018
-inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p12/${year}/vBDT/v1/
+inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/driftTube/V1p15/${year}/v4/v4/
 echo ${inputDir}
 outputDir=${inputDir}normalized
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
 
 for sample in \
-Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018 \
-Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018B-HighMET-17Sep2018 \
-Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018C-HighMET-17Sep2018 \
-Run2_displacedJetMuonNtupler_V1p12_Data2018_17Sept2018_Run2018D-HighMET-PromptReco
+Run2_displacedJetMuonNtupler_V1p15_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018 \
+Run2_displacedJetMuonNtupler_V1p15_Data2018_17Sept2018_Run2018B-HighMET-17Sep2018 \
+Run2_displacedJetMuonNtupler_V1p15_Data2018_17Sept2018_Run2018C-HighMET-17Sep2018 \
+Run2_displacedJetMuonNtupler_V1p15_Data2018_17Sept2018_Run2018D-HighMET-PromptReco
 do
 	echo "Sample " ${sample}
 	analyzer=llp_MuonSystem

@@ -101,7 +101,29 @@ int cscStation(double x, double y, double z)
   if (r > 337.5 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*4;
   return -999;
 };
-
+int dtRing(double x, double y, double z)
+{
+  double r = sqrt(x*x+y*y);
+  int sign_z = TMath::Sign(1.0, z);
+  if ((r > 402 && r < 449) || (r > 490.5 && r < 533.5) || (r > 597.5 && r < 636) || (r > 700 && r < 738)){
+    if (abs(z) < 126.8) return 0;
+    if (abs(z) > 126.8 && abs(z) < 395.4) return sign_z*1;
+    if (abs(z) > 395.5 && abs(z) < 661) return sign_z*2;
+  }
+  return -999;
+}
+int dtStation(double x, double y, double z)
+{
+  double r = sqrt(x*x+y*y);
+  int sign_z = TMath::Sign(1.0, z);
+  if (abs(z) < 661){
+    if (r > 402 && r < 449) return sign_z*1;
+    if (r > 490.5 && r < 533.5) return sign_z*2;
+    if (r > 597.5 && r < 636) return sign_z*3;
+    if (r > 700 && r < 738) return sign_z*4;
+  }
+  return -999;
+}
 
 void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfilename, string analysisTag)
 {
@@ -334,7 +356,9 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
       if (abs(MuonSystem->gLLP_eta[i]) < 2.4 && abs(MuonSystem->gLLP_eta[i]) > 0.9
         && abs(MuonSystem->gLLP_decay_vertex_z[i])<1100 && abs(MuonSystem->gLLP_decay_vertex_z[i])>568
         && MuonSystem->gLLP_decay_vertex_r[i] < 695.5) MuonSystem->gLLP_csc[i] = true;
-
+      if (abs(MuonSystem->gLLP_decay_vertex_z[i])< 661.0
+        && MuonSystem->gLLP_decay_vertex_r[i] < 738.0
+	&& MuonSystem->gLLP_decay_vertex_r[i] > 380.0) MuonSystem->gLLP_dt[i] = true;
 
     }
     // if ( wzFlag == true ) generatedEvents->Fill(1);;
@@ -642,7 +666,6 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
     }
 
 
-
     //****************************************
     // CLUSTERING ALGORITHM WITHOUT TIME CUT
     //****************************************
@@ -746,8 +769,174 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
 
       MuonSystem->nCscClusters++;
     }
-    if(MuonSystem->nCscClusters == 0) continue;
-    */
+    if(MuonSystem->nCscClusters == 0){
+      cout << "no clusters" << endl;
+      continue;
+    }
+
+    //-----------------------------
+    // DT INFO
+    //-----------------------------
+    //
+    // if( nDt < 10 ) continue;//require at least 30 segments in the DTs
+    // end = clock();
+    // time_taken = double(end - start) / double(CLOCKS_PER_SEC);
+    // cout << "Time taken by program is after jets : " << time_taken << endl;
+
+    MuonSystem->nDt = 0;
+    points.clear();
+    for(int i = 0; i < nDt; i++)
+    {
+      // if (dtT[i] > 22.0) continue;
+      // if (dtT[i] < -12.5) continue;
+
+      // MuonSystem->dtPhi[MuonSystem->nDt]           = dtPhi[i];   //[nDt]
+      // MuonSystem->dtEta[MuonSystem->nDt]           = dtEta[i];   //[nDt]
+      // MuonSystem->dtX[MuonSystem->nDt]             = dtX[i];   //[nDt]
+      // MuonSystem->dtY[MuonSystem->nDt]             = dtY[i];   //[nDt]
+      // MuonSystem->dtZ[MuonSystem->nDt]             = dtZ[i];   //[nDt]
+      // MuonSystem->dtDirectionX[MuonSystem->nDt]             = dtDirectionX[i];   //
+      // MuonSystem->dtDirectionY[MuonSystem->nDt]             = dtDirectionY[i];   //
+      // MuonSystem->dtDirectionZ[MuonSystem->nDt]             = dtDirectionZ[i];   //
+      // MuonSystem->dtStation[MuonSystem->nDt] = dtStation(dtX[i],dtY[i],dtZ[i]);
+      // MuonSystem->dtChamber[MuonSystem->nDt] = dtChamber(dtX[i],dtY[i],dtZ[i]);
+
+      // for dbscan
+      Point p;
+      p.phi = dtPhi[i];
+      p.eta = dtEta[i];
+      p.x = dtX[i];
+      p.y = dtY[i];
+      p.z = dtZ[i];
+      p.t = dtT[i];
+      p.dirX = dtDirX[i];
+      p.dirY = dtDirY[i];
+      p.dirZ = dtDirZ[i];
+      // p.station = MuonSystem->dtStation[MuonSystem->nDt];
+      // p.chamber = MuonSystem->dtChamber[MuonSystem->nDt];
+      p.station = dtStation(dtX[i],dtY[i],dtZ[i]);
+      p.chamber = 10*dtRing(dtX[i],dtY[i],dtZ[i]) + dtStation(dtX[i],dtY[i],dtZ[i]);
+      p.clusterID = UNCLASSIFIED;
+      points.push_back(p);
+
+      // MuonSystem->dtNRecHits[MuonSystem->nDt]      = dtNRecHits[i];   //[nDt]
+      // MuonSystem->dtNRecHits_flag[MuonSystem->nDt] = dtNRecHits_flag[i];   //[nDt]
+      // MuonSystem->dtT[MuonSystem->nDt]             = dtT[i];   //[nDt]
+      // MuonSystem->dtChi2[MuonSystem->nDt]          = dtChi2[i];   //[nDt]
+
+      //page 141 of tdr: https://cds.cern.ch/record/343814/files/LHCC-97-032.pdf
+
+      MuonSystem->nDt++;
+    }
+
+
+
+    //****************************************
+    // CLUSTERING ALGORITHM WITHOUT TIME CUT
+    //****************************************
+
+    min_point = 10;//6
+    epsilon = 0.2;//100
+    //run db scan only with points in the station
+    DBSCAN ds_dt(min_point, epsilon, points);
+    ds_dt.run();
+    ds_dt.result();
+    ds_dt.clusterMoments();
+    ds_dt.vertexing();
+    ds_dt.sort_clusters();
+
+    for ( auto &tmp : ds_dt.CscCluster )
+    {
+      MuonSystem->dtClusterX[MuonSystem->nDtClusters] =tmp.x;
+      MuonSystem->dtClusterY[MuonSystem->nDtClusters] =tmp.y;
+      MuonSystem->dtClusterZ[MuonSystem->nDtClusters] =tmp.z;
+      MuonSystem->dtClusterTime[MuonSystem->nDtClusters] = tmp.t;
+      MuonSystem->dtClusterEta[MuonSystem->nDtClusters] =tmp.eta;
+      MuonSystem->dtClusterPhi[MuonSystem->nDtClusters] = tmp.phi;
+      MuonSystem->dtClusterMajorAxis[MuonSystem->nDtClusters] =tmp.MajorAxis;
+      MuonSystem->dtClusterMinorAxis[MuonSystem->nDtClusters] =tmp.MinorAxis;
+      MuonSystem->dtClusterXSpread[MuonSystem->nDtClusters] =tmp.XSpread;
+      MuonSystem->dtClusterYSpread[MuonSystem->nDtClusters] =tmp.YSpread;
+      MuonSystem->dtClusterZSpread[MuonSystem->nDtClusters] =tmp.ZSpread;
+      MuonSystem->dtClusterEtaPhiSpread[MuonSystem->nDtClusters] =tmp.EtaPhiSpread;
+      MuonSystem->dtClusterEtaSpread[MuonSystem->nDtClusters] =tmp.EtaSpread;
+      MuonSystem->dtClusterPhiSpread[MuonSystem->nDtClusters] = tmp.PhiSpread;
+      MuonSystem->dtClusterTimeSpread[MuonSystem->nDtClusters] = tmp.TSpread;
+      MuonSystem->dtClusterSize[MuonSystem->nDtClusters] = tmp.nCscSegments;
+
+      MuonSystem->dtClusterMaxChamber[MuonSystem->nDtClusters] = tmp.maxChamber;
+      MuonSystem->dtClusterMaxChamberRatio[MuonSystem->nDtClusters] = 1.0*tmp.maxChamberSegment/tmp.nCscSegments;
+      MuonSystem->dtClusterNChamber[MuonSystem->nDtClusters] = tmp.nChamber;
+      MuonSystem->dtClusterMaxStation[MuonSystem->nDtClusters] = tmp.maxStation;
+      MuonSystem->dtClusterMaxStationRatio[MuonSystem->nDtClusters] = 1.0*tmp.maxStationSegment/tmp.nCscSegments;
+      MuonSystem->dtClusterNStation[MuonSystem->nDtClusters] = tmp.nStation;
+      MuonSystem->dtClusterMe11Ratio[MuonSystem->nDtClusters] = tmp.Me11Ratio;
+      MuonSystem->dtClusterMe12Ratio[MuonSystem->nDtClusters] = tmp.Me12Ratio;
+      MuonSystem->dtClusterVertexR[MuonSystem->nDtClusters] = tmp.vertex_r;
+      MuonSystem->dtClusterVertexZ[MuonSystem->nDtClusters] = tmp.vertex_z;
+      MuonSystem->dtClusterVertexChi2[MuonSystem->nDtClusters] = tmp.vertex_chi2;
+      MuonSystem->dtClusterVertexDis[MuonSystem->nDtClusters] = tmp.vertex_dis;
+      MuonSystem->dtClusterVertexN[MuonSystem->nDtClusters] = tmp.vertex_n;
+      MuonSystem->dtClusterVertexN1[MuonSystem->nDtClusters] = tmp.vertex_n1;
+      MuonSystem->dtClusterVertexN5[MuonSystem->nDtClusters] = tmp.vertex_n5;
+      MuonSystem->dtClusterVertexN15[MuonSystem->nDtClusters] = tmp.vertex_n15;
+      MuonSystem->dtClusterVertexN20[MuonSystem->nDtClusters] = tmp.vertex_n20;
+      MuonSystem->dtClusterVertexN10[MuonSystem->nDtClusters] = tmp.vertex_n10;
+      // for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
+      // {
+      //   MuonSystem->dtLabels[j] = MuonSystem->nDtClusters;
+      // } it should be dtLabels[tmp.segment_id[j]]
+
+      //Jet veto/ muon veto
+      MuonSystem->dtClusterJetVetoPt[MuonSystem->nDtClusters] = 0.0;
+      // MuonSystem->dtClusterCaloJetVeto[MuonSystem->nDtClusters] = 0.0;
+      MuonSystem->dtClusterMuonVetoPt[MuonSystem->nDtClusters] = 0.0;
+
+      for (int j = 0; j < nJets; j++)
+      {
+        // if (jetPt[j]<JET_PT_CUT) continue;
+        if (abs(jetEta[j])>3) continue;
+        if (RazorAnalyzer::deltaR(tmp.eta, tmp.phi, jetEta[j],jetPhi[j]) < 0.4 && jetPt[j] > MuonSystem->dtClusterJetVetoPt[MuonSystem->nDtClusters]){
+          MuonSystem->dtClusterJetVetoPt[MuonSystem->nDtClusters]  = jetPt[j];
+          MuonSystem->dtClusterJetVetoE[MuonSystem->nDtClusters]  = jetE[j];
+
+        }
+      }
+      // for (int j = 0; j < nCaloJets; j++)
+      // {
+      //   // if (calojetPt[j]<JET_PT_CUT) continue;
+      //   if (abs(calojetEta[j])>3) continue;
+      //   if (RazorAnalyzer::deltaR(tmp.eta, tmp.phi, calojetEta[j],calojetPhi[j]) < 0.4 && calojetPt[j] > MuonSystem->dtClusterCaloJetVeto[MuonSystem->nDtClusters])
+      //   {
+      //     MuonSystem->dtClusterCaloJetVeto[MuonSystem->nDtClusters] = calojetPt[j];
+      //     MuonSystem->dtClusterCaloJetVetoE[MuonSystem->nDtClusters] = calojetE[j];
+      //
+      //   }
+      // }
+      for (int j = 0; j < nMuons; j++)
+      {
+        // if (muonPt[j]<MUON_PT_CUT) continue;
+        if (abs(muonEta[j])>3) continue;
+        if (RazorAnalyzer::deltaR(tmp.eta, tmp.phi, muonEta[j],muonPhi[j]) < 0.4 && muonPt[j] > MuonSystem->dtClusterMuonVetoPt[MuonSystem->nDtClusters])
+        {
+          MuonSystem->dtClusterMuonVetoPt[MuonSystem->nDtClusters] = muonPt[j];
+          MuonSystem->dtClusterMuonVetoE[MuonSystem->nDtClusters] = muonE[j];
+
+        }
+      }
+      bool me1112_veto = MuonSystem->dtClusterMe11Ratio[MuonSystem->nDtClusters] == 0.0 && MuonSystem->dtClusterMe12Ratio[MuonSystem->nDtClusters] == 0.0;
+      // if (MuonSystem->dtClusterJetVetoPt[MuonSystem->nDtClusters] < JET_PT_CUT) MuonSystem->nDt_JetVetoCluster0p4 += tmp.nDtSegments;
+      // if (MuonSystem->dtClusterJetVetoPt[MuonSystem->nDtClusters] < JET_PT_CUT && MuonSystem->dtClusterMuonVetoPt[MuonSystem->nDtClusters] < MUON_PT_CUT) MuonSystem->nDt_JetMuonVetoCluster0p4 += tmp.nDtSegments;
+      // if (MuonSystem->dtClusterJetVetoPt[MuonSystem->nDtClusters] < JET_PT_CUT && me1112_veto) MuonSystem->nDt_JetVetoCluster0p4_Me1112Veto+= tmp.nDtSegments;
+      // if (MuonSystem->dtClusterJetVetoPt[MuonSystem->nDtClusters] < JET_PT_CUT && MuonSystem->dtClusterMuonVetoPt[MuonSystem->nDtClusters] < MUON_PT_CUT && me1112_veto) MuonSystem->nDt_JetMuonVetoCluster0p4_Me1112Veto+= tmp.nDtSegments;
+
+
+
+      MuonSystem->nDtClusters++;
+    }
+    //if(MuonSystem->nDtClusters == 0) continue;
+
+
     //****************************************
     // CLUSTERING ALGORITHM WITH TIME CUT
     //****************************************

@@ -15,10 +15,9 @@
 #include <iostream>
 
 // Header file for the classes stored in the TTree if any.
+#include "string"
 #include "vector"
-#include "vector"
-#include "vector"
-
+using namespace std;
 class llp_event {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
@@ -286,9 +285,68 @@ public :
   Int_t           cscClusterVertexN15[2000];   //[ncscClusters]
   Int_t           cscClusterVertexN20[2000];   //[ncscClusters]
   Int_t           cscClusterVertexN[2000];   //[ncscClusters]
-
+  Int_t           cscRechitCluster_match_gParticle_id[2000];
+  Int_t           dtRechitCluster_match_gParticle_id[2000];
+  Int_t           nDtClusters;
+  Float_t         dtClusterX[2000];   //[ndtClusters]
+  Float_t         dtClusterY[2000];   //[ndtClusters]
+  Float_t         dtClusterZ[2000];   //[ndtClusters]
+  Float_t         dtClusterTime[2000];   //[ndtClusters]
+  Float_t         dtClusterTimeSpread[2000];   //[ndtClusters]
+  Float_t         dtClusterGenMuonDeltaR[2000];   //[ndtClusters]
+  Float_t         dtClusterMajorAxis[2000];   //[ndtClusters]
+  Float_t         dtClusterMinorAxis[2000];   //[ndtClusters]
+  Float_t         dtClusterEtaPhiSpread[2000];   //[ndtClusters]
+  Float_t         dtClusterPhiSpread[2000];   //[ndtClusters]
+  Float_t         dtClusterEtaSpread[2000];   //[ndtClusters]
+  Float_t         dtClusterXSpread[2000];   //[ndtClusters]
+  Float_t         dtClusterYSpread[2000];   //[ndtClusters]
+  Float_t         dtClusterZSpread[2000];   //[ndtClusters]
+  Float_t         dtClusterPhi[2000];   //[ndtClusters]
+  Float_t         dtClusterEta[2000];   //[ndtClusters]
+  Float_t         dtClusterJetVetoPt[2000];   //[ndtClusters]
+  Float_t         dtClusterJetVetoE[2000];   //[ndtClusters]
+  Float_t         dtClusterMuonVetoPt[2000];   //[ndtClusters]
+  Float_t         dtClusterMuonVetoE[2000];   //[ndtClusters]
+  Float_t         dtClusterCaloJetVeto[2000];   //[ndtClusters]
+  Int_t           dtClusterSize[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberPlus11[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberPlus12[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberPlus13[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberPlus21[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberPlus22[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberPlus31[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberPlus32[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberPlus41[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberPlus42[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberMinus11[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberMinus12[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberMinus13[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberMinus21[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberMinus22[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberMinus31[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberMinus32[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberMinus41[2000];   //[ndtClusters]
+  Int_t           dtClusterNSegmentChamberMinus42[2000];   //[ndtClusters]
+  Float_t         dtClusterMe11Ratio[2000];   //[ndtClusters]
+  Float_t         dtClusterMe12Ratio[2000];   //[ndtClusters]
+  Int_t           dtClusterNStation[2000];   //[ndtClusters]
+  Int_t           dtClusterMaxStation[2000];   //[ndtClusters]
+  Float_t         dtClusterMaxStationRatio[2000];   //[ndtClusters]
+  Int_t           dtClusterNChamber[2000];   //[ndtClusters]
+  Int_t           dtClusterMaxChamber[2000];   //[ndtClusters]
+  Float_t         dtClusterMaxChamberRatio[2000];   //[ndtClusters]
+  Float_t         dtClusterVertexR[2000];   //[ndtClusters]
+  Float_t         dtClusterVertexZ[2000];   //[ndtClusters]
+  Float_t         dtClusterVertexDis[2000];   //[ndtClusters]
+  Float_t         dtClusterVertexChi2[2000];   //[ndtClusters]
+  Int_t           dtClusterVertexN1[2000];   //[ndtClusters]
+  Int_t           dtClusterVertexN5[2000];   //[ndtClusters]
+  Int_t           dtClusterVertexN10[2000];   //[ndtClusters]
+  Int_t           dtClusterVertexN15[2000];   //[ndtClusters]
+  Int_t           dtClusterVertexN20[2000];   //[ndtClusters]
+  Int_t           dtClusterVertexN[2000];   //[ndtClusters]
    Int_t           nCscRechitClusters;
-   Int_t           cscRechitCluster_match_gParticle_id[2000];
    Float_t         cscRechitClusterX[2000];   //[nCscRechitClusters]
    Float_t         cscRechitClusterY[2000];   //[nCscRechitClusters]
    Float_t         cscRechitClusterZ[2000];   //[nCscRechitClusters]
@@ -347,6 +405,40 @@ public :
    Int_t           cscRechitClusterVertexN15[2000];   //[nCscRechitClusters]
    Int_t           cscRechitClusterVertexN20[2000];   //[nCscRechitClusters]
    Int_t           cscRechitClusterVertexN[2000];   //[nCscRechitClusters]
+
+   Int_t           nDtRechitClusters;
+   Float_t         dtRechitClusterX[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterY[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterZ[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterTime[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterTimeSpread[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterGenMuonDeltaR[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterMajorAxis[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterMinorAxis[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterEtaPhiSpread[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterPhiSpread[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterEtaSpread[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterXSpread[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterYSpread[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterZSpread[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterPhi[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterEta[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterJetVetoPt[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterJetVetoE[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterMuonVetoPt[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterMuonVetoE[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterCaloJetVeto[2000];   //[nDtRechitClusters]
+   Int_t           dtRechitClusterSize[2000];   //[nDtRechitClusters]
+   Int_t           dtRechitClusterNStation[2000];   //[nDtRechitClusters]
+   Int_t           dtRechitClusterMaxStation[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterMaxStationRatio[2000];   //[nDtRechitClusters]
+   Int_t           dtRechitClusterNChamber[2000];   //[nDtRechitClusters]
+   Int_t           dtRechitClusterMaxChamber[2000];   //[nDtRechitClusters]
+   Float_t         dtRechitClusterMaxChamberRatio[2000];   //[nDtRechitClusters]
+   Int_t           dtRechitClusterNSegmentStation1[2000];   //[nDtRechitClusters]
+   Int_t           dtRechitClusterNSegmentStation2[2000];   //[nDtRechitClusters]
+   Int_t           dtRechitClusterNSegmentStation3[2000];   //[nDtRechitClusters]
+   Int_t           dtRechitClusterNSegmentStation4[2000];   //[nDtRechitClusters]
 
    /*Int_t           nCscSegClusters;
    Float_t         cscSegClusterX[2000];   //[ncscSegClusters]
@@ -428,8 +520,17 @@ public :
    Float_t         rpcX[2000];   //[nRpc]
    Float_t         rpcY[2000];   //[nRpc]
    Float_t         rpcZ[2000];   //[nRpc]
+   Int_t           rpcBx[2000];   //[nRpc]
    Float_t         rpcT[2000];   //[nRpc]
    Float_t         rpcTError[2000];   //[nRpc]
+   Int_t           nHORechits;
+   Float_t         hoRechit_Phi[2000];   //[nHORechits]
+   Float_t         hoRechit_Eta[2000];   //[nHORechits]
+   Float_t         hoRechit_X[2000];   //[nHORechits]
+   Float_t         hoRechit_Y[2000];   //[nHORechits]
+   Float_t         hoRechit_Z[2000];   //[nHORechits]
+   Float_t         hoRechit_T[2000];   //[nHORechits]
+   Float_t         hoRechit_E[2000];   //[nHORechits]
    Int_t           nDt;
    Float_t         dtPhi[2000];   //[nDt]
    Float_t         dtEta[2000];   //[nDt]
@@ -439,8 +540,19 @@ public :
    Float_t         dtDirX[2000];   //[nDt]
    Float_t         dtDirY[2000];   //[nDt]
    Float_t         dtDirZ[2000];   //[nDt]
+   Float_t         dtNRecHits[2000];   //[nCsc]
+   Float_t         dtNRecHits_flag[2000];   //[nCsc]
    Float_t         dtT[2000];   //[nDt]
    Float_t         dtTError[2000];   //[nDt]
+
+   Int_t           nDtRechits;
+   Float_t         dtRechitPhi[2000];   //[nDtRechits]
+   Float_t         dtRechitEta[2000];   //[nDtRechits]
+   Float_t         dtRechitX[2000];   //[nDtRechits]
+   Float_t         dtRechitY[2000];   //[nDtRechits]
+   Float_t         dtRechitZ[2000];   //[nDtRechits]
+   Int_t           dtRechitStation[2000];   //[nDtRechits]
+   Int_t           dtRechitWheel[2000];   //[nDtRechits]
 
    Int_t           nCaloJets;
    Float_t         calojetE[2000];   //[nJets]
@@ -531,6 +643,8 @@ public :
    Bool_t          Flag_badGlobalMuonFilter;
    Bool_t          Flag_duplicateMuonFilter;
    Bool_t          Flag_CSCTightHaloFilter;
+   Bool_t          Flag_globalSuperTightHalo2016Filter;
+   Bool_t          Flag_globalTightHalo2016Filter;
    Bool_t          Flag_hcalLaserEventFilter;
    Bool_t          Flag_EcalDeadCellTriggerPrimitiveFilter;
    Bool_t          Flag_EcalDeadCellBoundaryEnergyFilter;
@@ -546,6 +660,16 @@ public :
    Bool_t          Flag_BadChargedCandidateFilter;
    Bool_t          Flag_ecalBadCalibFilter;
    Bool_t          Flag_METFilters;
+   Bool_t          Flag2_globalSuperTightHalo2016Filter;
+   Bool_t          Flag2_globalTightHalo2016Filter;
+   Bool_t          Flag2_goodVertices;
+   Bool_t          Flag2_BadChargedCandidateFilter;
+   Bool_t          Flag2_BadPFMuonFilter;
+   Bool_t          Flag2_EcalDeadCellTriggerPrimitiveFilter;
+   Bool_t          Flag2_HBHENoiseFilter;
+   Bool_t          Flag2_HBHEIsoNoiseFilter;
+   Bool_t          Flag2_ecalBadCalibFilter;
+   Bool_t          Flag2_eeBadScFilter;
    Bool_t          HLTDecision[601];
    Int_t           HLTPrescale[601];
    Int_t           nGenJets;
@@ -568,6 +692,7 @@ public :
    Float_t         genQScale;
    Float_t         genAlphaQCD;
    Float_t         genAlphaQED;
+   string          *lheComments;
    std::vector<float>   *scaleWeights;
    std::vector<float>   *pdfWeights;
    std::vector<float>   *alphasWeights;
@@ -846,9 +971,69 @@ public :
    TBranch        *b_cscClusterVertexN15;   //!
    TBranch        *b_cscClusterVertexN20;   //!
    TBranch        *b_cscClusterVertexN;   //!
-
-   TBranch        *b_nCscRechitClusters;   //!
    TBranch        *b_cscRechitCluster_match_gParticle_id;
+   TBranch        *b_dtRechitCluster_match_gParticle_id;
+   TBranch        *b_nDtClusters;   //!
+   TBranch        *b_dtClusterX;   //!
+   TBranch        *b_dtClusterY;   //!
+   TBranch        *b_dtClusterZ;   //!
+   TBranch        *b_dtClusterTime;   //!
+   TBranch        *b_dtClusterTimeSpread;   //!
+   TBranch        *b_dtClusterGenMuonDeltaR;   //!
+   TBranch        *b_dtClusterMajorAxis;   //!
+   TBranch        *b_dtClusterMinorAxis;   //!
+   TBranch        *b_dtClusterEtaPhiSpread;   //!
+   TBranch        *b_dtClusterPhiSpread;   //!
+   TBranch        *b_dtClusterEtaSpread;   //!
+   TBranch        *b_dtClusterXSpread;   //!
+   TBranch        *b_dtClusterYSpread;   //!
+   TBranch        *b_dtClusterZSpread;   //!
+   TBranch        *b_dtClusterPhi;   //!
+   TBranch        *b_dtClusterEta;   //!
+   TBranch        *b_dtClusterJetVetoPt;   //!
+   TBranch        *b_dtClusterJetVetoE;   //!
+   TBranch        *b_dtClusterMuonVetoPt;   //!
+   TBranch        *b_dtClusterMuonVetoE;   //!
+   TBranch        *b_dtClusterCaloJetVeto;   //!
+   TBranch        *b_dtClusterSize;   //!
+   TBranch        *b_dtClusterNSegmentChamberPlus11;   //!
+   TBranch        *b_dtClusterNSegmentChamberPlus12;   //!
+   TBranch        *b_dtClusterNSegmentChamberPlus13;   //!
+   TBranch        *b_dtClusterNSegmentChamberPlus21;   //!
+   TBranch        *b_dtClusterNSegmentChamberPlus22;   //!
+   TBranch        *b_dtClusterNSegmentChamberPlus31;   //!
+   TBranch        *b_dtClusterNSegmentChamberPlus32;   //!
+   TBranch        *b_dtClusterNSegmentChamberPlus41;   //!
+   TBranch        *b_dtClusterNSegmentChamberPlus42;   //!
+   TBranch        *b_dtClusterNSegmentChamberMinus11;   //!
+   TBranch        *b_dtClusterNSegmentChamberMinus12;   //!
+   TBranch        *b_dtClusterNSegmentChamberMinus13;   //!
+   TBranch        *b_dtClusterNSegmentChamberMinus21;   //!
+   TBranch        *b_dtClusterNSegmentChamberMinus22;   //!
+   TBranch        *b_dtClusterNSegmentChamberMinus31;   //!
+   TBranch        *b_dtClusterNSegmentChamberMinus32;   //!
+   TBranch        *b_dtClusterNSegmentChamberMinus41;   //!
+   TBranch        *b_dtClusterNSegmentChamberMinus42;   //!
+   TBranch        *b_dtClusterMe11Ratio;   //!
+   TBranch        *b_dtClusterMe12Ratio;   //!
+   TBranch        *b_dtClusterNStation;   //!
+   TBranch        *b_dtClusterMaxStation;   //!
+   TBranch        *b_dtClusterMaxStationRatio;   //!
+   TBranch        *b_dtClusterNChamber;   //!
+   TBranch        *b_dtClusterMaxChamber;   //!
+   TBranch        *b_dtClusterMaxChamberRatio;   //!
+   TBranch        *b_dtClusterVertexR;   //!
+   TBranch        *b_dtClusterVertexZ;   //!
+   TBranch        *b_dtClusterVertexDis;   //!
+   TBranch        *b_dtClusterVertexChi2;   //!
+   TBranch        *b_dtClusterVertexN1;   //!
+   TBranch        *b_dtClusterVertexN5;   //!
+   TBranch        *b_dtClusterVertexN10;   //!
+   TBranch        *b_dtClusterVertexN15;   //!
+   TBranch        *b_dtClusterVertexN20;   //!
+   TBranch        *b_dtClusterVertexN;   //!
+   
+   TBranch        *b_nCscRechitClusters;   //!
    TBranch        *b_cscRechitClusterX;   //!
    TBranch        *b_cscRechitClusterY;   //!
    TBranch        *b_cscRechitClusterZ;   //!
@@ -907,6 +1092,41 @@ public :
    TBranch        *b_cscRechitClusterVertexN15;   //!
    TBranch        *b_cscRechitClusterVertexN20;   //!
    TBranch        *b_cscRechitClusterVertexN;   //!
+
+   TBranch        *b_nDtRechitClusters;   //!
+   TBranch        *b_dtRechitClusterX;   //!
+   TBranch        *b_dtRechitClusterY;   //!
+   TBranch        *b_dtRechitClusterZ;   //!
+   TBranch        *b_dtRechitClusterTime;   //!
+   TBranch        *b_dtRechitClusterTimeSpread;   //!
+   TBranch        *b_dtRechitClusterGenMuonDeltaR;   //!
+   TBranch        *b_dtRechitClusterMajorAxis;   //!
+   TBranch        *b_dtRechitClusterMinorAxis;   //!
+   TBranch        *b_dtRechitClusterEtaPhiSpread;   //!
+   TBranch        *b_dtRechitClusterPhiSpread;   //!
+   TBranch        *b_dtRechitClusterEtaSpread;   //!
+   TBranch        *b_dtRechitClusterXSpread;   //!
+   TBranch        *b_dtRechitClusterYSpread;   //!
+   TBranch        *b_dtRechitClusterZSpread;   //!
+   TBranch        *b_dtRechitClusterPhi;   //!
+   TBranch        *b_dtRechitClusterEta;   //!
+   TBranch        *b_dtRechitClusterJetVetoPt;   //!
+   TBranch        *b_dtRechitClusterJetVetoE;   //!
+   TBranch        *b_dtRechitClusterMuonVetoPt;   //!
+   TBranch        *b_dtRechitClusterMuonVetoE;   //!
+   TBranch        *b_dtRechitClusterCaloJetVeto;   //!
+   TBranch        *b_dtRechitClusterSize;   //!
+   TBranch        *b_dtRechitClusterNStation;   //!
+   TBranch        *b_dtRechitClusterMaxStation;   //!
+   TBranch        *b_dtRechitClusterMaxStationRatio;   //!
+   TBranch        *b_dtRechitClusterNChamber;   //!
+   TBranch        *b_dtRechitClusterMaxChamber;   //!
+   TBranch        *b_dtRechitClusterMaxChamberRatio;   //!
+   TBranch        *b_dtRechitClusterNSegmentStation1;   //!
+   TBranch        *b_dtRechitClusterNSegmentStation2;   //!
+   TBranch        *b_dtRechitClusterNSegmentStation3;   //!
+   TBranch        *b_dtRechitClusterNSegmentStation4;   //!
+
    /*
    TBranch        *b_nCscSegClusters;   //!
    TBranch        *b_cscSegClusterX;   //!
@@ -967,8 +1187,7 @@ public :
    TBranch        *b_cscSegClusterVertexN15;   //!
    TBranch        *b_cscSegClusterVertexN20;   //!
    TBranch        *b_cscSegClusterVertexN;   //!
-   */
-   TBranch        *b_nCsc;   //!
+   */   TBranch        *b_nCsc;   //!
    TBranch        *b_cscPhi;   //!
    TBranch        *b_cscEta;   //!
    TBranch        *b_cscX;   //!
@@ -988,7 +1207,24 @@ public :
    TBranch        *b_rpcY;   //!
    TBranch        *b_rpcZ;   //!
    TBranch        *b_rpcT;   //!
+   TBranch        *b_rpcBx;   //!
    TBranch        *b_rpcTError;   //!
+   TBranch        *b_nHORechits;   //!
+   TBranch        *b_hoRechit_Phi;   //!
+   TBranch        *b_hoRechit_Eta;   //!
+   TBranch        *b_hoRechit_X;   //!
+   TBranch        *b_hoRechit_Y;   //!
+   TBranch        *b_hoRechit_Z;   //!
+   TBranch        *b_hoRechit_E;   //!   
+   TBranch        *b_hoRechit_T;   //!
+   TBranch        *b_nDtRechits;   //!
+   TBranch        *b_dtRechitPhi;   //!
+   TBranch        *b_dtRechitEta;   //!
+   TBranch        *b_dtRechitX;   //!
+   TBranch        *b_dtRechitY;   //!
+   TBranch        *b_dtRechitZ;   //!
+   TBranch        *b_dtRechitStation;   //!   
+   TBranch        *b_dtRechitWheel;   //!
    TBranch        *b_nDt;   //!
    TBranch        *b_dtPhi;   //!
    TBranch        *b_dtEta;   //!
@@ -1090,6 +1326,8 @@ public :
    TBranch        *b_Flag_badGlobalMuonFilter;   //!
    TBranch        *b_Flag_duplicateMuonFilter;   //!
    TBranch        *b_Flag_CSCTightHaloFilter;   //!
+   TBranch        *b_Flag_globalSuperTightHalo2016Filter;   //!
+   TBranch        *b_Flag_globalTightHalo2016Filter;   //!
    TBranch        *b_Flag_hcalLaserEventFilter;   //!
    TBranch        *b_Flag_EcalDeadCellTriggerPrimitiveFilter;   //!
    TBranch        *b_Flag_EcalDeadCellBoundaryEnergyFilter;   //!
@@ -1105,6 +1343,16 @@ public :
    TBranch        *b_Flag_BadChargedCandidateFilter;   //!
    TBranch        *b_Flag_ecalBadCalibFilter;   //!
    TBranch        *b_Flag_METFilters;   //!
+   TBranch        *b_Flag2_globalSuperTightHalo2016Filter;   //!
+   TBranch        *b_Flag2_globalTightHalo2016Filter;   //!
+   TBranch        *b_Flag2_goodVertices;   //!
+   TBranch        *b_Flag2_BadChargedCandidateFilter;   //!
+   TBranch        *b_Flag2_BadPFMuonFilter;   //!
+   TBranch        *b_Flag2_EcalDeadCellTriggerPrimitiveFilter;   //!
+   TBranch        *b_Flag2_HBHENoiseFilter;   //!
+   TBranch        *b_Flag2_HBHEIsoNoiseFilter;   //!
+   TBranch        *b_Flag2_ecalBadCalibFilter;   //!
+   TBranch        *b_Flag2_eeBadScFilter;   //!
    TBranch        *b_HLTDecision;   //!
    TBranch        *b_HLTPrescale;   //!
    TBranch        *b_nGenJets;   //!
@@ -1127,6 +1375,7 @@ public :
    TBranch        *b_genQScale;   //!
    TBranch        *b_genAlphaQCD;   //!
    TBranch        *b_genAlphaQED;   //!
+   TBranch        *b_lheComments;
    TBranch        *b_scaleWeights;   //!
    TBranch        *b_pdfWeights;   //!
    TBranch        *b_alphasWeights;   //!
@@ -1229,6 +1478,7 @@ void llp_event::Init(TTree *tree)
    scaleWeights = 0;
    pdfWeights = 0;
    alphasWeights = 0;
+   lheComments = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -1433,7 +1683,7 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("ecalRechit_GainSwitch1", &ecalRechit_GainSwitch1, &b_ecalRechit_GainSwitch1);
    fChain->SetBranchAddress("ecalRechit_GainSwitch6", &ecalRechit_GainSwitch6, &b_ecalRechit_GainSwitch6);
    fChain->SetBranchAddress("ecalRechit_transpCorr", &ecalRechit_transpCorr, &b_ecalRechit_transpCorr);
-
+   /*
    fChain->SetBranchAddress("nCscClusters", &nCscClusters, &b_nCscClusters);
    fChain->SetBranchAddress("cscClusterX", cscClusterX, &b_cscClusterX);
    fChain->SetBranchAddress("cscClusterY", cscClusterY, &b_cscClusterY);
@@ -1494,7 +1744,66 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("cscClusterVertexN20", cscClusterVertexN20, &b_cscClusterVertexN20);
    fChain->SetBranchAddress("cscClusterVertexN", cscClusterVertexN, &b_cscClusterVertexN);
 
-   /*
+   fChain->SetBranchAddress("nCscSegClusters", &nCscSegClusters, &b_nCscSegClusters);
+   fChain->SetBranchAddress("nDtClusters", &nDtClusters, &b_nDtClusters);
+   fChain->SetBranchAddress("dtClusterX", dtClusterX, &b_dtClusterX);
+   fChain->SetBranchAddress("dtClusterY", dtClusterY, &b_dtClusterY);
+   fChain->SetBranchAddress("dtClusterZ", dtClusterZ, &b_dtClusterZ);
+   fChain->SetBranchAddress("dtClusterTime", dtClusterTime, &b_dtClusterTime);
+   fChain->SetBranchAddress("dtClusterTimeSpread", dtClusterTimeSpread, &b_dtClusterTimeSpread);
+   fChain->SetBranchAddress("dtClusterGenMuonDeltaR", dtClusterGenMuonDeltaR, &b_dtClusterGenMuonDeltaR);
+   fChain->SetBranchAddress("dtClusterMajorAxis", dtClusterMajorAxis, &b_dtClusterMajorAxis);
+   fChain->SetBranchAddress("dtClusterMinorAxis", dtClusterMinorAxis, &b_dtClusterMinorAxis);
+   fChain->SetBranchAddress("dtClusterEtaPhiSpread", dtClusterEtaPhiSpread, &b_dtClusterEtaPhiSpread);
+   fChain->SetBranchAddress("dtClusterPhiSpread", dtClusterPhiSpread, &b_dtClusterPhiSpread);
+   fChain->SetBranchAddress("dtClusterEtaSpread", dtClusterEtaSpread, &b_dtClusterEtaSpread);
+   fChain->SetBranchAddress("dtClusterXSpread", dtClusterXSpread, &b_dtClusterXSpread);
+   fChain->SetBranchAddress("dtClusterYSpread", dtClusterYSpread, &b_dtClusterYSpread);
+   fChain->SetBranchAddress("dtClusterZSpread", dtClusterZSpread, &b_dtClusterZSpread);
+   fChain->SetBranchAddress("dtClusterPhi", dtClusterPhi, &b_dtClusterPhi);
+   fChain->SetBranchAddress("dtClusterEta", dtClusterEta, &b_dtClusterEta);
+   fChain->SetBranchAddress("dtClusterJetVetoPt", dtClusterJetVetoPt, &b_dtClusterJetVetoPt);
+   fChain->SetBranchAddress("dtClusterJetVetoE", dtClusterJetVetoE, &b_dtClusterJetVetoE);
+   fChain->SetBranchAddress("dtClusterMuonVetoPt", dtClusterMuonVetoPt, &b_dtClusterMuonVetoPt);
+   fChain->SetBranchAddress("dtClusterMuonVetoE", dtClusterMuonVetoE, &b_dtClusterMuonVetoE);
+   fChain->SetBranchAddress("dtClusterCaloJetVeto", dtClusterCaloJetVeto, &b_dtClusterCaloJetVeto);
+   fChain->SetBranchAddress("dtClusterSize", dtClusterSize, &b_dtClusterSize);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberPlus11", dtClusterNSegmentChamberPlus11, &b_dtClusterNSegmentChamberPlus11);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberPlus12", dtClusterNSegmentChamberPlus12, &b_dtClusterNSegmentChamberPlus12);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberPlus13", dtClusterNSegmentChamberPlus13, &b_dtClusterNSegmentChamberPlus13);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberPlus21", dtClusterNSegmentChamberPlus21, &b_dtClusterNSegmentChamberPlus21);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberPlus22", dtClusterNSegmentChamberPlus22, &b_dtClusterNSegmentChamberPlus22);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberPlus31", dtClusterNSegmentChamberPlus31, &b_dtClusterNSegmentChamberPlus31);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberPlus32", dtClusterNSegmentChamberPlus32, &b_dtClusterNSegmentChamberPlus32);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberPlus41", dtClusterNSegmentChamberPlus41, &b_dtClusterNSegmentChamberPlus41);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberPlus42", dtClusterNSegmentChamberPlus42, &b_dtClusterNSegmentChamberPlus42);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberMinus11", dtClusterNSegmentChamberMinus11, &b_dtClusterNSegmentChamberMinus11);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberMinus12", dtClusterNSegmentChamberMinus12, &b_dtClusterNSegmentChamberMinus12);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberMinus13", dtClusterNSegmentChamberMinus13, &b_dtClusterNSegmentChamberMinus13);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberMinus21", dtClusterNSegmentChamberMinus21, &b_dtClusterNSegmentChamberMinus21);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberMinus22", dtClusterNSegmentChamberMinus22, &b_dtClusterNSegmentChamberMinus22);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberMinus31", dtClusterNSegmentChamberMinus31, &b_dtClusterNSegmentChamberMinus31);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberMinus32", dtClusterNSegmentChamberMinus32, &b_dtClusterNSegmentChamberMinus32);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberMinus41", dtClusterNSegmentChamberMinus41, &b_dtClusterNSegmentChamberMinus41);
+   fChain->SetBranchAddress("dtClusterNSegmentChamberMinus42", dtClusterNSegmentChamberMinus42, &b_dtClusterNSegmentChamberMinus42);
+   fChain->SetBranchAddress("dtClusterMe11Ratio", dtClusterMe11Ratio, &b_dtClusterMe11Ratio);
+   fChain->SetBranchAddress("dtClusterMe12Ratio", dtClusterMe12Ratio, &b_dtClusterMe12Ratio);
+   fChain->SetBranchAddress("dtClusterNStation", dtClusterNStation, &b_dtClusterNStation);
+   fChain->SetBranchAddress("dtClusterMaxStation", dtClusterMaxStation, &b_dtClusterMaxStation);
+   fChain->SetBranchAddress("dtClusterMaxStationRatio", dtClusterMaxStationRatio, &b_dtClusterMaxStationRatio);
+   fChain->SetBranchAddress("dtClusterNChamber", dtClusterNChamber, &b_dtClusterNChamber);
+   fChain->SetBranchAddress("dtClusterMaxChamber", dtClusterMaxChamber, &b_dtClusterMaxChamber);
+   fChain->SetBranchAddress("dtClusterMaxChamberRatio", dtClusterMaxChamberRatio, &b_dtClusterMaxChamberRatio);
+   fChain->SetBranchAddress("dtClusterVertexR", dtClusterVertexR, &b_dtClusterVertexR);
+   fChain->SetBranchAddress("dtClusterVertexZ", dtClusterVertexZ, &b_dtClusterVertexZ);
+   fChain->SetBranchAddress("dtClusterVertexDis", dtClusterVertexDis, &b_dtClusterVertexDis);
+   fChain->SetBranchAddress("dtClusterVertexChi2", dtClusterVertexChi2, &b_dtClusterVertexChi2);
+   fChain->SetBranchAddress("dtClusterVertexN1", dtClusterVertexN1, &b_dtClusterVertexN1);
+   fChain->SetBranchAddress("dtClusterVertexN5", dtClusterVertexN5, &b_dtClusterVertexN5);
+   fChain->SetBranchAddress("dtClusterVertexN10", dtClusterVertexN10, &b_dtClusterVertexN10);
+   fChain->SetBranchAddress("dtClusterVertexN15", dtClusterVertexN15, &b_dtClusterVertexN15);
+   fChain->SetBranchAddress("dtClusterVertexN20", dtClusterVertexN20, &b_dtClusterVertexN20);
+   fChain->SetBranchAddress("dtClusterVertexN", dtClusterVertexN, &b_dtClusterVertexN);
    fChain->SetBranchAddress("nCscSegClusters", &nCscSegClusters, &b_nCscSegClusters);
    fChain->SetBranchAddress("cscSegClusterX", cscSegClusterX, &b_cscSegClusterX);
    fChain->SetBranchAddress("cscSegClusterY", cscSegClusterY, &b_cscSegClusterY);
@@ -1555,9 +1864,19 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("cscSegClusterVertexN20", cscSegClusterVertexN20, &b_cscSegClusterVertexN20);
    fChain->SetBranchAddress("cscSegClusterVertexN", cscSegClusterVertexN, &b_cscSegClusterVertexN);
    */
+   
+   fChain->SetBranchAddress("nCsc", &nCsc, &b_nCsc);
+   fChain->SetBranchAddress("cscPhi", cscPhi, &b_cscPhi);
+   fChain->SetBranchAddress("cscEta", cscEta, &b_cscEta);
+   fChain->SetBranchAddress("cscX", cscX, &b_cscX);
+   fChain->SetBranchAddress("cscY", cscY, &b_cscY);
+   fChain->SetBranchAddress("cscZ", cscZ, &b_cscZ);
+   fChain->SetBranchAddress("cscDirectionX", cscDirectionX, &b_cscDirectionX);
+   fChain->SetBranchAddress("cscDirectionY", cscDirectionY, &b_cscDirectionY);
+   fChain->SetBranchAddress("cscDirectionZ", cscDirectionZ, &b_cscDirectionZ);
+
    fChain->SetBranchAddress("nCscRechitClusters", &nCscRechitClusters, &b_nCscRechitClusters);
    fChain->SetBranchAddress("cscRechitCluster_match_gParticle_id", &cscRechitCluster_match_gParticle_id, &b_cscRechitCluster_match_gParticle_id);
-
    fChain->SetBranchAddress("cscRechitClusterX", cscRechitClusterX, &b_cscRechitClusterX);
    fChain->SetBranchAddress("cscRechitClusterY", cscRechitClusterY, &b_cscRechitClusterY);
    fChain->SetBranchAddress("cscRechitClusterZ", cscRechitClusterZ, &b_cscRechitClusterZ);
@@ -1617,15 +1936,41 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("cscRechitClusterVertexN20", cscRechitClusterVertexN20, &b_cscRechitClusterVertexN20);
    fChain->SetBranchAddress("cscRechitClusterVertexN", cscRechitClusterVertexN, &b_cscRechitClusterVertexN);
 
-   fChain->SetBranchAddress("nCsc", &nCsc, &b_nCsc);
-   fChain->SetBranchAddress("cscPhi", cscPhi, &b_cscPhi);
-   fChain->SetBranchAddress("cscEta", cscEta, &b_cscEta);
-   fChain->SetBranchAddress("cscX", cscX, &b_cscX);
-   fChain->SetBranchAddress("cscY", cscY, &b_cscY);
-   fChain->SetBranchAddress("cscZ", cscZ, &b_cscZ);
-   fChain->SetBranchAddress("cscDirectionX", cscDirectionX, &b_cscDirectionX);
-   fChain->SetBranchAddress("cscDirectionY", cscDirectionY, &b_cscDirectionY);
-   fChain->SetBranchAddress("cscDirectionZ", cscDirectionZ, &b_cscDirectionZ);
+   fChain->SetBranchAddress("nDtRechitClusters", &nDtRechitClusters, &b_nDtRechitClusters);
+   fChain->SetBranchAddress("dtRechitCluster_match_gParticle_id", &dtRechitCluster_match_gParticle_id, &b_dtRechitCluster_match_gParticle_id);
+   fChain->SetBranchAddress("dtRechitClusterX", dtRechitClusterX, &b_dtRechitClusterX);
+   fChain->SetBranchAddress("dtRechitClusterY", dtRechitClusterY, &b_dtRechitClusterY);
+   fChain->SetBranchAddress("dtRechitClusterZ", dtRechitClusterZ, &b_dtRechitClusterZ);
+   fChain->SetBranchAddress("dtRechitClusterTime", dtRechitClusterTime, &b_dtRechitClusterTime);
+   fChain->SetBranchAddress("dtRechitClusterTimeSpread", dtRechitClusterTimeSpread, &b_dtRechitClusterTimeSpread);
+   fChain->SetBranchAddress("dtRechitClusterGenMuonDeltaR", dtRechitClusterGenMuonDeltaR, &b_dtRechitClusterGenMuonDeltaR);
+   fChain->SetBranchAddress("dtRechitClusterMajorAxis", dtRechitClusterMajorAxis, &b_dtRechitClusterMajorAxis);
+   fChain->SetBranchAddress("dtRechitClusterMinorAxis", dtRechitClusterMinorAxis, &b_dtRechitClusterMinorAxis);
+   fChain->SetBranchAddress("dtRechitClusterEtaPhiSpread", dtRechitClusterEtaPhiSpread, &b_dtRechitClusterEtaPhiSpread);
+   fChain->SetBranchAddress("dtRechitClusterPhiSpread", dtRechitClusterPhiSpread, &b_dtRechitClusterPhiSpread);
+   fChain->SetBranchAddress("dtRechitClusterEtaSpread", dtRechitClusterEtaSpread, &b_dtRechitClusterEtaSpread);
+   fChain->SetBranchAddress("dtRechitClusterXSpread", dtRechitClusterXSpread, &b_dtRechitClusterXSpread);
+   fChain->SetBranchAddress("dtRechitClusterYSpread", dtRechitClusterYSpread, &b_dtRechitClusterYSpread);
+   fChain->SetBranchAddress("dtRechitClusterZSpread", dtRechitClusterZSpread, &b_dtRechitClusterZSpread);
+   fChain->SetBranchAddress("dtRechitClusterPhi", dtRechitClusterPhi, &b_dtRechitClusterPhi);
+   fChain->SetBranchAddress("dtRechitClusterEta", dtRechitClusterEta, &b_dtRechitClusterEta);
+   fChain->SetBranchAddress("dtRechitClusterJetVetoPt", dtRechitClusterJetVetoPt, &b_dtRechitClusterJetVetoPt);
+   fChain->SetBranchAddress("dtRechitClusterJetVetoE", dtRechitClusterJetVetoE, &b_dtRechitClusterJetVetoE);
+   fChain->SetBranchAddress("dtRechitClusterMuonVetoPt", dtRechitClusterMuonVetoPt, &b_dtRechitClusterMuonVetoPt);
+   fChain->SetBranchAddress("dtRechitClusterMuonVetoE", dtRechitClusterMuonVetoE, &b_dtRechitClusterMuonVetoE);
+   fChain->SetBranchAddress("dtRechitClusterCaloJetVeto", dtRechitClusterCaloJetVeto, &b_dtRechitClusterCaloJetVeto);
+   fChain->SetBranchAddress("dtRechitClusterSize", dtRechitClusterSize, &b_dtRechitClusterSize);
+   fChain->SetBranchAddress("dtRechitClusterNSegmentStation1", dtRechitClusterNSegmentStation1, &b_dtRechitClusterNSegmentStation1);
+   fChain->SetBranchAddress("dtRechitClusterNSegmentStation2", dtRechitClusterNSegmentStation2, &b_dtRechitClusterNSegmentStation2);
+   fChain->SetBranchAddress("dtRechitClusterNSegmentStation3", dtRechitClusterNSegmentStation3, &b_dtRechitClusterNSegmentStation3);
+   fChain->SetBranchAddress("dtRechitClusterNSegmentStation4", dtRechitClusterNSegmentStation4, &b_dtRechitClusterNSegmentStation4);
+   fChain->SetBranchAddress("dtRechitClusterNStation", dtRechitClusterNStation, &b_dtRechitClusterNStation);
+   fChain->SetBranchAddress("dtRechitClusterMaxStation", dtRechitClusterMaxStation, &b_dtRechitClusterMaxStation);
+   fChain->SetBranchAddress("dtRechitClusterMaxStationRatio", dtRechitClusterMaxStationRatio, &b_dtRechitClusterMaxStationRatio);
+   fChain->SetBranchAddress("dtRechitClusterNChamber", dtRechitClusterNChamber, &b_dtRechitClusterNChamber);
+   fChain->SetBranchAddress("dtRechitClusterMaxChamber", dtRechitClusterMaxChamber, &b_dtRechitClusterMaxChamber);
+   fChain->SetBranchAddress("dtRechitClusterMaxChamberRatio", dtRechitClusterMaxChamberRatio, &b_dtRechitClusterMaxChamberRatio);
+
    fChain->SetBranchAddress("cscNRecHits", cscNRecHits, &b_cscNRecHits);
    fChain->SetBranchAddress("cscNRecHits_flag", cscNRecHits_flag, &b_cscNRecHits_flag);
    fChain->SetBranchAddress("cscT", cscT, &b_cscT);
@@ -1637,7 +1982,24 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("rpcY", rpcY, &b_rpcY);
    fChain->SetBranchAddress("rpcZ", rpcZ, &b_rpcZ);
    fChain->SetBranchAddress("rpcT", rpcT, &b_rpcT);
+   fChain->SetBranchAddress("rpcBx", rpcBx, &b_rpcBx);
    fChain->SetBranchAddress("rpcTError", rpcTError, &b_rpcTError);
+   fChain->SetBranchAddress("nHORechits", &nHORechits, &b_nHORechits);
+   fChain->SetBranchAddress("hoRechit_Phi", hoRechit_Phi, &b_hoRechit_Phi);
+   fChain->SetBranchAddress("hoRechit_Eta", hoRechit_Eta, &b_hoRechit_Eta);
+   fChain->SetBranchAddress("hoRechit_X", hoRechit_X, &b_hoRechit_X);
+   fChain->SetBranchAddress("hoRechit_Y", hoRechit_Y, &b_hoRechit_Y);
+   fChain->SetBranchAddress("hoRechit_Z", hoRechit_Z, &b_hoRechit_Z);
+   fChain->SetBranchAddress("hoRechit_T", hoRechit_T, &b_hoRechit_T);
+   fChain->SetBranchAddress("hoRechit_E", hoRechit_E, &b_hoRechit_E);
+   fChain->SetBranchAddress("nDtRechits", &nDtRechits, &b_nDtRechits);
+   fChain->SetBranchAddress("dtRechitPhi", dtRechitPhi, &b_dtRechitPhi);
+   fChain->SetBranchAddress("dtRechitEta", dtRechitEta, &b_dtRechitEta);
+   fChain->SetBranchAddress("dtRechitX", dtRechitX, &b_dtRechitX);
+   fChain->SetBranchAddress("dtRechitY", dtRechitY, &b_dtRechitY);
+   fChain->SetBranchAddress("dtRechitZ", dtRechitZ, &b_dtRechitZ);
+   fChain->SetBranchAddress("dtRechitStation", dtRechitStation, &b_dtRechitStation);
+   fChain->SetBranchAddress("dtRechitWhee;", dtRechitWheel, &b_dtRechitWheel);
    fChain->SetBranchAddress("nDt", &nDt, &b_nDt);
    fChain->SetBranchAddress("dtPhi", dtPhi, &b_dtPhi);
    fChain->SetBranchAddress("dtEta", dtEta, &b_dtEta);
@@ -1739,6 +2101,8 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("Flag_badGlobalMuonFilter", &Flag_badGlobalMuonFilter, &b_Flag_badGlobalMuonFilter);
    fChain->SetBranchAddress("Flag_duplicateMuonFilter", &Flag_duplicateMuonFilter, &b_Flag_duplicateMuonFilter);
    fChain->SetBranchAddress("Flag_CSCTightHaloFilter", &Flag_CSCTightHaloFilter, &b_Flag_CSCTightHaloFilter);
+   fChain->SetBranchAddress("Flag_globalSuperTightHalo2016Filter", &Flag_globalSuperTightHalo2016Filter, &b_Flag_globalSuperTightHalo2016Filter);
+   fChain->SetBranchAddress("Flag_globalTightHalo2016Filter", &Flag_globalTightHalo2016Filter, &b_Flag_globalTightHalo2016Filter);
    fChain->SetBranchAddress("Flag_hcalLaserEventFilter", &Flag_hcalLaserEventFilter, &b_Flag_hcalLaserEventFilter);
    fChain->SetBranchAddress("Flag_EcalDeadCellTriggerPrimitiveFilter", &Flag_EcalDeadCellTriggerPrimitiveFilter, &b_Flag_EcalDeadCellTriggerPrimitiveFilter);
    fChain->SetBranchAddress("Flag_EcalDeadCellBoundaryEnergyFilter", &Flag_EcalDeadCellBoundaryEnergyFilter, &b_Flag_EcalDeadCellBoundaryEnergyFilter);
@@ -1754,6 +2118,16 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("Flag_BadChargedCandidateFilter", &Flag_BadChargedCandidateFilter, &b_Flag_BadChargedCandidateFilter);
    fChain->SetBranchAddress("Flag_ecalBadCalibFilter", &Flag_ecalBadCalibFilter, &b_Flag_ecalBadCalibFilter);
    fChain->SetBranchAddress("Flag_METFilters", &Flag_METFilters, &b_Flag_METFilters);
+   fChain->SetBranchAddress("Flag2_globalSuperTightHalo2016Filter", &Flag2_globalSuperTightHalo2016Filter, &b_Flag2_globalSuperTightHalo2016Filter);
+   fChain->SetBranchAddress("Flag2_globalTightHalo2016Filter", &Flag2_globalTightHalo2016Filter, &b_Flag2_globalTightHalo2016Filter);
+   fChain->SetBranchAddress("Flag2_goodVertices", &Flag2_goodVertices, &b_Flag2_goodVertices);
+   fChain->SetBranchAddress("Flag2_BadChargedCandidateFilter", &Flag2_BadChargedCandidateFilter, &b_Flag2_BadChargedCandidateFilter);
+   fChain->SetBranchAddress("Flag2_BadPFMuonFilter", &Flag2_BadPFMuonFilter, &b_Flag2_BadPFMuonFilter);
+   fChain->SetBranchAddress("Flag2_EcalDeadCellTriggerPrimitiveFilter", &Flag2_EcalDeadCellTriggerPrimitiveFilter, &b_Flag2_EcalDeadCellTriggerPrimitiveFilter);
+   fChain->SetBranchAddress("Flag2_HBHENoiseFilter", &Flag2_HBHENoiseFilter, &b_Flag2_HBHENoiseFilter);
+   fChain->SetBranchAddress("Flag2_HBHEIsoNoiseFilter", &Flag2_HBHEIsoNoiseFilter, &b_Flag2_HBHEIsoNoiseFilter);
+   fChain->SetBranchAddress("Flag2_ecalBadCalibFilter", &Flag2_ecalBadCalibFilter, &b_Flag2_ecalBadCalibFilter);
+   fChain->SetBranchAddress("Flag2_eeBadScFilter", &Flag2_eeBadScFilter, &b_Flag2_eeBadScFilter);
    fChain->SetBranchAddress("HLTDecision", HLTDecision, &b_HLTDecision);
    fChain->SetBranchAddress("HLTPrescale", HLTPrescale, &b_HLTPrescale);
    fChain->SetBranchAddress("nGenJets", &nGenJets, &b_nGenJets);
@@ -1776,6 +2150,7 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("genQScale", &genQScale, &b_genQScale);
    fChain->SetBranchAddress("genAlphaQCD", &genAlphaQCD, &b_genAlphaQCD);
    fChain->SetBranchAddress("genAlphaQED", &genAlphaQED, &b_genAlphaQED);
+   fChain->SetBranchAddress("lheComments", &lheComments, &b_lheComments);
    fChain->SetBranchAddress("scaleWeights", &scaleWeights, &b_scaleWeights);
    fChain->SetBranchAddress("pdfWeights", &pdfWeights, &b_pdfWeights);
    fChain->SetBranchAddress("alphasWeights", &alphasWeights, &b_alphasWeights);

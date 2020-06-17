@@ -33,9 +33,9 @@ then
 	cd ${CMSSW_BASE}/src/
 	workDir=`pwd`
 	echo "entering directory: ${workDir}"
+	ulimit -c 0
 	source /cvmfs/cms.cern.ch/cmsset_default.sh
 	export SCRAM_ARCH=slc7_amd64_gcc630
-	ulimit -c 0
 	eval `scram runtime -sh`
 	echo `which root`
 
@@ -64,7 +64,9 @@ then
 		./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${analyzerTag}
 		echo ${outputfile}
 		echo ${outputDirectory}
-
+		ls *root > output.txt
+		echo "Output ROOT files: "
+		cat output.txt
 		##^_^##
 		echo "RazorRun_T2 finished"
 		date
@@ -74,23 +76,37 @@ then
 
 		##job finished, copy file to T2
 		echo "copying output file to /mnt/hadoop/${outputDirectory}"
-		if [ -f ${outputfile} ]
-		then
-			eval `scram unsetenv -sh`
-			gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}
-			gfal-copy --checksum-mode=both ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
-			#mkdir -p ${outputDirectory}
-			#cp ${outputfile} ${outputDirectory}/${outputfile}
-		else
-			echo "output doesn't exist"
-		fi
-		if [ -f /mnt/hadoop/${outputDirectory}/${outputfile} ]
-		#if [ -f /${outputDirectory}/${outputfile} ]
-		then
-			echo "ZZZZAAAA ============ good news, job finished successfully "
-		else
-			echo "YYYYZZZZ ============ somehow job failed, please consider resubmitting"
-		fi
+		eval `scram unsetenv -sh`
+		gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}	
+		while IFS= read -r line
+		do
+        		echo $line	
+			gfal-copy --checksum-mode=both ${line} gsiftp://transfer.ultralight.org//${outputDirectory}/${line}
+			if [ -f /mnt/hadoop/${outputDirectory}/${line} ]
+			then
+				echo ${line} "copied"
+			else
+				echo ${line} "not copied"
+			fi
+		done <"output.txt"
+
+		#if [ -f ${outputfile} ]
+		#then
+		#	eval `scram unsetenv -sh`
+		#	gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}
+		#	gfal-copy --checksum-mode=both ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
+		#	#mkdir -p ${outputDirectory}
+		#	#cp ${outputfile} ${outputDirectory}/${outputfile}
+		#else
+		#	echo "output doesn't exist"
+		#fi
+		#if [ -f /mnt/hadoop/${outputDirectory}/${outputfile} ]
+		##if [ -f /${outputDirectory}/${outputfile} ]
+		#then
+		#	echo "ZZZZAAAA ============ good news, job finished successfully "
+		#else
+		#	echo "YYYYZZZZ ============ somehow job failed, please consider resubmitting"
+		#fi
 	else
 		echo echo "WWWWYYYY ============= failed to access file RazorRun_T2, job anandoned"
 	fi

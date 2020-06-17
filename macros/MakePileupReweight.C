@@ -2,7 +2,7 @@
 //
 // Simple Example
 //
-//root -l llp_analyzer/macros/ObjectStudies/MakeElectronEfficiencyPlots.C+'("/afs/cern.ch/work/s/sixie/public/Run2SUSY/ElectronNtuple/ElectronNtuple_PromptGenLevel_TTJets_25ns.root",-1,"Electron")'
+//root -l macros/MakePileupReweight.C(0,2016)
 //
 //________________________________________________________________________________________________
 
@@ -52,47 +52,52 @@ TH1F* NormalizeHist(TH1F *originalHist) {
 
 
 
-void MakePileupReweight(int option = 0) {
+void MakePileupReweight(int option = 0, int year = 2018) {
 
 
   TFile *pileupTargetFile = 0;
   TFile *pileupSourceFile = 0;
   TFile *file = 0 ;
-
-  //For 2016 Data
-  // pileupSourceFile = new TFile("llp_analyzer/data/PileupWeights/PileupSource_MC80X_Summer16.root", "READ");
-  // if (option == 0) pileupTargetFile = new TFile("llp_analyzer/data/PileupWeights/PileupTarget_2016_36p2ifb.root", "READ");
-  // else if (option == 1) pileupTargetFile = new TFile("llp_analyzer/data/PileupWeights/PileupTarget_2016_36p2ifb_SysUp.root", "READ");
-  // else if (option == 2) pileupTargetFile = new TFile("llp_analyzer/data/PileupWeights/PileupTarget_2016_36p2ifb_SysDown.root", "READ");
-  // else {
-  //   return;
-  // }
-  // file = TFile::Open("PileupReweight_Summer16_2016_36p2ifb.root", "UPDATE");
-
-  //For 2017 Data
-  // pileupSourceFile = new TFile("llp_analyzer/data/PileupWeights/PileupSource_MC_Fall2017.root", "READ");
-  // // /afs/cern.ch/user/j/jmao/work/public/releases/CMSSW_9_2_1/src/llp_analyzer/data/PileupWeights/PileupSource_MC_Fall2017.root
-  // if (option == 0) pileupTargetFile = new TFile("llp_analyzer/data/PileupWeights/PileupTarget_2017Rereco_41p2ifb.root", "READ");
-  // else if (option == 1) pileupTargetFile = new TFile("llp_analyzer/data/PileupWeights/PileupTarget_2017Rereco_41p2ifb_SysUp.root", "READ");
-  // else if (option == 2) pileupTargetFile = new TFile("llp_analyzer/data/PileupWeights/PileupTarget_2017Rereco_41p2ifb_SysDown.root", "READ");
-  // else {
-  //   return;
-  // }
-
-  // 2018 signal sample
-
   char* cmsswPath;
   string pathname = getenv("CMSSW_BASE");
-  pileupSourceFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupSource_MC_ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18.root", pathname.c_str()), "READ");
-  // /afs/cern.ch/user/j/jmao/work/public/releases/CMSSW_9_2_1/src/llp_analyzer/data/PileupWeights/PileupSource_MC_Fall2017.root
-  if (option == 0) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2018.root", pathname.c_str()), "READ");
-  else if (option == 1) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2018_SysUp.root", pathname.c_str()), "READ");
-  else if (option == 2) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2018_SysDown.root", pathname.c_str()), "READ");
-  else {
-    return;
-  }
-  file = TFile::Open("PileupReweight_MC_ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18.root", "UPDATE");
 
+
+  if (year == 2018)
+  {
+    pileupSourceFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupSource_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root", pathname.c_str()), "READ");
+    if (option == 0) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2018.root", pathname.c_str()), "READ");
+    else if (option == 1) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2018_SysUp.root", pathname.c_str()), "READ");
+    else if (option == 2) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2018_SysDown.root", pathname.c_str()), "READ");
+    else {
+      return;
+    }
+    file = TFile::Open(Form("%s/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root", pathname.c_str()), "UPDATE");
+  }
+  else if (year == 2017)
+  {
+    pileupSourceFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupSource_MC_Fall17_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root", pathname.c_str()), "READ");
+    if (option == 0) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2017EOYReReco_41p5ifb.root", pathname.c_str()), "READ");
+    else if (option == 1) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2017EOYReReco_41p5ifb_SysUp.root", pathname.c_str()), "READ");
+    else if (option == 2) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2017EOYReReco_41p5ifb_SysDown.root", pathname.c_str()), "READ");
+    else {
+      return;
+    }
+    file = TFile::Open(Form("%s/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall17_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root", pathname.c_str()), "UPDATE");
+  }
+  else if (year == 2016)
+  {
+    pileupSourceFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupSource_MC_Summer16_ggH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8.root", pathname.c_str()), "READ");
+    if (option == 0) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2016Rereco_07Aug17.root", pathname.c_str()), "READ");
+    else if (option == 1) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2016Rereco_07Aug17_SysUp.root", pathname.c_str()), "READ");
+    else if (option == 2) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2016Rereco_07Aug17_SysDown.root", pathname.c_str()), "READ");
+    else {
+      return;
+    }
+    file = TFile::Open(Form("%s/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Summer16_ggH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8.root", pathname.c_str()), "UPDATE");
+  }
+  else{
+    cout<<"[ERROR]: YEAR IS NOT CORRECT"<<endl;
+  }
 
   TH1F *pileupTargetHist = (TH1F*)pileupTargetFile->Get("pileup");
   assert(pileupTargetHist);
