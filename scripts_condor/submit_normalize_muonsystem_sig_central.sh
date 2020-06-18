@@ -43,8 +43,8 @@ do
                         do
 				echo "Sample " ${sample} "mx " ${mx} "ctau " ${ctau}
 				sample_long=${sample%_MH125*}_MH-125_MS-${mx}_ctau-${ctau}_${tune}_13TeV-powheg-pythia8
-				analyzer=llp_MuonSystem_bdt
-				inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p15/MC_${year}/v3/v10/
+				analyzer=llp_MuonSystem
+				inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/driftTube/V1p15/MC_${year}/v3/v2/
 				outputDir=${inputDir}normalized
 				echo ${inputDir}
 				rm -f submit/${analyzer}_normalize_${year}_${sample_long}.jdl

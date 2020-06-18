@@ -1,7 +1,6 @@
 ver=V1p15
 outputRoot=Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018-HighMET-17Sep2018.root
-#outputRoot=Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018CD-HighMET-17Sep2018.root
-dir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/Data2018/v1/v9/normalized/
+dir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/driftTube/${ver}/Data2018/v4/v4/normalized/
 eval `scram runtime -sh`
 
 

@@ -8,12 +8,32 @@ else
    cp ${CMSSW_BASE}/src/llp_analyzer/bin/Run$2 .
    #cp ${CMSSW_BASE}/src/llp_analyzer/data/JEC/Autumn18_RunsABCD_V19_DATA.tar.gz .   
    #cp ${CMSSW_BASE}/src/llp_analyzer/data/JEC/Autumn18_V19_MC.tar.gz .
-
+   # cp ${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18.root .
+   # cp ${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_2017_41p2ifb.root .
+   # cp ${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_Summer16_2016_36p2ifb.root .   
+   # cp /mnt/hadoop/store/user/jmao/AllUNeed4Razor.tgz ./
+   # cp /mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/SusyEwkHgg/Aux/RazorRunAuxFiles_Expanded.tar.gz ./
+   # cp /mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/SusyEwkHgg/Aux/ElectronEffFastsimToFullsimCorrectionFactors.2016.root ./
+   # cp /mnt/hadoop/store/group/phys_susy/razor/Run2Analysis/ScaleFactors/ScaleFactors_07Aug2017Rereco_2016data.tgz ./
    cp ${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall17_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root .
    cp ${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root .
    cp ${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Summer16_ggH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8.root .
    cp ${CMSSW_BASE}/src/llp_analyzer/data/HiggsPtWeights/ggH_HiggsPtReweight_NNLOPS.root .
    tar vxzf JEC.tar.gz
+   # tar vxzf Autumn18_RunsABCD_V19_DATA.tar.gz
+   # tar vxzf Autumn18_V19_MC.tar.gz
+
+    #tar vxzf ScaleFactors_07Aug2017Rereco_2016data.tgz
+
+    #tar vxzf RazorRunAuxFiles_Expanded.tar.gz
+    #tar vxzf AllUNeed4Razor.tgz
+    #tar vxzf JEC_Summer16_23Sep2016V3.tgz
+    #tar vxzf JEC_Summer16_23Sep2016V4.tgz
+    #tar vxzf Fall17_17Nov2017_V6_DATA_V8_MC.tgz
+    #tar vxzf Fall17_17Nov2017_V32_DATA_MC.tgz
+    #tar vxzf Spring16_FastSimV1.tgz
+    #cp RazorRunAuxFiles_Expanded/* .
+
    echo $1 $2
     ./Run$2 $1 ${@:3}
     rm -rf Run$2

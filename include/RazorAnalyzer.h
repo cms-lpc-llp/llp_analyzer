@@ -46,8 +46,9 @@ class RazorAnalyzer: public llp_event {
         void EnableGenParticles();
         void EnableRazor();
         void EnableCSC();
-        void EnableDT();
-
+	void EnableDT();
+	void EnableRPC();
+	void EnableHO();
         void EnableEcalRechits();
         void EnableAll();
         void EnableAllWithEcalRechits();
@@ -127,7 +128,7 @@ class RazorAnalyzer: public llp_event {
 	bool photonPassTightID(int i, bool use25nsCuts = true);
 	bool photonPassLooseIso(int i, bool use25nsCuts = true, bool usePrivatePF = false, bool usePFClusterIso = false);
 	//bool photonPassMediumIso(int i, bool use25nsCuts = true, bool usePrivatePF = false, bool usePFClusterIso = false);
-  bool photonPassMediumIso(int i, bool use25nsCuts = true, bool usePrivatePF = false);
+	bool photonPassMediumIso(int i, bool use25nsCuts = true, bool usePrivatePF = false);
 	bool photonPassTightIso(int i, bool use25nsCuts = true, bool usePrivatePF = false, bool usePFClusterIso = false);
         bool isLoosePhoton(int i, bool use25nsCuts = true);
         bool isMediumPhoton(int i, bool use25nsCuts = true);

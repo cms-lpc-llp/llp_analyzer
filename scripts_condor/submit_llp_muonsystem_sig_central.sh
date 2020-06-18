@@ -31,18 +31,20 @@ do
 	do
 		echo "Sample " ${sample}
 		version=/V1p15/MC_${year}/v3/
-		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v10/${sample}
+		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/driftTube/${version}/v2/${sample}
 		#${sample%_HToSS*}_HToSSTobbbb_MH-125_MS-${mx}_ctau-${ctau_cm}_${tune}_13TeV-powheg-pythia8
 		echo ${output}
 		inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
 		nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
-		maxjob=`python -c "print int($nfiles.0/$filesPerJob)+1"`
+		#maxjob=`python -c "print int($nfiles.0/$filesPerJob)+1"`
+		maxjob=`python -c "print int(0)+1"`
 		mod=`python -c "print int($nfiles.0%$filesPerJob)"`
 		if [ ${mod} -eq 0 ]
 		then
-		        maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
+		        maxjob=`python -c "print int(0)+1"`
+			#maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 		fi
-		analyzer=llp_MuonSystem_cluster
+		analyzer=llp_MuonSystem
 		if [ ${year} == "Fall18" ]
 		then
 		        echo ${year}

@@ -1,6 +1,6 @@
 ver=V1p15
 outputRoot=Run2_displacedJetMuonNtupler_${ver}_Data2016_Run2016-HighMET-07Aug17.root
-dir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/Data2016/v1/v9/normalized/
+dir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/driftTube/${ver}/Data2016/v4/v4/normalized/
 eval `scram runtime -sh`
 hadd $outputRoot /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2016_Run2016B-HighMET-07Aug17_ver1.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2016_Run2016B-HighMET-07Aug17_ver2.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2016_Run2016C-HighMET-07Aug17.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2016_Run2016D-HighMET-07Aug17.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2016_Run2016E-HighMET-07Aug17.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2016_Run2016F-HighMET-07Aug17.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2016_Run2016G-HighMET-07Aug17.root /mnt/hadoop/$dir/Run2_displacedJetMuonNtupler_${ver}_Data2016_Run2016H-HighMET-07Aug17.root
 

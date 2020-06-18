@@ -56,9 +56,7 @@ do
 	#ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8 \
 	#VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8
 	for sample in \
-        VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-        ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-        ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
+	ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
 	do
 	        echo "${list_dir}${sample}.txt"
 	        rm -f ${list_dir}${sample}.txt

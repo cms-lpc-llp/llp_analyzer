@@ -235,6 +235,7 @@ public :
    Int_t           cscRechitsWGroupsBX[50000];   //[ncscRechits]
    UInt_t          cscRechitsNWireGroups[50000];   //[ncscRechits]
    Int_t           cscRechitsDetId[50000];   //[ncscRechits]
+
    Int_t           nCscRechitClusters;
    Float_t         cscRechitCluster_match_cscSegCluster_minDeltaR[20];   //[nCscRechitClusters]
    Int_t           cscRechitCluster_match_cscSegCluster_index[20];   //[nCscRechitClusters]
@@ -922,11 +923,6 @@ public :
    TBranch        *b_cscRechitsNWireGroups;   //!
    TBranch        *b_cscRechitsDetId;   //!
    TBranch        *b_nCscRechitClusters;   //!
-   TBranch        *b_cscRechitCluster_match_cscSegCluster_minDeltaR;   //!
-   TBranch        *b_cscRechitCluster_match_cscSegCluster_index;   //!
-   TBranch        *b_cscRechitCluster_match_gParticle_minDeltaR;   //!
-   TBranch        *b_cscRechitCluster_match_gParticle_index;   //!
-   TBranch        *b_cscRechitCluster_match_gParticle_id;   //!
    TBranch        *b_cscRechitClusterX;   //!
    TBranch        *b_cscRechitClusterY;   //!
    TBranch        *b_cscRechitClusterZ;   //!
@@ -985,6 +981,11 @@ public :
    TBranch        *b_cscRechitClusterVertexN15;   //!
    TBranch        *b_cscRechitClusterVertexN20;   //!
    TBranch        *b_cscRechitClusterVertexN;   //!
+   TBranch        *b_cscRechitCluster_match_cscSegCluster_minDeltaR;   //!
+   TBranch        *b_cscRechitCluster_match_cscSegCluster_index;   //!
+   TBranch        *b_cscRechitCluster_match_gParticle_minDeltaR;   //!
+   TBranch        *b_cscRechitCluster_match_gParticle_index;   //!
+   TBranch        *b_cscRechitCluster_match_gParticle_id;   //!
    TBranch        *b_nCscSegClusters;   //!
    TBranch        *b_cscSegCluster_match_gParticle_minDeltaR;   //!
    TBranch        *b_cscSegCluster_match_gParticle_index;   //!
@@ -1466,6 +1467,7 @@ void llp_event::Init(TTree *tree)
    scaleWeights = 0;
    pdfWeights = 0;
    alphasWeights = 0;
+   lheComments = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
