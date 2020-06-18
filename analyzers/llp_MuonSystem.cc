@@ -294,7 +294,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     //std::cout << "deb1 " << jentry << std::endl;
 
 
-    cout<<*lheComments<<endl;
+    //cout<<*lheComments<<endl;
     cout<<"parsing file "<<*lheComments<<endl;
     if (!isData && signalScan)
     {
