@@ -41,7 +41,7 @@ MC_Fall18 \
 MC_Fall17 \
 MC_Summer16
 do
-	version=displacedJetMuonNtuple/V1p15/${year}/v3/sixie/
+	version=displacedJetMuonNtuple/V1p17/${year}/v1/sixie/
 	root_dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/${version}/
 	list_dir=$CMSSW_BASE/src/llp_analyzer/lists/${version}
 	echo $list_dir
@@ -53,12 +53,12 @@ do
 	else
 		tune=TuneCP5
 	fi
-	#ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8 \
-	#VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8
 	for sample in \
+	VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8 \
         VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
         ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-        ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
+        ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8 \
+	ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
 	do
 	        echo "${list_dir}${sample}.txt"
 	        rm -f ${list_dir}${sample}.txt

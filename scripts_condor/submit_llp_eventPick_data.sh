@@ -52,7 +52,7 @@ do
 		echo "Sample " ${sample}
 		#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
 		version=/${ver}/${year}/v1/
-		output=/store/group/phys_exotica/delayedjets/pickEvents/csc/${version}/v1/${sample}
+		output=/store/group/phys_exotica/delayedjets/pickEvents/csc/${version}/v2/${sample}
 		echo ${output}
 		inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${ver}/${year}/${sample}.txt
 		nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
@@ -63,7 +63,8 @@ do
 	                maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 	        fi
 		#event_list=lists/EventPick/event_pick_Run2_displacedJetMuonNtupler_V1p15_Data2016_Data2017_Data2018-HighMET_goodLumi_oot_highBDT_timeSpread20.txt
-		event_list=list/EventPick/event_pick_Run2_displacedJetMuonNtupler_V1p15_Data2016_Data2017_Data2018-HighMET_goodLumi_intime0p20p7_binD.txt
+		#event_list=list/EventPick/event_pick_Run2_displacedJetMuonNtupler_V1p15_Data2016_Data2017_Data2018-HighMET_goodLumi_intime0p20p7_binD.txt
+		event_list=lists/EventPick/event_pick_Run2_displacedJetMuonNtupler_V1p15_Data2016_Data2017_Data2018-HighMET_goodLumi_intime_bdtBin2_Nrechit80_dphi0p75.txt
 		analyzer=EventPick
 		rm -f submit/${analyzer}_${sample}*
 		rm -f log/${analyzer}_${sample}*

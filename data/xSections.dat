@@ -20,6 +20,7 @@ zH_withISR_mh2000								 7.639E-06
 #https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt13TeV#ZHllH_H_l_e_or_Process
 ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18   					4.858E+01
 ggH_HToSSTobbbb_ms55_pl1000							4.858E+01
+ggH_HToSSTobbbb_ms1_pl1000							4.858E+01
 ggH_HToSSTobbbb_ms55_pl10000							4.858E+01
 ZH_HToSSTobbbb_ms55_pl1000							0.08946
 ZH_HToSSTobbbb_ms55_pl10000							0.08946
@@ -60,6 +61,8 @@ ggH_HToSSTodddd_MH-125_TuneCP5_13TeV-powheg-pythia8		4.858E+01
 ggH_HToSSTodddd_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	4.858E+01
 
 
+VBFH_HToSSTo4b_MH-125_TuneCP5_13TeV-powheg-pythia8		3.78E+00
+VBFH_HToSSTo4b_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8		3.78E+00
 VBFH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8		3.78E+00
 VBFH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	3.78E+00
 VBFH_HToSSTo4Tau_MH-125_TuneCP5_13TeV-powheg-pythia8		3.78E+00

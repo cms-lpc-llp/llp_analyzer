@@ -18,9 +18,9 @@ ctau_VBF=(
 # 1 10 100 1000 10000 100000
 ctau_ggH=(1 10 100 1000 10000 100000)
 for year in \
-Fall18 \
+Summer16 \
 Fall17 \
-Summer16
+Fall18
 do
         if [ ${year} == "Summer16" ]
         then
@@ -28,15 +28,22 @@ do
         else
                 tune=TuneCP5
         fi
-        #VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8
         #VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
         #ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-        #ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
+        #ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8 \
+        #VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8
         for sample in \
         ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
 	do
 
-                for mx in 15 40 55
+		mass=()
+		if [[ ${sample} == "VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8" || ${sample} == "ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8" ]]
+		then
+			mass=( 15 40 55 )
+		else
+			mass=( 7 15 40 55 )
+		fi
+		for mx in "${mass[@]}"
 		do
 			ctau_list=ctau_${sample:0:3}[@]
                         for ctau in "${!ctau_list}"
@@ -44,7 +51,7 @@ do
 				echo "Sample " ${sample} "mx " ${mx} "ctau " ${ctau}
 				sample_long=${sample%_MH125*}_MH-125_MS-${mx}_ctau-${ctau}_${tune}_13TeV-powheg-pythia8
 				analyzer=llp_MuonSystem_bdt
-				inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p15/MC_${year}/v3/v10/
+				inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p17/MC_${year}/v1/v5/
 				outputDir=${inputDir}normalized
 				echo ${inputDir}
 				rm -f submit/${analyzer}_normalize_${year}_${sample_long}.jdl
@@ -61,13 +68,14 @@ do
 			
 				#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
 				echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
-				echo "RequestMemory = 2000" >> ${jdl_file}
+				echo "RequestMemory = 12000" >> ${jdl_file}
 				echo "RequestCpus = 1" >> ${jdl_file}
 				echo "RequestDisk = 4" >> ${jdl_file}
 			
 				echo "+RunAsOwner = True" >> ${jdl_file}
 				echo "+InteractiveUser = true" >> ${jdl_file}
-				echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
+				#echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
+				echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7-m202006\"" >> ${jdl_file}
 				echo '+SingularityBindCVMFS = True' >> ${jdl_file}
 				echo "run_as_owner = True" >> ${jdl_file}
 				echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}

@@ -1,5 +1,5 @@
-ver=V1p15
-anaVer=/v1/v18/
+ver=V1p17
+anaVer=/v5/vBDT1/
 outputRoot=(
 Run2_displacedJetMuonNtupler_${ver}_Data2016_Run2016-HighMET-07Aug17.root
 Run2_displacedJetMuonNtupler_${ver}_Data2017_Run2017-HighMET-17Nov2017.root
@@ -20,7 +20,9 @@ hadd ${outputRoot[0]} /mnt/hadoop/${dir[0]}/Run2_displacedJetMuonNtupler_${ver}_
 
 hadd ${outputRoot[1]} /mnt/hadoop/${dir[1]}/Run2_displacedJetMuonNtupler_${ver}_Data2017_Run2017B-HighMET-17Nov2017.root /mnt/hadoop/${dir[1]}/Run2_displacedJetMuonNtupler_${ver}_Data2017_Run2017C-HighMET-17Nov2017.root /mnt/hadoop/${dir[1]}/Run2_displacedJetMuonNtupler_${ver}_Data2017_Run2017D-HighMET-17Nov2017.root /mnt/hadoop/${dir[1]}/Run2_displacedJetMuonNtupler_${ver}_Data2017_Run2017E-HighMET-17Nov2017.root /mnt/hadoop/${dir[1]}/Run2_displacedJetMuonNtupler_${ver}_Data2017_Run2017F-HighMET-17Nov2017.root
 
-hadd ${outputRoot[2]} /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018B-HighMET-17Sep2018.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018C-HighMET-17Sep2018.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018D-HighMET-PromptReco.root
+#hadd ${outputRoot[2]} /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018B-HighMET-17Sep2018.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018C-HighMET-17Sep2018.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018D-HighMET-PromptReco.root 
+
+hadd ${outputRoot[2]} /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018B-HighMET-17Sep2018.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018C-HighMET-17Sep2018.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018Dv1-HighMET-PromptReco.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018Dv2-HighMET-PromptReco.root /mnt/hadoop/${dir[2]}/Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018E-HighMET-PromptReco.root 
 
 eval `scram unsetenv -sh`
 LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
@@ -32,7 +34,7 @@ do
 		echo " ${outputRoot[$i]} hadd done"
 	fi
 	
-	gfal-copy --checksum-mode=both  ${outputRoot[$i]} gsiftp://transfer.ultralight.org/${dir[$i]}/${outputRoot[$i]}
+	gfal-copy -f --checksum-mode=both  ${outputRoot[$i]} gsiftp://transfer.ultralight.org/${dir[$i]}/${outputRoot[$i]}
 	
 	if [ -f /mnt/hadoop/${dir[$i]}/${outputRoot[$i]} ]
 	then

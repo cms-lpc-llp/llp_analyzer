@@ -7,7 +7,7 @@
 //ROOT includes
 #include "TH1F.h"
 #include "TH2F.h"
-
+#include "DBSCAN.h"
 #include "SimpleTable.h"
 
 using namespace std;
@@ -52,8 +52,13 @@ void EventPick::Analyze(bool isData, int option, string outputFileName, string l
   TFile outFile(outputFileName.c_str(), "RECREATE");
   TTree *newtree = fChain->CloneTree(0);
 
-
-
+  int cscRechitsClusterId[10000];
+  newtree->Branch("cscRechitsClusterId",cscRechitsClusterId,"cscRechitsClusterId[nCscRechits]/I");
+	// newtree->SetBranchAddress("cscRechitsClusterId",cscRechitsClusterId);
+	for( int i = 0; i < 10000; i++ )
+	{
+		cscRechitsClusterId[i] = -999;   //[nCsc]
+	}
 
   TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
 
@@ -129,8 +134,40 @@ void EventPick::Analyze(bool isData, int option, string outputFileName, string l
     //   }
     //   if (nCluster==0)continue;
     // }
+	 vector<Point> points;
+   points.clear();
 
+   for (int j = 0; j < ncscRechits; j++) {
+     Point p;
+     p.phi = cscRechitsPhi[j];
+     p.eta = cscRechitsEta[j];
+     p.x = cscRechitsX[j];
+     p.y = cscRechitsY[j];
+     p.z = cscRechitsZ[j];
+     p.t = cscRechitsTpeak[j];
+     p.twire = cscRechitsTwire[j];
+     p.station = cscRechitsStation[j];
+     p.chamber = cscRechitsChamber[j];
+     p.clusterID = UNCLASSIFIED;
+     points.push_back(p);
+    }
+		//Do DBSCAN Clustering
+    int min_point = 50;  //minimum number of segments to call it a cluster
+    float epsilon = 0.2; //cluster radius parameter
+    DBSCAN ds(min_point, epsilon, points);
+    ds.run();
+    ds.result();
+    ds.clusterMoments();
+    ds.sort_clusters();
 
+		int i = 0;
+		for ( auto &tmp : ds.CscCluster ) {
+			for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
+			{
+			 cscRechitsClusterId[tmp.segment_id[j]] = i;
+			}
+			i++;
+		}
     newtree->Fill();
     if (isData) NEvents->Fill(1);
     else NEvents->Fill(1,genWeight);

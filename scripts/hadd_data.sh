@@ -1,5 +1,5 @@
-ver=V1p15
-ver2=/v1/v18/
+ver=V1p17
+ver2=/v5/vBDT1/
 outputRoot=Run2_displacedJetMuonNtupler_${ver}_Data2016_Data2017_Data2018-HighMET_goodLumi.root
 dir1=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/Data2016/${ver2}/normalized/
 dir2=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/Data2017/${ver2}/normalized/
@@ -21,7 +21,7 @@ fi
 eval `scram unsetenv -sh`
 LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
 
-gfal-copy --checksum-mode=both $outputRoot gsiftp://transfer.ultralight.org/${dir3}/$outputRoot
+gfal-copy -f --checksum-mode=both $outputRoot gsiftp://transfer.ultralight.org/${dir3}/$outputRoot
 
 if [ -f /mnt/hadoop/$dir/$outputRoot ]
 then

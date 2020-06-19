@@ -26,7 +26,77 @@ int DBSCAN::run()
     nClusters = clusterID-1;
     return (clusterID-1);
 }
-
+void DBSCAN::clear_clusters(){
+  // nClusters = 0;
+  clusterSize.clear();
+  cscLabels.clear();
+  clusterEta.clear();
+  clusterPhi.clear();
+  clusterX.clear();
+  clusterY.clear();
+  clusterZ.clear();
+  clusterTime.clear();
+  clusterTimeTotal.clear();
+  clusterMajorAxis.clear();
+  clusterMinorAxis.clear();
+  clusterXSpread.clear();
+  clusterYSpread.clear();
+  clusterXYSpread.clear();
+  clusterRSpread.clear();
+  clusterZSpread.clear();
+  clusterTimeSpread.clear();
+  clusterEtaPhiSpread.clear();
+  clusterEtaSpread.clear();
+  clusterPhiSpread.clear();
+  // clusterXSpread_phi0p5.clear();
+  // clusterYSpread_phi0p5.clear();
+  // clusterXYSpread_phi0p5.clear();
+  // clusterPhiSpread_phi0p5.clear();
+  // clusterEtaPhiSpread_phi0p5.clear();
+  // clusterXSpread_phi0p55.clear();
+  // clusterYSpread_phi0p55.clear();
+  // clusterXYSpread_phi0p55.clear();
+  // clusterPhiSpread_phi0p55.clear();
+  // clusterEtaPhiSpread_phi0p55.clear();
+  // clusterXSpread_phi0p6.clear();
+  // clusterYSpread_phi0p6.clear();
+  // clusterXYSpread_phi0p6.clear();
+  // clusterPhiSpread_phi0p6.clear();
+  // clusterEtaPhiSpread_phi0p6.clear();
+  // clusterXSpread_phi0p65.clear();
+  // clusterYSpread_phi0p65.clear();
+  // clusterXYSpread_phi0p65.clear();
+  // clusterPhiSpread_phi0p65.clear();
+  // clusterEtaPhiSpread_phi0p65.clear();
+  // clusterXSpread_phi0p7.clear();
+  // clusterYSpread_phi0p7.clear();
+  // clusterXYSpread_phi0p7.clear();
+  // clusterPhiSpread_phi0p7.clear();
+  // clusterEtaPhiSpread_phi0p7.clear();
+  // clusterXSpread_phi0p75.clear();
+  // clusterYSpread_phi0p75.clear();
+  // clusterXYSpread_phi0p75.clear();
+  // clusterPhiSpread_phi0p75.clear();
+  // clusterEtaPhiSpread_phi0p75.clear();
+  clusterXSpread_corr.clear();
+  clusterYSpread_corr.clear();
+  clusterXYSpread_corr.clear();
+  clusterEtaSpread_corr.clear();
+  clusterPhiSpread_corr.clear();
+  clusterEtaPhiSpread_corr.clear();
+  clusterRSpread_corr.clear();
+  clusterVertexR.clear();
+  clusterVertexZ.clear();
+  clusterVertexDis.clear();
+  clusterVertexChi2.clear();
+  clusterVertexN.clear();
+  clusterVertexN1cm.clear();
+  clusterVertexN5cm.clear();
+  clusterVertexN10cm.clear();
+  clusterVertexN15cm.clear();
+  clusterVertexN20cm.clear();
+  CscCluster.clear();
+}
 int DBSCAN::result(){
 
   // for (unsigned int i = 0;i < m_pointSize;i++)
@@ -115,7 +185,37 @@ int DBSCAN::clusterMoments()
   {
     float m11(0.0), m12(0.0), m22(0.0);
     float XSpread(0.0), YSpread(0.0), ZSpread(0.0), TSpread(0.0), XYSpread(0.0), RSpread(0.0);
-    float XSpread_phi0p5(0.0), YSpread_phi0p5(0.0), XYSpread_phi0p5(0.0), PhiSpread_phi0p5(0.0), EtaPhiSpread_phi0p5(0.0);
+
+    // float XSpread_phi0p5(0.0), YSpread_phi0p5(0.0), XYSpread_phi0p5(0.0), PhiSpread_phi0p5(0.0), EtaPhiSpread_phi0p5(0.0);
+    // float XSpread_phi0p55(0.0), YSpread_phi0p55(0.0), XYSpread_phi0p55(0.0), PhiSpread_phi0p55(0.0), EtaPhiSpread_phi0p55(0.0);
+    // float XSpread_phi0p6(0.0), YSpread_phi0p6(0.0), XYSpread_phi0p6(0.0), PhiSpread_phi0p6(0.0), EtaPhiSpread_phi0p6(0.0);
+    // float XSpread_phi0p65(0.0), YSpread_phi0p65(0.0), XYSpread_phi0p65(0.0), PhiSpread_phi0p65(0.0), EtaPhiSpread_phi0p65(0.0);
+    // float XSpread_phi0p7(0.0), YSpread_phi0p7(0.0), XYSpread_phi0p7(0.0), PhiSpread_phi0p7(0.0), EtaPhiSpread_phi0p7(0.0);
+    // float XSpread_phi0p75(0.0), YSpread_phi0p75(0.0), XYSpread_phi0p75(0.0), PhiSpread_phi0p75(0.0), EtaPhiSpread_phi0p75(0.0);
+    //
+    // float XSpread_phi0p7_r1p3(0.0), YSpread_phi0p7_r1p3(0.0), XYSpread_phi0p7_r1p3(0.0), RSpread_phi0p7_r1p3(0.0),
+    // PhiSpread_phi0p7_r1p3(0.0),EtaSpread_phi0p7_r1p3(0.0), EtaPhiSpread_phi0p7_r1p3(0.0);
+    // float XSpread_phi0p7_r1p2(0.0), YSpread_phi0p7_r1p2(0.0), XYSpread_phi0p7_r1p2(0.0), RSpread_phi0p7_r1p2(0.0),
+    // PhiSpread_phi0p7_r1p2(0.0),EtaSpread_phi0p7_r1p2(0.0), EtaPhiSpread_phi0p7_r1p2(0.0);
+    // float XSpread_phi0p7_r1p1(0.0), YSpread_phi0p7_r1p1(0.0), XYSpread_phi0p7_r1p1(0.0), RSpread_phi0p7_r1p1(0.0),
+    // PhiSpread_phi0p7_r1p1(0.0),EtaSpread_phi0p7_r1p1(0.0), EtaPhiSpread_phi0p7_r1p1(0.0);
+    // float XSpread_phi0p7_r1p15(0.0), YSpread_phi0p7_r1p15(0.0), XYSpread_phi0p7_r1p15(0.0), RSpread_phi0p7_r1p15(0.0),
+    // PhiSpread_phi0p7_r1p15(0.0),EtaSpread_phi0p7_r1p15(0.0), EtaPhiSpread_phi0p7_r1p15(0.0);
+    // float XSpread_phi0p7_r1p25(0.0), YSpread_phi0p7_r1p25(0.0), XYSpread_phi0p7_r1p25(0.0), RSpread_phi0p7_r1p25(0.0),
+    // PhiSpread_phi0p7_r1p25(0.0),EtaSpread_phi0p7_r1p25(0.0), EtaPhiSpread_phi0p7_r1p25(0.0);
+    //
+    // float XSpread_r1p2(0.0), YSpread_r1p2(0.0), XYSpread_r1p2(0.0), RSpread_r1p2(0.0),
+    // PhiSpread_r1p2(0.0), EtaSpread_r1p2(0.0), EtaPhiSpread_r1p2(0.0);
+
+
+    vector<vector<float>> XSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
+    vector<vector<float>> YSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
+    vector<vector<float>> XYSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
+    vector<vector<float>> EtaSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
+    vector<vector<float>> PhiSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
+    vector<vector<float>> EtaPhiSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
+    vector<vector<float>> RSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
+
 
     vector<Point>::iterator iter;
     for(iter = m_points.begin(); iter != m_points.end(); ++iter)
@@ -142,16 +242,30 @@ int DBSCAN::clusterMoments()
           float radius = sqrt(pow(iter->x, 2) + pow(iter->y, 2));
           RSpread += pow(radius-sqrt(clusterX[i]*clusterX[i]+clusterY[i]*clusterY[i]),2);
 
-          float phi = deltaPhi(iter->phi,clusterPhi[i])*0.5 + clusterPhi[i];
-          PhiSpread_phi0p5 += deltaPhi(phi,clusterPhi[i])*deltaPhi(phi,clusterPhi[i]);
 
-          EtaPhiSpread_phi0p5 += (iter->eta-clusterEta[i])* deltaPhi(phi,clusterPhi[i]);
+          // phi+R correction
+          for (int j = 0; j < N_phicorr; j++)
+          {
+            for (int k = 0; k < N_rcorr; k++)
+            {
+              float phi = deltaPhi(iter->phi,clusterPhi[i])*phi_corr[j] + clusterPhi[i];
+              float r = (radius-sqrt(clusterX[i]*clusterX[i]+clusterY[i]*clusterY[i]))*r_corr[k] + sqrt(clusterX[i]*clusterX[i]+clusterY[i]*clusterY[i]);
+              if (r < 0) cout<<"r is negative!!!"<<r<<","<<r_corr[k]<<","<<j<<","<<k<<endl;
+              float x = r*cos(phi);
+              float y = r*sin(phi);
+              double theta = atan(r/abs(iter->z));
+              double eta = -1.0*TMath::Sign(1.0, iter->z)*log(tan(theta/2));
+              PhiSpread_corr[j][k] += deltaPhi(phi,clusterPhi[i])*deltaPhi(phi,clusterPhi[i]);
+              EtaPhiSpread_corr[j][k] += (eta-clusterEta[i])* deltaPhi(phi,clusterPhi[i]);
+              EtaSpread_corr[j][k] += (eta-clusterEta[i])* (eta-clusterEta[i]);
+              XYSpread_corr[j][k] += (x - clusterX[i])*(y - clusterY[i]);
+              XSpread_corr[j][k] += (x - clusterX[i]) * (x - clusterX[i]);
+              YSpread_corr[j][k] += (y - clusterY[i]) * (y - clusterY[i]);
+              RSpread_corr[j][k] += pow(r - sqrt(clusterX[i]*clusterX[i]+clusterY[i]*clusterY[i]), 2);
+            }
+          }
 
-          float x = radius*cos(phi);
-          float y = radius*sin(phi);
-          XYSpread_phi0p5 += (x - clusterX[i])*(y - clusterY[i]);
-          XSpread_phi0p5 += (x - clusterX[i]) * (x - clusterX[i]);
-          YSpread_phi0p5 += (y - clusterY[i]) * (y - clusterY[i]);
+
 
 
       }
@@ -165,20 +279,118 @@ int DBSCAN::clusterMoments()
 
     clusterXYSpread.push_back(sqrt(abs(XYSpread)/(float)clusterSize[i]));
     clusterTimeSpread.push_back(sqrt(TSpread/(float)clusterSize[i]));
-    clusterEtaSpread.push_back(sqrt(m11/clusterSize[i]));
+    clusterEtaSpread.push_back(sqrt(abs(m11)/clusterSize[i]));
     clusterEtaPhiSpread.push_back(sqrt(abs(m12)/clusterSize[i]));
-    clusterPhiSpread.push_back(sqrt(m22/clusterSize[i]));
+    clusterPhiSpread.push_back(sqrt(abs(m22)/clusterSize[i]));
     clusterMajorAxis.push_back(sqrt((a+b)/clusterSize[i]));
     clusterMinorAxis.push_back(sqrt((a-b)/clusterSize[i]));
+    for (int j = 0; j < N_phicorr; j++)
+    {
 
-    clusterXYSpread_phi0p5.push_back(sqrt(abs(XYSpread_phi0p5)/(float)clusterSize[i]));
-    clusterXSpread_phi0p5.push_back(sqrt(XSpread_phi0p5/(float)clusterSize[i]));
-    clusterYSpread_phi0p5.push_back(sqrt(YSpread_phi0p5/(float)clusterSize[i]));
-    clusterPhiSpread_phi0p5.push_back(sqrt(PhiSpread_phi0p5/(float)clusterSize[i]));
-    clusterEtaPhiSpread_phi0p5.push_back(sqrt(abs(EtaPhiSpread_phi0p5)/(float)clusterSize[i]));
+      for (int k = 0; k < N_rcorr; k++)
+      {
+        PhiSpread_corr[j][k] = sqrt(abs(PhiSpread_corr[j][k])/(float)clusterSize[i]);
+        EtaPhiSpread_corr[j][k] = sqrt(abs(EtaPhiSpread_corr[j][k])/(float)clusterSize[i]);
+        EtaSpread_corr[j][k] = sqrt(abs(EtaSpread_corr[j][k])/(float)clusterSize[i]);
+        XYSpread_corr[j][k] = sqrt(abs(XYSpread_corr[j][k])/(float)clusterSize[i]);
+        XSpread_corr[j][k] = sqrt(abs(XSpread_corr[j][k])/(float)clusterSize[i]);
+        YSpread_corr[j][k] = sqrt(abs(YSpread_corr[j][k])/(float)clusterSize[i]);
+        RSpread_corr[j][k] = sqrt(abs(RSpread_corr[j][k])/(float)clusterSize[i]);
+      }
+    }
+    clusterPhiSpread_corr.push_back(PhiSpread_corr);
+    clusterEtaPhiSpread_corr.push_back(EtaPhiSpread_corr);
+    clusterEtaSpread_corr.push_back(EtaSpread_corr);
+    clusterXYSpread_corr.push_back(XYSpread_corr);
+    clusterXSpread_corr.push_back(XSpread_corr);
+    clusterYSpread_corr.push_back(YSpread_corr);
+    clusterRSpread_corr.push_back(RSpread_corr);
 
 
-
+    //
+    // clusterXYSpread_phi0p5.push_back(sqrt(abs(XYSpread_phi0p5)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p5.push_back(sqrt(XSpread_phi0p5/(float)clusterSize[i]));
+    // clusterYSpread_phi0p5.push_back(sqrt(YSpread_phi0p5/(float)clusterSize[i]));
+    // clusterPhiSpread_phi0p5.push_back(sqrt(PhiSpread_phi0p5/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p5.push_back(sqrt(abs(EtaPhiSpread_phi0p5)/(float)clusterSize[i]));
+    //
+    // clusterXYSpread_phi0p55.push_back(sqrt(abs(XYSpread_phi0p55)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p55.push_back(sqrt(XSpread_phi0p55/(float)clusterSize[i]));
+    // clusterYSpread_phi0p55.push_back(sqrt(YSpread_phi0p55/(float)clusterSize[i]));
+    // clusterPhiSpread_phi0p55.push_back(sqrt(PhiSpread_phi0p55/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p55.push_back(sqrt(abs(EtaPhiSpread_phi0p55)/(float)clusterSize[i]));
+    //
+    // clusterXYSpread_phi0p6.push_back(sqrt(abs(XYSpread_phi0p6)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p6.push_back(sqrt(XSpread_phi0p6/(float)clusterSize[i]));
+    // clusterYSpread_phi0p6.push_back(sqrt(YSpread_phi0p6/(float)clusterSize[i]));
+    // clusterPhiSpread_phi0p6.push_back(sqrt(PhiSpread_phi0p6/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p6.push_back(sqrt(abs(EtaPhiSpread_phi0p6)/(float)clusterSize[i]));
+    //
+    // clusterXYSpread_phi0p65.push_back(sqrt(abs(XYSpread_phi0p65)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p65.push_back(sqrt(XSpread_phi0p65/(float)clusterSize[i]));
+    // clusterYSpread_phi0p65.push_back(sqrt(YSpread_phi0p65/(float)clusterSize[i]));
+    // clusterPhiSpread_phi0p65.push_back(sqrt(PhiSpread_phi0p65/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p65.push_back(sqrt(abs(EtaPhiSpread_phi0p65)/(float)clusterSize[i]));
+    //
+    // clusterXYSpread_phi0p7.push_back(sqrt(abs(XYSpread_phi0p7)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p7.push_back(sqrt(XSpread_phi0p7/(float)clusterSize[i]));
+    // clusterYSpread_phi0p7.push_back(sqrt(YSpread_phi0p7/(float)clusterSize[i]));
+    // clusterPhiSpread_phi0p7.push_back(sqrt(PhiSpread_phi0p7/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p7.push_back(sqrt(abs(EtaPhiSpread_phi0p7)/(float)clusterSize[i]));
+    //
+    // clusterXYSpread_phi0p75.push_back(sqrt(abs(XYSpread_phi0p75)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p75.push_back(sqrt(XSpread_phi0p75/(float)clusterSize[i]));
+    // clusterYSpread_phi0p75.push_back(sqrt(YSpread_phi0p75/(float)clusterSize[i]));
+    // clusterPhiSpread_phi0p75.push_back(sqrt(PhiSpread_phi0p75/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p75.push_back(sqrt(abs(EtaPhiSpread_phi0p75)/(float)clusterSize[i]));
+    //
+    // clusterPhiSpread_r1p2.push_back(sqrt(abs(PhiSpread_r1p2)/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_r1p2.push_back(sqrt(abs(EtaPhiSpread_r1p2)/(float)clusterSize[i]));
+    // clusterEtaSpread_r1p2.push_back(sqrt(EtaSpread_r1p2/(float)clusterSize[i]));
+    // clusterXYSpread_r1p2.push_back(sqrt(abs(XYSpread_r1p2)/(float)clusterSize[i]));
+    // clusterXSpread_r1p2.push_back(sqrt(abs(XSpread_r1p2)/(float)clusterSize[i]));
+    // clusterYSpread_r1p2.push_back(sqrt(abs(YSpread_r1p2)/(float)clusterSize[i]));
+    // clusterRSpread_r1p2.push_back(sqrt(abs(RSpread_r1p2)/(float)clusterSize[i]));
+    //
+    // clusterPhiSpread_phi0p7_r1p2.push_back(sqrt(abs(PhiSpread_phi0p7_r1p2)/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p7_r1p2.push_back(sqrt(abs(EtaPhiSpread_phi0p7_r1p2)/(float)clusterSize[i]));
+    // clusterEtaSpread_phi0p7_r1p2.push_back(sqrt(EtaSpread_phi0p7_r1p2/(float)clusterSize[i]));
+    // clusterXYSpread_phi0p7_r1p2.push_back(sqrt(abs(XYSpread_phi0p7_r1p2)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p7_r1p2.push_back(sqrt(abs(XSpread_phi0p7_r1p2)/(float)clusterSize[i]));
+    // clusterYSpread_phi0p7_r1p2.push_back(sqrt(abs(YSpread_phi0p7_r1p2)/(float)clusterSize[i]));
+    // clusterRSpread_phi0p7_r1p2.push_back(sqrt(abs(RSpread_phi0p7_r1p2)/(float)clusterSize[i]));
+    //
+    // clusterPhiSpread_phi0p7_r1p3.push_back(sqrt(abs(PhiSpread_phi0p7_r1p3)/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p7_r1p3.push_back(sqrt(abs(EtaPhiSpread_phi0p7_r1p3)/(float)clusterSize[i]));
+    // clusterEtaSpread_phi0p7_r1p3.push_back(sqrt(EtaSpread_phi0p7_r1p3/(float)clusterSize[i]));
+    // clusterXYSpread_phi0p7_r1p3.push_back(sqrt(abs(XYSpread_phi0p7_r1p3)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p7_r1p3.push_back(sqrt(abs(XSpread_phi0p7_r1p3)/(float)clusterSize[i]));
+    // clusterYSpread_phi0p7_r1p3.push_back(sqrt(abs(YSpread_phi0p7_r1p3)/(float)clusterSize[i]));
+    // clusterRSpread_phi0p7_r1p3.push_back(sqrt(abs(RSpread_phi0p7_r1p3)/(float)clusterSize[i]));
+    //
+    // clusterPhiSpread_phi0p7_r1p1.push_back(sqrt(abs(PhiSpread_phi0p7_r1p1)/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p7_r1p1.push_back(sqrt(abs(EtaPhiSpread_phi0p7_r1p1)/(float)clusterSize[i]));
+    // clusterEtaSpread_phi0p7_r1p1.push_back(sqrt(EtaSpread_phi0p7_r1p1/(float)clusterSize[i]));
+    // clusterXYSpread_phi0p7_r1p1.push_back(sqrt(abs(XYSpread_phi0p7_r1p1)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p7_r1p1.push_back(sqrt(abs(XSpread_phi0p7_r1p1)/(float)clusterSize[i]));
+    // clusterYSpread_phi0p7_r1p1.push_back(sqrt(abs(YSpread_phi0p7_r1p1)/(float)clusterSize[i]));
+    // clusterRSpread_phi0p7_r1p1.push_back(sqrt(abs(RSpread_phi0p7_r1p1)/(float)clusterSize[i]));
+    //
+    // clusterPhiSpread_phi0p7_r1p15.push_back(sqrt(abs(PhiSpread_phi0p7_r1p15)/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p7_r1p15.push_back(sqrt(abs(EtaPhiSpread_phi0p7_r1p15)/(float)clusterSize[i]));
+    // clusterEtaSpread_phi0p7_r1p15.push_back(sqrt(EtaSpread_phi0p7_r1p15/(float)clusterSize[i]));
+    // clusterXYSpread_phi0p7_r1p15.push_back(sqrt(abs(XYSpread_phi0p7_r1p15)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p7_r1p15.push_back(sqrt(abs(XSpread_phi0p7_r1p15)/(float)clusterSize[i]));
+    // clusterYSpread_phi0p7_r1p15.push_back(sqrt(abs(YSpread_phi0p7_r1p15)/(float)clusterSize[i]));
+    // clusterRSpread_phi0p7_r1p15.push_back(sqrt(abs(RSpread_phi0p7_r1p15)/(float)clusterSize[i]));
+    //
+    // clusterPhiSpread_phi0p7_r1p25.push_back(sqrt(abs(PhiSpread_phi0p7_r1p25)/(float)clusterSize[i]));
+    // clusterEtaPhiSpread_phi0p7_r1p25.push_back(sqrt(abs(EtaPhiSpread_phi0p7_r1p25)/(float)clusterSize[i]));
+    // clusterEtaSpread_phi0p7_r1p25.push_back(sqrt(EtaSpread_phi0p7_r1p25/(float)clusterSize[i]));
+    // clusterXYSpread_phi0p7_r1p25.push_back(sqrt(abs(XYSpread_phi0p7_r1p25)/(float)clusterSize[i]));
+    // clusterXSpread_phi0p7_r1p25.push_back(sqrt(abs(XSpread_phi0p7_r1p25)/(float)clusterSize[i]));
+    // clusterYSpread_phi0p7_r1p25.push_back(sqrt(abs(YSpread_phi0p7_r1p25)/(float)clusterSize[i]));
+    // clusterRSpread_phi0p7_r1p25.push_back(sqrt(abs(RSpread_phi0p7_r1p25)/(float)clusterSize[i]));
   }
   return 0;
 }
@@ -264,6 +476,8 @@ void DBSCAN::sort_clusters()
     tmpCluster.MinorAxis = clusterMinorAxis[i];
     tmpCluster.XSpread = clusterXSpread[i];
     tmpCluster.XYSpread = clusterXYSpread[i];
+    tmpCluster.RSpread = clusterRSpread[i];
+
 
     tmpCluster.YSpread = clusterYSpread[i];
     tmpCluster.ZSpread = clusterZSpread[i];
@@ -275,25 +489,20 @@ void DBSCAN::sort_clusters()
     tmpCluster.Me11Ratio = 1.0*nSegments_Me11/clusterSize[i];
     tmpCluster.Me12Ratio = 1.0*nSegments_Me12/clusterSize[i];
 
-    tmpCluster.XSpread_phi0p5 = clusterXSpread_phi0p5[i];
-    tmpCluster.YSpread_phi0p5 = clusterYSpread_phi0p5[i];
-    tmpCluster.XYSpread_phi0p5 = clusterXYSpread_phi0p5[i];
-    tmpCluster.PhiSpread_phi0p5 = clusterPhiSpread_phi0p5[i];
-    tmpCluster.EtaPhiSpread_phi0p5 = clusterEtaPhiSpread_phi0p5[i];
+    for (int j = 0; j < N_phicorr; j++)
+    {
+      for (int k = 0; k < N_rcorr; k++)
+      {
+        tmpCluster.XSpread_corr[j][k] = clusterXSpread_corr[i][j][k];
+        tmpCluster.YSpread_corr[j][k] = clusterYSpread_corr[i][j][k];
+        tmpCluster.XYSpread_corr[j][k] = clusterXYSpread_corr[i][j][k];
+        tmpCluster.EtaSpread_corr[j][k] = clusterEtaSpread_corr[i][j][k];
+        tmpCluster.PhiSpread_corr[j][k] = clusterPhiSpread_corr[i][j][k];
+        tmpCluster.EtaPhiSpread_corr[j][k] = clusterEtaPhiSpread_corr[i][j][k];
+        tmpCluster.RSpread_corr[j][k] = clusterRSpread_corr[i][j][k];
+      }
+    }
 
-
-
-
-    // tmpCluster.vertex_r = clusterVertexR[i];
-    // tmpCluster.vertex_z = clusterVertexZ[i];
-    // tmpCluster.vertex_dis = clusterVertexDis[i];
-    // tmpCluster.vertex_chi2 = clusterVertexChi2[i];
-    // tmpCluster.vertex_n = clusterVertexN[i];
-    // tmpCluster.vertex_n1 = clusterVertexN1cm[i];
-    // tmpCluster.vertex_n5 = clusterVertexN5cm[i];
-    // tmpCluster.vertex_n10 = clusterVertexN10cm[i];
-    // tmpCluster.vertex_n15 = clusterVertexN15cm[i];
-    // tmpCluster.vertex_n20 = clusterVertexN20cm[i];
     tmpCluster.segment_id = segment_index;
 
     // count the number of chambers and max chamber segments
@@ -324,10 +533,17 @@ void DBSCAN::sort_clusters()
     std::vector<int>::iterator station_it;
     std::sort(cscStations.begin(), cscStations.end());
     station_it = std::unique(cscStations.begin(), cscStations.end());
-    cscStations.resize( std::distance(cscStations.begin(),station_it) );
+    cscStations.resize( std::distance(cscStations.begin(),station_it) );//list of unique stations
     int max_station = 999; // station with the maximum number of cscsegment in this cluster
     int max_station_segment = 0; // station with the maximum number of cscsegment in this cluster
     tmpCluster.nStation = 0;
+    tmpCluster.nStation5 = 0;
+    tmpCluster.nStation10perc = 0;
+    tmpCluster.avgStation = 0.0;
+    tmpCluster.avgStation5 = 0.0;
+    tmpCluster.avgStation10perc = 0.0;
+    int nSeg10perc = 0;
+    int nSeg5 = 0;
     for (unsigned int l = 0; l < cscStations.size(); l++)
     {
       int counter = 0;
@@ -340,8 +556,26 @@ void DBSCAN::sort_clusters()
         max_station_segment = counter;
         max_station = cscStations[l];
       }
-      if(counter>5)tmpCluster.nStation++;
+      tmpCluster.nStation++;
+      tmpCluster.avgStation += counter * cscStations[l];
+
+      if(counter>=5.0){
+        tmpCluster.avgStation5 += counter * cscStations[l];
+        tmpCluster.nStation5++;
+        nSeg5 += counter;
+
+      }
+      if(1.0*counter/clusterSize[i] > 0.1)
+      {
+        tmpCluster.avgStation10perc += counter * cscStations[l];
+        tmpCluster.nStation10perc++;
+        nSeg10perc += counter;
+      }
     }
+    tmpCluster.avgStation10perc = 1.0* tmpCluster.avgStation10perc/nSeg10perc;
+    tmpCluster.avgStation5 = 1.0* tmpCluster.avgStation5/nSeg5;
+    tmpCluster.avgStation = 1.0* tmpCluster.avgStation/clusterSize[i];
+
     tmpCluster.maxStation = max_station;
     tmpCluster.maxStationSegment = max_station_segment;
 
@@ -355,6 +589,50 @@ void DBSCAN::sort_clusters()
 
 }
 
+
+void DBSCAN::merge_clusters()
+{
+  // clear all the cluster variables
+  //change cluster ID of points
+  bool modified = true;
+  while(modified){
+    modified = false;
+    float mindR = 15;
+    int cluster1 = 999;
+    int cluster2 = 999;
+
+    for(unsigned int i = 0; i < clusterEta.size(); i++){
+      for(unsigned int j = i+1; j < clusterEta.size(); j++){
+        float current_dR = deltaR(clusterEta[i], clusterPhi[i], clusterEta[j], clusterPhi[j]);
+        if(current_dR<mindR)
+        {
+          mindR = current_dR;
+          cluster1 = i;
+          cluster2 = j;
+
+        }
+      }
+    }
+    if (mindR < MERGE_CLUSTER_DR){
+      vector<Point>::iterator iter;
+      int count = 0;
+      for(iter = m_points.begin(); iter != m_points.end(); ++iter)
+      {
+        if ( iter->clusterID == cluster2+1 ){
+          iter->clusterID = cluster1+1;
+          count++;
+        }
+        if ( iter->clusterID > cluster2+1 )iter->clusterID = iter->clusterID-1;
+      }
+      clusterEta.erase(clusterEta.begin() + cluster2);
+      clusterPhi.erase(clusterPhi.begin() + cluster2);
+      nClusters--;
+      modified = true;
+      // can't use cscCluster, because its sorted, but the other vectors and clusterID are not sorted.
+    }
+  }
+  clear_clusters(); // clear all the vectors, but nClusters is kept to keep track of the number of clusters.
+}
 
 int DBSCAN::vertexing()
 {
@@ -563,3 +841,8 @@ double DBSCAN::deltaPhi(double phi1, double phi2)
   }
   return dphi;
 };
+double DBSCAN::deltaR(double eta1, double phi1, double eta2, double phi2) {
+  double dphi = deltaPhi(phi1,phi2);
+  double deta = eta1 - eta2;
+  return sqrt( dphi*dphi + deta*deta);
+}

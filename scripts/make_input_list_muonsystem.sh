@@ -37,9 +37,9 @@
 #MC_Summer16 \
 #MC_Fall17 \
 for year in \
-MC_Summer16
+MC_Fall18
 do
-	version=displacedJetMuonNtuple/V1p16/${year}/v1/sixie/
+	version=displacedJetMuonNtuple/V1p17/${year}/v1/sixie/
 	root_dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/${version}/
 	list_dir=$CMSSW_BASE/src/llp_analyzer/lists/${version}
 	echo $list_dir
@@ -50,22 +50,34 @@ do
 	#n3n2-n1-hbb-hbb_mh200_pl1000_ev100000 \
 	#n3n2-n1-hbb-hbb_mh400_pl1000_ev100000 \
 	#n3n2-n1-hinc-hgg_mh200_pl100_ev100000
+	#ggH_HToSSTobbbb_ms1_pl1000
 	#WplusH_HToSSTobbbb_ms55_pl10000_ev150000 \
 	#WminusH_HToSSTobbbb_ms55_pl10000_ev150000
+	#for sample in \
+	#ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch1 \
+	#ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch3 \
+	#ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch4 \
+	#ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch1 \
+	#ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch3 \
+	#ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch4
+	#do
+	#for sample in \
 	#WH_HToSSTobbbb_CSCDecayFilter_ms55_pl100000_ev150000 \
+	#ZH_HToSSTobbbb_ms55_pl1000_ev150000 \
+	#ZH_HToSSTobbbb_ms55_pl10000_ev150000
+	#do
+	#ggH_HToSSTobbbb_ms1_pl1000 \
+	#WplusH_HToSSTobbbb_ms55_pl10000_ev150000 \
+        #WminusH_HToSSTobbbb_ms55_pl10000_ev150000
 	for sample in \
-	ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch1 \
-	ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch3 \
-	ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch4 \
-	ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch1 \
-	ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch3 \
-	ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch4
+	WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
 	do
 	        echo "${list_dir}${sample}.txt"
 	        rm -f ${list_dir}${sample}.txt
 		sample=${sample%.txt}
-	        find ${root_dir}${sample%_batch*}/*${sample##*ev150000_}*/ -name "*.root" -size +1000c >> ${list_dir}${sample}.txt
-	        sed -i '/failed/d' ${list_dir}${sample}.txt
+	        #find ${root_dir}${sample%_batch*}/*${sample##*ev150000_}*/ -name "*.root" -size +1000c >> ${list_dir}${sample}.txt
+		find ${root_dir}${sample}/ -name "*.root" -size +1000c >> ${list_dir}${sample}.txt
+		sed -i '/failed/d' ${list_dir}${sample}.txt
 	        echo "input list created for $sample"
 	done
 done

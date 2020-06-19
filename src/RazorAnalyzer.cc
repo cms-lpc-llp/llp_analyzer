@@ -440,7 +440,17 @@ void RazorAnalyzer::EnableDT()
   fChain->SetBranchStatus("dtRechitEta", 1);
   fChain->SetBranchStatus("dtRechitPhi", 1);
   fChain->SetBranchStatus("dtRechitTime", 1);
-  
+
+  fChain->SetBranchStatus("nDtSeg", 1);
+  fChain->SetBranchStatus("dtSegPhi", 1);
+  fChain->SetBranchStatus("dtSegEta", 1);
+  fChain->SetBranchStatus("dtSegX", 1);
+  fChain->SetBranchStatus("dtSegY", 1);
+  fChain->SetBranchStatus("dtSegZ", 1);
+  fChain->SetBranchStatus("dtSegStation", 1);
+  fChain->SetBranchStatus("dtSegWheel", 1);
+  fChain->SetBranchStatus("dtSegTime", 1);
+
   fChain->SetBranchStatus("nRpc", 1);
   fChain->SetBranchStatus("rpcPhi", 1);
   fChain->SetBranchStatus("rpcEta", 1);
@@ -477,7 +487,19 @@ void RazorAnalyzer::EnableCSC()
     fChain->SetBranchStatus("cscT", 1);
 
     fChain->SetBranchStatus("cscChi2", 1);
-    /*
+    fChain->SetBranchStatus("nCscSeg", 1);
+    fChain->SetBranchStatus("cscSegPhi", 1);
+    fChain->SetBranchStatus("cscSegEta", 1);
+    fChain->SetBranchStatus("cscSegX", 1);
+    fChain->SetBranchStatus("cscSegY", 1);
+    fChain->SetBranchStatus("cscSegZ", 1);
+    fChain->SetBranchStatus("cscSegT", 1);
+    fChain->SetBranchStatus("cscSegChi2", 1);
+    fChain->SetBranchStatus("cscSegChamber", 1);
+    fChain->SetBranchStatus("cscSegStation", 1);
+    fChain->SetBranchStatus("cscSegNRecHits", 1);
+
+        /*
     fChain->SetBranchStatus("nCscClusters", 1);
     fChain->SetBranchStatus("cscClusterX", 1);
     fChain->SetBranchStatus("cscClusterY", 1);

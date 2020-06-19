@@ -10,68 +10,72 @@ cd ../
 RazorAnalyzerDir=`pwd`
 cd -
 
-inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p16/MC_Summer16/v1/v8/
-outputDir=${inputDir}normalized
-echo ${inputDir}
 job_script=${RazorAnalyzerDir}/scripts_condor/normalize.sh
-#DYJetsToLL_M-50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8 \
-#QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
-#WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8
-#ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18
-#for sample in \
-#WplusH_HToSSTobbbb_ms55_pl10000_ev150000 \
-#WminusH_HToSSTobbbb_ms55_pl10000_ev150000
-#do
-for sample in \
-ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch1 \
-ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch3 \
-ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch4 \
-ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch1 \
-ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch3 \
+listSummer16=(
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch1
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch3
+ZH_HToSSTobbbb_ms55_pl10000_ev150000_batch4
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch1
+ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch3
 ZH_HToSSTobbbb_ms55_pl1000_ev150000_batch4
+WH_HToSSTobbbb_CSCDecayFilter_ms55_pl100000_ev150000
+)
+listSummer16=(
+ZH_HToSSTobbbb_ms55_pl1000_ev150000
+ZH_HToSSTobbbb_ms55_pl10000_ev150000
+WH_HToSSTobbbb_CSCDecayFilter_ms55_pl100000_ev150000
+)
+listFall18=(
+WplusH_HToSSTobbbb_ms55_pl10000_ev150000
+WminusH_HToSSTobbbb_ms55_pl10000_ev150000
+WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+)
+#listFall18=(
+#ggH_HToSSTobbbb_ms1_pl1000
+#)
+for year in \
+Summer16 \
+Fall18
 do
-#ZH_HToSSTobbbb_ms55_pl10000_ev150000 \
-#ZH_HToSSTobbbb_ms55_pl1000_ev150000
-#for sample in \
-#WH_HToSSTobbbb_CSCDecayFilter_ms55_pl100000_ev150000
-#do
-	echo "Sample " ${sample}
-	analyzer=llp_MuonSystem
-	rm -f submit/${analyzer}_normalize_${sample}*.jdl
-	rm -f log/${analyzer}_normalize_${sample}*
+        echo ${year}
+        sampleList=list${year}[@]
+        for sample in "${!sampleList}"
+        do
 
-	jdl_file=submit/${analyzer}_normalize_${sample}.jdl
-	echo "Universe = vanilla" > ${jdl_file}
-	echo "Executable = ${job_script}" >> ${jdl_file}
-	echo "Arguments = bkg no ${sample} ${inputDir} ${outputDir} ${CMSSW_BASE} ${HOME}/"  >> ${jdl_file}
+		inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p17/MC_${year}/v1/v4/
+		outputDir=${inputDir}normalized
+		echo ${inputDir}
+		echo "Sample " ${sample}
+		analyzer=llp_MuonSystem
+		rm -f submit/${analyzer}_normalize_${sample}*.jdl
+		rm -f log/${analyzer}_normalize_${sample}*
 
-	echo "Log = log/${analyzer}_normalize_${sample}_PC.log" >> ${jdl_file}
-	echo "Output = log/${analyzer}_normalize_${sample}_\$(Cluster).\$(Process).out" >> ${jdl_file}
-	echo "Error = log/${analyzer}_normalize_${sample}_\$(Cluster).\$(Process).err" >> ${jdl_file}
+		jdl_file=submit/${analyzer}_normalize_${sample}.jdl
+		echo "Universe = vanilla" > ${jdl_file}
+		echo "Executable = ${job_script}" >> ${jdl_file}
+		echo "Arguments = bkg no ${sample} ${inputDir} ${outputDir} ${CMSSW_BASE} ${HOME}/"  >> ${jdl_file}
 
-	#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
-	echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
-	echo "RequestMemory = 2000" >> ${jdl_file}
-	echo "RequestCpus = 1" >> ${jdl_file}
-	echo "RequestDisk = 4" >> ${jdl_file}
+		echo "Log = log/${analyzer}_normalize_${sample}_PC.log" >> ${jdl_file}
+		echo "Output = log/${analyzer}_normalize_${sample}_\$(Cluster).\$(Process).out" >> ${jdl_file}
+		echo "Error = log/${analyzer}_normalize_${sample}_\$(Cluster).\$(Process).err" >> ${jdl_file}
 
-	echo "+RunAsOwner = True" >> ${jdl_file}
-	echo "+InteractiveUser = true" >> ${jdl_file}
-	echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
-	echo '+SingularityBindCVMFS = True' >> ${jdl_file}
-	echo "run_as_owner = True" >> ${jdl_file}
-	echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}
-	echo "should_transfer_files = YES" >> ${jdl_file}
-	echo "when_to_transfer_output = ON_EXIT" >> ${jdl_file}
-	echo "Queue 1" >> ${jdl_file}
-	echo "condor_submit ${jdl_file}"
-	condor_submit ${jdl_file}
+		#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
+		echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
+		echo "RequestMemory = 2000" >> ${jdl_file}
+		echo "RequestCpus = 1" >> ${jdl_file}
+		echo "RequestDisk = 4" >> ${jdl_file}
+
+		echo "+RunAsOwner = True" >> ${jdl_file}
+		echo "+InteractiveUser = true" >> ${jdl_file}
+#		echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
+                echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7-m202006\"" >> ${jdl_file}
+		echo '+SingularityBindCVMFS = True' >> ${jdl_file}
+		echo "run_as_owner = True" >> ${jdl_file}
+		echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}
+		echo "should_transfer_files = YES" >> ${jdl_file}
+		echo "when_to_transfer_output = ON_EXIT" >> ${jdl_file}
+		echo "Queue 1" >> ${jdl_file}
+		echo "condor_submit ${jdl_file}"
+		condor_submit -batch-name ${sample} ${jdl_file} 
+	done
 done

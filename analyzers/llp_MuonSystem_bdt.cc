@@ -117,7 +117,7 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
   //options format: MH/MX/ctau/condor: 1000/300/0/1
   // mh can be 3-4 digits, mx is always 3 digits, ctau is one digit(number of zeros), last digit is condor option
   // mh can be 3-4 digits, mx is always 3 digits, ctau is 6 digit last digit is condor option
-
+  bool brem = int(options/100)==1;//1 is muon brem, 2 is OOT data
   bool signalScan = int(options/10) == 1;
   int option = options%10;
 
@@ -474,6 +474,8 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       if(!isMuonPOGLooseMuon(i)) continue;
       if(muonPt[i] < zh_lepton1_cut) continue;
       if(fabs(muonEta[i]) > 2.4) continue;
+      float muonIso = (muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i];
+      if (muonIso>=0.15) continue;
 
       //remove overlaps
       bool overlap = false;
@@ -542,6 +544,7 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       for( uint j = 0; j < Leptons.size(); j++ )
       {
         if (!( Leptons[i].pdgId == -1*Leptons[j].pdgId )) continue;// same flavor opposite charge
+        if (abs(Leptons[i].pdgId)!=13)continue; //only select Z->mumu events
         double tmpMass = (Leptons[i].lepton+Leptons[j].lepton).M();
 
         //select the pair closest to Z pole mass
@@ -565,7 +568,7 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       }
     }
 
-    if (foundZ && fabs(ZMass-Z_MASS) < 30.0 && Leptons.size() == 2 && leadingLepPt > zh_lepton0_cut)
+    if (foundZ && ZMass > Z_MASS-30.0 && Leptons.size() == 2 && leadingLepPt > zh_lepton0_cut)
     {
       MuonSystem->ZMass = ZMass;
       MuonSystem->ZPt   = ZPt;
@@ -610,7 +613,7 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       TLorentzVector visible = Leptons[0].lepton;
       MuonSystem->MT = GetMT(visible,met);
     }
-
+    if(isData && brem && (MuonSystem->category!=2))continue; //only select Z->mumu events if selecting muon brem
 
   //-----------------------------------------------
   //Select Jets
@@ -748,7 +751,6 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
     vector<Point> points;
     points.clear();
     MuonSystem->nCscRechits  = 0;
-    cout<<"number of rechits "<<ncscRechits<<endl;
     int nCscRechitsChamberPlus11(0), nCscRechitsChamberPlus12(0), nCscRechitsChamberPlus13(0), nCscRechitsChamberPlus21(0), nCscRechitsChamberPlus22(0),
     nCscRechitsChamberPlus31(0), nCscRechitsChamberPlus32(0), nCscRechitsChamberPlus41(0), nCscRechitsChamberPlus42(0),
     nCscRechitsChamberMinus11(0), nCscRechitsChamberMinus12(0), nCscRechitsChamberMinus13(0), nCscRechitsChamberMinus21(0), nCscRechitsChamberMinus22(0),
@@ -836,46 +838,57 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 1) nDTRechitsChamberPlus41++;
       if (dtRechitStation[i] == 4 && dtRechitWheel[i] == 2) nDTRechitsChamberPlus42++;
     }
-    if (nDTRechitsChamberMinus12 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberMinus11 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamber10 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberPlus11 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberPlus12 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberMinus22 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberMinus21 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamber20 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberPlus21 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberPlus22 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberMinus32 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberMinus31 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamber30 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberPlus31 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberPlus32 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberMinus42 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberMinus41 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamber40 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberPlus41 > 50) MuonSystem->nDTRings++;
-    if (nDTRechitsChamberPlus42 > 50) MuonSystem->nDTRings++;
+    if (nDTRechitsChamberMinus12 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberMinus11 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamber10 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberPlus11 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberPlus12 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberMinus22 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberMinus21 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamber20 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberPlus21 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberPlus22 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberMinus32 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberMinus31 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamber30 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberPlus31 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberPlus32 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberMinus42 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberMinus41 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamber40 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberPlus41 > 50) MuonSystem->nDtRings++;
+    if (nDTRechitsChamberPlus42 > 50) MuonSystem->nDtRings++;
 
-    if (MuonSystem->nDTRings+MuonSystem->nCscRings > 10) continue;
+    if (MuonSystem->nDtRings+MuonSystem->nCscRings > 10) continue;
     //Do DBSCAN Clustering
     int min_point = 50;  //minimum number of segments to call it a cluster
     float epsilon = 0.2; //cluster radius parameter
     DBSCAN ds(min_point, epsilon, points);
     ds.run();
     ds.result();
+    ds.clusterMoments();//but need this step to merge
+    ds.sort_clusters();//might not need to sort
+
+    ds.merge_clusters();
+    ds.result();
     ds.clusterMoments();
     ds.sort_clusters();
+
     //Save cluster information
     MuonSystem->nCscRechitClusters = 0;
     for ( auto &tmp : ds.CscCluster ) {
-        if (isData && tmp.tTotal > -12.5)continue;
+        if (isData && !brem && tmp.tTotal > -12.5)continue;
+        if (isData && brem && abs(tmp.tTotal) > 12.5)continue;
+        if (!isData && abs(tmp.tTotal) > 12.5)continue;
 
         if(tmp.nCscSegmentChamberPlus11 != 0)continue;
         if(tmp.nCscSegmentChamberPlus12 != 0)continue;
         if(tmp.nCscSegmentChamberMinus11 != 0)continue;
         if(tmp.nCscSegmentChamberMinus12 != 0)continue;
-        if(abs(tmp.eta)>=2.1) continue;
+        if(abs(tmp.eta)>=2.0) continue;
+        if(tmp.TSpread > 20)continue;
+
+
         MuonSystem->cscRechitClusterX[MuonSystem->nCscRechitClusters] =tmp.x;
         MuonSystem->cscRechitClusterY[MuonSystem->nCscRechitClusters] =tmp.y;
         MuonSystem->cscRechitClusterZ[MuonSystem->nCscRechitClusters] =tmp.z;
@@ -895,6 +908,51 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
         MuonSystem->cscRechitClusterPhiSpread[MuonSystem->nCscRechitClusters] = tmp.PhiSpread;
         MuonSystem->cscRechitClusterTimeSpread[MuonSystem->nCscRechitClusters] = tmp.TSpread;
         MuonSystem->cscRechitClusterSize[MuonSystem->nCscRechitClusters] = tmp.nCscSegments;
+        if(!isData)
+        {
+          int phi_corr_index = 0;
+          int r_corr_index = 0;
+          if (abs(tmp.eta) < 1)
+          {
+            phi_corr_index = 5;
+            r_corr_index = 3;
+          }
+          else if (abs(tmp.eta) < 1.2)
+          {
+            phi_corr_index = 4;
+            r_corr_index = 2;
+          }
+          else if (abs(tmp.eta) < 1.4)
+          {
+            phi_corr_index = 2;
+            r_corr_index = 1;
+          }
+          else if (abs(tmp.eta) < 1.6)
+          {
+            phi_corr_index = 1;
+            r_corr_index = 1;
+          }
+          else if (abs(tmp.eta) < 1.8)
+          {
+            phi_corr_index = 5;
+            r_corr_index = 1;
+          }
+          else if (abs(tmp.eta) < 2)
+          {
+            phi_corr_index = 5;
+            r_corr_index = 0;
+          }
+          MuonSystem->cscRechitClusterRSpread_corr[MuonSystem->nCscRechitClusters] = tmp.RSpread_corr[phi_corr_index][r_corr_index];
+          MuonSystem->cscRechitClusterXYSpread_corr[MuonSystem->nCscRechitClusters] = tmp.XYSpread_corr[phi_corr_index][r_corr_index];
+          MuonSystem->cscRechitClusterXSpread_corr[MuonSystem->nCscRechitClusters] = tmp.XSpread_corr[phi_corr_index][r_corr_index];
+          MuonSystem->cscRechitClusterYSpread_corr[MuonSystem->nCscRechitClusters] = tmp.YSpread_corr[phi_corr_index][r_corr_index];
+          MuonSystem->cscRechitClusterPhiSpread_corr[MuonSystem->nCscRechitClusters] = tmp.PhiSpread_corr[phi_corr_index][r_corr_index];
+          MuonSystem->cscRechitClusterEtaSpread_corr[MuonSystem->nCscRechitClusters] = tmp.EtaSpread_corr[phi_corr_index][r_corr_index];
+          MuonSystem->cscRechitClusterEtaPhiSpread_corr[MuonSystem->nCscRechitClusters] = tmp.EtaPhiSpread_corr[phi_corr_index][r_corr_index];
+          MuonSystem->cscRechitClusterRSpread_corr[MuonSystem->nCscRechitClusters] = tmp.RSpread_corr[phi_corr_index][r_corr_index];
+
+        }
+
 
         MuonSystem->cscRechitClusterNRechitChamberPlus11[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus11;
         MuonSystem->cscRechitClusterNRechitChamberPlus12[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus12;
@@ -920,13 +978,53 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
         MuonSystem->cscRechitClusterMaxStation[MuonSystem->nCscRechitClusters] = tmp.maxStation;
         MuonSystem->cscRechitClusterMaxStationRatio[MuonSystem->nCscRechitClusters] = 1.0*tmp.maxStationSegment/tmp.nCscSegments;
         MuonSystem->cscRechitClusterNStation[MuonSystem->nCscRechitClusters] = tmp.nStation;
-
+        MuonSystem->cscRechitClusterNStation5[MuonSystem->nCscRechitClusters] = tmp.nStation5;
+        MuonSystem->cscRechitClusterNStation10perc[MuonSystem->nCscRechitClusters] = tmp.nStation10perc;
+        MuonSystem->cscRechitClusterAvgStation[MuonSystem->nCscRechitClusters] = tmp.avgStation;
+        MuonSystem->cscRechitClusterAvgStation5[MuonSystem->nCscRechitClusters] = tmp.avgStation5;
+        MuonSystem->cscRechitClusterAvgStation10perc[MuonSystem->nCscRechitClusters] = tmp.avgStation10perc;
         MuonSystem->cscRechitClusterMe11Ratio[MuonSystem->nCscRechitClusters] = tmp.Me11Ratio;
         MuonSystem->cscRechitClusterMe12Ratio[MuonSystem->nCscRechitClusters] = tmp.Me12Ratio;
-        for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
-       {
-         MuonSystem->cscRechitsCluster2Id[tmp.segment_id[j]] = MuonSystem->nCscRechitClusters;
+       //  for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
+       // {
+       //   MuonSystem->cscRechitsCluster2Id[tmp.segment_id[j]] = MuonSystem->nCscRechitClusters;
+       // }
+       //match to MB1 DT segments
+       for (int i = 0; i < nDtSeg; i++) {
+         if (RazorAnalyzer::deltaR(dtSegEta[i], dtSegPhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 )
+         {
+           if (dtSegStation[i] == 1) MuonSystem->cscRechitCluster_match_MB1Seg_0p4[MuonSystem->nCscRechitClusters] ++;
+         }
+
        }
+       if (MuonSystem->cscRechitCluster_match_MB1Seg_0p4[MuonSystem->nCscRechitClusters]>0) continue;
+       //match to RPC hits in RE1/2
+       for (int i = 0; i < nRpc; i++) {
+         float rpcR = sqrt(rpcX[i]*rpcX[i] + rpcY[i]*rpcY[i]);
+         if (RazorAnalyzer::deltaR(rpcEta[i], rpcPhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 )
+         {
+           if (rpcR < 461.0 && rpcR > 275 && abs(rpcZ[i]) > 663 && abs(rpcZ[i]) < 730)
+           {
+             MuonSystem->cscRechitCluster_match_RE12_0p4[MuonSystem->nCscRechitClusters] ++;
+           }
+           if (rpcR < 470 && rpcR > 380 && abs(rpcZ[i]) < 661)
+           {
+             MuonSystem->cscRechitCluster_match_RB1_0p4[MuonSystem->nCscRechitClusters] ++;
+           }
+
+         }
+
+       }
+       if (MuonSystem->cscRechitCluster_match_RB1_0p4[MuonSystem->nCscRechitClusters]>0) continue;
+       if (MuonSystem->cscRechitCluster_match_RE12_0p4[MuonSystem->nCscRechitClusters]>0) continue;
+
+       if(MuonSystem->category == 2 && brem && isData)
+       {
+         bool match1 = RazorAnalyzer::deltaR(MuonSystem->lepEta[MuonSystem->ZleptonIndex1], MuonSystem->lepPhi[MuonSystem->ZleptonIndex1], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4;
+         bool match2 = RazorAnalyzer::deltaR(MuonSystem->lepEta[MuonSystem->ZleptonIndex2], MuonSystem->lepPhi[MuonSystem->ZleptonIndex2], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4;
+         if(match1==false && match2 == false) continue;
+       }
+
 
         //Jet veto/ muon veto
         MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters] = 0.0;
@@ -961,13 +1059,17 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
         for(int i = 0; i < nMuons; i++)
         {
           if (fabs(muonEta[i]>3.0)) continue;
+          float muonIso = (muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i];
+          if (muonIso>0.15)continue;
           if (RazorAnalyzer::deltaR(muonEta[i], muonPhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 && muonPt[i] > MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] ) {
             MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters]  = muonPt[i];
+
           }
           if (RazorAnalyzer::deltaR(muonEta[i], muonPhi[i], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4 && muonE[i] > MuonSystem->cscRechitClusterMuonVetoE[MuonSystem->nCscRechitClusters] ) {
             MuonSystem->cscRechitClusterMuonVetoE[MuonSystem->nCscRechitClusters]  = muonE[i];
           }
         }
+        if (isData && brem && MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] < 50)continue;//match to muon the pass tight iso, with pt>50
         // match to gen-level muon
         if(!isData)
         {

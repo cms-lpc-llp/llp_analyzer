@@ -10,7 +10,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=2
+filesPerJob=5
 for year in \
 Summer16 \
 Fall17 \
@@ -24,14 +24,14 @@ do
         fi
         #VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8 \
 	#VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-	#ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-	#ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
+	#ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8 \
+        #ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8	
         for sample in \
         ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
 	do
 		echo "Sample " ${sample}
-		version=/V1p15/MC_${year}/v3/
-		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v10/${sample}
+		version=/V1p17/MC_${year}/v1/
+		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v5/${sample}
 		#${sample%_HToSS*}_HToSSTobbbb_MH-125_MS-${mx}_ctau-${ctau_cm}_${tune}_13TeV-powheg-pythia8
 		echo ${output}
 		inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
@@ -81,7 +81,8 @@ do
 		
 		echo "+RunAsOwner = True" >> ${jdl_file}
 		echo "+InteractiveUser = true" >> ${jdl_file}
-		echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
+		#echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
+		echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7-m202006\"" >> ${jdl_file}
 		echo '+SingularityBindCVMFS = True' >> ${jdl_file}
 		echo "run_as_owner = True" >> ${jdl_file}
 		echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}
