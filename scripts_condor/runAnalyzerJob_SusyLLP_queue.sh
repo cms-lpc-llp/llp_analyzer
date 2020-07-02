@@ -18,11 +18,13 @@ outputDirectory=$8
 analyzerTag=$9
 CMSSW_BASE=${10}
 homeDir=${11}
+process=${12}
 
 
 currentDir=`pwd`
 user=${homeDir#*/storage/user/}
-runDir=${currentDir}/${user}_${analyzerTag}/
+runDir=${currentDir}/${user}_${analyzerTag}_${sample}_${option}_Job${jobnumber}/
+#runDir=${currentDir}/${user}_${analyzerTag}_${sample}_Job${jobnumber}/
 rm -rf ${runDir}
 mkdir -p ${runDir}
 
@@ -46,6 +48,11 @@ then
 	if [ -f $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/RazorRun_T2_JM ]
 	then
 		cp $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/RazorRun_T2_JM ./
+
+
+		ls
+		pwd
+
 		mkdir -p JEC
 		cp -r $CMSSW_BASE/src/cms_lpc_llp/llp_analyzer/data/JEC/Summer16_23Sep2016V3_MC/ JEC/Summer16_23Sep2016V3_MC
 		if [ -d JEC/Summer16_23Sep2016V3_MC ]
@@ -68,9 +75,9 @@ then
 		echo "************************************"
 		echo ""
 		echo " "; echo "Starting razor run job now"; echo " ";
-		echo ./RazorRun_T2_JM inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile}
-		./RazorRun_T2_JM inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${label}
-		#./RazorRun_T2_JM inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${label}
+		echo ./RazorRun_T2_JM inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${analyzerTag} -p=${process}
+		./RazorRun_T2_JM inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${analyzerTag} -p=${process}
+		#./RazorRun_T2_JM inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${analyzerTag} -p=${process}
 		echo ${outputfile}
 		echo ${outputDirectory}
 

@@ -13,6 +13,7 @@
 #include "TH1F.h"
 
 #define _debug 0
+#define _debug_lab 0
 #define _debug_npu 0
 #define _debug_sync 0
 #define _debug_met 0
@@ -22,13 +23,14 @@
 #define _debug_match 0
 #define _debug_avgH 0
 #define _debug_trg 0
+#define _debug_pre 0
 
 #define N_MAX_LLP_DAUGHTERS 4
 #define N_MAX_LLP_GRAND_DAUGHTERS 4
 #define N_MAX_LLPS 2
 #define N_MAX_LEPTONS 20
 #define N_MAX_JETS 20
-#define NTriggersMAX 602 //Number of trigger in the .dat file
+#define NTriggersMAX 1201 //Number of trigger in the .dat file
 using namespace std;
 
 struct leptons
@@ -152,15 +154,18 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		cout << "process label: " << label << "\n";
 	}
 	else if ((options/10) % 10 == 2){
-		label = "zH";
+		//label = "zH";
+		label = "MR_JetHT";
 		cout << "process label: " << label << "\n";
 	}
 	else if ((options/10) % 10 == 3){
-		label = "bkg_wH";
+		//label = "bkg_wH";
+		label = "MR_SingleMuon";
 		cout << "process label: " << label << "\n";
 	}
 	else if ((options/10) % 10 == 4){
-		label = "bkg_zH";
+		//label = "bkg_zH";
+		label = "MR_SingleElectron";
 		cout << "process label: " << label << "\n";
 	}
 	else if ((options/10) % 10 == 5){
@@ -169,6 +174,18 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	}
 	else if ((options/10) % 10 == 6){
 		label = "bkg_HH";
+		cout << "process label: " << label << "\n";
+	}
+	else if ((options/10) % 10 == 7){
+		label = "MR_EMU";
+		cout << "process label: " << label << "\n";
+	}
+	else if ((options/10) % 10 == 8){
+		label = "MR_PHO";
+		cout << "process label: " << label << "\n";
+	}
+	else if ((options/10) % 10 == 9){
+		label = "MR_ZLL";
 		cout << "process label: " << label << "\n";
 	}
 	else{
@@ -209,30 +226,48 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 	int wzId;
 	int NTrigger;//Number of trigger in trigger paths
-	int elePt_cut = 0;
-	int muonPt_cut = 0;
-	uint nLepton_cut = 0;
+	//int elePt_cut = 0;
+	//int muonPt_cut = 0;
+	//uint nLepton_cut = 0;
 
 
 
 	if (label == "HH" || label == "bkg_HH" ){
 		NTrigger = 1;
-		muonPt_cut = 15;
-		elePt_cut = 15;
-		nLepton_cut = 0;
+		//muonPt_cut = 15;
+		//elePt_cut = 15;
+		//nLepton_cut = 0;
+	}
+	if (label == "MR_EMU" ){
+		NTrigger = 10;
+	}
+	if (label == "MR_PHO" ){
+		NTrigger = 16;
+	}
+	if (label == "MR_SingleMuon" ){
+		NTrigger = 8;
+	}
+	if (label == "MR_SingleElectron" ){
+		NTrigger = 2;
+	}
+	if (label == "MR_ZLL" ){
+		NTrigger = 10;
+	}
+	if (label == "MR_JetHT" ){
+		NTrigger = 11;
 	}
 	if (label == "zH" || label == "bkg_zH" ){
 		NTrigger = 4;
-		muonPt_cut = 15;
-		elePt_cut = 15;
-		nLepton_cut = 2;
+		//muonPt_cut = 15;
+		//elePt_cut = 15;
+		//nLepton_cut = 2;
 	}
 	//else{}
 	if (label == "wH" || label == "bkg_wH" ){
 		NTrigger = 2;
-		muonPt_cut = 27;
-		elePt_cut = 32;
-		nLepton_cut = 1;
+		//muonPt_cut = 27;
+		//elePt_cut = 32;
+		//nLepton_cut = 1;
 	}
 
 	int trigger_paths[NTrigger];
@@ -253,6 +288,81 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	else if (label == "HH" || label == "bkg_HH"){
 		wzId = 25;
 		trigger_paths[0] = 310;
+	}
+	else if (label == "MR_EMU"){
+		wzId = 25;
+		trigger_paths[0] = 372; //HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL
+		trigger_paths[1] = 373; //HLT_Mu23_TrkIsoVVL_Ele8_CaloIdL_TrackIdL_IsoVL_DZ
+		trigger_paths[2] = 374; //HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL
+		trigger_paths[3] = 375; //HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
+		trigger_paths[4] = 376; //HLT_Mu30_Ele30_CaloIdL_GsfTrkIdVL
+		trigger_paths[5] = 377; //HLT_Mu33_Ele33_CaloIdL_GsfTrkIdVL
+		trigger_paths[6] = 378; //HLT_Mu37_Ele27_CaloIdL_GsfTrkIdVL
+		trigger_paths[7] = 379; //HLT_Mu27_Ele37_CaloIdL_GsfTrkIdVL
+		trigger_paths[8] = 615; //HLT_Mu27_Ele37_CaloIdL_MW
+		trigger_paths[9] = 616; //HLT_Mu37_Ele27_CaloIdL_MW
+	}
+	else if (label == "MR_PHO"){
+		wzId = 25;
+		trigger_paths[15] = 402;  //HLT_Photon22
+		trigger_paths[14] = 403;  //HLT_Photon30
+		trigger_paths[13] = 774;  //HLT_Photon33
+		trigger_paths[12] = 404;  //HLT_Photon36
+		trigger_paths[11] = 405;  //HLT_Photon50
+		trigger_paths[10] = 406;  //HLT_Photon75
+		trigger_paths[9] = 407;  //HLT_Photon90
+		trigger_paths[8] = 408;  //HLT_Photon120
+		trigger_paths[7] = 536;  //HLT_Photon125
+		trigger_paths[6] =  58;  //HLT_Photon150
+		trigger_paths[5] = 775;  //HLT_Photon200
+		trigger_paths[4] = 409;  //HLT_Photon175
+		trigger_paths[3] = 335;  //HLT_Photon250_NoHE
+		trigger_paths[2] = 336;  //HLT_Photon300_NoHE
+		trigger_paths[1] = 583;  //HLT_Photon500
+		trigger_paths[0] = 584;  //HLT_Photon600
+	}
+	else if (label == "MR_SingleMuon"){
+		wzId = 25;
+		trigger_paths[7] = 115; //HLT_IsoMu17_eta2p1
+		trigger_paths[6] = 120; //HLT_IsoMu18
+		trigger_paths[5] = 129; //HLT_IsoMu20 
+		trigger_paths[4] = 133; //HLT_IsoMu22
+		trigger_paths[3] = 135; //HLT_IsoMu24
+		trigger_paths[2] = 136; //HLT_IsoMu27
+		trigger_paths[1] = 644; //HLT_IsoMu24_eta2p1
+		trigger_paths[0] = 645; //HLT_IsoMu30
+	}
+	else if (label == "MR_SingleElectron"){
+		wzId = 25;
+		trigger_paths[1] = 87; //HLT_Ele32_WPTight_Gsf
+		trigger_paths[0] = 88; //HLT_Ele32_eta2p1_WPLoose_Gsf
+	}
+	else if (label == "MR_ZLL"){
+		wzId = 25;
+		trigger_paths[9] = 87; //HLT_Ele32_WPTight_Gsf
+		trigger_paths[8] = 88; //HLT_Ele32_eta2p1_WPLoose_Gsf
+		trigger_paths[7] = 115; //HLT_IsoMu17_eta2p1
+		trigger_paths[6] = 120; //HLT_IsoMu18
+		trigger_paths[5] = 129; //HLT_IsoMu20 
+		trigger_paths[4] = 133; //HLT_IsoMu22
+		trigger_paths[3] = 135; //HLT_IsoMu24
+		trigger_paths[2] = 136; //HLT_IsoMu27
+		trigger_paths[1] = 644; //HLT_IsoMu24_eta2p1
+		trigger_paths[0] = 645; //HLT_IsoMu30
+	}
+	else if (label == "MR_JetHT"){
+		wzId = 25;
+		trigger_paths[10] = 239; //HLT_PFJet40
+		trigger_paths[9] = 240; //HLT_PFJet60
+		trigger_paths[8] = 241; //HLT_PFJet80
+		trigger_paths[7] = 242; //HLT_PFJet140
+		trigger_paths[6] = 243; //HLT_PFJet200
+		trigger_paths[5] = 244; //HLT_PFJet260
+		trigger_paths[4] = 245; //HLT_PFJet320
+		trigger_paths[3] = 246; //HLT_PFJet400
+		trigger_paths[2] = 247; //HLT_PFJet450
+		trigger_paths[1] = 248; //HLT_PFJet500
+		trigger_paths[0] = 666; //HLT_PFJet550
 	}
 
 	//--------------------------------
@@ -319,6 +429,10 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			}
 
 		}
+		//else if(label =="MR_EMU"|| label == "MR_PHO" || label == "MR_ZLL"){
+		else if( (label.find("MR") != std::string::npos) ){
+			NEvents->Fill(1);
+		}
 		else{
 			//generatedEvents->Fill(1);
 			llp_tree->weight = 1;
@@ -364,7 +478,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 		if(!isData)
 		{
-			
+
 			//   for(int i=0; i < nGenJets; i++)
 			//   {
 			//   llp_tree->genJetE[llp_tree->nGenJets] = genJetE[i];
@@ -373,7 +487,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			//   llp_tree->genJetPhi[llp_tree->nGenJets] = genJetPhi[i];
 			//// llp_tree->nGenJets++;
 			//}
-			
+
 			llp_tree->genMetPtTrue = genMetPtTrue;
 			llp_tree->genMetPhiTrue = genMetPhiTrue;
 			llp_tree->genMetPtCalo = genMetPtCalo;
@@ -413,7 +527,16 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		if(_debug_met) std::cout << "met " << llp_tree->met << std::endl;
 		//if( llp_tree->met < 120. ) continue;
 		//if( llp_tree->met < 150. ) continue;
-		if( llp_tree->met < 200. ) continue;
+		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
+		if(_debug_lab) std::cout << "met " << llp_tree->met << std::endl;
+		if( (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
+		if( (label=="MR_EMU") && llp_tree->met < 30. ) continue;
+		if( (label.find("MR_Single") != std::string::npos) && llp_tree->met < 40. ) continue;
+		if( (label.find("MR_ZLL") != std::string::npos) && llp_tree->met < 40. ) continue;
+		if( (label.find("MR_JetHT") != std::string::npos) && llp_tree->met < 200. ) continue;
+		if( (label=="MR_PHO") && llp_tree->met >= 30. ) continue;
+		if(_debug_lab) std::cout << "label " << label.c_str() << "passed "<< std::endl;
+		if(_debug_lab) std::cout << "met " << llp_tree->met << "passed "<< std::endl;
 		if(_debug_met) std::cout << "metType1Pt passed" << metType1Pt << std::endl;
 		llp_tree->metPhi = metType1Phi;
 		if(_debug) std::cout << "npv " << llp_tree->npv << std::endl;
@@ -434,24 +557,84 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//Triggers
 		for(int i = 0; i < NTriggersMAX; i++){
 			llp_tree->HLTDecision[i] = HLTDecision[i];
+			llp_tree->HLTPrescale[i] = HLTPrescale[i];
 		}
 		if(_debug_trg) std::cout << "begin: 310 " << HLTDecision[310] << std::endl;
 		if(_debug_trg) std::cout << "begin: 310 " << llp_tree->HLTDecision[310] << std::endl;
-		if(!HLTDecision[310]) continue; 
+		if( (label.find("MR") == std::string::npos) && !HLTDecision[310]) continue; 
+
+		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 		bool triggered = false;
-		for(int i = 0; i < NTrigger; i++)
-		{
-			if(_debug_trg) std::cout << "i " << i << ", NTrigger "<< NTrigger << std::endl;
+		if( (label.find("MR_PHO") != std::string::npos) || (label.find("MR_JetHT") != std::string::npos) ){
+			if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
+			triggered = false;
+			for(int i = 0; i < NTrigger; i++){
+				int trigger_temp = trigger_paths[i];
+				if(_debug_pre) std::cout << "trig " << trigger_temp << std::endl;
+				if(_debug_pre) std::cout << "trig dec " << HLTDecision[trigger_temp] << std::endl;
+				if(_debug_pre) std::cout << "trig pre " << HLTPrescale[trigger_temp] << std::endl;
+				triggered = triggered || HLTDecision[trigger_temp];
+				if(_debug_pre) std::cout << "triggered " << triggered << std::endl;
+				if(triggered){
+					//assign weight based on prescale of the highest threshold passed trigger
+					llp_tree->weight = 1*HLTPrescale[trigger_temp];
+					if(_debug_pre) std::cout << "weight " << llp_tree->weight << std::endl;
+					break;
+				}
+				else{
+					llp_tree->weight = 1;
+					if(_debug_pre) std::cout << "weight " << llp_tree->weight << std::endl;
+				}
+			}//end for loop
+		}//MR_PHO/JetHT re-weight based on Prescale
+		else if( (label.find("MR_EMU") != std::string::npos) || (label.find("MR_Single") != std::string::npos) || (label=="MR_ZLL")){
+			if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
+			triggered = false;
+			int tempW = 999999999;
+			for(int i = 0; i < NTrigger; i++){
+				int trigger_temp = trigger_paths[i];
+				if(_debug_pre) std::cout << "trig " << trigger_temp << std::endl;
+				if(_debug_pre) std::cout << "trig dec " << HLTDecision[trigger_temp] << std::endl;
+				if(_debug_pre) std::cout << "trig pre " << HLTPrescale[trigger_temp] << std::endl;
+				triggered = triggered || HLTDecision[trigger_temp];
+				if(_debug_pre) std::cout << "triggered " << triggered << std::endl;
+				if(triggered && tempW!=1){
+					//if weight is already 1, no need to compare again
+					//assign weight based on smallest prescale of passed trigger
+					if(_debug_pre) std::cout << "tempW " << tempW << std::endl;
+					if(tempW>=HLTPrescale[trigger_temp] && HLTPrescale[trigger_temp]>0){
+						//make sure trigger is not disabled
+						tempW = HLTPrescale[trigger_temp];
+						if(_debug_pre) std::cout << "tempW " << tempW << std::endl;
+					}
+				}
+			}//end for loop
+			if(triggered){
+				llp_tree->weight = tempW;
+				if(_debug_pre) std::cout << "weight " << llp_tree->weight << std::endl;
+			}
+			else{
+				llp_tree->weight = 1;
+				if(_debug_pre) std::cout << "weight " << llp_tree->weight << std::endl;
+			}
+		}//MR_EMU/SingleMuon/SingleElectron/ZLL re-weight based on Prescale	
+		if( (label.find("MR") != std::string::npos) && !triggered) continue; 
 
-			int trigger_temp = trigger_paths[i];
-			if(_debug_trg) std::cout << "temp  " << trigger_paths[i] << ", triggered "<< triggered << std::endl;
+		//bool triggered = false;
+		//for(int i = 0; i < NTrigger; i++)
+		//{
+		//	if(_debug_trg) std::cout << "i " << i << ", NTrigger "<< NTrigger << std::endl;
 
-			triggered = triggered || HLTDecision[trigger_temp];
-			if(_debug_trg) std::cout << "is triggered ?"<< triggered << std::endl;
+		//	int trigger_temp = trigger_paths[i];
+		//	if(_debug_trg) std::cout << "temp  " << trigger_paths[i] << ", triggered "<< triggered << std::endl;
 
-		}
+		//	triggered = triggered || HLTDecision[trigger_temp];
+		//	if(_debug_trg) std::cout << "is triggered ?"<< triggered << std::endl;
+
+		//}
 		//if (triggered) trig->Fill(1);
-		if(_debug) std::cout << "triggered " << triggered << std::endl;
+		//if(_debug) std::cout << "triggered " << triggered << std::endl;
+
 		//*************************************************************************
 		//Start Object Selection
 		//*************************************************************************
@@ -481,6 +664,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			}
 
 			if(muonPt[i] <= 10 ) continue;
+			//if( (label=="MR_EMU") && muonPt[i] < 25. ) continue;
+			if( (label.find("MR") != std::string::npos) && muonPt[i] < 25.) continue; 
 			if(fabs(muonEta[i]) > 2.4) continue;
 
 			if(!muonIsLoose[i]) continue;
@@ -515,6 +700,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			llp_tree->nMuons++;
 		}
+		if( (label=="MR_SingleMuon") && llp_tree->nMuons != 1 ) continue;
 		if(_debug) std::cout << "nMuons " << llp_tree->nMuons << std::endl;
 
 		//-------------------------------
@@ -530,6 +716,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			}
 
 			if(elePt[i] <= 10 ) continue;
+			//if( (label=="MR_EMU") && elePt[i] < 25. ) continue;
+			if( (label.find("MR") != std::string::npos) && elePt[i] < 25.) continue; 
 			if(fabs(eleEta[i]) > 2.5) continue;
 
 			if(!ele_passCutBasedIDVeto[i]) continue;
@@ -556,7 +744,10 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			llp_tree->nElectrons++;
 		}
+		if( (label=="MR_SingleElectron") && llp_tree->nElectrons != 1 ) continue;
 		if(_debug) std::cout << "nElectrons " << llp_tree->nElectrons << std::endl;
+
+
 
 		std::vector<taus> Taus;
 		//-------------------------------
@@ -662,11 +853,12 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->nPhotons++;
 		}
 		if(_debug) std::cout << "nPhotons " << llp_tree->nPhotons << std::endl;
+		if( (label=="MR_PHO") && llp_tree->nPhotons != 1 ) continue;
 
 		//-------------------------------
 		//Leptons
 		//-------------------------------
-  	 	TLorentzVector lepp4;
+		TLorentzVector lepp4;
 		sort(Leptons.begin(), Leptons.end(), my_largest_pt_lep);
 		for ( auto &tmp : Leptons )
 		{
@@ -690,6 +882,51 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//if (triggered) trig_lepId->Fill(1);
 		if(_debug) std::cout << "nLeptons " << llp_tree->nLeptons << std::endl;
 
+		//-------------------------------
+		// reconstruct Z
+		//-------------------------------
+		double ZMass = -999;
+		double ZPt = -999;
+		double tmpDistToZPole = 9999;
+		pair<uint,uint> ZCandidateLeptonIndex;
+		bool foundZ = false;
+		TLorentzVector ZCandidate;
+		if(_debug) std::cout << "Leptons.size() " << Leptons.size() << std::endl;
+		for( uint i = 0; i < Leptons.size(); i++ )
+		{
+			for( uint j = 0; j < Leptons.size(); j++ )
+			{
+				if (!( Leptons[i].pdgId == -1*Leptons[j].pdgId )) continue;// same flavor opposite charge
+				double tmpMass = (Leptons[i].lepton+Leptons[j].lepton).M();
+				//select the pair closest to Z pole mass
+				if ( fabs( tmpMass - Z_MASS) < tmpDistToZPole)
+				{
+					tmpDistToZPole = tmpMass;
+					if (Leptons[i].pdgId > 0)
+					{
+						ZCandidateLeptonIndex = pair<int,int>(i,j);
+					}
+					else
+					{
+						ZCandidateLeptonIndex = pair<int,int>(j,i);
+					}
+					ZMass = tmpMass;
+					ZPt = (Leptons[i].lepton+Leptons[j].lepton).Pt();
+					ZCandidate = Leptons[i].lepton+Leptons[j].lepton;
+					foundZ = true;
+				}
+			}
+		}
+		if (foundZ && fabs(ZMass-Z_MASS) < 30.0)
+		{
+			llp_tree->ZMass = ZMass;
+			llp_tree->ZPt   = ZPt;
+			llp_tree->ZEta  = ZCandidate.Eta();
+			llp_tree->ZPhi  = ZCandidate.Phi();
+			llp_tree->ZleptonIndex1 = ZCandidateLeptonIndex.first;
+			llp_tree->ZleptonIndex2 = ZCandidateLeptonIndex.second;
+		} // endif foundZ
+		if( (label=="MR_ZLL") &&  !(foundZ && fabs(ZMass-Z_MASS) < 30.0) ) continue;
 
 		//-----------------------------------------------
 		//Select Jets
@@ -751,7 +988,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			TLorentzVector thisJet = makeTLorentzVector( jetPt[i], jetEta[i], jetPhi[i], jetE[i] );
 			//double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
 			//		fixedGridRhoFastjetAll, jetJetArea[i] , JetCorrector);
-		
+
 			//double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
 			//		fixedGridRhoFastjetAll, jetJetArea[i],
 			//		runNum,
@@ -759,7 +996,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			////cout <<"JEC :" << JEC << std::endl;
 
 			//TLorentzVector thisJet = makeTLorentzVector( jetPt[i]*JEC, jetEta[i], jetPhi[i], jetE[i]*JEC );
-		
+
 			if( thisJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
 			//if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
 			if( fabs( thisJet.Eta() ) >= 2.4 ) continue;
@@ -853,6 +1090,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//   }
 		//   /
 		//if (triggered) trig_lepId_dijet->Fill(1);
+
 		sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
 		if (Jets.size()>0)
@@ -866,6 +1104,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->jetMet_dPhi = -999.;
 			llp_tree->jetMet_dPhiStar = -999.;
 		}
+
 		float jetMet_dPhiMin_temp = 999 ; 
 		float jetMet_dPhiStarMin_temp = 999 ; 
 		float jetMet_dPhiMin4_temp = 999 ; 
@@ -929,15 +1168,63 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			llp_tree->nJets++;
 		}
+		if( (label=="MR_JetHT") && llp_tree->nJets != 2 ) continue;
 		if(_debug) std::cout << "nJets in tree " << llp_tree->nJets << std::endl;
 		llp_tree->jetMet_dPhiMin = jetMet_dPhiMin_temp;
 		llp_tree->jetMet_dPhiStarMin = jetMet_dPhiStarMin_temp;
 		llp_tree->jetMet_dPhiMin4 = jetMet_dPhiMin4_temp;
 
 
+		if(label=="MR_PHO"){
+			TLorentzVector photon0 = makeTLorentzVectorPtEtaPhiM(llp_tree->phoPt[0],llp_tree->phoEta[0], llp_tree->phoPhi[0], 0.);
+			if (Jets.size()>0)
+			{
+				llp_tree->jetPho_dPhi = RazorAnalyzerLLP::deltaPhi(jetPhi[0], llp_tree->phoPhi[0]);
+				TLorentzVector jet0 = makeTLorentzVectorPtEtaPhiM( jetPt[0], 0, jetPhi[0], 0 );
+				llp_tree->jetPho_dPhiStar = RazorAnalyzerLLP::deltaPhi(jetPhi[0],  (photon0+jet0).Phi() );
+			}
+			else{
+				llp_tree->jetPho_dPhi = -999.;
+				llp_tree->jetPho_dPhiStar = -999.;
+			}
 
-	llp_tree->tree_->Fill();
-	if(_debug) std::cout << "nJets in tree " << llp_tree->nJets << std::endl;
+			float jetPho_dPhiMin_temp = 999 ; 
+			float jetPho_dPhiStarMin_temp = 999 ; 
+			float jetPho_dPhiMin4_temp = 999 ; 
+
+
+			int MR_PHO_nJets = 0;
+			for ( auto &tmp : Jets )
+			{
+
+				if(jetPho_dPhiMin4_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),llp_tree->phoPhi[0])) && MR_PHO_nJets < 4)
+				{
+					jetPho_dPhiMin4_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),llp_tree->phoPhi[0]));
+				}
+				if (jetPho_dPhiMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),llp_tree->phoPhi[0])))
+				{
+					jetPho_dPhiMin_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),llp_tree->phoPhi[0]));
+				}     
+				TLorentzVector jet_temp = makeTLorentzVectorPtEtaPhiM( tmp.jet.Pt(), 0, tmp.jet.Phi(), 0 );
+				if (jetPho_dPhiStarMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(), (photon0+jet_temp).Phi() )))
+				{
+					jetPho_dPhiStarMin_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(), (photon0+jet_temp).Phi() ));
+				}     
+
+				MR_PHO_nJets++;
+
+			}
+			if(_debug) std::cout << "nJets in tree " << MR_PHO_nJets << std::endl;
+			llp_tree->jetPho_dPhiMin = jetPho_dPhiMin_temp;
+			llp_tree->jetPho_dPhiStarMin = jetPho_dPhiStarMin_temp;
+			llp_tree->jetPho_dPhiMin4 = jetPho_dPhiMin4_temp;
+
+
+		}//MR_PHO dPhi
+
+
+		llp_tree->tree_->Fill();
+		if(_debug) std::cout << "nJets in tree " << llp_tree->nJets << std::endl;
 	}
 
 	cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
