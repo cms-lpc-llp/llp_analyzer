@@ -734,6 +734,8 @@ void RazorAnalyzer::EnableLLP(){
     fChain->SetBranchStatus("gLLP_eta", 1);
     fChain->SetBranchStatus("gLLP_phi", 1);
     fChain->SetBranchStatus("gLLP_beta", 1);
+    fChain->SetBranchStatus("gLLP_e", 1);
+    fChain->SetBranchStatus("gLLP_pt", 1);
 
     fChain->SetBranchStatus("gLLP_decay_vertex_x", 1);
     fChain->SetBranchStatus("gLLP_decay_vertex_y", 1);
@@ -2063,9 +2065,11 @@ bool RazorAnalyzer::isMuonPOGLooseMuon(int i, bool applyID, bool applyIso){
   bool pass = true;
   if (applyID) {
     if (!(muonIsLoose[i] && fabs(muon_ip3dSignificance[i]) < 4)) pass = false;
+    // if (!(muonIsLoose[i]))pass = false;
   }
   if (applyIso) {
-    if (!((muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i] < 0.2)) pass = false;
+    if (!((muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i] < 0.25)) pass = false;
+
   }
   return pass;
 }
@@ -2076,7 +2080,7 @@ bool RazorAnalyzer::isMuonPOGMediumMuon(int i, bool applyID, bool applyIso){
     if (!(muonIsICHEPMedium[i] && fabs(muon_ip3dSignificance[i]) < 4)) pass = false;
   }
   if (applyIso) {
-    if (!((muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i] < 0.12)) pass = false;
+    if (!((muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i] < 0.2)) pass = false;
   }
   return pass;
 }
@@ -2087,7 +2091,7 @@ bool RazorAnalyzer::isMuonPOGTightMuon(int i, bool applyID, bool applyIso){
     if (!(muonIsTight[i] && fabs(muon_ip3dSignificance[i]) < 4)) pass = false;
   }
   if (applyIso) {
-    if (!((muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i] < 0.12)) pass = false;
+    if (!((muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i] < 0.15)) pass = false;
   }
   return pass;
 }
