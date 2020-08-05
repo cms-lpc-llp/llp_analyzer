@@ -18,6 +18,14 @@ zH_withISR_mh2000								 7.639E-06
 
 #privately produced ggH
 #https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt13TeV#ZHllH_H_l_e_or_Process
+ggH_HToSS_SToEE_ms0p1_pl500    							4.858E+01
+ggH_HToSS_SToPi0Pi0_ms1_pl500							4.858E+01
+ggH_HToSS_SToEE_ms0p1_pl100                          				4.858E+01
+ggH_HToSS_SToPi0Pi0_ms1_pl100							4.858E+01
+ggH_HToSSTobbbb_ms1_pl1000							4.858E+01
+ggH_HToSS_SToPiPlusPiMinus_ms1_pl500						4.858E+01
+ggH_HToSS_SToKPlusKMinus_ms1p5_pl500						4.858E+01
+ggH_HToSS_SToEE_ms0p4_pl500							4.858E+01
 ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18   					4.858E+01
 ggH_HToSSTobbbb_ms55_pl1000							4.858E+01
 ggH_HToSSTobbbb_ms1_pl1000							4.858E+01
@@ -130,6 +138,35 @@ ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8 	
 ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
 ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8		0.08946
 ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8		0.08946
+
+
+#2017 samples, xsec taken from AN-18-008
+ZToMuMu_NNPDF31_13TeV-powheg_M_50_120							2112.9
+ZToMuMu_NNPDF31_13TeV-powheg_M_120_200							20.55
+ZToMuMu_NNPDF31_13TeV-powheg_M_200_400							2.889
+ZToMuMu_NNPDF31_13TeV-powheg_M_400_800							0.251
+ZToMuMu_NNPDF31_13TeV-powheg_M_800_1400							1.707e-2
+ZToMuMu_NNPDF31_13TeV-powheg_M_1400_2300						1.37e-3
+#ZToMuMu_NNPDF31_13TeV-powheg_M_2300_3500
+#ZToMuMu_NNPDF31_13TeV-powheg_M_3500_4500
+#ZToMuMu_NNPDF31_13TeV-powheg_M_4500_6000
+#ZToMuMu_NNPDF31_13TeV-powheg_M_6000_Inf
+#
+#mcm
+#ZToMuMu_NNPDF31_13TeV-powheg_M_50_120                                                   1975
+#ZToMuMu_NNPDF31_13TeV-powheg_M_120_200                                                  19.32
+#ZToMuMu_NNPDF31_13TeV-powheg_M_200_400                                                  2.731
+#ZToMuMu_NNPDF31_13TeV-powheg_M_400_800                                                  0.231
+#ZToMuMu_NNPDF31_13TeV-powheg_M_800_1400                                                 1.678e-2
+#ZToMuMu_NNPDF31_13TeV-powheg_M_1400_2300                                                1.39e-3
+ZToMuMu_NNPDF31_13TeV-powheg_M_2300_3500						1
+ZToMuMu_NNPDF31_13TeV-powheg_M_3500_4500						1
+ZToMuMu_NNPDF31_13TeV-powheg_M_4500_6000						1
+ZToMuMu_NNPDF31_13TeV-powheg_M_6000_Inf							1
+
+
+QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8					1005
+
 #13 TeV Spring 15 MC
 QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8                            2022100000.0
 QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                        2.486e+08
