@@ -134,7 +134,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	//---------------------------
 	int option;
 	std::string label;
-	bool pf;
+	bool signalScan;
 
 	//HUNDRED'S DIGIT
 	//option of run condor or locally
@@ -193,22 +193,22 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	}
 
 	//UNIT'S DIGIT
-	// pf option
+	// signalScan option
 	if(options%10==1){
-		pf = true;
+		signalScan = true;
 	}
 	else{
-		pf = false;
+		signalScan = false;
 	}
 
 	// DATA or MC
 	if( isData )
 	{
-		std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << " and pfjet is " << pf << std::endl;
+		std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << " and signalScan is " << signalScan << std::endl;
 	}
 	else
 	{
-		std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << " and pfjet is " << pf << std::endl;
+		std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << " and signalScan is " << signalScan << std::endl;
 	}
 
 	const float ELE_MASS = 0.000511;
@@ -380,14 +380,21 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	//-----------------------------------------------
 	string outfilename = outputfilename;
 	if (outfilename == "") outfilename = "SusyLLPTree.root";
-	TFile *outFile = new TFile(outfilename.c_str(), "RECREATE");
-	//RazorLiteTree *llp_tree = new RazorLiteTree;
+	TFile *outFile;
+	if(!signalScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
+
 	SusyLLPTree *llp_tree = new SusyLLPTree;
 	llp_tree->CreateTree();
 	llp_tree->tree_->SetAutoFlush(0);
 	llp_tree->InitTree();
+
 	//histogram containing total number of processed events (for normalization)
 	TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
+
+	//for signals, need one output file for each signal point
+	map<pair<int,int>, TFile*> Files2D;
+	map<pair<int,int>, TTree*> Trees2D;
+	map<pair<int,int>, TH1F*> NEvents2D;
 
 	//*************************************************************************
 	//Look over Input File Events
@@ -414,6 +421,44 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		if(_debug) std::cout << "deb0 " << jentry << std::endl;
 		llp_tree->InitVariables();
 		if(_debug) std::cout << "deb1 " << jentry << std::endl;
+
+		//std::cout << *lheComments<<endl;
+		if (!isData && signalScan)
+		{
+
+			string mh_substring = lheComments->substr(lheComments->find("MH-")+3);
+			int mh = stoi(mh_substring.substr(0,mh_substring.find('_')));
+			string mx_substring = lheComments->substr(lheComments->find("MS-")+3);
+			int mx = stoi(mx_substring.substr(0,mx_substring.find('_')));
+			string ctau_substring = lheComments->substr(lheComments->find("ctauS-")+6);
+			int ctau = stoi(ctau_substring.substr(0,ctau_substring.find('_')));
+			llp_tree->mH = mh;
+			llp_tree->mX = mx;
+			llp_tree->ctau = ctau;
+
+
+			pair<int,int> signalPair = make_pair(mx, ctau);
+
+			if (Files2D.count(signalPair) == 0){ //create file and tree
+				//format file name
+				string thisFileName = outfilename;
+				thisFileName.erase(thisFileName.end()-5, thisFileName.end());
+				thisFileName += "_" + to_string(mx) + "_" + to_string(ctau) + ".root";
+
+				Files2D[signalPair] = new TFile(thisFileName.c_str(), "recreate");
+				Trees2D[signalPair] =  llp_tree->tree_->CloneTree(0);
+				NEvents2D[signalPair] = new TH1F(Form("NEvents%d%d", mx, ctau), "NEvents", 1,0.5,1.5);
+
+
+				cout << "Created new output file " << thisFileName << endl;
+			}
+			//Fill NEvents hist
+			NEvents2D[signalPair]->Fill(1.0, genWeight);
+
+
+
+		}
+
 		if (label =="bkg_wH"|| label == "bkg_zH" || label == "bkg_HH"){
 			if (isData)
 			{
@@ -427,7 +472,6 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				NEvents->Fill(1);
 				llp_tree->weight = 1;
 			}
-
 		}
 		//else if(label =="MR_EMU"|| label == "MR_PHO" || label == "MR_ZLL"){
 		else if( (label.find("MR") != std::string::npos) ){
@@ -493,6 +537,60 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->genMetPtCalo = genMetPtCalo;
 			llp_tree->genMetPhiCalo = genMetPhiCalo;
 
+			for(int i = 0; i < 2;i++)
+			{
+				//std::cout << "i " << i << std::endl;
+				//std::cout << "gLLP_beta[i] " << gLLP_beta[i] << std::endl;
+				//std::cout << "gLLP_eta[i] " << gLLP_eta[i] << std::endl;
+				//std::cout << "gLLP_phi[i] " << gLLP_phi[i] << std::endl;
+				//std::cout << "gLLP_decay_vertex_x[i] " << gLLP_decay_vertex_x[i] << std::endl;
+				//std::cout << "gLLP_decay_vertex_y[i] " << gLLP_decay_vertex_y[i] << std::endl;
+				//std::cout << "gLLP_decay_vertex_z[i] " << gLLP_decay_vertex_z[i] << std::endl;
+				llp_tree->gLLP_e[i] = gLLP_e[i];
+				llp_tree->gLLP_pt[i] = gLLP_pt[i];
+				llp_tree->gLLP_eta[i] = gLLP_eta[i];
+				llp_tree->gLLP_phi[i] = gLLP_phi[i];
+				llp_tree->gLLP_travel_time[i] = gLLP_travel_time[i];
+				llp_tree->gLLP_decay_vertex_r[i] = sqrt(gLLP_decay_vertex_x[i]*gLLP_decay_vertex_x[i]+gLLP_decay_vertex_y[i]*gLLP_decay_vertex_y[i]);
+				//std::cout << "llp_tree->gLLP_decay_vertex_r[i] " << llp_tree->gLLP_decay_vertex_r[i] << std::endl;
+				llp_tree->gLLP_decay_vertex_x[i] = gLLP_decay_vertex_x[i];
+				llp_tree->gLLP_decay_vertex_y[i] = gLLP_decay_vertex_y[i];
+				llp_tree->gLLP_decay_vertex_z[i] = gLLP_decay_vertex_z[i];
+				float beta = gLLP_beta[i];
+				if(beta<0){
+				TLorentzVector gLLP = makeTLorentzVector( gLLP_pt[i], gLLP_eta[i], gLLP_phi[i], gLLP_e[i] );
+				
+				//std::cout << "gLLP.Px " << gLLP.Px() << std::endl;
+				//std::cout << "gLLP.Py " << gLLP.Py() << std::endl;
+				//std::cout << "gLLP.Pz " << gLLP.Pz() << std::endl;
+				float Px = gLLP.Px();
+				float Py = gLLP.Py();
+				float Pz = gLLP.Pz();
+
+				float P2 = sqrt(Px*Px+Py*Py+Pz*Pz);
+				//std::cout << "P2 " << P2 << std::endl;
+				//std::cout << "gLLP_e[i] " << gLLP_e[i] << std::endl;
+				beta = sqrt(Px*Px+Py*Py+Pz*Pz)/gLLP_e[i];
+				}
+				float gLLP_decay_vertex = sqrt(pow(llp_tree->gLLP_decay_vertex_r[i], 2) + pow(llp_tree->gLLP_decay_vertex_z[i],2));
+				//std::cout << "gLLP_decay_vertex " << gLLP_decay_vertex << std::endl;
+				float gamma = 1.0/sqrt(1-beta*beta);
+				//std::cout << "beta " << beta << std::endl;
+				//std::cout << "gamma " << gamma << std::endl;
+				llp_tree->gLLP_ctau[i] = gLLP_decay_vertex/(beta * gamma);
+				llp_tree->gLLP_beta[i] = gLLP_beta[i];
+
+				//if (abs(llp_tree->gLLP_eta[i]) < 2.4 && abs(llp_tree->gLLP_eta[i]) > 0.9
+				//  && abs(llp_tree->gLLP_decay_vertex_z[i])<1100 && abs(llp_tree->gLLP_decay_vertex_z[i])>568
+				//  && llp_tree->gLLP_decay_vertex_r[i] < 695.5) llp_tree->gLLP_csc[i] = true;
+
+				if( abs(llp_tree->gLLP_decay_vertex_z[i])<268.3 && llp_tree->gLLP_decay_vertex_r[i] < 129.0 && abs(llp_tree->gLLP_eta[i]) < 1.48 ) llp_tree->gLLP_eb[i] = true;
+
+			}//gLLP 
+
+
+
+
 			if(_debug) std::cout << "nBunchXing " << nBunchXing << std::endl;
 			for (int i=0; i < nBunchXing; i++)
 			{
@@ -532,8 +630,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		if( (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
 		if( (label=="MR_EMU") && llp_tree->met < 30. ) continue;
 		if( (label.find("MR_Single") != std::string::npos) && llp_tree->met < 40. ) continue;
-		if( (label.find("MR_ZLL") != std::string::npos) && llp_tree->met < 40. ) continue;
-		if( (label.find("MR_JetHT") != std::string::npos) && llp_tree->met < 200. ) continue;
+		if( (label.find("MR_ZLL") != std::string::npos) && isData && llp_tree->met >= 30. ) continue;
+		if( (label.find("MR_JetHT") != std::string::npos) && llp_tree->met >= 30. ) continue;
 		if( (label=="MR_PHO") && llp_tree->met >= 30. ) continue;
 		if(_debug_lab) std::cout << "label " << label.c_str() << "passed "<< std::endl;
 		if(_debug_lab) std::cout << "met " << llp_tree->met << "passed "<< std::endl;
@@ -541,6 +639,31 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->metPhi = metType1Phi;
 		if(_debug) std::cout << "npv " << llp_tree->npv << std::endl;
 		TLorentzVector t1PFMET = makeTLorentzVectorPtEtaPhiM( metType1Pt, 0, metType1Phi, 0 );
+
+		if(_debug) std::cout << "isData " << isData << std::endl;
+		//Znunu
+		if(!isData && (label.find("MR_ZLL") != std::string::npos) )
+		{
+			if(_debug) std::cout << "before nu cuts " << std::endl;
+			int count_nu=0;
+			int count_nu25=0;
+			if(_debug) std::cout << "nGenParticle " << nGenParticle << std::endl;
+			for(int i = 0; i < nGenParticle; i++)
+			{
+				//(abs(gParticleId)==12||abs(gParticleId)==14||abs(gParticleId)==16)&&gParticleMotherId==23
+				if ( !( abs(gParticleId[i])==12 || abs(gParticleId[i])==14 || abs(gParticleId[i])==16 ) ) continue;
+				if (abs(gParticleMotherId[i])!=23 ) continue;
+				if (abs(gParticleStatus[i])!=1) continue;
+				count_nu++;
+				if(gParticlePt[i]<25) continue;
+				count_nu25++;
+			}
+			if(_debug) std::cout << "count_nu " << count_nu << std::endl;
+			if(_debug) std::cout << "count_nu25 " << count_nu25 << std::endl;
+			if(count_nu!=2) continue;
+			if(count_nu25!=2) continue;
+			if(_debug) std::cout << "passed nu cuts " << std::endl;
+		}
 
 		//met filters
 		llp_tree->Flag2_globalSuperTightHalo2016Filter          = Flag2_globalSuperTightHalo2016Filter;
@@ -618,7 +741,11 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				if(_debug_pre) std::cout << "weight " << llp_tree->weight << std::endl;
 			}
 		}//MR_EMU/SingleMuon/SingleElectron/ZLL re-weight based on Prescale	
+
+		if( (label.find("MR_ZLL") != std::string::npos) && !isData) triggered=true; 
 		if( (label.find("MR") != std::string::npos) && !triggered) continue; 
+
+		if(_debug) std::cout << "passed trigger " << std::endl;
 
 		//bool triggered = false;
 		//for(int i = 0; i < NTrigger; i++)
@@ -926,7 +1053,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->ZleptonIndex1 = ZCandidateLeptonIndex.first;
 			llp_tree->ZleptonIndex2 = ZCandidateLeptonIndex.second;
 		} // endif foundZ
-		if( (label=="MR_ZLL") &&  !(foundZ && fabs(ZMass-Z_MASS) < 30.0) ) continue;
+		if( (label=="MR_ZLL") && isData && !(foundZ && fabs(ZMass-Z_MASS) < 30.0) ) continue;
 
 		//-----------------------------------------------
 		//Select Jets
@@ -999,7 +1126,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			if( thisJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
 			//if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
-			if( fabs( thisJet.Eta() ) >= 2.4 ) continue;
+			if( fabs( thisJet.Eta() ) >= 1.48 ) continue;
+			//if( fabs( thisJet.Eta() ) >= 2.4 ) continue;
 			//if( fabs( thisJet.Eta() ) >= 3.0 ) continue;
 			// if ( !jetPassIDLoose[i] ) continue;
 			// if (!(jetRechitE[i] > 0.0)) continue;
@@ -1079,18 +1207,6 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->HT = ht;
 
 
-		//-----------------------------
-		//Require at least 2 jets
-		//-----------------------------
-		///
-		//   if(pf)
-		//   {
-		//   if( Jets.size() < 1 ) continue;
-
-		//   }
-		//   /
-		//if (triggered) trig_lepId_dijet->Fill(1);
-
 		sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
 
 		if (Jets.size()>0)
@@ -1168,7 +1284,140 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			llp_tree->nJets++;
 		}
+
+
+		//gLLP grandaughters
+		double ecal_radius = 129.0;
+		//double hcal_radius = 179.0;
+		double EB_z = 268.36447217; // 129*sinh(1.479)
+		double EE_z = 298.5; //where Ecal Endcap starts in z direction
+		if(!isData){
+			llp_tree->genVertexX = genVertexX;
+			llp_tree->genVertexY = genVertexY;
+			llp_tree->genVertexZ = genVertexZ;
+			llp_tree->genVertexT = genVertexT;
+			for(int i = 0; i <4; i++){
+				llp_tree->gLLP_grandaughter_id[i] = gLLP_grandaughter_id[i];
+				llp_tree->gLLP_grandaughter_mass[i] = gLLP_grandaughter_mass[i];
+				llp_tree->gLLP_grandaughter_e[i] = gLLP_grandaughter_e[i];
+				llp_tree->gLLP_grandaughter_pt[i] = gLLP_grandaughter_pt[i];
+				llp_tree->gLLP_grandaughter_eta[i] = gLLP_grandaughter_eta[i];
+				llp_tree->gLLP_grandaughter_phi[i] = gLLP_grandaughter_phi[i];
+				//llp_tree->gLLP_grandaughter_eta_ecalcorr[i] = gLLP_grandaughter_eta_ecalcorr[i];
+				//llp_tree->gLLP_grandaughter_phi_ecalcorr[i] = gLLP_grandaughter_phi_ecalcorr[i];
+
+				TLorentzVector tmpdau = makeTLorentzVectorPtEtaPhiM(gLLP_grandaughter_pt[i], gLLP_grandaughter_eta[i], gLLP_grandaughter_phi[i], gLLP_grandaughter_mass[i]);
+				int llp_index=0;
+				if(i>1) llp_index=1;
+				double radius = sqrt( pow(gLLP_decay_vertex_x[llp_index],2) + pow(gLLP_decay_vertex_y[llp_index],2) );
+				llp_tree->gLLP_grandaughter_travel_time_EB[i] = (1./30.)*fabs(ecal_radius-radius)/(tmpdau.Pt()/tmpdau.E());// - (1./30.) * ecal_radius * cosh(tmp.Eta());//1/30 is to convert cm to ns
+				//Calculate dt from generation point to ECAL face
+				double x_ecal = gLLP_decay_vertex_x[llp_index] + 30. * (tmpdau.Px()/tmpdau.E())*(llp_tree->gLLP_grandaughter_travel_time_EB[i]);
+				double y_ecal = gLLP_decay_vertex_y[llp_index] + 30. * (tmpdau.Py()/tmpdau.E())*(llp_tree->gLLP_grandaughter_travel_time_EB[i]);
+				double z_ecal = gLLP_decay_vertex_z[llp_index] + 30. * (tmpdau.Pz()/tmpdau.E())*(llp_tree->gLLP_grandaughter_travel_time_EB[i]);
+
+
+				if( fabs(z_ecal) < EB_z && radius <= ecal_radius &&  fabs(gLLP_decay_vertex_z[llp_index]) < EE_z) {
+					llp_tree->gLLP_grandaughter_photon_travel_time_EB[i] = (1./30) * sqrt(pow(ecal_radius,2)+pow(z_ecal,2));
+					//llp_tree->photon_travel_time_dau_pv[i] = (1./30) * sqrt(pow(x_ecal-genVertexX,2) + pow(y_ecal-genVertexY,2) + pow(z_ecal-genVertexZ,2));
+					//llp_tree->gen_time_dau_pv[i] =  gLLP_travel_time[llp_index] + (llp_tree->gLLP_grandaughter_travel_time_EB[i]) - photon_travel_time_dau_pv[i] + genVertexT;
+					if(genVertexT==-999) genVertexT=0;
+					llp_tree->gen_time_grandaughter_EB[i] = gLLP_travel_time[llp_index] + (llp_tree->gLLP_grandaughter_travel_time_EB[i]) - llp_tree->gLLP_grandaughter_photon_travel_time_EB[i] + genVertexT;
+
+				} else {
+					llp_tree->gLLP_grandaughter_travel_time_EB[i] = -666;
+					//llp_tree->gen_time_dau_pv[i] = -666.;
+					llp_tree->gen_time_grandaughter_EB[i] = -666.;
+					llp_tree->gLLP_grandaughter_photon_travel_time_EB[i] = -666.;
+					//llp_tree->photon_travel_time_dau_pv[i] = -666.;
+				}
+
+				// Correction of eta and phi based on ecal points
+				double phi = atan((y_ecal-genVertexY)/(x_ecal-genVertexX));
+				if  (x_ecal < 0.0) {
+					phi = TMath::Pi() + phi;
+				}
+				phi = deltaPhi(phi,0.0);
+
+				//std::cout << "phi " << phi 
+				//	<< ", x_ecal " << x_ecal
+				//	<< ", y_ecal " << y_ecal
+				//	<< ", z_ecal " << z_ecal
+				//	<< ", genVertexX " << genVertexX
+				//	<< ", genVertexY " << genVertexY
+				//	<< ", genVertexZ " << genVertexZ
+				//	<< ", genVertexT " << genVertexT
+				//	<< std::endl;
+				double theta = atan(sqrt(pow(x_ecal-genVertexX,2)+pow(y_ecal-genVertexY,2))/abs(z_ecal-genVertexZ));
+				double eta = -1.0*TMath::Sign(1.0, z_ecal-genVertexZ)*log(tan(theta/2));
+				llp_tree->gLLP_grandaughter_eta_ecalcorr[i] = eta;
+				llp_tree->gLLP_grandaughter_phi_ecalcorr[i] = phi;
+
+				//llp_tree->gLLP_grandaughter_EB[i] = gLLP_grandaughter_EB[i];
+				//llp_tree->gLLP_grandaughter_ETL[i] = gLLP_grandaughter_ETL[i];
+				//llp_tree->gLLP_grandaughter_photon_travel_time_EB[i] = gLLP_grandaughter_photon_travel_time_EB[i];
+				//llp_tree->gLLP_grandaughter_photon_travel_time_ETL[i] = gLLP_grandaughter_photon_travel_time_ETL[i];
+				//llp_tree->gLLP_grandaughter_travel_time_EB[i] = gLLP_grandaughter_travel_time_EB[i];
+				//llp_tree->gLLP_grandaughter_travel_time_ETL[i] = gLLP_grandaughter_travel_time_ETL[i];
+				//llp_tree->gen_time_grandaughter_EB[i] = gen_time_grandaughter_EB[i];
+				//llp_tree->gen_time_grandaughter_ETL[i] = gen_time_grandaughter_ETL[i];
+				//llp_tree->gLLP_grandaughter_match_jet_index[i] = gLLP_grandaughter_match_jet_index[i];
+
+				if(_debug_match) std::cout << "evt: "<<llp_tree->evtNum <<" n_jet " << llp_tree->nJets << std::endl; 
+				double min_delta_r = 666.;
+				int match_jet_index = -666;
+				for ( int i_jet = 0; i_jet < llp_tree->nJets; i_jet++ )
+				{
+					double current_delta_r = deltaR(llp_tree->gLLP_grandaughter_eta_ecalcorr[i], llp_tree->gLLP_grandaughter_phi_ecalcorr[i], llp_tree->jetEta[i_jet], llp_tree->jetPhi[i_jet]);
+					if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r <<", current_delta_r "<< current_delta_r << std::endl;
+					if ( current_delta_r < min_delta_r )
+					{
+						min_delta_r = current_delta_r;
+						match_jet_index = i_jet;
+					}
+					if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
+				}//end matching to jets 
+
+				if ( min_delta_r < 0.4 )
+					//if ( min_delta_r < 20 )
+				{
+					llp_tree->gLLP_grandaughter_match_jet_index[i] = match_jet_index;
+					llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = min_delta_r;
+					//llp_tree->matched[match_jet_index] = true;
+					if(i<2) llp_tree->jet_matched_gLLP0_grandaughter[match_jet_index] = true;
+					else llp_tree->jet_matched_gLLP1_grandaughter[match_jet_index] = true;
+					if(_debug_match) std::cout << " i " << i << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
+				}
+				//llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = gLLP_grandaughter_min_delta_r_match_jet[i];
+
+			}//loop over grandaughters
+
+			//tagged?
+			for(int i=0;i<4;i++)
+			{
+				int llp_index=0;
+				if(i>1) llp_index=1;
+				if(llp_tree->gLLP_grandaughter_match_jet_index[i]>-666)
+				{
+					int jet_index = llp_tree->gLLP_grandaughter_match_jet_index[i];
+					if(llp_tree->jetTime[jet_index] > 0.09 
+							&& llp_tree->jetMinDeltaRPVTracks[jet_index] > 0.06
+							&& llp_tree->jetGammaMax_ET[jet_index] < 0.16
+							&& llp_tree->jetChargedHadronEnergyFraction[jet_index] < 0.06)
+					{
+						llp_tree->gLLP_tagged[llp_index] = true;
+					}
+				}
+			}
+
+		}//finished gen part
+
 		if( (label=="MR_JetHT") && llp_tree->nJets != 2 ) continue;
+		if(label=="MR_JetHT") 
+		{
+			llp_tree->jet2_dPhi = abs(RazorAnalyzerLLP::deltaPhi(llp_tree->jetPhi[0], llp_tree->jetPhi[1]));
+		}
+		if( (label=="MR_PHO") && llp_tree->nJets != 1 ) continue;
 		if(_debug) std::cout << "nJets in tree " << llp_tree->nJets << std::endl;
 		llp_tree->jetMet_dPhiMin = jetMet_dPhiMin_temp;
 		llp_tree->jetMet_dPhiStarMin = jetMet_dPhiStarMin_temp;
@@ -1223,19 +1472,54 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		}//MR_PHO dPhi
 
 
-		llp_tree->tree_->Fill();
+		//llp_tree->tree_->Fill();
 		if(_debug) std::cout << "nJets in tree " << llp_tree->nJets << std::endl;
+
+		if(!isData && signalScan)
+		{
+			pair<int,int> smsPair = make_pair(llp_tree->mX, llp_tree->ctau);
+			Trees2D[smsPair]->Fill();
+		}
+		else
+		{
+			llp_tree->tree_->Fill();
+		}
+
+	}//end fill
+
+
+	if(!isData && signalScan)
+	{
+		for(auto &filePtr : Files2D)
+		{
+			cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
+			filePtr.second->cd();
+			Trees2D[filePtr.first]->Write();
+			NEvents2D[filePtr.first]->Write("NEvents");
+			filePtr.second->Close();
+
+		}
 	}
-
-	cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
-	outFile->cd();
-	cout << "Writing output trees..." << endl;
-	llp_tree->tree_->Write();
-	cout << "Writing output NEvents..." << endl;
-	NEvents->Write();
-	cout << "Closing output trees..." << endl;
-	outFile->Write();
-	outFile->Close();
-
+	else
+	{
+		cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
+		cout << "Writing output trees..." << endl;
+		outFile->cd();
+		llp_tree->tree_->Write();
+		NEvents->Write();
+		// outFile->Write();
+		outFile->Close();
+	}
+	/* 
+	   cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
+	   outFile->cd();
+	   cout << "Writing output trees..." << endl;
+	   llp_tree->tree_->Write();
+	   cout << "Writing output NEvents..." << endl;
+	   NEvents->Write();
+	   cout << "Closing output trees..." << endl;
+	   outFile->Write();
+	   outFile->Close();
+	   */
 	delete helper;
-}
+	}
