@@ -684,7 +684,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		}
 		if(_debug_trg) std::cout << "begin: 310 " << HLTDecision[310] << std::endl;
 		if(_debug_trg) std::cout << "begin: 310 " << llp_tree->HLTDecision[310] << std::endl;
-		if( (label.find("MR") == std::string::npos) && !HLTDecision[310]) continue; 
+		//if( (label.find("MR") == std::string::npos) && !HLTDecision[310]) continue; 
+		if( (label.find("MR") == std::string::npos) && !HLTDecision[467]) continue; 
 
 		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 		bool triggered = false;

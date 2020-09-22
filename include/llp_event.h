@@ -454,8 +454,8 @@ class llp_event {
 		Bool_t	   Flag2_HBHEIsoNoiseFilter;
 		Bool_t	   Flag2_ecalBadCalibFilter;
 		Bool_t	   Flag2_eeBadScFilter;
-		Bool_t          HLTDecision[602];
-		Int_t           HLTPrescale[602];
+		Bool_t          HLTDecision[1201];
+		Int_t           HLTPrescale[1201];
 		Int_t           nGenJets;
 		Float_t         genJetE[500];   //[nGenJets]
 		Float_t         genJetPt[500];   //[nGenJets]
@@ -474,6 +474,7 @@ class llp_event {
 		Float_t         genQScale;
 		Float_t         genAlphaQCD;
 		Float_t         genAlphaQED;
+		std::string		*lheComments;
 		std::vector<float>   *scaleWeights;
 		std::vector<float>   *pdfWeights;
 		std::vector<float>   *alphasWeights;
@@ -1006,6 +1007,7 @@ class llp_event {
 		TBranch        *b_genQScale;   //!
 		TBranch        *b_genAlphaQCD;   //!
 		TBranch        *b_genAlphaQED;   //!
+		TBranch        *b_lheComments;   //!
 		TBranch        *b_scaleWeights;   //!
 		TBranch        *b_pdfWeights;   //!
 		TBranch        *b_alphasWeights;   //!
@@ -1190,6 +1192,7 @@ void llp_event::Init(TTree *tree)
 	ecalRechit_GainSwitch1 = 0;
 	ecalRechit_GainSwitch6 = 0;
 	ecalRechit_transpCorr = 0;
+	lheComments = 0;
 	scaleWeights = 0;
 	pdfWeights = 0;
 	alphasWeights = 0;
@@ -1618,6 +1621,7 @@ void llp_event::Init(TTree *tree)
 	fChain->SetBranchAddress("genQScale", &genQScale, &b_genQScale);
 	fChain->SetBranchAddress("genAlphaQCD", &genAlphaQCD, &b_genAlphaQCD);
 	fChain->SetBranchAddress("genAlphaQED", &genAlphaQED, &b_genAlphaQED);
+	fChain->SetBranchAddress("lheComments", &lheComments, &b_lheComments);
 	fChain->SetBranchAddress("scaleWeights", &scaleWeights, &b_scaleWeights);
 	fChain->SetBranchAddress("pdfWeights", &pdfWeights, &b_pdfWeights);
 	fChain->SetBranchAddress("alphasWeights", &alphasWeights, &b_alphasWeights);

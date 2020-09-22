@@ -30,7 +30,7 @@ void RazorAnalyzerLLP::EnableAll(){
     EnableTaus();
     EnablePhotons();
     //EnableCSC();
-    EnableTracks();
+    //EnableTracks();
     EnableJets();
     //EnableCaloJets();
     EnableFatJets();
@@ -50,7 +50,7 @@ void RazorAnalyzerLLP::EnableAllWithEcalRechits(){
     EnableTaus();
     EnablePhotons();
     //EnableCSC();
-    EnableTracks();
+    //EnableTracks();
     EnableJets();
     EnableFatJets();
     EnableMet();
@@ -58,7 +58,7 @@ void RazorAnalyzerLLP::EnableAllWithEcalRechits(){
     EnableMC();
     EnableGenParticles();
     EnableLLP();
-    EnableEcalRechits();
+    //EnableEcalRechits();
 }
 
 void RazorAnalyzerLLP::EnableEventInfo(){
@@ -611,7 +611,7 @@ void RazorAnalyzerLLP::EnableMC(){
     fChain->SetBranchStatus("genQScale", 1);
     fChain->SetBranchStatus("genAlphaQCD", 1);
     fChain->SetBranchStatus("genAlphaQED", 1);
-    //fChain->SetBranchStatus("lheComments", 1);
+    fChain->SetBranchStatus("lheComments", 1);
     fChain->SetBranchStatus("scaleWeights", 1);
     fChain->SetBranchStatus("pdfWeights", 1);
     fChain->SetBranchStatus("alphasWeights", 1);

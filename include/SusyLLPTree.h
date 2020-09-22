@@ -9,7 +9,6 @@
 #define N_MAX_LEPTONS 20
 #define N_MAX_JETS 20
 #define N_MAX_CSC 2000
-#define NTriggersMAX 602 //Number of trigger in the .dat file
 #define N_CSC_CUT 20
 #define JET_PT_CUT 10
 #define MUON_PT_CUT 20
@@ -19,7 +18,7 @@
 #define N_MAX_TAUS 20
 #define N_MAX_PHOTONS 20
 
-#define NTriggersMAX 602 //Number of trigger in the .dat file
+#define NTriggersMAX 1201 //Number of trigger in the .dat file
 #define OBJSIZE 20
 #define CSCRECHITARRAYSIZE 100000
 #define RECHITARRAYSIZE 20000
@@ -65,6 +64,8 @@ class SusyLLPTree
 		TFile *f_;
 
 		//event info
+		std::string *lheComments;
+		UInt_t  mH, mX, ctau;
 		UInt_t  runNum, lumiSec, evtNum;
 		UInt_t  category;
 		UInt_t  npv, npu;
@@ -78,6 +79,14 @@ class SusyLLPTree
 		Float_t jetMet_dPhiStarMin;
 		Float_t jetMet_dPhiMin4;
 
+		Float_t jetPho_dPhi;
+		Float_t jetPho_dPhiStar;
+		Float_t jetPho_dPhiMin;
+		Float_t jetPho_dPhiStarMin;
+		Float_t jetPho_dPhiMin4;
+
+		Float_t jet2_dPhi;
+
 		//leptons
 		int nLeptons;
 		float lepE[N_MAX_LEPTONS];
@@ -90,6 +99,7 @@ class SusyLLPTree
 		// bool lepMediumPassId[N_MAX_LEPTONS];
 		// bool lepTightPassId[N_MAX_LEPTONS];
 		bool lepPassId[N_MAX_LEPTONS];
+		//float MT;
 
 		//Z-candidate
 		float MT;
@@ -514,14 +524,18 @@ class SusyLLPTree
 		float gLLP_decay_vertex_x[LLP_ARRAY_SIZE];
 		float gLLP_decay_vertex_y[LLP_ARRAY_SIZE];
 		float gLLP_decay_vertex_z[LLP_ARRAY_SIZE];
+		float gLLP_decay_vertex_r[LLP_ARRAY_SIZE];
 		float gLLP_beta[LLP_ARRAY_SIZE];
+		float gLLP_ctau[LLP_ARRAY_SIZE];
 		float gLLP_travel_time[LLP_ARRAY_SIZE];
 		float gLLP_pt[LLP_ARRAY_SIZE];
 		float gLLP_e[LLP_ARRAY_SIZE];
 		float gLLP_eta[LLP_ARRAY_SIZE];
 		float gLLP_phi[LLP_ARRAY_SIZE];
+		bool gLLP_eb[LLP_ARRAY_SIZE];
 		bool gLLP_csc[LLP_ARRAY_SIZE];
 		bool gLLP_dt[LLP_ARRAY_SIZE];
+		bool gLLP_tagged[LLP_ARRAY_SIZE];
 
 		float photon_travel_time[LLP_DAUGHTER_ARRAY_SIZE];
 		float photon_travel_time_pv[LLP_DAUGHTER_ARRAY_SIZE];
@@ -560,6 +574,9 @@ class SusyLLPTree
 		float gLLP_grandaughter_e[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
 		float gLLP_grandaughter_mass[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
 
+		int gLLP_grandaughter_match_jet_index[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+		float gLLP_grandaughter_min_delta_r_match_jet[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+
 		//MET
 		float metType1Pt;
 		float metType1Px;
@@ -569,6 +586,7 @@ class SusyLLPTree
 
 		//HLT 
 		bool HLTDecision[NTriggersMAX];
+		int HLTPrescale[NTriggersMAX];
 
 		//Tracks
 		int nTracks;
