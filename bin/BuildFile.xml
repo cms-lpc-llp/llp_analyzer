@@ -1,0 +1,6 @@
+<bin name="RunSusyLLP" file="RunSusyLLP.cc">
+    <use name="root" />
+    <use name="rootcore" />
+    <use name="PhysicsTools/TensorFlow" />
+    <use name="LLPAnalysis/llpAnalyzer"/>
+</bin>
