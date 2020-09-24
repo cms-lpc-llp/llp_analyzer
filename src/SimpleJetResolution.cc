@@ -1,6 +1,6 @@
-#include "SimpleJetResolution.h"
-#include "JetCorrectorParameters.h"
-#include "JetCorrUtilities.cc"
+#include "LLPAnalysis/llpAnalyzer/interface/SimpleJetResolution.h"
+#include "LLPAnalysis/llpAnalyzer/interface/JetCorrectorParameters.h"
+#include "LLPAnalysis/llpAnalyzer/interface/JetCorrUtilities.h"
 #include <iostream>
 #include <sstream>
 #include <cmath>

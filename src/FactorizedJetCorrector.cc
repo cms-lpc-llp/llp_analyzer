@@ -3,11 +3,10 @@
 // Author: Konstantinos Kousouris, Philipp Schieferdecker
 // Email:  kkousour@fnal.gov, philipp.schieferdecker@cern.ch
 
-#include "FactorizedJetCorrector.h"
-#include "SimpleJetCorrector.h"
-#include "JetCorrectorParameters.h"
-//#include "JetCorrUtilities.cc"
-#include "JetCorrUtilities.h"
+#include "LLPAnalysis/llpAnalyzer/interface/FactorizedJetCorrector.h"
+#include "LLPAnalysis/llpAnalyzer/interface/SimpleJetCorrector.h"
+#include "LLPAnalysis/llpAnalyzer/interface/JetCorrectorParameters.h"
+#include "LLPAnalysis/llpAnalyzer/interface/JetCorrUtilities.h"
 #include "Math/PtEtaPhiE4D.h"
 #include "Math/Vector3D.h"
 #include "Math/LorentzVector.h"

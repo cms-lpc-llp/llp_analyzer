@@ -1,6 +1,6 @@
-#include "RazorAnalyzer.h"
-#include "Hemisphere.hh"
-//#include "DataFormats/Math/interface/deltaPhi.h"
+#include "LLPAnalysis/llpAnalyzer/interface/RazorAnalyzerLLP.h"
+#include "LLPAnalysis/llpAnalyzer/interface/Hemisphere.hh"
+#include <math.h>
 
 using namespace std;
 
@@ -11,10 +11,10 @@ using std::endl;
 double deltaPhi(double phi1, double phi2)
 {
   double dphi = phi1-phi2;
-  while (dphi > TMath::Pi())
-    dphi -= TMath::TwoPi();
-  while (dphi <= -TMath::Pi())
-    dphi += TMath::TwoPi();
+  while (dphi > M_PI)
+    dphi -= 2*M_PI;
+  while (dphi <= -1*M_PI)
+    dphi += 2*M_PI;
   return dphi;
 };
 
