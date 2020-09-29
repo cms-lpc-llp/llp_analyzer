@@ -257,7 +257,7 @@ void SusyLLPTree::InitVariables()
 
 	//Tracks
 	nTracks=0;
-	for(int i = 0; i <RECHITARRAYSIZE; i++){
+	for(int i = 0; i <SUSYLLPTREE_RECHITARRAYSIZE; i++){
 		track_Pt[i] = -999;
 		track_Eta[i] = -999;
 		track_Phi[i] = -999;

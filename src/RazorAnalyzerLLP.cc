@@ -23,23 +23,7 @@ void RazorAnalyzerLLP::Analyze(bool isData, int option, string outputFileName, s
 //NOTE: the functions below need to be maintained by hand.  If variables are added or removed from the ntuple, these functions need to be updated to reflect the changes.
 
 void RazorAnalyzerLLP::EnableAll(){
-    EnableEventInfo();
-    EnablePVAll();
-    EnableMuons();
-    EnableElectrons();
-    EnableTaus();
-    EnablePhotons();
-    //EnableCSC();
-    EnableTracks();
-    EnableJets();
-    //EnableCaloJets();
-    EnableFatJets();
-    EnableMet();
-    EnablePileup();
-    EnableMC();
-    EnableGenParticles();
-    EnableLLP();
-    //EnableEcalRechits();
+  fChain->SetBranchStatus("*", 1);   
 }
 
 void RazorAnalyzerLLP::EnableAllWithEcalRechits(){

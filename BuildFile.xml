@@ -1,5 +1,6 @@
 <use name="root" />
 <use name="rootcore" />
+<use name="PhysicsTools/TensorFlow" />
 <export>
   <lib name="1"/>
 </export>

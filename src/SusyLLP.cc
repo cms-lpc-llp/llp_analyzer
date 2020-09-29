@@ -4,6 +4,7 @@
 #include "LLPAnalysis/llpAnalyzer/interface/JetCorrectorParameters.h"
 #include "LLPAnalysis/llpAnalyzer/interface/JetCorrectionUncertainty.h"
 #include "LLPAnalysis/llpAnalyzer/interface/BTagCalibrationStandalone.h"
+#include "PhysicsTools/TensorFlow/interface/TensorFlow.h"
 
 //C++ includes
 #include "assert.h"
@@ -127,6 +128,43 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	cout << "Initializing..." << endl;
 	cout << "IsData = " << isData << "\n";
 	cout << "options = " << options << "\n";
+
+	//---------------------------
+	//-----------NN Setup----------
+	//---------------------------
+	std::string basePath = std::string(std::getenv("CMSSW_BASE")) + "/src/NNInferenceCMSSW/LLP_NN_Inference/nn_inference";
+	
+	std::string graphPath = basePath + "/graph.pb";
+	std::string inputTensorName = "dense_input";
+	std::string outputTensorName = "FCN/dense_4/Softmax";//"FCN/dense_4/Softmax";//or Softmax?
+	//int nInputs = 10;
+	
+	// threading setup
+	// to enable tensorflow-native multi-threading, change to "tensorflow" and increase nThreads
+	std::string threadPool = "no_threads";
+	int nThreads = 1;
+	
+	std::vector<std::string> inputFeatures = { "Jet_nTrackConstituents","Jet_nSelectedTracks", "Jet_timeRecHitsEB", "Jet_timeRecHitsHB", "Jet_energyRecHitsEB", "Jet_energyRecHitsHB", "Jet_nRecHitsEB", "Jet_nRecHitsHB", "Jet_cHadEFrac", "Jet_nHadEFrac", "Jet_eleEFrac", "Jet_photonEFrac", "Jet_ptAllTracks", "Jet_ptAllPVTracks", "Jet_ptPVTracksMax", "Jet_nTracksAll", "Jet_nTracksPVMax", "Jet_alphaMax", "Jet_betaMax", "Jet_gammaMax", "Jet_gammaMaxEM", "Jet_gammaMaxHadronic", "Jet_gammaMaxET","Jet_minDeltaRAllTracks","Jet_minDeltaRPVTracks",};
+
+	// the input branches are named "f0" to "f9", so use a loop in this example
+	int nInputs = inputFeatures.size();
+	std::vector<float> inputValues(nInputs);
+	
+	// setup TensorFlow objects
+	tensorflow::setLogging();
+	tensorflow::GraphDef* graphDef = tensorflow::loadGraphDef(graphPath);
+	// TF < 2
+	//tensorflow::SessionOptions sessionOptions;
+	//tensorflow::setThreading(sessionOptions, nThreads, threadPool);
+	//tensorflow::Session* session = tensorflow::createSession(graphDef, sessionOptions);
+	// TF >= 2
+	tensorflow::Session* session = tensorflow::createSession(graphDef, nThreads);
+		
+	// register an input tensor (1 x nInputs) that is filled during the event loop
+	tensorflow::Tensor inputTensor(tensorflow::DT_FLOAT, {1, nInputs});
+	
+
+
 
 	//---------------------------
 	//-----------option----------
@@ -1137,6 +1175,108 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			// if ((jetChargedHadronEnergyFraction[i]+jetNeutralHadronEnergyFraction[i])/(jetChargedEMEnergyFraction[i]+jetNeutralEMEnergyFraction[i]) < 0.2) continue;
 
 			// std::cout <<jetRechitT[i] << "," << jetRechitE[i] <<  "," << jetNRechits[i] << std::endl;
+			//************************************
+			//Compute Rechit Quantities
+			//************************************
+			double jetEnergyRecHitsECAL = 0;
+			double jetEnergyRecHitsHCAL = 0;
+			double jetTimeRecHitsECAL = -100;
+			double jetTimeRecHitsHCAL = -100;
+			double tmpJetTimeEnergyRecHitsHCAL = 0;
+ 			int jetNRecHitsECAL = 0;
+ 			int jetNRecHitsHCAL = 0;
+			cout << "nhits: " << nRechits << "\n";
+			//Loop over ECAL rechits
+			for (int q=0; q < nRechits; q++) {
+			  if (ecalRechit_E[q] <= 0.5) continue;
+			  double tmpDR = RazorAnalyzerLLP::deltaR(thisJet.Eta(), thisJet.Phi(), ecalRechit_Eta[q], ecalRechit_Phi[q]);
+			  if (tmpDR > 0.4) continue;			  
+
+			  jetEnergyRecHitsECAL += ecalRechit_E[q];
+			  jetNRecHitsECAL++;
+			}  
+			if (jetNRecHitsECAL == 0) {
+			  jetEnergyRecHitsECAL = -1;
+			}
+			if (isnan(jetRechitT[i]) || jetRechitE[i] == 0) {
+			  jetTimeRecHitsECAL = -100;
+			} else {
+			  jetTimeRecHitsECAL = jetRechitT[i];
+			}
+
+			//Loop over HCAL rechits
+			for (int q=0; q < nHBHERechits; q++) {
+			  if (hbheRechit_E[q] <= 0.1) continue;
+			  double tmpDR = RazorAnalyzerLLP::deltaR(thisJet.Eta(), thisJet.Phi(), hbheRechit_Eta[q], hbheRechit_Phi[q]);
+			  if (tmpDR > 0.4) continue;
+
+			  jetEnergyRecHitsHCAL += hbheRechit_E[q];
+			  jetNRecHitsHCAL++;
+			  tmpJetTimeEnergyRecHitsHCAL += hbheRechit_E[q]*hbheRechit_T[q];
+			}
+			if (jetEnergyRecHitsHCAL > 0) {
+			  jetTimeRecHitsHCAL = tmpJetTimeEnergyRecHitsHCAL / jetEnergyRecHitsHCAL;
+			} else {
+			  jetEnergyRecHitsHCAL = -1;
+			  jetTimeRecHitsHCAL = -100;
+			}
+
+
+			cout << thisJet.Pt() << " " << thisJet.Eta() << " " << thisJet.Phi() << " | "
+			     << jetEnergyRecHitsECAL << " " << jetEnergyRecHitsHCAL << " : " << jetNRecHitsECAL << " " 
+			     << jetNRecHitsHCAL << " | " 
+			     << jetTimeRecHitsECAL << " " << jetTimeRecHitsHCAL << "\n";
+
+			//************************************
+			//Evaluate NN tagger
+			//************************************
+			inputValues[0] = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
+			inputValues[1] = jetNSelectedTracks[i];
+			inputValues[2] = jetTimeRecHitsECAL;
+			inputValues[3] = jetTimeRecHitsHCAL;  
+			inputValues[4] = jetEnergyRecHitsECAL;
+			inputValues[5] = jetEnergyRecHitsHCAL;
+			inputValues[6] = jetNRecHitsECAL;
+			inputValues[7] = jetNRecHitsHCAL;
+			inputValues[8] = jetChargedHadronEnergyFraction[i];
+			inputValues[9] = jetNeutralHadronEnergyFraction[i];
+			inputValues[10] = jetElectronEnergyFraction[i];
+			inputValues[11] = jetPhotonEnergyFraction[i];
+			inputValues[12] = jetPtAllTracks[i];
+			inputValues[13] = jetPtAllPVTracks[i];
+			inputValues[14] = jetPtAllPVTracks[i];//Jet_ptPVTracksMax;
+			inputValues[15] = 10; //Jet_nTracksAll
+			inputValues[15] = 10; //Jet_nTracksPVMax;
+			inputValues[16] = jetAlphaMax[i];
+			inputValues[17] = jetBetaMax[i];
+			inputValues[18] = jetGammaMax[i];
+			inputValues[19] = jetGammaMax_EM[i];
+			inputValues[20] = jetGammaMax_Hadronic[i];
+			inputValues[21] = jetGammaMax_ET[i];
+			inputValues[22] = jetMinDeltaRAllTracks[i];
+			inputValues[23] = jetMinDeltaRPVTracks[i];
+
+
+			// fill the input tensor using a data pointer that is shifted consecutively
+			float* d = inputTensor.flat<float>().data();
+			for (float v : inputValues) {
+			  //std::cout<< " input value: " << v <<std::endl;
+			  *d = v;
+			  d++;
+			}
+			// run the inference
+			std::vector<tensorflow::Tensor> outputs;
+			// TF < 2
+			//tensorflow::run(session, {{inputTensorName, inputTensor}}, {outputTensorName}, &outputs);
+			// TF >= 2
+			tensorflow::run(session, {{inputTensorName, inputTensor}}, {outputTensorName}, &outputs, threadPool);
+			
+			// store the result
+			double outputValue = outputs[0].matrix<float>()(0, 1);
+			std::cout << "output value: " << outputValue << std::endl;
+			std::cout << "\n" << std::endl;
+			
+			
 
 			jets tmpJet;
 			tmpJet.jet    = thisJet;
@@ -1158,8 +1298,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			tmpJet.jetGammaMax_ET = jetGammaMax_ET[i];
 			tmpJet.jetMinDeltaRPVTracks = jetMinDeltaRPVTracks[i];
 
-			tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
-			tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
+			tmpJet.jetChargedEMEnergyFraction = jetElectronEnergyFraction[i];
+			tmpJet.jetNeutralEMEnergyFraction = jetPhotonEnergyFraction[i];
 
 			tmpJet.jetNVertexTracks = jetNVertexTracks[i];
 			tmpJet.jetNSelectedTracks = jetNSelectedTracks[i];
@@ -1514,18 +1654,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		outFile->Close();
 		cout << "here4\n";
 	}
-	/* 
-	   cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
-	   outFile->cd();
-	   cout << "Writing output trees..." << endl;
-	   llp_tree->tree_->Write();
-	   cout << "Writing output NEvents..." << endl;
-	   NEvents->Write();
-	   cout << "Closing output trees..." << endl;
-	   outFile->Write();
-	   outFile->Close();
-	   */
-		cout << "here5\n";
-	delete helper;
-		cout << "here6\n";
-	}
+
+	cout << "here5\n";
+	//if (helper) delete helper; //for some reason this is causing crashes. something is 
+	//                             not done corrector in the RazorHelper destructor
+	cout << "here6\n";
+}
