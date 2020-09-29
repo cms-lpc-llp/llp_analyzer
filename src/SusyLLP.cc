@@ -132,7 +132,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	//---------------------------
 	//-----------NN Setup----------
 	//---------------------------
-	std::string basePath = std::string(std::getenv("CMSSW_BASE")) + "/src/NNInferenceCMSSW/LLP_NN_Inference/nn_inference";
+	std::string basePath = std::string(std::getenv("CMSSW_BASE")) + "/src/LLPAnalysis/llpAnalyzer/nn_inference";
 	
 	std::string graphPath = basePath + "/graph.pb";
 	std::string inputTensorName = "dense_input";
