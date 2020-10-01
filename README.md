@@ -6,11 +6,12 @@ Class for analyzing the 2015 razor ntuples
 Setup
 -------------
 
-    cmsrel CMSSW_9_4_4
-    cd CMSSW_9_4_4/src
-    git clone git@github.com:cms-lpc-llp/llp_analyzer.git
-    cd llp_analyzer
-    make
+    cmsrel CMSSW_11_1_3
+    cd CMSSW_11_1_3/src
+    git clone git@github.com:cms-lpc-llp/llp_analyzer.git LLPAnalysis/llpAnalyzer
+    cd LLPAnalysis/llpAnalyzer
+    git checkout scramCompliant-v1
+    scramv1 b 
   
 Defining a new analysis
 -------------
@@ -22,14 +23,12 @@ Defining a new analysis
 
 Running
 ------------
-After compiling, 
+After compiling with cmssw scram, the executable shows up in this directory: $CMSSW_BASE/bin/slc7_amd64_gcc820/ 
 
-    ./RazorRun_T2 <list of input files> <name of your analyzer> <options>
+Example to execute analysis:
+
+    $CMSSW_BASE/bin/slc7_amd64_gcc820/RunSusyLLP  <list of input files> <name of your analyzer> <options>
   
-Example: to execute a dummy analysis that does nothing,
-
-    ./RazorRun_T2 lists/TTJets_List_Test.txt DummyAnalyzer
-
 The "options" are the following:
     
     -d   --isData
