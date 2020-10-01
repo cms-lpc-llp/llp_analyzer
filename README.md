@@ -8,6 +8,8 @@ Setup
 
     cmsrel CMSSW_11_1_3
     cd CMSSW_11_1_3/src
+    cmsenv
+    pip install --upgrade --user git+https://github.com/cms-ml/cmsml
     git clone git@github.com:cms-lpc-llp/llp_analyzer.git LLPAnalysis/llpAnalyzer
     cd LLPAnalysis/llpAnalyzer
     git checkout scramCompliant-v1
