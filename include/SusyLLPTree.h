@@ -340,6 +340,14 @@ class SusyLLPTree
 		float pho_pfClusterSeedE[OBJSIZE];
 		*/
 
+		//fatjets
+		int nFatJets;
+		float fatJetE[N_MAX_JETS];
+		float fatJetPt[N_MAX_JETS];
+		float fatJetCorrectedPt[N_MAX_JETS];
+		float fatJetEta[N_MAX_JETS];
+		float fatJetPhi[N_MAX_JETS];
+
 		//jets
 		int nJets;
 		float jetE[N_MAX_JETS];
@@ -421,6 +429,14 @@ class SusyLLPTree
 		float jet_sig_et1[N_MAX_JETS];
 		float jet_sig_et2[N_MAX_JETS];
 		bool jet_matched[N_MAX_JETS];
+		bool fatjet_matched_gLLP0[N_MAX_JETS];
+		bool fatjet_matched_gLLP1[N_MAX_JETS];
+		bool fatjet_matched_gLLP0_daughter[N_MAX_JETS];
+		bool fatjet_matched_gLLP1_daughter[N_MAX_JETS];
+		bool jet_matched_gLLP0[N_MAX_JETS];
+		bool jet_matched_gLLP1[N_MAX_JETS];
+		bool jet_matched_gLLP0_daughter[N_MAX_JETS];
+		bool jet_matched_gLLP1_daughter[N_MAX_JETS];
 		bool jet_matched_gLLP0_grandaughter[N_MAX_JETS];
 		bool jet_matched_gLLP1_grandaughter[N_MAX_JETS];
 
@@ -532,10 +548,18 @@ class SusyLLPTree
 		float gLLP_e[LLP_ARRAY_SIZE];
 		float gLLP_eta[LLP_ARRAY_SIZE];
 		float gLLP_phi[LLP_ARRAY_SIZE];
+		float gLLP_eta_ecalcorr[LLP_ARRAY_SIZE];
+		float gLLP_phi_ecalcorr[LLP_ARRAY_SIZE];
 		bool gLLP_eb[LLP_ARRAY_SIZE];
 		bool gLLP_csc[LLP_ARRAY_SIZE];
 		bool gLLP_dt[LLP_ARRAY_SIZE];
 		bool gLLP_tagged[LLP_ARRAY_SIZE];
+
+		int gLLP_match_fatjet_index[LLP_ARRAY_SIZE];
+		float gLLP_min_delta_r_match_fatjet[LLP_ARRAY_SIZE];
+		int gLLP_match_jet_index[LLP_ARRAY_SIZE];
+		float gLLP_min_delta_r_match_jet[LLP_ARRAY_SIZE];
+
 
 		float photon_travel_time[LLP_DAUGHTER_ARRAY_SIZE];
 		float photon_travel_time_pv[LLP_DAUGHTER_ARRAY_SIZE];
@@ -543,6 +567,16 @@ class SusyLLPTree
 		float gen_time[LLP_DAUGHTER_ARRAY_SIZE];
 		float gen_time_pv[LLP_DAUGHTER_ARRAY_SIZE];
 		float gLLP_daughter_travel_time[LLP_DAUGHTER_ARRAY_SIZE];
+
+		float gLLP_daughter_photon_travel_time_EB[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+		float gLLP_daughter_photon_travel_time_ETL[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+
+		float gLLP_daughter_travel_time_EB[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+		float gLLP_daughter_travel_time_ETL[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+
+		float gen_time_daughter_EB[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+		float gen_time_daughter_ETL[LLP_GRAND_DAUGHTER_ARRAY_SIZE];
+
 		int   gLLP_daughter_id[LLP_DAUGHTER_ARRAY_SIZE];
 		float gLLP_daughter_pt[LLP_DAUGHTER_ARRAY_SIZE];
 		float gLLP_daughter_eta[LLP_DAUGHTER_ARRAY_SIZE];
@@ -551,6 +585,11 @@ class SusyLLPTree
 		float gLLP_daughter_phi_ecalcorr[LLP_DAUGHTER_ARRAY_SIZE];
 		float gLLP_daughter_e[LLP_DAUGHTER_ARRAY_SIZE];
 		float gLLP_daughter_mass[LLP_DAUGHTER_ARRAY_SIZE];
+
+		int gLLP_daughter_match_fatjet_index[LLP_DAUGHTER_ARRAY_SIZE];
+		float gLLP_daughter_min_delta_r_match_fatjet[LLP_DAUGHTER_ARRAY_SIZE];
+		int gLLP_daughter_match_jet_index[LLP_DAUGHTER_ARRAY_SIZE];
+		float gLLP_daughter_min_delta_r_match_jet[LLP_DAUGHTER_ARRAY_SIZE];
 
 		//grandaughters
 		bool gLLP_grandaughter_EB[LLP_GRAND_DAUGHTER_ARRAY_SIZE];

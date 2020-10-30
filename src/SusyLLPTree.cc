@@ -138,6 +138,22 @@ void SusyLLPTree::InitVariables()
 		pho_passMVAIDWP90[i] = 0;
 	}
 
+	//fatjets
+	nFatJets = 0;
+	for( int i = 0; i < N_MAX_JETS; i++ )
+	{
+		fatJetE[i] = 0.0;
+		fatJetPt[i] = 0.0;
+		fatJetCorrectedPt[i] = 0.0;
+		fatJetEta[i] = 0.0;
+		fatJetPhi[i] = 0.0;
+
+		fatjet_matched_gLLP0[i]=0;
+		fatjet_matched_gLLP1[i]=0;
+		fatjet_matched_gLLP0_daughter[i]=0;
+		fatjet_matched_gLLP1_daughter[i]=0;
+	}
+
 	//jets
 	nJets = 0;
 	//nBJets = 0;
@@ -246,6 +262,10 @@ void SusyLLPTree::InitVariables()
 		jetNPixelHitsMedian[i] = 0;
 		jetNHitsMedian[i] = 0;
 
+		jet_matched_gLLP0[i]=0;
+		jet_matched_gLLP1[i]=0;
+		jet_matched_gLLP0_daughter[i]=0;
+		jet_matched_gLLP1_daughter[i]=0;
 		jet_matched_gLLP0_grandaughter[i]=0;
 		jet_matched_gLLP1_grandaughter[i]=0;
 	}
@@ -355,6 +375,14 @@ void SusyLLPTree::InitVariables()
 		gLLP_dt[i] = false;
 		gLLP_travel_time[i] = -666.;
 		gLLP_tagged[i] = false;
+		gLLP_eta_ecalcorr[i] = -666.;
+		gLLP_phi_ecalcorr[i] = -666.;
+
+		gLLP_match_fatjet_index[i] = -666.;
+		gLLP_min_delta_r_match_fatjet[i] = -666.;
+		gLLP_match_jet_index[i] = -666.;
+		gLLP_min_delta_r_match_jet[i] = -666.;
+
 	}
 
 	for ( int i = 0; i < LLP_DAUGHTER_ARRAY_SIZE; i++ )
@@ -367,6 +395,15 @@ void SusyLLPTree::InitVariables()
 		gLLP_daughter_phi_ecalcorr[i] = -666.;
 		gLLP_daughter_e[i] = -666.;
 		gLLP_daughter_mass[i] = -666.;
+
+		gLLP_daughter_photon_travel_time_EB[i] = -666.;
+		gLLP_daughter_travel_time_EB[i] = -666.;
+		gen_time_daughter_EB[i] = -666.;
+
+		gLLP_daughter_match_fatjet_index[i] = -666.;
+		gLLP_daughter_min_delta_r_match_fatjet[i] = -666.;
+		gLLP_daughter_match_jet_index[i] = -666.;
+		gLLP_daughter_min_delta_r_match_jet[i] = -666.;
 
 		gLLP_daughter_travel_time[i] = -666.;
 		gen_time[i] = -666.;
@@ -532,6 +569,14 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("pho_passCutBasedIDMedium",   pho_passCutBasedIDMedium); 
 	tree_->SetBranchAddress("pho_passCutBasedIDTight ",   pho_passCutBasedIDTight ); 
 
+	//fatjets
+	tree_->SetBranchAddress("nFatJets",     &nFatJets);
+	tree_->SetBranchAddress("fatJetE", fatJetE);
+	tree_->SetBranchAddress("fatJetPt", fatJetPt);
+	tree_->SetBranchAddress("fatJetCorrectedPt", fatJetCorrectedPt);
+	tree_->SetBranchAddress("fatJetEta", fatJetEta);
+	tree_->SetBranchAddress("fatJetPhi", fatJetPhi);
+
 	//jets
 	tree_->SetBranchAddress("nJets",     &nJets);
 	tree_->SetBranchAddress("jetE", jetE);
@@ -643,6 +688,8 @@ void SusyLLPTree::InitTree()
 	// tree_->SetBranchAddress("jetLoosePassId", jetLoosePassId);
 	// tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
 
+	tree_->SetBranchAddress("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter);
+	tree_->SetBranchAddress("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter);
 	tree_->SetBranchAddress("jet_matched_gLLP0_grandaughter", jet_matched_gLLP0_grandaughter);
 	tree_->SetBranchAddress("jet_matched_gLLP1_grandaughter", jet_matched_gLLP1_grandaughter);
 
@@ -759,7 +806,7 @@ void SusyLLPTree::InitTree()
 
 	tree_->SetBranchAddress("gen_time_daughter_EB", gen_time_daughter_EB);
 	tree_->SetBranchAddress("gen_time_daughter_ETL", gen_time_daughter_ETL);
-
+*/
 	tree_->SetBranchAddress("gLLP_daughter_id", gLLP_daughter_id);
 	tree_->SetBranchAddress("gLLP_daughter_pt", gLLP_daughter_pt);
 	tree_->SetBranchAddress("gLLP_daughter_eta", gLLP_daughter_eta);
@@ -771,10 +818,13 @@ void SusyLLPTree::InitTree()
 
 	tree_->SetBranchAddress("gLLP_daughter_match_jet_index", gLLP_daughter_match_jet_index);
 	tree_->SetBranchAddress("gLLP_daughter_min_delta_r_match_jet", gLLP_daughter_min_delta_r_match_jet);
-	*/
+	
+	tree_->SetBranchAddress("gLLP_daughter_photon_travel_time_EB", gLLP_daughter_photon_travel_time_EB);
+	tree_->SetBranchAddress("gLLP_daughter_travel_time_EB", gLLP_daughter_travel_time_EB);
+	tree_->SetBranchAddress("gen_time_daughter_EB", gen_time_daughter_EB);
 
 		//grandaughters
-		tree_->SetBranchAddress("gLLP_grandaughter_EB", gLLP_grandaughter_EB);
+	tree_->SetBranchAddress("gLLP_grandaughter_EB", gLLP_grandaughter_EB);
 	tree_->SetBranchAddress("gLLP_grandaughter_photon_travel_time_EB", gLLP_grandaughter_photon_travel_time_EB);
 	tree_->SetBranchAddress("gLLP_grandaughter_travel_time_EB", gLLP_grandaughter_travel_time_EB);
 	tree_->SetBranchAddress("gen_time_grandaughter_EB", gen_time_grandaughter_EB);
@@ -953,6 +1003,14 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("pho_passMVAIDWP80", pho_passMVAIDWP80, "pho_passMVAIDWP80[nPhotons]/O");
 	tree_->Branch("pho_passMVAIDWP90", pho_passMVAIDWP90, "pho_passMVAIDWP90[nPhotons]/O");
 
+	//fatjets
+	tree_->Branch("nFatJets", &nFatJets,"nFatJets/I");
+	tree_->Branch("fatJetE", fatJetE,"fatJetE[nFatJets]/F");
+	tree_->Branch("fatJetPt", fatJetPt,"fatJetPt[nFatJets]/F");
+	tree_->Branch("fatJetCorrectedPt", fatJetCorrectedPt,"fatJetCorrectedPt[nFatJets]/F");
+	tree_->Branch("fatJetEta", fatJetEta,"fatJetEta[nFatJets]/F");
+	tree_->Branch("fatJetPhi", fatJetPhi,"fatJetPhi[nFatJets]/F");
+
 	//jets
 	tree_->Branch("nJets", &nJets,"nJets/I");
 	tree_->Branch("jetE", jetE,"jetE[nJets]/F");
@@ -1062,6 +1120,14 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("jetNPixelHitsMedian",   jetNPixelHitsMedian,   "jetNPixelHitsMedian[nJets]/F");
 	tree_->Branch("jetNHitsMedian",   jetNHitsMedian,   "jetNHitsMedian[nJets]/F");
 
+	tree_->Branch("fatjet_matched_gLLP0", fatjet_matched_gLLP0,"fatjet_matched_gLLP0[nJets]/O");
+	tree_->Branch("fatjet_matched_gLLP1", fatjet_matched_gLLP1,"fatjet_matched_gLLP1[nJets]/O");
+	tree_->Branch("fatjet_matched_gLLP0_daughter", fatjet_matched_gLLP0_daughter,"fatjet_matched_gLLP0_daughter[nJets]/O");
+	tree_->Branch("fatjet_matched_gLLP1_daughter", fatjet_matched_gLLP1_daughter,"fatjet_matched_gLLP1_daughter[nJets]/O");
+	tree_->Branch("jet_matched_gLLP0", jet_matched_gLLP0,"jet_matched_gLLP0[nJets]/O");
+	tree_->Branch("jet_matched_gLLP1", jet_matched_gLLP1,"jet_matched_gLLP1[nJets]/O");
+	tree_->Branch("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter,"jet_matched_gLLP0_daughter[nJets]/O");
+	tree_->Branch("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter,"jet_matched_gLLP1_daughter[nJets]/O");
 	tree_->Branch("jet_matched_gLLP0_grandaughter", jet_matched_gLLP0_grandaughter,"jet_matched_gLLP0_grandaughter[nJets]/O");
 	tree_->Branch("jet_matched_gLLP1_grandaughter", jet_matched_gLLP1_grandaughter,"jet_matched_gLLP1_grandaughter[nJets]/O");
 
@@ -1143,6 +1209,14 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("gLLP_eb", gLLP_eb, "gLLP_eb[2]/O");
 	tree_->Branch("gLLP_tagged", gLLP_tagged, "gLLP_tagged[2]/O");
 	tree_->Branch("gLLP_travel_time", gLLP_travel_time, "gLLP_travel_time[2]/F");
+
+	tree_->Branch("gLLP_eta_ecalcorr", gLLP_eta_ecalcorr, "gLLP_eta_ecalcorr[2]/F");
+	tree_->Branch("gLLP_phi_ecalcorr", gLLP_phi_ecalcorr, "gLLP_phi_ecalcorr[2]/F");
+	tree_->Branch("gLLP_match_fatjet_index", gLLP_match_fatjet_index, "gLLP_match_fatjet_index[2]/I");
+	tree_->Branch("gLLP_min_delta_r_match_fatjet", gLLP_min_delta_r_match_fatjet, "gLLP_min_delta_r_match_fatjet[2]/F");
+	tree_->Branch("gLLP_match_jet_index", gLLP_match_jet_index, "gLLP_match_jet_index[2]/I");
+	tree_->Branch("gLLP_min_delta_r_match_jet", gLLP_min_delta_r_match_jet, "gLLP_min_delta_r_match_jet[2]/F");
+
 	/*
 	   tree_->Branch("gParticleProdVertexX", gParticleProdVertexX, "gParticleProdVertexX[nGenParticle]/F");
 	   tree_->Branch("gParticleProdVertexY", gParticleProdVertexY, "gParticleProdVertexY[nGenParticle]/F");
@@ -1165,6 +1239,7 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("gLLP_csc", gLLP_csc, "gLLP_csc[2]/O");
 	tree_->Branch("gLLP_dt", gLLP_dt, "gLLP_dt[2]/O");
 	tree_->Branch("gLLP_travel_time", gLLP_travel_time, "gLLP_travel_time[2]/F");
+	*/
 
 	tree_->Branch("gLLP_daughter_id", gLLP_daughter_id, "gLLP_daughter_id[4]/I");
 	tree_->Branch("gLLP_daughter_pt", gLLP_daughter_pt, "gLLP_daughter_pt[4]/F");
@@ -1174,7 +1249,15 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("gLLP_daughter_phi_ecalcorr", gLLP_daughter_phi_ecalcorr, "gLLP_daughter_phi_ecalcorr[4]/F");
 	tree_->Branch("gLLP_daughter_e", gLLP_daughter_e, "gLLP_daughter_e[4]/F");
 	tree_->Branch("gLLP_daughter_mass", gLLP_daughter_mass, "gLLP_daughter_mass[4]/F");
-	*/
+
+	tree_->Branch("gLLP_daughter_travel_time_EB", gLLP_daughter_travel_time_EB, "gLLP_daughter_travel_time_EB[4]/F");
+	tree_->Branch("gLLP_daughter_photon_travel_time_EB", gLLP_daughter_photon_travel_time_EB, "gLLP_daughter_photon_travel_time_EB[4]/F");
+	tree_->Branch("gen_time_daughter_EB", gen_time_daughter_EB, "gen_time_daughter_EB[4]/F");
+
+	tree_->Branch("gLLP_daughter_match_fatjet_index", gLLP_daughter_match_fatjet_index, "gLLP_daughter_match_fatjet_index[4]/I");
+	tree_->Branch("gLLP_daughter_min_delta_r_match_fatjet", gLLP_daughter_min_delta_r_match_fatjet, "gLLP_daughter_min_delta_r_match_fatjet[4]/F");
+	tree_->Branch("gLLP_daughter_match_jet_index", gLLP_daughter_match_jet_index, "gLLP_daughter_match_jet_index[4]/I");
+	tree_->Branch("gLLP_daughter_min_delta_r_match_jet", gLLP_daughter_min_delta_r_match_jet, "gLLP_daughter_min_delta_r_match_jet[4]/F");
 
 
 	tree_->Branch("gLLP_grandaughter_id", gLLP_grandaughter_id, "gLLP_grandaughter_id[4]/I");
