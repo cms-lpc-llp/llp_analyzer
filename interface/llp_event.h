@@ -623,7 +623,7 @@ public :
    Float_t         jetMinDeltaRPVTracks_wp[50];   //[nJets]
    Int_t           jetNPFCands[50];   //[nJets]
    Int_t           jetPFCandIndex[50][5000];   //[nJets]
-   UInt_t          nFatJets;
+   Int_t          nFatJets;
    Float_t         fatJetE[50];   //[nFatJets]
    Float_t         fatJetPt[50];   //[nFatJets]
    Float_t         fatJetEta[50];   //[nFatJets]

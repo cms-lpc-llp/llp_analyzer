@@ -54,6 +54,23 @@ struct photons
 	TLorentzVector photon;
 };
 
+struct fatjets
+{
+	TLorentzVector fatjet;
+	float CorrectedPt;
+
+	//ecal rechits
+	int fatjetNRecHitsEcal;
+	float fatjetEnergyRecHitsEcal;
+	float fatjetTimeRecHitsEcal;
+
+	//hcal hbhe rechits
+	int fatjetNRecHitsHcal;
+	float fatjetEnergyRecHitsHcal;
+	float fatjetTimeRecHitsHcal;
+
+};
+
 
 struct jets
 {
@@ -100,6 +117,18 @@ struct jets
 	//float jetSV_z;
 	//int   jetSVNTracks;
 	float jetSVMass;
+
+	//ecal rechits
+	int jetNRecHitsEcal;
+	float jetEnergyRecHitsEcal;
+	float jetTimeRecHitsEcal;
+
+	//hcal hbhe rechits
+	int jetNRecHitsHcal;
+	float jetEnergyRecHitsHcal;
+	float jetTimeRecHitsHcal;
+
+	float dnn_score;
 };
 
 //pt comparison
@@ -120,6 +149,12 @@ struct largest_pt_jet
 {
 	inline bool operator() (const jets& p1, const jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
 } my_largest_pt_jet;
+
+//fatjet highest pt comparator
+struct largest_pt_fatjet
+{
+	inline bool operator() (const fatjets& p1, const fatjets& p2){return p1.fatjet.Pt() > p2.fatjet.Pt();}
+} my_largest_pt_fatjet;
 
 //Analyze
 void SusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag, string process)
@@ -567,6 +602,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->genMetPtCalo = genMetPtCalo;
 			llp_tree->genMetPhiCalo = genMetPhiCalo;
 
+
 			for(int i = 0; i < 2;i++)
 			{
 				//std::cout << "i " << i << std::endl;
@@ -586,6 +622,12 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				llp_tree->gLLP_decay_vertex_x[i] = gLLP_decay_vertex_x[i];
 				llp_tree->gLLP_decay_vertex_y[i] = gLLP_decay_vertex_y[i];
 				llp_tree->gLLP_decay_vertex_z[i] = gLLP_decay_vertex_z[i];
+				//acceptance cut
+				if(llp_tree->gLLP_decay_vertex_r[i] > 30. && llp_tree->gLLP_decay_vertex_r[i] < 184. && abs(llp_tree->gLLP_decay_vertex_z[i]) < 376. && abs(llp_tree->gLLP_eta[i])!=666) {
+					if(i<1) llp_tree->gLLP0_EB = true;
+					else llp_tree->gLLP1_EB = true;
+				}
+
 				float beta = gLLP_beta[i];
 				if(beta<0){
 				TLorentzVector gLLP = makeTLorentzVector( gLLP_pt[i], gLLP_eta[i], gLLP_phi[i], gLLP_e[i] );
@@ -1175,7 +1217,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			double jetEnergyRecHitsECAL = 0;
 			double jetEnergyRecHitsHCAL = 0;
 			double jetTimeRecHitsECAL = -100;
-			//double jetTimeRecHitsHCAL = -100;
+			double jetTimeRecHitsHCAL = -100;
 			double tmpJetTimeEnergyRecHitsHCAL = 0;
  			int jetNRecHitsECAL = 0;
  			int jetNRecHitsHCAL = 0;
@@ -1219,12 +1261,12 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			  tmpJetTimeEnergyRecHitsHCAL += hbheRechit_E[q]*hbheRechit_T[q];
 			}
 
-			// if (jetEnergyRecHitsHCAL > 0) {
-			//   jetTimeRecHitsHCAL = tmpJetTimeEnergyRecHitsHCAL / jetEnergyRecHitsHCAL;
-			// } else {
-			//   jetEnergyRecHitsHCAL = -1;
-			//   jetTimeRecHitsHCAL = -100;
-			// }
+			if (jetEnergyRecHitsHCAL > 0) {
+			  jetTimeRecHitsHCAL = tmpJetTimeEnergyRecHitsHCAL / jetEnergyRecHitsHCAL;
+			} else {
+			  jetEnergyRecHitsHCAL = -1;
+			  jetTimeRecHitsHCAL = -100;
+			}
 
 			
 			// cout << thisJet.Pt() << " " << thisJet.Eta() << " " << thisJet.Phi() << " | "
@@ -1303,6 +1345,17 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			tmpJet.jetSVMass = jetSVMass[i];
 
 			tmpJet.jetChargedMultiplicity = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
+			//ecal rechits
+			tmpJet.jetNRecHitsEcal = jetNRecHitsECAL;
+			tmpJet.jetEnergyRecHitsEcal = jetEnergyRecHitsECAL;
+			tmpJet.jetTimeRecHitsEcal = jetTimeRecHitsECAL;
+
+			//hcal hbhe rechits
+		 	tmpJet.jetNRecHitsHcal = jetNRecHitsHCAL;
+			tmpJet.jetEnergyRecHitsHcal = jetEnergyRecHitsHCAL;
+			tmpJet.jetTimeRecHitsHcal = jetTimeRecHitsHCAL;
+
+			tmpJet.dnn_score = outputValue;
 
 			if(_debug_trk) std::cout << "nTracks" << nTracks << std::endl;
 			std::vector<float> nPixelHits;
@@ -1401,6 +1454,18 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->jetNPixelHitsMedian[llp_tree->nJets] = tmp.jetNPixelHitsMedian;
 			llp_tree->jetNHitsMedian[llp_tree->nJets] = tmp.jetNHitsMedian;
 
+			//ecal rechits
+			llp_tree->jetNRecHitsEcal[llp_tree->nJets] = tmp.jetNRecHitsEcal;
+			llp_tree->jetEnergyRecHitsEcal[llp_tree->nJets] = tmp.jetEnergyRecHitsEcal;
+			llp_tree->jetTimeRecHitsEcal[llp_tree->nJets] = tmp.jetTimeRecHitsEcal;
+
+			//hcal hbhe rechits
+			llp_tree->jetNRecHitsHcal[llp_tree->nJets] = tmp.jetNRecHitsHcal;
+			llp_tree->jetEnergyRecHitsHcal[llp_tree->nJets] = tmp.jetEnergyRecHitsHcal;
+			llp_tree->jetTimeRecHitsHcal[llp_tree->nJets] = tmp.jetTimeRecHitsHcal;
+
+			llp_tree->jetDNNScore[llp_tree->nJets] = tmp.dnn_score;
+
 			//std::cout << "jetEta " << tmp.jet.Eta() << std::endl;
 			//std::cout << "jetEta " << llp_tree->jetEta[llp_tree->nJets] << std::endl;
 
@@ -1421,6 +1486,161 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->nJets++;
 		}
 
+		//fatjets
+		std::vector<fatjets> FatJets;
+		for(int i = 0; i < nFatJets; i++)
+		{
+
+			//------------------------------------------------------------
+			//exclude selected muons and electrons from the jet collection
+			//------------------------------------------------------------
+			double deltaR = -1;
+			for(auto& lep : Leptons){
+				double thisDR = RazorAnalyzerLLP::deltaR(fatJetEta[i],fatJetPhi[i],lep.lepton.Eta(),lep.lepton.Phi());
+				if(deltaR < 0 || thisDR < deltaR) deltaR = thisDR;
+			}
+			if(deltaR > 0 && deltaR < 0.4) continue; //jet matches a selected lepton
+
+			//------------------------------------------------------------
+			//exclude selected taus from the jet collection
+			//------------------------------------------------------------
+			double deltaR_tau = -1;
+			for(auto& tau : Taus){
+				double thisDR_tau = RazorAnalyzerLLP::deltaR(fatJetEta[i],fatJetPhi[i],tau.tau.Eta(),tau.tau.Phi());
+				if(deltaR_tau < 0 || thisDR_tau < deltaR_tau) deltaR_tau = thisDR_tau;
+			}
+			if(deltaR_tau > 0 && deltaR_tau < 0.4) continue; //jet matches a selected tau
+
+			//------------------------------------------------------------
+			//exclude selected photons from the jet collection
+			//------------------------------------------------------------
+			double deltaR_pho = -1;
+			for(auto& pho : Photons){
+				double thisDR_pho = RazorAnalyzerLLP::deltaR(fatJetEta[i],fatJetPhi[i],pho.photon.Eta(),pho.photon.Phi());
+				if(deltaR_pho < 0 || thisDR_pho < deltaR_pho) deltaR_pho = thisDR_pho;
+			}
+			if(deltaR_pho > 0 && deltaR_pho < 0.4) continue; //jet matches a selected photon
+
+			//------------------------------------------------------------
+			//Apply Jet Energy and Resolution Corrections
+			//------------------------------------------------------------
+
+			TLorentzVector thisFatJet = makeTLorentzVector( fatJetPt[i], fatJetEta[i], fatJetPhi[i], fatJetE[i] );
+
+			if( thisFatJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
+			if( fabs( thisFatJet.Eta() ) >= 1.48 ) continue;
+
+			//std::cout <<fatJetPt[i] << "," << fatJetE[i] <<  "," << fatJetEta[i] << std::endl;
+
+			//************************************
+			//Compute Rechit Quantities
+			//************************************
+			double fatjetEnergyRecHitsECAL = 0;
+			double fatjetEnergyRecHitsHCAL = 0;
+			double fatjetTimeRecHitsECAL = -100;
+			double fatjetTimeRecHitsHCAL = -100;
+			double tmpFatJetTimeEnergyRecHitsECAL = 0;
+			double tmpFatJetTimeEnergyRecHitsHCAL = 0;
+ 			int fatjetNRecHitsECAL = 0;
+ 			int fatjetNRecHitsHCAL = 0;
+
+			//Loop over ECAL rechits
+			for (int q=0; q < nRechits; q++) {
+			  if (ecalRechit_E[q] <= 0.5) continue;
+			  double tmpDR = RazorAnalyzerLLP::deltaR(thisFatJet.Eta(), thisFatJet.Phi(), ecalRechit_Eta[q], ecalRechit_Phi[q]);
+			  if (tmpDR > 0.8) continue;			  
+			  if (ecalRechit_kSaturatedflag[q] || 
+			      ecalRechit_kLeadingEdgeRecoveredflag[q] || 
+			      ecalRechit_kPoorRecoflag[q] ||
+			      ecalRechit_kWeirdflag[q] || 
+			      ecalRechit_kDiWeirdflag[q]) continue;
+			  if (ecalRechit_T_Error[q] < 0 || ecalRechit_T_Error[q] > 100) continue;
+			  if (abs(ecalRechit_T[q]) > 12.5) continue;
+			  if (abs(ecalRechit_Eta[q]) > 1.5) continue;
+
+			  //cout << "Rechit " << q << " : " << ecalRechit_E[q] << "\n";
+		 
+			  fatjetEnergyRecHitsECAL += ecalRechit_E[q];
+			  fatjetNRecHitsECAL++;
+			  tmpFatJetTimeEnergyRecHitsECAL += ecalRechit_E[q]*ecalRechit_T[q];
+			}  
+
+			if (fatjetEnergyRecHitsECAL > 0) {
+			  fatjetTimeRecHitsECAL = tmpFatJetTimeEnergyRecHitsECAL / fatjetEnergyRecHitsECAL;
+			} else {
+			  fatjetEnergyRecHitsECAL = -1;
+			  fatjetTimeRecHitsECAL = -100;
+			}
+
+			//if (fatjetNRecHitsECAL == 0) {
+			//  fatjetEnergyRecHitsECAL = -1;
+			//}
+			//if (isnan(fatjetRechitT[i]) || jetRechitE[i] == 0) {
+			//  fatjetTimeRecHitsECAL = -100;
+			//} else {
+			//  fatjetTimeRecHitsECAL = jetRechitT[i];
+			//}
+
+			//Loop over HCAL rechits
+			for (int q=0; q < nHBHERechits; q++) {
+			  if (hbheRechit_E[q] <= 0.1) continue;
+			  double tmpDR = RazorAnalyzerLLP::deltaR(thisFatJet.Eta(), thisFatJet.Phi(), hbheRechit_Eta[q], hbheRechit_Phi[q]);
+			  if (tmpDR > 0.8) continue;
+
+			  fatjetEnergyRecHitsHCAL += hbheRechit_E[q];
+			  fatjetNRecHitsHCAL++;
+			  tmpFatJetTimeEnergyRecHitsHCAL += hbheRechit_E[q]*hbheRechit_T[q];
+			}
+
+			if (fatjetEnergyRecHitsHCAL > 0) {
+			  fatjetTimeRecHitsHCAL = tmpFatJetTimeEnergyRecHitsHCAL / fatjetEnergyRecHitsHCAL;
+			} else {
+			  fatjetEnergyRecHitsHCAL = -1;
+			  fatjetTimeRecHitsHCAL = -100;
+			}
+
+
+			fatjets tmpFatJet;
+			tmpFatJet.fatjet    = thisFatJet;
+			tmpFatJet.CorrectedPt   = fatJetCorrectedPt[i];
+
+			//ecal rechits
+			tmpFatJet.fatjetNRecHitsEcal = fatjetNRecHitsECAL;
+			tmpFatJet.fatjetEnergyRecHitsEcal = fatjetEnergyRecHitsECAL;
+			tmpFatJet.fatjetTimeRecHitsEcal = fatjetTimeRecHitsECAL;
+
+			//hcal hbhe rechits
+			tmpFatJet.fatjetNRecHitsHcal = fatjetNRecHitsHCAL;
+			tmpFatJet.fatjetEnergyRecHitsHcal = fatjetEnergyRecHitsHCAL;
+			tmpFatJet.fatjetTimeRecHitsHcal = fatjetTimeRecHitsHCAL;
+
+			
+			FatJets.push_back(tmpFatJet);
+		}
+
+		sort(FatJets.begin(), FatJets.end(), my_largest_pt_fatjet);
+		for ( auto &tmp : FatJets )
+		{
+
+			llp_tree->fatJetPt[llp_tree->nFatJets] = tmp.fatjet.Pt();
+			llp_tree->fatJetEta[llp_tree->nFatJets] = tmp.fatjet.Eta();
+			llp_tree->fatJetE[llp_tree->nFatJets] = tmp.fatjet.E();
+			llp_tree->fatJetPhi[llp_tree->nFatJets] = tmp.fatjet.Phi();
+			llp_tree->fatJetCorrectedPt[llp_tree->nFatJets] = tmp.CorrectedPt;
+			
+			//ecal rechits
+			llp_tree->fatjetNRecHitsEcal[llp_tree->nFatJets] = tmp.fatjetNRecHitsEcal;
+			llp_tree->fatjetEnergyRecHitsEcal[llp_tree->nFatJets] = tmp.fatjetEnergyRecHitsEcal;
+			llp_tree->fatjetTimeRecHitsEcal[llp_tree->nFatJets] = tmp.fatjetTimeRecHitsEcal;
+
+			//hcal hbhe rechits
+			llp_tree->fatjetNRecHitsHcal[llp_tree->nFatJets] = tmp.fatjetNRecHitsHcal;
+			llp_tree->fatjetEnergyRecHitsHcal[llp_tree->nFatJets] = tmp.fatjetEnergyRecHitsHcal;
+			llp_tree->fatjetTimeRecHitsHcal[llp_tree->nFatJets] = tmp.fatjetTimeRecHitsHcal;
+
+			llp_tree->nFatJets++;
+		}
+
 
 		//gLLP grandaughters
 		double ecal_radius = 129.0;
@@ -1432,6 +1652,105 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->genVertexY = genVertexY;
 			llp_tree->genVertexZ = genVertexZ;
 			llp_tree->genVertexT = genVertexT;
+
+			//gLLP daughters
+			for(int i = 0; i <4; i++){
+				llp_tree->gLLP_daughter_id[i] = gLLP_daughter_id[i];
+				llp_tree->gLLP_daughter_mass[i] = gLLP_daughter_mass[i];
+				llp_tree->gLLP_daughter_e[i] = gLLP_daughter_e[i];
+				llp_tree->gLLP_daughter_pt[i] = gLLP_daughter_pt[i];
+				llp_tree->gLLP_daughter_eta[i] = gLLP_daughter_eta[i];
+				llp_tree->gLLP_daughter_phi[i] = gLLP_daughter_phi[i];
+
+				TLorentzVector tmpdau = makeTLorentzVectorPtEtaPhiM(gLLP_daughter_pt[i], gLLP_daughter_eta[i], gLLP_daughter_phi[i], gLLP_daughter_mass[i]);
+				int llp_index=0;
+				if(i>1) llp_index=1;
+				double radius = sqrt( pow(gLLP_decay_vertex_x[llp_index],2) + pow(gLLP_decay_vertex_y[llp_index],2) );
+				llp_tree->gLLP_daughter_travel_time_EB[i] = (1./30.)*fabs(ecal_radius-radius)/(tmpdau.Pt()/tmpdau.E());// - (1./30.) * ecal_radius * cosh(tmp.Eta());//1/30 is to convert cm to ns
+				//Calculate dt from generation point to ECAL face
+				double x_ecal = gLLP_decay_vertex_x[llp_index] + 30. * (tmpdau.Px()/tmpdau.E())*(llp_tree->gLLP_daughter_travel_time_EB[i]);
+				double y_ecal = gLLP_decay_vertex_y[llp_index] + 30. * (tmpdau.Py()/tmpdau.E())*(llp_tree->gLLP_daughter_travel_time_EB[i]);
+				double z_ecal = gLLP_decay_vertex_z[llp_index] + 30. * (tmpdau.Pz()/tmpdau.E())*(llp_tree->gLLP_daughter_travel_time_EB[i]);
+
+
+				if( fabs(z_ecal) < EB_z && radius <= ecal_radius &&  fabs(gLLP_decay_vertex_z[llp_index]) < EE_z) {
+					llp_tree->gLLP_daughter_photon_travel_time_EB[i] = (1./30) * sqrt(pow(ecal_radius,2)+pow(z_ecal,2));
+					if(genVertexT==-999) genVertexT=0;
+					llp_tree->gen_time_daughter_EB[i] = gLLP_travel_time[llp_index] + (llp_tree->gLLP_daughter_travel_time_EB[i]) - llp_tree->gLLP_daughter_photon_travel_time_EB[i] + genVertexT;
+
+				} else {
+					llp_tree->gLLP_daughter_travel_time_EB[i] = -666;
+					llp_tree->gen_time_daughter_EB[i] = -666.;
+					llp_tree->gLLP_daughter_photon_travel_time_EB[i] = -666.;
+				}
+
+				// Correction of eta and phi based on ecal points
+				double phi = atan((y_ecal-genVertexY)/(x_ecal-genVertexX));
+				if  (x_ecal < 0.0) {
+					phi = TMath::Pi() + phi;
+				}
+				phi = deltaPhi(phi,0.0);
+
+				double theta = atan(sqrt(pow(x_ecal-genVertexX,2)+pow(y_ecal-genVertexY,2))/abs(z_ecal-genVertexZ));
+				double eta = -1.0*TMath::Sign(1.0, z_ecal-genVertexZ)*log(tan(theta/2));
+				llp_tree->gLLP_daughter_eta_ecalcorr[i] = eta;
+				llp_tree->gLLP_daughter_phi_ecalcorr[i] = phi;
+
+				//match to AK4
+				double min_delta_r = 666.;
+				int match_jet_index = -666;
+				for ( int i_jet = 0; i_jet < llp_tree->nJets; i_jet++ )
+				{
+					double current_delta_r = deltaR(llp_tree->gLLP_daughter_eta_ecalcorr[i], llp_tree->gLLP_daughter_phi_ecalcorr[i], llp_tree->jetEta[i_jet], llp_tree->jetPhi[i_jet]);
+					if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r <<", current_delta_r "<< current_delta_r << std::endl;
+					if ( current_delta_r < min_delta_r )
+					{
+						min_delta_r = current_delta_r;
+						match_jet_index = i_jet;
+					}
+					if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
+				}//end matching to jets 
+
+				if ( min_delta_r < 0.4 )
+					//if ( min_delta_r < 20 )
+				{
+					llp_tree->gLLP_daughter_match_jet_index[i] = match_jet_index;
+					llp_tree->gLLP_daughter_min_delta_r_match_jet[i] = min_delta_r;
+					//llp_tree->matched[match_jet_index] = true;
+					if(i<2) llp_tree->jet_matched_gLLP0_daughter[match_jet_index] = true;
+					else llp_tree->jet_matched_gLLP1_daughter[match_jet_index] = true;
+					if(_debug_match) std::cout << " i " << i << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
+				}
+
+				//match to AK8
+				double fatjet_min_delta_r = 666.;
+				int match_fatjet_index = -666;
+				for ( int i_fatjet = 0; i_fatjet < llp_tree->nFatJets; i_fatjet++ )
+				{
+					double current_delta_r = deltaR(llp_tree->gLLP_daughter_eta_ecalcorr[i], llp_tree->gLLP_daughter_phi_ecalcorr[i], llp_tree->fatJetEta[i_fatjet], llp_tree->fatJetPhi[i_fatjet]);
+					if(_debug_match) std::cout << " i_fatjet " << i_fatjet << ", match_fatjet_index " << match_fatjet_index << ", fatjet_min_delta_r " << fatjet_min_delta_r <<", current_delta_r "<< current_delta_r << std::endl;
+					if ( current_delta_r < fatjet_min_delta_r )
+					{
+						fatjet_min_delta_r = current_delta_r;
+						match_fatjet_index = i_fatjet;
+					}
+					if(_debug_match) std::cout << " i_fatjet " << i_fatjet << ", match_fatjet_index " << match_fatjet_index << ", fatjet_min_delta_r " << fatjet_min_delta_r << std::endl;
+				}//end matching to jets 
+
+				if ( fatjet_min_delta_r < 0.8 )
+				{
+					llp_tree->gLLP_daughter_match_fatjet_index[i] = match_fatjet_index;
+					llp_tree->gLLP_daughter_min_delta_r_match_fatjet[i] = fatjet_min_delta_r;
+					//llp_tree->matched[match_fatjet_index] = true;
+					if(i<2) llp_tree->fatjet_matched_gLLP0_daughter[match_fatjet_index] = true;
+					else llp_tree->fatjet_matched_gLLP1_daughter[match_fatjet_index] = true;
+					if(_debug_match) std::cout << " i " << i << ", match_fatjet_index " << match_fatjet_index << ", fatjet_min_delta_r " << fatjet_min_delta_r << std::endl;
+				}
+
+
+			}//end of loop over daughters
+
+			//gLLP grandaughters
 			for(int i = 0; i <4; i++){
 				llp_tree->gLLP_grandaughter_id[i] = gLLP_grandaughter_id[i];
 				llp_tree->gLLP_grandaughter_mass[i] = gLLP_grandaughter_mass[i];
