@@ -10,7 +10,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=10
+filesPerJob=60
 
 #ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18
 #ggH_HToSSTobbbb_ms55_pl1000 \
@@ -33,28 +33,102 @@ ZH_HToSSTobbbb_ms55_pl1000_ev150000
 ZH_HToSSTobbbb_ms55_pl10000_ev150000
 WH_HToSSTobbbb_CSCDecayFilter_ms55_pl100000_ev150000
 )
+#listFall18=(
+#WplusH_HToSSTobbbb_ms55_pl10000_ev150000
+#WminusH_HToSSTobbbb_ms55_pl10000_ev150000
+#WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+#)
 listFall18=(
-WplusH_HToSSTobbbb_ms55_pl10000_ev150000
-WminusH_HToSSTobbbb_ms55_pl10000_ev150000
-WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+ggH_HToSS_SToEE_ms0p1_pl100
+ggH_HToSS_SToEE_ms0p1_pl500
+ggH_HToSS_SToPi0Pi0_ms1_pl100
+ggH_HToSS_SToPi0Pi0_ms1_pl500
+ggH_HToSSTobbbb_ms1_pl1000
+ggH_HToSS_SToPiPlusPiMinus_ms1_pl500
+ggH_HToSS_SToKPlusKMinus_ms1p5_pl500
+ggH_HToSS_SToEE_ms0p4_pl500
+)
+listFall18=(
+ttH_HToSS_SToBB_ms15_pl100
+ttH_HToSS_SToBB_ms15_pl1000
+ttH_HToSS_SToBB_ms15_pl10000
+ttH_HToSS_SToBB_ms15_pl100000
+ttH_HToSS_SToBB_ms40_pl100
+ttH_HToSS_SToBB_ms40_pl1000
+ttH_HToSS_SToBB_ms40_pl10000
+ttH_HToSS_SToBB_ms40_pl100000
+ttH_HToSS_SToBB_ms55_pl100
+ttH_HToSS_SToBB_ms55_pl1000
+ttH_HToSS_SToBB_ms55_pl10000
+ttH_HToSS_SToBB_ms55_pl100000
+WminusHToSS_SToBB_ms15_pl100
+WminusHToSS_SToBB_ms15_pl1000
+WminusHToSS_SToBB_ms15_pl10000
+WminusHToSS_SToBB_ms15_pl100000
+WminusHToSS_SToBB_ms40_pl100
+WminusHToSS_SToBB_ms40_pl1000
+WminusHToSS_SToBB_ms40_pl10000
+WminusHToSS_SToBB_ms40_pl100000
+WminusHToSS_SToBB_ms55_pl100
+WminusHToSS_SToBB_ms55_pl1000
+WminusHToSS_SToBB_ms55_pl10000
+WminusHToSS_SToBB_ms55_pl100000
+WplusHToSS_SToBB_ms15_pl100
+WplusHToSS_SToBB_ms15_pl1000
+WplusHToSS_SToBB_ms15_pl10000
+WplusHToSS_SToBB_ms15_pl100000
+WplusHToSS_SToBB_ms40_pl100
+WplusHToSS_SToBB_ms40_pl1000
+WplusHToSS_SToBB_ms40_pl10000
+WplusHToSS_SToBB_ms40_pl100000
+WplusHToSS_SToBB_ms55_pl100
+WplusHToSS_SToBB_ms55_pl1000
+WplusHToSS_SToBB_ms55_pl10000
+WplusHToSS_SToBB_ms55_pl100000
+ZHToSS_SToBB_ms15_pl100
+ZHToSS_SToBB_ms15_pl1000
+ZHToSS_SToBB_ms15_pl10000
+ZHToSS_SToBB_ms15_pl100000
+ZHToSS_SToBB_ms40_pl100
+ZHToSS_SToBB_ms40_pl1000
+ZHToSS_SToBB_ms40_pl10000
+ZHToSS_SToBB_ms40_pl100000
+ZHToSS_SToBB_ms55_pl100
+ZHToSS_SToBB_ms55_pl1000
+ZHToSS_SToBB_ms55_pl10000
+ZHToSS_SToBB_ms55_pl100000
+)
+listFall17=(
+ZToMuMu_NNPDF31_13TeV-powheg_M_120_200 
+ZToMuMu_NNPDF31_13TeV-powheg_M_200_400 
+ZToMuMu_NNPDF31_13TeV-powheg_M_3500_4500
+ZToMuMu_NNPDF31_13TeV-powheg_M_50_120
+ZToMuMu_NNPDF31_13TeV-powheg_M_1400_2300
+ZToMuMu_NNPDF31_13TeV-powheg_M_2300_3500
+ZToMuMu_NNPDF31_13TeV-powheg_M_4500_6000
+ZToMuMu_NNPDF31_13TeV-powheg_M_6000_Inf
+ZToMuMu_NNPDF31_13TeV-powheg_M_400_800
 )
 #listFall18=(
 #ggH_HToSSTobbbb_ms1_pl1000
 #)
 for year in \
 Summer16 \
+Fall17 \
 Fall18
 do
         echo ${year}
         sampleList=list${year}[@]
-        for sample in "${!sampleList}"
+        sampleList=listFall18[@]
+	for sample in "${!sampleList}"
         do
 
 		echo "Sample " ${sample}
 		version=/V1p17/MC_${year}/v1/
-		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v4/${sample}
+		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v70/${sample}
 		echo ${output}
-		inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
+	        #inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
+		inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple//V1p17/MC_Fall18/v1//sixie/${sample}.txt
 		nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
         	maxjob=`python -c "print int($nfiles.0/$filesPerJob)+1"`
         	mod=`python -c "print int($nfiles.0%$filesPerJob)"`
@@ -70,11 +144,11 @@ do
         	elif [ ${year} == "Fall17" ]
         	then
         	        echo ${year}
-        	        analyzerTag=Razor2017_17Nov2017Rereco
+        	        analyzerTag=Razor2017_Source2018
         	elif [ ${year} == 'Summer16' ]
         	then
         	        echo ${year}
-        	        analyzerTag=Razor2016_07Aug2017Rereco
+        	        analyzerTag=Razor2016_Source2018
         	else
         	        echo "ERROR: NEED TO SET CORRECT YEAR"
         	fi
