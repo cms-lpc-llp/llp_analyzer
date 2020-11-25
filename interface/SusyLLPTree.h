@@ -8,6 +8,7 @@
 #define LLP_GRAND_DAUGHTER_ARRAY_SIZE 4
 #define N_MAX_LEPTONS 20
 #define N_MAX_JETS 20
+#define MAX_NPFCAND 2000
 #define N_MAX_CSC 2000
 #define N_CSC_CUT 20
 #define JET_PT_CUT 10
@@ -440,6 +441,13 @@ class SusyLLPTree
 		float jet_energy_frac[N_MAX_JETS];
 		float jet_sig_et1[N_MAX_JETS];
 		float jet_sig_et2[N_MAX_JETS];
+		float jet_pt_deb[N_MAX_JETS];
+		float jet_sig_pt1[N_MAX_JETS];
+		float jet_sig_pt2[N_MAX_JETS];
+		float jet_pt_dpf[N_MAX_JETS];
+		int jetNPFCands[N_MAX_JETS];
+		int jetPFCandIndex[N_MAX_JETS][MAX_NPFCAND];
+
 		bool jet_matched[N_MAX_JETS];
 		bool fatjet_matched_gLLP0_daughter[N_MAX_JETS];
 		bool fatjet_matched_gLLP1_daughter[N_MAX_JETS];
@@ -489,6 +497,16 @@ class SusyLLPTree
 		float jetTimeRecHitsHcal[N_MAX_JETS];
 
 		float jetDNNScore[N_MAX_JETS];
+
+		//PFCandidates
+		int   nPFCandidates;
+		int   PFCandidatePdgId[MAX_NPFCAND];
+		float PFCandidatePt[MAX_NPFCAND];
+		float PFCandidateEta[MAX_NPFCAND];
+		float PFCandidatePhi[MAX_NPFCAND];
+		int   PFCandidateTrackIndex[MAX_NPFCAND];
+		int   PFCandidateGeneralTrackIndex[MAX_NPFCAND];
+		int   PFCandidatePVIndex[MAX_NPFCAND];
 
 		// met filters
 		bool Flag2_globalSuperTightHalo2016Filter;

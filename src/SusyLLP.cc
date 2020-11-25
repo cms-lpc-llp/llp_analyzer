@@ -13,6 +13,7 @@
 #include "TH1F.h"
 
 #define _debug 0
+#define _debug_pf 0
 #define _debug_lab 0
 #define _debug_npu 0
 #define _debug_sync 0
@@ -91,7 +92,15 @@ struct jets
 	int ecalNRechits;
 	float ecalRechitE;
 
+	float jetAlphaMax;
+	float jetBetaMax;
+	float jetGammaMax;
+	float jetGammaMax_Hadronic;
+	float jetGammaMax_EM;
 	float jetGammaMax_ET;
+	float jetPtAllTracks;
+	float jetPtAllPVTracks;
+	float jetMinDeltaRAllTracks;
 	float jetMinDeltaRPVTracks;
 
 	float jetChargedEMEnergyFraction;
@@ -127,6 +136,13 @@ struct jets
 	int jetNRecHitsHcal;
 	float jetEnergyRecHitsHcal;
 	float jetTimeRecHitsHcal;
+
+	double jetsig1EB;
+	double jetsig2EB;
+	double jetptDEB;
+	double jetsig1PF;
+	double jetsig2PF;
+	double jetptDPF;
 
 	float dnn_score;
 };
@@ -179,6 +195,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	int nThreads = 1;
 	
 	std::vector<std::string> inputFeatures = { "Jet_0_nTrackConstituents","Jet_0_nSelectedTracks", "Jet_0_timeRecHitsEB", "Jet_0_energyRecHitsEB", "Jet_0_nRecHitsEB", "Jet_0_cHadEFrac", "Jet_0_nHadEFrac", "Jet_0_eleEFrac", "Jet_0_photonEFrac", "Jet_0_ptAllTracks", "Jet_0_ptAllPVTracks", "Jet_0_alphaMax", "Jet_0_betaMax", "Jet_0_gammaMax", "Jet_0_gammaMaxEM", "Jet_0_gammaMaxHadronic", "Jet_0_gammaMaxET","Jet_0_minDeltaRAllTracks","Jet_0_minDeltaRPVTracks",};
+//"Jet_0_sig1EB","Jet_0_sig2EB","Jet_0_ptDEB","Jet_0_sig1PF","Jet_0_sig2PF","Jet_0_ptDPF",};
+
 
 	int nInputs = inputFeatures.size();
 	std::vector<float> inputValues(nInputs);
@@ -1139,6 +1157,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//cout <<"nJets :" << nJets << std::endl;
 
 		if(_debug) std::cout << "nJets " << nJets << std::endl;
+		if(_debug_pf) std::cout << "nJets " << nJets << std::endl;
 		if(_debug_jet) std::cout << "nJets " << nJets << std::endl;
 		if(_debug_jet) std::cout << "jetE 0 " << jetE[0] << std::endl;
 		//if(_debug_jet) std::cout << "jetChargedEMEnergyFraction 0 " << jetChargedEMEnergyFraction[0] << std::endl;
@@ -1221,6 +1240,12 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			double tmpJetTimeEnergyRecHitsHCAL = 0;
  			int jetNRecHitsECAL = 0;
  			int jetNRecHitsHCAL = 0;
+			std::vector<double> ebrechitphi;
+			std::vector<double> ebrechiteta;
+			std::vector<double> ebrechitet;
+			std::vector<double> ebrechitetsq;
+
+			if(_debug_pf) std::cout << "this jet pt " << thisJet.Pt() << std::endl;
 
 			//Loop over ECAL rechits
 			for (int q=0; q < nRechits; q++) {
@@ -1237,10 +1262,22 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			  if (abs(ecalRechit_Eta[q]) > 1.5) continue;
 
 			  //cout << "Rechit " << q << " : " << ecalRechit_E[q] << "\n";
-		 
+			  
+			  ebrechitphi.push_back(ecalRechit_Phi[q]);
+			  ebrechiteta.push_back(ecalRechit_Eta[q]);
+			  ebrechitet.push_back(ecalRechit_E[q]/cosh(ecalRechit_Eta[q]));
+			  ebrechitetsq.push_back( pow(ecalRechit_E[q]/cosh(ecalRechit_Eta[q]),2) );
+
 			  jetEnergyRecHitsECAL += ecalRechit_E[q];
 			  jetNRecHitsECAL++;
 			}  
+			double jetsig1EB(0.0),jetsig2EB(0.0);
+			RazorAnalyzerLLP::jet_second_moments(ebrechitet,ebrechiteta,ebrechitphi,jetsig1EB,jetsig2EB);
+			double jetptDEB = -1;
+			if ( accumulate(ebrechitet.begin(),ebrechitet.end(),0) > 0) {
+				jetptDEB = sqrt( accumulate(ebrechitetsq.begin(),ebrechitetsq.end(),0) / accumulate(ebrechitet.begin(),ebrechitet.end(),0) );
+			}	
+			if(_debug_pf) std::cout << "this jet ptDEB " << jetptDEB << std::endl;
 			if (jetNRecHitsECAL == 0) {
 			  jetEnergyRecHitsECAL = -1;
 			}
@@ -1267,6 +1304,35 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			  jetEnergyRecHitsHCAL = -1;
 			  jetTimeRecHitsHCAL = -100;
 			}
+			if(_debug_pf) std::cout << "this jet time hcal " << jetTimeRecHitsHCAL << std::endl;
+
+			std::vector<double> pfcandphi;
+			std::vector<double> pfcandeta;
+			std::vector<double> pfcandpt;
+			std::vector<double> pfcandptsq;
+
+			//Loop over PF candidates
+			for (int q=0; q < jetNPFCands[i]; q++) {
+			  int thisIndex = jetPFCandIndex[i][q];
+			  double tmpDR = RazorAnalyzerLLP::deltaR(thisJet.Eta(), thisJet.Phi(), PFCandidateEta[thisIndex], PFCandidatePhi[thisIndex]);
+			  if (tmpDR > 0.4) continue;			  
+
+			  pfcandphi.push_back(PFCandidatePhi[thisIndex]);
+			  pfcandeta.push_back(PFCandidateEta[thisIndex]);
+			  pfcandpt.push_back(PFCandidatePt[thisIndex]);
+			  pfcandptsq.push_back( pow(PFCandidatePt[thisIndex],2) );
+			  
+			}
+
+			double jetsig1PF(0.0),jetsig2PF(0.0);
+			RazorAnalyzerLLP::jet_second_moments(pfcandpt,pfcandeta,pfcandphi,jetsig1PF,jetsig2PF);
+			double jetptDPF = -1;
+			if ( accumulate(pfcandpt.begin(),pfcandpt.end(),0) > 0) {
+				jetptDPF = sqrt( accumulate(pfcandptsq.begin(),pfcandptsq.end(),0) / accumulate(pfcandpt.begin(),pfcandpt.end(),0) );
+			}	
+			if(_debug_pf) std::cout << "this jet sig1PF " << jetsig1PF << std::endl;
+			if(_debug_pf) std::cout << "this jet sig2PF " << jetsig2PF << std::endl;
+			if(_debug_pf) std::cout << "this jet ptDPF " << jetptDPF << std::endl;
 
 			
 			// cout << thisJet.Pt() << " " << thisJet.Eta() << " " << thisJet.Phi() << " | "
@@ -1296,7 +1362,14 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			inputValues[16] = jetGammaMax_ET[i];
 			inputValues[17] = jetMinDeltaRAllTracks[i];
 			inputValues[18] = jetMinDeltaRPVTracks[i];
-		
+/*
+			inputValues[19] = jetsig1EB;
+			inputValues[20] = jetsig2EB;
+			inputValues[21] = jetptDEB;
+			inputValues[22] = jetsig1PF;
+			inputValues[23] = jetsig2PF;
+			inputValues[24] = jetptDPF;
+*/		
 			// fill the input tensor using a data pointer that is shifted consecutively
 			float* d = inputTensor.flat<float>().data();
 			for (float v : inputValues) {
@@ -1333,8 +1406,17 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			tmpJet.jetPhotonEnergyFraction = jetPhotonEnergyFraction[i];
 			tmpJet.jetCSV = jetCISV[i];
 
+
+			tmpJet.jetAlphaMax = jetAlphaMax[i];
+			tmpJet.jetBetaMax = jetBetaMax[i];
+			tmpJet.jetGammaMax = jetGammaMax[i];
+			tmpJet.jetGammaMax_Hadronic = jetGammaMax_Hadronic[i];
+			tmpJet.jetGammaMax_EM = jetGammaMax_EM[i];
 			tmpJet.jetGammaMax_ET = jetGammaMax_ET[i];
+			tmpJet.jetPtAllPVTracks = jetPtAllPVTracks[i];
+			tmpJet.jetPtAllTracks = jetPtAllTracks[i];
 			tmpJet.jetMinDeltaRPVTracks = jetMinDeltaRPVTracks[i];
+			tmpJet.jetMinDeltaRAllTracks = jetMinDeltaRAllTracks[i];
 
 			tmpJet.jetChargedEMEnergyFraction = jetElectronEnergyFraction[i];
 			tmpJet.jetNeutralEMEnergyFraction = jetPhotonEnergyFraction[i];
@@ -1354,6 +1436,13 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		 	tmpJet.jetNRecHitsHcal = jetNRecHitsHCAL;
 			tmpJet.jetEnergyRecHitsHcal = jetEnergyRecHitsHCAL;
 			tmpJet.jetTimeRecHitsHcal = jetTimeRecHitsHCAL;
+
+			tmpJet.jetsig1EB = jetsig1EB;
+			tmpJet.jetsig2EB = jetsig2EB;
+			tmpJet.jetptDEB = jetptDEB;
+			tmpJet.jetsig1PF = jetsig1PF;
+			tmpJet.jetsig2PF = jetsig2PF;
+			tmpJet.jetptDPF = jetptDPF;
 
 			tmpJet.dnn_score = outputValue;
 
@@ -1436,7 +1525,15 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->ecalNRechits[llp_tree->nJets] = tmp.ecalNRechits;
 			llp_tree->ecalRechitE[llp_tree->nJets] = tmp.ecalRechitE;
 
+			llp_tree->jetAlphaMax[llp_tree->nJets] = tmp.jetAlphaMax;
+			llp_tree->jetBetaMax[llp_tree->nJets] = tmp.jetBetaMax;
+			llp_tree->jetGammaMax[llp_tree->nJets] = tmp.jetGammaMax;
+			llp_tree->jetGammaMax_Hadronic[llp_tree->nJets] = tmp.jetGammaMax_Hadronic;
+			llp_tree->jetGammaMax_EM[llp_tree->nJets] = tmp.jetGammaMax_EM;
 			llp_tree->jetGammaMax_ET[llp_tree->nJets] = tmp.jetGammaMax_ET;
+			llp_tree->jetPtAllPVTracks[llp_tree->nJets] = tmp.jetPtAllPVTracks;
+			llp_tree->jetPtAllTracks[llp_tree->nJets] = tmp.jetPtAllTracks;
+			llp_tree->jetMinDeltaRAllTracks[llp_tree->nJets] = tmp.jetMinDeltaRAllTracks;
 			llp_tree->jetMinDeltaRPVTracks[llp_tree->nJets] = tmp.jetMinDeltaRPVTracks;
 
 			llp_tree->jetChargedEMEnergyFraction[llp_tree->nJets] = tmp.jetChargedEMEnergyFraction;
@@ -1463,6 +1560,13 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->jetNRecHitsHcal[llp_tree->nJets] = tmp.jetNRecHitsHcal;
 			llp_tree->jetEnergyRecHitsHcal[llp_tree->nJets] = tmp.jetEnergyRecHitsHcal;
 			llp_tree->jetTimeRecHitsHcal[llp_tree->nJets] = tmp.jetTimeRecHitsHcal;
+
+			llp_tree->jet_sig_et1[llp_tree->nJets] = tmp.jetsig1EB;
+			llp_tree->jet_sig_et2[llp_tree->nJets] = tmp.jetsig2EB;
+			llp_tree->jet_pt_deb[llp_tree->nJets] = tmp.jetptDEB;
+			llp_tree->jet_sig_pt1[llp_tree->nJets] = tmp.jetsig1PF;
+			llp_tree->jet_sig_pt2[llp_tree->nJets] = tmp.jetsig2PF;
+			llp_tree->jet_pt_dpf[llp_tree->nJets] = tmp.jetptDPF;
 
 			llp_tree->jetDNNScore[llp_tree->nJets] = tmp.dnn_score;
 

@@ -242,7 +242,16 @@ void SusyLLPTree::InitVariables()
 		jetMinDeltaRPVTracks[i] = -99.0;
 		jet_sig_et1[i] = -99.0;
 		jet_sig_et2[i] = -99.0;
+		jet_pt_deb[i] = -99.0;
+		jet_sig_pt1[i] = -99.0;
+		jet_sig_pt2[i] = -99.0;
+		jet_pt_dpf[i] = -99.0;
 		jet_energy_frac[i] = 0.0;
+
+		jetNPFCands[i] = 0;
+		for (uint q=0;q<MAX_NPFCAND;q++) {
+			jetPFCandIndex[i][q] = -1;
+		}
 
 		jetGammaMax_wp[i] = -99.0;
 		jetGammaMax_EM_wp[i] = -99.0;
@@ -289,6 +298,18 @@ void SusyLLPTree::InitVariables()
 		jetTimeRecHitsHcal[i] = -100;
 
 		jetDNNScore[i] = -1;
+	}
+
+	//PFCandidates
+	nPFCandidates = 0;
+	for ( int i = 0; i < MAX_NPFCAND; i++) {
+		PFCandidatePdgId[i] = -999.;
+		PFCandidatePt[i] = -999.;
+		PFCandidateEta[i] = -999.;
+		PFCandidatePhi[i] = -999.;
+		PFCandidateTrackIndex[i] = -1;
+		PFCandidateGeneralTrackIndex[i] = -1;
+		PFCandidatePVIndex[i] = -1;
 	}
 
 	//triggers
@@ -704,6 +725,16 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("jet_matched_gLLP0_grandaughter", jet_matched_gLLP0_grandaughter);
 	tree_->SetBranchAddress("jet_matched_gLLP1_grandaughter", jet_matched_gLLP1_grandaughter);
 
+	//PFCandidates
+	tree_->SetBranchAddress("nPFCandidates",     &nPFCandidates);
+	tree_->SetBranchAddress("PFCandidatePdgId", PFCandidatePdgId);
+	tree_->SetBranchAddress("PFCandidatePt", PFCandidatePt);
+	tree_->SetBranchAddress("PFCandidateEta", PFCandidateEta);
+	tree_->SetBranchAddress("PFCandidatePhi", PFCandidatePhi);
+	tree_->SetBranchAddress("PFCandidateTrackIndex", PFCandidateTrackIndex);
+	tree_->SetBranchAddress("PFCandidateGeneralTrackIndex", PFCandidateGeneralTrackIndex);
+	tree_->SetBranchAddress("PFCandidatePVIndex", PFCandidatePVIndex);
+
 	// triggers
 	tree_->SetBranchAddress("HLTDecision",   &HLTDecision);
 
@@ -831,7 +862,7 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("gLLP_daughter_min_delta_r_match_jet", gLLP_daughter_min_delta_r_match_jet);
 	*/
 
-	tree_->SetBranchAddress("gLLP_daughter_id", gLLP_daughter_id);
+		tree_->SetBranchAddress("gLLP_daughter_id", gLLP_daughter_id);
 	tree_->SetBranchAddress("gLLP_daughter_pt", gLLP_daughter_pt);
 	tree_->SetBranchAddress("gLLP_daughter_eta", gLLP_daughter_eta);
 	tree_->SetBranchAddress("gLLP_daughter_phi", gLLP_daughter_phi);
@@ -842,13 +873,13 @@ void SusyLLPTree::InitTree()
 
 	tree_->SetBranchAddress("gLLP_daughter_match_jet_index", gLLP_daughter_match_jet_index);
 	tree_->SetBranchAddress("gLLP_daughter_min_delta_r_match_jet", gLLP_daughter_min_delta_r_match_jet);
-	
+
 	tree_->SetBranchAddress("gLLP_daughter_photon_travel_time_EB", gLLP_daughter_photon_travel_time_EB);
 	tree_->SetBranchAddress("gLLP_daughter_travel_time_EB", gLLP_daughter_travel_time_EB);
 	tree_->SetBranchAddress("gen_time_daughter_EB", gen_time_daughter_EB);
 
-		//grandaughters
-		tree_->SetBranchAddress("gLLP_grandaughter_EB", gLLP_grandaughter_EB);
+	//grandaughters
+	tree_->SetBranchAddress("gLLP_grandaughter_EB", gLLP_grandaughter_EB);
 	tree_->SetBranchAddress("gLLP_grandaughter_photon_travel_time_EB", gLLP_grandaughter_photon_travel_time_EB);
 	tree_->SetBranchAddress("gLLP_grandaughter_travel_time_EB", gLLP_grandaughter_travel_time_EB);
 	tree_->SetBranchAddress("gen_time_grandaughter_EB", gen_time_grandaughter_EB);
@@ -1132,7 +1163,14 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("jetMinDeltaRPVTracks",jetMinDeltaRPVTracks,"jetMinDeltaRPVTracks[nJets]/F");
 	tree_->Branch("jet_sig_et1",jet_sig_et1,"jet_sig_et1[nJets]/F");
 	tree_->Branch("jet_sig_et2",jet_sig_et2,"jet_sig_et2[nJets]/F");
+	tree_->Branch("jet_pt_deb",jet_pt_deb,"jet_pt_deb[nJets]/F");
+	tree_->Branch("jet_sig_pt1",jet_sig_pt1,"jet_sig_pt1[nJets]/F");
+	tree_->Branch("jet_sig_pt2",jet_sig_pt2,"jet_sig_pt2[nJets]/F");
+	tree_->Branch("jet_pt_dpf",jet_pt_dpf,"jet_pt_dpf[nJets]/F");
 	tree_->Branch("jet_energy_frac",jet_energy_frac,"jet_energy_frac[nJets]/F");
+
+	tree_->Branch("jetNPFCands",jetNPFCands,"jetNPFCands[nJets]/I");
+	tree_->Branch("jetPFCandIndex",jetPFCandIndex,Form("jetPFCandIndex[nJets][%d]/I",MAX_NPFCAND));
 
 	tree_->Branch("jetAlphaMax_wp",jetAlphaMax_wp,"jetAlphaMax_wp[nJets]/F");
 	tree_->Branch("jetBetaMax_wp",jetBetaMax_wp,"jetBetaMax_wp[nJets]/F");
@@ -1177,6 +1215,14 @@ void SusyLLPTree::CreateTree()
 
 	tree_->Branch("jetDNNScore",   jetDNNScore,   "jetDNNScore[nJets]/F");
 
+        //PFCandidates
+        tree_->Branch("nPFCandidates", &nPFCandidates, "nPFCandidates/I");
+        tree_->Branch("PFCandidatePdgId", PFCandidatePdgId, "PFCandidatePdgId[nPFCandidates]/I");
+        tree_->Branch("PFCandidatePt", PFCandidatePt, "PFCandidatePt[nPFCandidates]/F");
+        tree_->Branch("PFCandidateEta", PFCandidateEta, "PFCandidateEta[nPFCandidates]/F");
+        tree_->Branch("PFCandidatePhi", PFCandidatePhi, "PFCandidatePhi[nPFCandidates]/F");
+        tree_->Branch("PFCandidateTrackIndex", PFCandidateTrackIndex, "PFCandidateTrackIndex[nPFCandidates]/I");
+        tree_->Branch("PFCandidatePVIndex", PFCandidatePVIndex, "PFCandidatePVIndex[nPFCandidates]/I");
 
 	//HLT
 	tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[1201]/O"); //hardcoded

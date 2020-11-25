@@ -36,6 +36,7 @@ class RazorAnalyzerLLP: public llp_event {
         void EnableElectrons();
         void EnableTaus();
         void EnableIsoPFCandidates();
+        void EnablePFCandidates();
         void EnablePhotons();
         void EnableJets();
         void EnableCaloJets();
@@ -223,6 +224,7 @@ class RazorAnalyzerLLP: public llp_event {
         double BTagScaleFactor( double jetPt, bool CSVM, string option="");
 
         //functions in RazorAuxMisc.cc
+	void jet_second_moments(std::vector<double> &et,std::vector<double> &eta,std::vector<double> &phi,double &sig1,double &sig2);
 	double deltaPhi(double phi1, double phi2);
 	double deltaR(double eta1, double phi1, double eta2, double phi2);
         TLorentzVector makeTLorentzVector(double pt, double eta, double phi, double energy);

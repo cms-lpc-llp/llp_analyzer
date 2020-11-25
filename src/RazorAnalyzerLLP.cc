@@ -43,6 +43,7 @@ void RazorAnalyzerLLP::EnableAllWithEcalRechits(){
     EnableGenParticles();
     EnableLLP();
     EnableEcalRechits();
+    EnablePFCandidates();
 }
 
 void RazorAnalyzerLLP::EnableEventInfo(){
@@ -231,6 +232,17 @@ void RazorAnalyzerLLP::EnableIsoPFCandidates(){
     // fChain->SetBranchStatus("isoPFCandidateIso04", 1);
     // fChain->SetBranchStatus("isoPFCandidateD0", 1);
     // fChain->SetBranchStatus("isoPFCandidatePdgId", 1);
+}
+
+void RazorAnalyzerLLP::EnablePFCandidates(){
+    fChain->SetBranchStatus("nPFCandidates", 1);
+    fChain->SetBranchStatus("PFCandidatePt", 1);
+    fChain->SetBranchStatus("PFCandidateEta", 1);
+    fChain->SetBranchStatus("PFCandidatePhi", 1);
+    fChain->SetBranchStatus("PFCandidatePdgId", 1);
+    fChain->SetBranchStatus("PFCandidateTrackIndex", 1);
+    fChain->SetBranchStatus("PFCandidateGeneralTrackIndex", 1);
+    fChain->SetBranchStatus("PFCandidatePVIndex", 1);
 }
 
 void RazorAnalyzerLLP::EnablePhotons(){
@@ -4232,6 +4244,32 @@ double RazorAnalyzerLLP::deltaPhi(double phi1, double phi2) {
   while (dphi <= -TMath::Pi())
     dphi += TMath::TwoPi();
   return dphi;
+}
+
+void RazorAnalyzerLLP::jet_second_moments(std::vector<double> &et,std::vector<double> &eta,std::vector<double> &phi,double &sig1,double &sig2) {
+  double mean_eta = 0.0;
+  double mean_phi = 0.0;
+  double et_squared = 0.0;
+  for(unsigned int i = 0;i < eta.size();i++)
+  {
+    mean_eta += et[i]*et[i]*eta[i];
+    mean_phi += et[i]*et[i]*phi[i];
+    et_squared += et[i]*et[i];
+  }
+  mean_eta = mean_eta/et_squared;
+  mean_phi = mean_phi/et_squared;
+
+  double m11(0.0),m22(0.0),m12(0.0);
+  for(unsigned int i = 0;i < eta.size();i++)
+  {
+    m11 += et[i]*et[i]*(eta[i]-mean_eta)*(eta[i]-mean_eta);
+    m22 += et[i]*et[i]*(phi[i]-mean_phi)*(phi[i]-mean_phi);
+    m12 += et[i]*et[i]*(phi[i]-mean_phi)*(eta[i]-mean_eta);
+  }
+  double a = (m11+m22)/2;
+  double b = 0.5*sqrt(pow(m11+m22,2)-4*(m11*m22-m12*m12));
+  sig1 = sqrt(abs(a+b)/et_squared);
+  sig2 = sqrt(abs(a-b)/et_squared);
 }
 
 double RazorAnalyzerLLP::deltaR(double eta1, double phi1, double eta2, double phi2) {

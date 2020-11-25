@@ -164,7 +164,7 @@ public :
    Int_t           tau_leadCandID[50];   //[nTaus]
    Float_t         tau_leadChargedHadrCandPt[50];   //[nTaus]
    Int_t           tau_leadChargedHadrCandID[50];   //[nTaus]
-   UInt_t          nPFCandidates;
+   Int_t          nPFCandidates;
    Int_t           PFCandidatePdgId[2000];   //[nPFCandidates]
    Float_t         PFCandidatePt[2000];   //[nPFCandidates]
    Float_t         PFCandidateEta[2000];   //[nPFCandidates]
