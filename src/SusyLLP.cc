@@ -183,6 +183,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	//---------------------------
 	//-----------NN Setup----------
 	//---------------------------
+/*
 	std::string basePath = std::string(std::getenv("CMSSW_BASE")) + "/src/LLPAnalysis/llpAnalyzer/nn_inference";
 	
 	std::string graphPath = basePath + "/graph_NoHCAL_NoSi.pb";
@@ -195,8 +196,20 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	int nThreads = 1;
 	
 	std::vector<std::string> inputFeatures = { "Jet_0_nTrackConstituents","Jet_0_nSelectedTracks", "Jet_0_timeRecHitsEB", "Jet_0_energyRecHitsEB", "Jet_0_nRecHitsEB", "Jet_0_cHadEFrac", "Jet_0_nHadEFrac", "Jet_0_eleEFrac", "Jet_0_photonEFrac", "Jet_0_ptAllTracks", "Jet_0_ptAllPVTracks", "Jet_0_alphaMax", "Jet_0_betaMax", "Jet_0_gammaMax", "Jet_0_gammaMaxEM", "Jet_0_gammaMaxHadronic", "Jet_0_gammaMaxET","Jet_0_minDeltaRAllTracks","Jet_0_minDeltaRPVTracks",};
-//"Jet_0_sig1EB","Jet_0_sig2EB","Jet_0_ptDEB","Jet_0_sig1PF","Jet_0_sig2PF","Jet_0_ptDPF",};
+*/
 
+	std::string basePath = std::string(std::getenv("CMSSW_BASE")) + "/src/LLPAnalysis/llpAnalyzer/nn_inference/tagger_AK4_v2";
+	
+	std::string graphPath = basePath + "/graph.pb";
+	std::string inputTensorName = "input_input";
+	std::string outputTensorName = "FCN/output/Softmax";//"FCN/dense_4/Softmax";//or Softmax?
+	
+	// threading setup
+	// to enable tensorflow-native multi-threading, change to "tensorflow" and increase nThreads
+	std::string threadPool = "no_threads";
+	int nThreads = 1;
+	
+	std::vector<std::string> inputFeatures = { "Jet_nTrackConstituents", "Jet_nSelectedTracks", "Jet_timeRecHitsEB", "Jet_eFracRecHitsEB", "Jet_nRecHitsEB", "Jet_sig1EB", "Jet_sig2EB", "Jet_ptDEB", "Jet_sig1PF", "Jet_sig2PF", "Jet_ptDPF", "Jet_cHadEFrac", "Jet_nHadEFrac", "Jet_eleEFrac", "Jet_photonEFrac", "Jet_ptAllTracks", "Jet_ptAllPVTracks", "Jet_alphaMax", "Jet_betaMax", "Jet_gammaMax", "Jet_gammaMaxEM", "Jet_gammaMaxHadronic", "Jet_gammaMaxET", "Jet_minDeltaRAllTracks", "Jet_minDeltaRPVTracks",};
 
 	int nInputs = inputFeatures.size();
 	std::vector<float> inputValues(nInputs);
@@ -1343,33 +1356,34 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			//************************************
 			//Evaluate NN tagger
 			//************************************
+	//std::vector<std::string> inputFeatures = { "Jet_0_nTrackConstituents","Jet_0_nSelectedTracks", "Jet_0_timeRecHitsEB", "Jet_0_energyRecHitsEB", "Jet_0_nRecHitsEB", "Jet_0_cHadEFrac", "Jet_0_nHadEFrac", "Jet_0_eleEFrac", "Jet_0_photonEFrac", "Jet_0_ptAllTracks", "Jet_0_ptAllPVTracks", "Jet_0_alphaMax", "Jet_0_betaMax", "Jet_0_gammaMax", "Jet_0_gammaMaxEM", "Jet_0_gammaMaxHadronic", "Jet_0_gammaMaxET","Jet_0_minDeltaRAllTracks","Jet_0_minDeltaRPVTracks",};
+	//std::vector<std::string> inputFeatures = { "Jet_nTrackConstituents", "Jet_nSelectedTracks", "Jet_timeRecHitsEB", "Jet_eFracRecHitsEB", "Jet_nRecHitsEB", "Jet_sig1EB", "Jet_sig2EB", "Jet_ptDEB", "Jet_sig1PF", "Jet_sig2PF", "Jet_ptDPF", "Jet_cHadEFrac", "Jet_nHadEFrac", "Jet_eleEFrac", "Jet_photonEFrac", "Jet_ptAllTracks", "Jet_ptAllPVTracks", "Jet_alphaMax", "Jet_betaMax", "Jet_gammaMax", "Jet_gammaMaxEM", "Jet_gammaMaxHadronic", "Jet_gammaMaxET", "Jet_minDeltaRAllTracks", "Jet_minDeltaRPVTracks",};
 			inputValues[0] = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
 			inputValues[1] = jetNSelectedTracks[i];
 			inputValues[2] = jetTimeRecHitsECAL;
-			inputValues[3] = sqrt(jetEnergyRecHitsECAL);
+			inputValues[3] = jetEnergyRecHitsECAL/jetE[i];
 			inputValues[4] = jetNRecHitsECAL;
-			inputValues[5] = jetChargedHadronEnergyFraction[i];
-			inputValues[6] = jetNeutralHadronEnergyFraction[i];
-			inputValues[7] = jetElectronEnergyFraction[i];
-			inputValues[8] = jetPhotonEnergyFraction[i];
-			inputValues[9] = jetPtAllTracks[i];
-			inputValues[10] = (jetPtAllPVTracks[i] == 0) ? -1 :jetPtAllPVTracks[i];
-			inputValues[11] = jetAlphaMax[i];
-			inputValues[12] = jetBetaMax[i];
-			inputValues[13] = jetGammaMax[i];
-			inputValues[14] = jetGammaMax_EM[i];
-			inputValues[15] = jetGammaMax_Hadronic[i];
-			inputValues[16] = jetGammaMax_ET[i];
-			inputValues[17] = jetMinDeltaRAllTracks[i];
-			inputValues[18] = jetMinDeltaRPVTracks[i];
-/*
-			inputValues[19] = jetsig1EB;
-			inputValues[20] = jetsig2EB;
-			inputValues[21] = jetptDEB;
-			inputValues[22] = jetsig1PF;
-			inputValues[23] = jetsig2PF;
-			inputValues[24] = jetptDPF;
-*/		
+			inputValues[5] = jetsig1EB;
+			inputValues[6] = jetsig2EB;
+			inputValues[7] = jetptDEB;
+			inputValues[8] = jetsig1PF;
+			inputValues[9] = jetsig2PF;
+			inputValues[10] = jetptDPF;
+			inputValues[11] = jetChargedHadronEnergyFraction[i];
+			inputValues[12] = jetNeutralHadronEnergyFraction[i];
+			inputValues[13] = jetElectronEnergyFraction[i];
+			inputValues[14] = jetPhotonEnergyFraction[i];
+			inputValues[15] = jetPtAllTracks[i];
+			inputValues[16] = (jetPtAllPVTracks[i] == 0) ? -1 :jetPtAllPVTracks[i];
+			inputValues[17] = jetAlphaMax[i];
+			inputValues[18] = jetBetaMax[i];
+			inputValues[19] = jetGammaMax[i];
+			inputValues[20] = jetGammaMax_EM[i];
+			inputValues[21] = jetGammaMax_Hadronic[i];
+			inputValues[22] = jetGammaMax_ET[i];
+			inputValues[23] = jetMinDeltaRAllTracks[i];
+			inputValues[24] = jetMinDeltaRPVTracks[i];
+
 			// fill the input tensor using a data pointer that is shifted consecutively
 			float* d = inputTensor.flat<float>().data();
 			for (float v : inputValues) {

@@ -1,0 +1,3 @@
+ Directory: model_weights/v4_calo_AOD_2018_dnn_5Upsampling_0p25Background_Final/SUSY/AK4jets/model_FCN_2_NoHCAL_NoAv_NoTan_Adam_ReLU_500epochs_patience50_batch_size_512_dropout_0p1/ 
+ Model: 2_NoHCAL_NoAv_NoTan_Adam_ReLU_500epochs_patience50_batch_size_512_dropout_0p1 
+ Input features: ['Jet_nTrackConstituents', 'Jet_nSelectedTracks', 'Jet_timeRecHitsEB', 'Jet_eFracRecHitsEB', 'Jet_nRecHitsEB', 'Jet_sig1EB', 'Jet_sig2EB', 'Jet_ptDEB', 'Jet_sig1PF', 'Jet_sig2PF', 'Jet_ptDPF', 'Jet_cHadEFrac', 'Jet_nHadEFrac', 'Jet_eleEFrac', 'Jet_photonEFrac', 'Jet_ptAllTracks', 'Jet_ptAllPVTracks', 'Jet_alphaMax', 'Jet_betaMax', 'Jet_gammaMax', 'Jet_gammaMaxEM', 'Jet_gammaMaxHadronic', 'Jet_gammaMaxET', 'Jet_minDeltaRAllTracks', 'Jet_minDeltaRPVTracks'] 
