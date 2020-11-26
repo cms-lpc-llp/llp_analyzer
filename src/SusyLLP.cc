@@ -1284,7 +1284,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			  jetEnergyRecHitsECAL += ecalRechit_E[q];
 			  jetNRecHitsECAL++;
 			}  
-			double jetsig1EB(0.0),jetsig2EB(0.0);
+			double jetsig1EB(-1.),jetsig2EB(-1.);
 			RazorAnalyzerLLP::jet_second_moments(ebrechitet,ebrechiteta,ebrechitphi,jetsig1EB,jetsig2EB);
 			double jetptDEB = -1;
 			if ( accumulate(ebrechitet.begin(),ebrechitet.end(),0) > 0) {
@@ -1337,7 +1337,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			  
 			}
 
-			double jetsig1PF(0.0),jetsig2PF(0.0);
+			double jetsig1PF(-1.),jetsig2PF(-1.);
 			RazorAnalyzerLLP::jet_second_moments(pfcandpt,pfcandeta,pfcandphi,jetsig1PF,jetsig2PF);
 			double jetptDPF = -1;
 			if ( accumulate(pfcandpt.begin(),pfcandpt.end(),0) > 0) {
@@ -1361,7 +1361,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			inputValues[0] = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
 			inputValues[1] = jetNSelectedTracks[i];
 			inputValues[2] = jetTimeRecHitsECAL;
-			inputValues[3] = jetEnergyRecHitsECAL/jetE[i];
+			inputValues[3] = (jetEnergyRecHitsECAL == 0) ? -1 : (jetEnergyRecHitsECAL/jetE[i]);
 			inputValues[4] = jetNRecHitsECAL;
 			inputValues[5] = jetsig1EB;
 			inputValues[6] = jetsig2EB;
@@ -1373,16 +1373,16 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			inputValues[12] = jetNeutralHadronEnergyFraction[i];
 			inputValues[13] = jetElectronEnergyFraction[i];
 			inputValues[14] = jetPhotonEnergyFraction[i];
-			inputValues[15] = jetPtAllTracks[i];
-			inputValues[16] = (jetPtAllPVTracks[i] == 0) ? -1 :jetPtAllPVTracks[i];
-			inputValues[17] = jetAlphaMax[i];
-			inputValues[18] = jetBetaMax[i];
-			inputValues[19] = jetGammaMax[i];
-			inputValues[20] = jetGammaMax_EM[i];
-			inputValues[21] = jetGammaMax_Hadronic[i];
-			inputValues[22] = jetGammaMax_ET[i];
-			inputValues[23] = jetMinDeltaRAllTracks[i];
-			inputValues[24] = jetMinDeltaRPVTracks[i];
+			inputValues[15] = (jetPtAllTracks[i] == -99) ? -100 : jetPtAllTracks[i];
+			inputValues[16] = (jetPtAllPVTracks[i] == -99) ? -1 : jetPtAllPVTracks[i];
+			inputValues[17] = (jetAlphaMax[i] == -99) ? -100 : jetAlphaMax[i];
+			inputValues[18] = (jetBetaMax[i] == -99) ? -100 : jetBetaMax[i];
+			inputValues[19] = (jetGammaMax[i] == -99) ? -100 : jetGammaMax[i];
+			inputValues[20] = (jetGammaMax_EM[i] == -99) ? -100 : jetGammaMax_EM[i];
+			inputValues[21] = (jetGammaMax_Hadronic[i] == -99) ? -100 : jetGammaMax_Hadronic[i];
+			inputValues[22] = (jetGammaMax_ET[i] == -99) ? -100 : jetGammaMax_ET[i];
+			inputValues[23] = (jetMinDeltaRAllTracks[i] == -99 || jetMinDeltaRAllTracks[i] == 15) ? 999 : jetMinDeltaRAllTracks[i];
+			inputValues[24] = (jetMinDeltaRPVTracks[i] == -99 || jetMinDeltaRPVTracks[i] == 15) ? 999 : jetMinDeltaRPVTracks[i];
 
 			// fill the input tensor using a data pointer that is shifted consecutively
 			float* d = inputTensor.flat<float>().data();
