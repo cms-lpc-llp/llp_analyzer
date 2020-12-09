@@ -496,6 +496,7 @@ class SusyLLPTree
 		float jetEnergyRecHitsHcal[N_MAX_JETS];
 		float jetTimeRecHitsHcal[N_MAX_JETS];
 
+		float jetDNNScoreV1[N_MAX_JETS];
 		float jetDNNScore[N_MAX_JETS];
 
 		//PFCandidates

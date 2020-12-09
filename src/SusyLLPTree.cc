@@ -234,8 +234,8 @@ void SusyLLPTree::InitVariables()
 		jetGammaMax_ET[i] = -100.0;
 		jetAlphaMax[i] = -100.0;
 		jetBetaMax[i] = -100.0;
-		jetPtAllTracks[i] = 0;
-		jetPtAllPVTracks[i] = 0;
+		jetPtAllTracks[i] = -99.0;
+		jetPtAllPVTracks[i] = -99.0;
 		jetMedianTheta2D[i] = -99.0;
 		jetMedianIP[i] = -99.0;
 		jetMinDeltaRAllTracks[i] =999.0;
@@ -297,6 +297,7 @@ void SusyLLPTree::InitVariables()
 		jetEnergyRecHitsHcal[i] = 0;
 		jetTimeRecHitsHcal[i] = -100;
 
+		jetDNNScoreV1[i] = -1;
 		jetDNNScore[i] = -1;
 	}
 
@@ -1213,6 +1214,7 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("jetEnergyRecHitsHcal",   jetEnergyRecHitsHcal,   "jetEnergyRecHitsHcal[nJets]/F");
 	tree_->Branch("jetTimeRecHitsHcal",   jetTimeRecHitsHcal,   "jetTimeRecHitsHcal[nJets]/F");
 
+	tree_->Branch("jetDNNScoreV1",   jetDNNScoreV1,   "jetDNNScoreV1[nJets]/F");
 	tree_->Branch("jetDNNScore",   jetDNNScore,   "jetDNNScore[nJets]/F");
 
         //PFCandidates
