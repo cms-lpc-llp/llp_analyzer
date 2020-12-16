@@ -21,18 +21,18 @@ const double phi_corr[N_phicorr] = { 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.80, 0.85
 
 struct cscCluster
 {
-  float x, y, z, t, tTotal, eta, phi;
+  float x, y, z, t, tTotal, tWire, tWirePruned, eta, phi;//t is t_strip, tWire, tTotal is sum
   int nCscSegments;
   float jetVeto, calojetVeto, muonVeto;
   int maxChamber, maxChamberSegment, nChamber;
-  int maxStation, maxStationSegment, nStation, nStation5, nStation10perc;
-  float avgStation, avgStation5, avgStation10perc;
+  int maxStation, maxStationSegment, nStation, nStation5, nStation10, nStation10perc;
+  float avgStation, avgStation5, avgStation10, avgStation10perc;
   int nCscSegmentChamberPlus11, nCscSegmentChamberPlus12, nCscSegmentChamberPlus13, nCscSegmentChamberPlus21, nCscSegmentChamberPlus22, nCscSegmentChamberPlus31, nCscSegmentChamberPlus32, nCscSegmentChamberPlus41, nCscSegmentChamberPlus42;
   int nCscSegmentChamberMinus11, nCscSegmentChamberMinus12, nCscSegmentChamberMinus13, nCscSegmentChamberMinus21, nCscSegmentChamberMinus22, nCscSegmentChamberMinus31, nCscSegmentChamberMinus32, nCscSegmentChamberMinus41, nCscSegmentChamberMinus42;
 
   float Me11Ratio, Me12Ratio;
-  float MajorAxis, MinorAxis, EtaSpread, PhiSpread, EtaPhiSpread, XYSpread;
-  float XSpread, YSpread, ZSpread, TSpread, RSpread;
+  float MajorAxis, MinorAxis, EtaSpread, PhiSpread, EtaPhiSpread, XYSpread, DeltaRSpread;
+  float XSpread, YSpread, ZSpread, TSpread, TWireSpread, TTotalSpread, TTotalSpreadPruned,RSpread;
 
   // float XSpread_phi0p5, YSpread_phi0p5, XYSpread_phi0p5, PhiSpread_phi0p5, EtaPhiSpread_phi0p5;
   // float XSpread_phi0p55, YSpread_phi0p55, XYSpread_phi0p55, PhiSpread_phi0p55, EtaPhiSpread_phi0p55;
@@ -94,6 +94,8 @@ public:
     vector<float>clusterY;
     vector<float>clusterZ;
     vector<float>clusterTime;
+    vector<float>clusterTimeWire;
+    vector<float>clusterTimeWirePruned;
     vector<float>clusterTimeTotal;
     vector<float>clusterMajorAxis;
     vector<float>clusterMinorAxis;
@@ -104,9 +106,15 @@ public:
 
     vector<float>clusterZSpread;
     vector<float>clusterTimeSpread;
+    vector<float>clusterTimeTotalSpread;
+    vector<float>clusterTimeWireSpread;
+    vector<float>clusterTimeTotalSpreadPruned;
     vector<float>clusterEtaPhiSpread;
     vector<float>clusterEtaSpread;
     vector<float>clusterPhiSpread;
+    vector<float>clusterDeltaRSpread;
+
+
 
 
     // vector<float>clusterXSpread_phi0p5;

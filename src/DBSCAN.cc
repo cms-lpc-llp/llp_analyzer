@@ -36,6 +36,9 @@ void DBSCAN::clear_clusters(){
   clusterY.clear();
   clusterZ.clear();
   clusterTime.clear();
+  clusterTimeWire.clear();
+  clusterTimeWirePruned.clear();
+
   clusterTimeTotal.clear();
   clusterMajorAxis.clear();
   clusterMinorAxis.clear();
@@ -45,39 +48,15 @@ void DBSCAN::clear_clusters(){
   clusterRSpread.clear();
   clusterZSpread.clear();
   clusterTimeSpread.clear();
+  clusterTimeTotalSpread.clear();
+  clusterTimeTotalSpreadPruned.clear();
+
+  clusterTimeWireSpread.clear();
   clusterEtaPhiSpread.clear();
   clusterEtaSpread.clear();
   clusterPhiSpread.clear();
-  // clusterXSpread_phi0p5.clear();
-  // clusterYSpread_phi0p5.clear();
-  // clusterXYSpread_phi0p5.clear();
-  // clusterPhiSpread_phi0p5.clear();
-  // clusterEtaPhiSpread_phi0p5.clear();
-  // clusterXSpread_phi0p55.clear();
-  // clusterYSpread_phi0p55.clear();
-  // clusterXYSpread_phi0p55.clear();
-  // clusterPhiSpread_phi0p55.clear();
-  // clusterEtaPhiSpread_phi0p55.clear();
-  // clusterXSpread_phi0p6.clear();
-  // clusterYSpread_phi0p6.clear();
-  // clusterXYSpread_phi0p6.clear();
-  // clusterPhiSpread_phi0p6.clear();
-  // clusterEtaPhiSpread_phi0p6.clear();
-  // clusterXSpread_phi0p65.clear();
-  // clusterYSpread_phi0p65.clear();
-  // clusterXYSpread_phi0p65.clear();
-  // clusterPhiSpread_phi0p65.clear();
-  // clusterEtaPhiSpread_phi0p65.clear();
-  // clusterXSpread_phi0p7.clear();
-  // clusterYSpread_phi0p7.clear();
-  // clusterXYSpread_phi0p7.clear();
-  // clusterPhiSpread_phi0p7.clear();
-  // clusterEtaPhiSpread_phi0p7.clear();
-  // clusterXSpread_phi0p75.clear();
-  // clusterYSpread_phi0p75.clear();
-  // clusterXYSpread_phi0p75.clear();
-  // clusterPhiSpread_phi0p75.clear();
-  // clusterEtaPhiSpread_phi0p75.clear();
+  clusterDeltaRSpread.clear();
+
   clusterXSpread_corr.clear();
   clusterYSpread_corr.clear();
   clusterXYSpread_corr.clear();
@@ -106,10 +85,12 @@ int DBSCAN::result(){
   // }
   for(int i = 0; i < nClusters; i++)
   {
-    float avg_x(0.0), avg_y(0.0), avg_z(0.0), avg_t(0.0), avg_tTotal(0.0);
+    float avg_x(0.0), avg_y(0.0), avg_z(0.0), avg_tWire(0.0), avg_tWirePruned(0.0), avg_t(0.0), avg_tTotal(0.0),tTotalSpreadPruned(0.0);
     float avg_eta(0.0), avg_phi(0.0);
     int size(0);
     vector<float> wireTimes;
+    vector<float> stripTimes;
+
     vector<Point>::iterator iter;
     for(iter = m_points.begin(); iter != m_points.end(); ++iter)
     {
@@ -121,16 +102,18 @@ int DBSCAN::result(){
           avg_y += iter->y;
           avg_z += iter->z;
           avg_t += iter->t;
-          avg_tTotal += iter->twire;
+          avg_tWire += iter->twire;
           wireTimes.push_back(iter->twire);
+          stripTimes.push_back(iter->t);
           size ++;
       }
     }
     avg_x = avg_x/size;
     avg_y = avg_y/size;
     avg_z = avg_z/size;
-    avg_tTotal = (avg_t + avg_tTotal)/(2 * size);
+    avg_tTotal = (avg_t + avg_tWire)/(2 * size);
     avg_t = avg_t/size;
+    avg_tWire = avg_tWire/size;
 
     // prune wire time
     //The wire times have a long tail that has to be pruned.  The strip times (tpeak) are fine
@@ -153,8 +136,15 @@ int DBSCAN::result(){
         modified = true;
       }
     }
-
-
+    for (std::vector<float>::iterator itWT = wireTimes.begin(); itWT != wireTimes.end(); ++itWT) {
+      tTotalSpreadPruned += (*itWT - avg_tTotal)*(*itWT - avg_tTotal);
+      avg_tWirePruned += *itWT;
+    }
+    for (std::vector<float>::iterator itWT = stripTimes.begin(); itWT != stripTimes.end(); ++itWT) {
+      tTotalSpreadPruned += (*itWT - avg_tTotal)*(*itWT - avg_tTotal);
+    }
+    tTotalSpreadPruned = sqrt(tTotalSpreadPruned/(stripTimes.size()+wireTimes.size()));
+    avg_tWirePruned = avg_tWirePruned/wireTimes.size();
     // calculate cluster eta and phi
     avg_phi = atan(avg_y/avg_x);
     if  (avg_x < 0.0){
@@ -170,9 +160,11 @@ int DBSCAN::result(){
     clusterY.push_back(avg_y);
     clusterZ.push_back(avg_z);
     clusterTime.push_back(avg_t);
+    clusterTimeWire.push_back(avg_tWire);
+    clusterTimeWirePruned.push_back(avg_tWirePruned);
     clusterTimeTotal.push_back(avg_tTotal);
     clusterSize.push_back(size);
-
+    clusterTimeTotalSpreadPruned.push_back(tTotalSpreadPruned);
 
   }
   return 0;
@@ -184,7 +176,7 @@ int DBSCAN::clusterMoments()
   for(int i = 0; i < nClusters; i++)
   {
     float m11(0.0), m12(0.0), m22(0.0);
-    float XSpread(0.0), YSpread(0.0), ZSpread(0.0), TSpread(0.0), XYSpread(0.0), RSpread(0.0);
+    float XSpread(0.0), YSpread(0.0), ZSpread(0.0), TSpread(0.0), TTotalSpread(0.0), TWireSpread(0.0), XYSpread(0.0), RSpread(0.0), DeltaRSpread(0.0);
 
     // float XSpread_phi0p5(0.0), YSpread_phi0p5(0.0), XYSpread_phi0p5(0.0), PhiSpread_phi0p5(0.0), EtaPhiSpread_phi0p5(0.0);
     // float XSpread_phi0p55(0.0), YSpread_phi0p55(0.0), XYSpread_phi0p55(0.0), PhiSpread_phi0p55(0.0), EtaPhiSpread_phi0p55(0.0);
@@ -234,11 +226,18 @@ int DBSCAN::clusterMoments()
           m11 += (iter->eta-clusterEta[i])*(iter->eta-clusterEta[i]);
           m12 += (iter->eta-clusterEta[i])* deltaPhi(iter->phi,clusterPhi[i]);
           m22 += deltaPhi(iter->phi,clusterPhi[i])*deltaPhi(iter->phi,clusterPhi[i]);
+          DeltaRSpread +=  pow(deltaR(clusterEta[i], clusterPhi[i], iter->eta, iter->phi),2);
+
           XYSpread += (iter->x - clusterX[i])*(iter->y - clusterY[i]);
           XSpread += (iter->x - clusterX[i]) * (iter->x - clusterX[i]);
           YSpread += (iter->y - clusterY[i]) * (iter->y - clusterY[i]);
           ZSpread += (iter->z - clusterZ[i]) * (iter->z - clusterZ[i]);
           TSpread += (iter->t - clusterTime[i]) * (iter->t - clusterTime[i]);
+          TWireSpread += (iter->twire - clusterTimeWire[i]) * (iter->twire - clusterTimeWire[i]);
+          TTotalSpread += (iter->t - clusterTimeTotal[i]) * (iter->t - clusterTimeTotal[i])+
+          (iter->twire - clusterTimeTotal[i]) * (iter->twire - clusterTimeTotal[i]);
+
+
           float radius = sqrt(pow(iter->x, 2) + pow(iter->y, 2));
           RSpread += pow(radius-sqrt(clusterX[i]*clusterX[i]+clusterY[i]*clusterY[i]),2);
 
@@ -276,9 +275,11 @@ int DBSCAN::clusterMoments()
     clusterYSpread.push_back(sqrt(YSpread/(float)clusterSize[i]));
     clusterZSpread.push_back(sqrt(ZSpread/(float)clusterSize[i]));
     clusterRSpread.push_back(sqrt(RSpread/(float)clusterSize[i]));
-
+    clusterDeltaRSpread.push_back(sqrt(DeltaRSpread/(float)clusterSize[i]));
     clusterXYSpread.push_back(sqrt(abs(XYSpread)/(float)clusterSize[i]));
     clusterTimeSpread.push_back(sqrt(TSpread/(float)clusterSize[i]));
+    clusterTimeTotalSpread.push_back(sqrt(TTotalSpread/(float)clusterSize[i]/2));
+    clusterTimeWireSpread.push_back(sqrt(TWireSpread/(float)clusterSize[i]));
     clusterEtaSpread.push_back(sqrt(abs(m11)/clusterSize[i]));
     clusterEtaPhiSpread.push_back(sqrt(abs(m12)/clusterSize[i]));
     clusterPhiSpread.push_back(sqrt(abs(m22)/clusterSize[i]));
@@ -307,90 +308,6 @@ int DBSCAN::clusterMoments()
     clusterRSpread_corr.push_back(RSpread_corr);
 
 
-    //
-    // clusterXYSpread_phi0p5.push_back(sqrt(abs(XYSpread_phi0p5)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p5.push_back(sqrt(XSpread_phi0p5/(float)clusterSize[i]));
-    // clusterYSpread_phi0p5.push_back(sqrt(YSpread_phi0p5/(float)clusterSize[i]));
-    // clusterPhiSpread_phi0p5.push_back(sqrt(PhiSpread_phi0p5/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p5.push_back(sqrt(abs(EtaPhiSpread_phi0p5)/(float)clusterSize[i]));
-    //
-    // clusterXYSpread_phi0p55.push_back(sqrt(abs(XYSpread_phi0p55)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p55.push_back(sqrt(XSpread_phi0p55/(float)clusterSize[i]));
-    // clusterYSpread_phi0p55.push_back(sqrt(YSpread_phi0p55/(float)clusterSize[i]));
-    // clusterPhiSpread_phi0p55.push_back(sqrt(PhiSpread_phi0p55/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p55.push_back(sqrt(abs(EtaPhiSpread_phi0p55)/(float)clusterSize[i]));
-    //
-    // clusterXYSpread_phi0p6.push_back(sqrt(abs(XYSpread_phi0p6)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p6.push_back(sqrt(XSpread_phi0p6/(float)clusterSize[i]));
-    // clusterYSpread_phi0p6.push_back(sqrt(YSpread_phi0p6/(float)clusterSize[i]));
-    // clusterPhiSpread_phi0p6.push_back(sqrt(PhiSpread_phi0p6/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p6.push_back(sqrt(abs(EtaPhiSpread_phi0p6)/(float)clusterSize[i]));
-    //
-    // clusterXYSpread_phi0p65.push_back(sqrt(abs(XYSpread_phi0p65)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p65.push_back(sqrt(XSpread_phi0p65/(float)clusterSize[i]));
-    // clusterYSpread_phi0p65.push_back(sqrt(YSpread_phi0p65/(float)clusterSize[i]));
-    // clusterPhiSpread_phi0p65.push_back(sqrt(PhiSpread_phi0p65/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p65.push_back(sqrt(abs(EtaPhiSpread_phi0p65)/(float)clusterSize[i]));
-    //
-    // clusterXYSpread_phi0p7.push_back(sqrt(abs(XYSpread_phi0p7)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p7.push_back(sqrt(XSpread_phi0p7/(float)clusterSize[i]));
-    // clusterYSpread_phi0p7.push_back(sqrt(YSpread_phi0p7/(float)clusterSize[i]));
-    // clusterPhiSpread_phi0p7.push_back(sqrt(PhiSpread_phi0p7/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p7.push_back(sqrt(abs(EtaPhiSpread_phi0p7)/(float)clusterSize[i]));
-    //
-    // clusterXYSpread_phi0p75.push_back(sqrt(abs(XYSpread_phi0p75)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p75.push_back(sqrt(XSpread_phi0p75/(float)clusterSize[i]));
-    // clusterYSpread_phi0p75.push_back(sqrt(YSpread_phi0p75/(float)clusterSize[i]));
-    // clusterPhiSpread_phi0p75.push_back(sqrt(PhiSpread_phi0p75/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p75.push_back(sqrt(abs(EtaPhiSpread_phi0p75)/(float)clusterSize[i]));
-    //
-    // clusterPhiSpread_r1p2.push_back(sqrt(abs(PhiSpread_r1p2)/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_r1p2.push_back(sqrt(abs(EtaPhiSpread_r1p2)/(float)clusterSize[i]));
-    // clusterEtaSpread_r1p2.push_back(sqrt(EtaSpread_r1p2/(float)clusterSize[i]));
-    // clusterXYSpread_r1p2.push_back(sqrt(abs(XYSpread_r1p2)/(float)clusterSize[i]));
-    // clusterXSpread_r1p2.push_back(sqrt(abs(XSpread_r1p2)/(float)clusterSize[i]));
-    // clusterYSpread_r1p2.push_back(sqrt(abs(YSpread_r1p2)/(float)clusterSize[i]));
-    // clusterRSpread_r1p2.push_back(sqrt(abs(RSpread_r1p2)/(float)clusterSize[i]));
-    //
-    // clusterPhiSpread_phi0p7_r1p2.push_back(sqrt(abs(PhiSpread_phi0p7_r1p2)/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p7_r1p2.push_back(sqrt(abs(EtaPhiSpread_phi0p7_r1p2)/(float)clusterSize[i]));
-    // clusterEtaSpread_phi0p7_r1p2.push_back(sqrt(EtaSpread_phi0p7_r1p2/(float)clusterSize[i]));
-    // clusterXYSpread_phi0p7_r1p2.push_back(sqrt(abs(XYSpread_phi0p7_r1p2)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p7_r1p2.push_back(sqrt(abs(XSpread_phi0p7_r1p2)/(float)clusterSize[i]));
-    // clusterYSpread_phi0p7_r1p2.push_back(sqrt(abs(YSpread_phi0p7_r1p2)/(float)clusterSize[i]));
-    // clusterRSpread_phi0p7_r1p2.push_back(sqrt(abs(RSpread_phi0p7_r1p2)/(float)clusterSize[i]));
-    //
-    // clusterPhiSpread_phi0p7_r1p3.push_back(sqrt(abs(PhiSpread_phi0p7_r1p3)/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p7_r1p3.push_back(sqrt(abs(EtaPhiSpread_phi0p7_r1p3)/(float)clusterSize[i]));
-    // clusterEtaSpread_phi0p7_r1p3.push_back(sqrt(EtaSpread_phi0p7_r1p3/(float)clusterSize[i]));
-    // clusterXYSpread_phi0p7_r1p3.push_back(sqrt(abs(XYSpread_phi0p7_r1p3)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p7_r1p3.push_back(sqrt(abs(XSpread_phi0p7_r1p3)/(float)clusterSize[i]));
-    // clusterYSpread_phi0p7_r1p3.push_back(sqrt(abs(YSpread_phi0p7_r1p3)/(float)clusterSize[i]));
-    // clusterRSpread_phi0p7_r1p3.push_back(sqrt(abs(RSpread_phi0p7_r1p3)/(float)clusterSize[i]));
-    //
-    // clusterPhiSpread_phi0p7_r1p1.push_back(sqrt(abs(PhiSpread_phi0p7_r1p1)/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p7_r1p1.push_back(sqrt(abs(EtaPhiSpread_phi0p7_r1p1)/(float)clusterSize[i]));
-    // clusterEtaSpread_phi0p7_r1p1.push_back(sqrt(EtaSpread_phi0p7_r1p1/(float)clusterSize[i]));
-    // clusterXYSpread_phi0p7_r1p1.push_back(sqrt(abs(XYSpread_phi0p7_r1p1)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p7_r1p1.push_back(sqrt(abs(XSpread_phi0p7_r1p1)/(float)clusterSize[i]));
-    // clusterYSpread_phi0p7_r1p1.push_back(sqrt(abs(YSpread_phi0p7_r1p1)/(float)clusterSize[i]));
-    // clusterRSpread_phi0p7_r1p1.push_back(sqrt(abs(RSpread_phi0p7_r1p1)/(float)clusterSize[i]));
-    //
-    // clusterPhiSpread_phi0p7_r1p15.push_back(sqrt(abs(PhiSpread_phi0p7_r1p15)/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p7_r1p15.push_back(sqrt(abs(EtaPhiSpread_phi0p7_r1p15)/(float)clusterSize[i]));
-    // clusterEtaSpread_phi0p7_r1p15.push_back(sqrt(EtaSpread_phi0p7_r1p15/(float)clusterSize[i]));
-    // clusterXYSpread_phi0p7_r1p15.push_back(sqrt(abs(XYSpread_phi0p7_r1p15)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p7_r1p15.push_back(sqrt(abs(XSpread_phi0p7_r1p15)/(float)clusterSize[i]));
-    // clusterYSpread_phi0p7_r1p15.push_back(sqrt(abs(YSpread_phi0p7_r1p15)/(float)clusterSize[i]));
-    // clusterRSpread_phi0p7_r1p15.push_back(sqrt(abs(RSpread_phi0p7_r1p15)/(float)clusterSize[i]));
-    //
-    // clusterPhiSpread_phi0p7_r1p25.push_back(sqrt(abs(PhiSpread_phi0p7_r1p25)/(float)clusterSize[i]));
-    // clusterEtaPhiSpread_phi0p7_r1p25.push_back(sqrt(abs(EtaPhiSpread_phi0p7_r1p25)/(float)clusterSize[i]));
-    // clusterEtaSpread_phi0p7_r1p25.push_back(sqrt(EtaSpread_phi0p7_r1p25/(float)clusterSize[i]));
-    // clusterXYSpread_phi0p7_r1p25.push_back(sqrt(abs(XYSpread_phi0p7_r1p25)/(float)clusterSize[i]));
-    // clusterXSpread_phi0p7_r1p25.push_back(sqrt(abs(XSpread_phi0p7_r1p25)/(float)clusterSize[i]));
-    // clusterYSpread_phi0p7_r1p25.push_back(sqrt(abs(YSpread_phi0p7_r1p25)/(float)clusterSize[i]));
-    // clusterRSpread_phi0p7_r1p25.push_back(sqrt(abs(RSpread_phi0p7_r1p25)/(float)clusterSize[i]));
   }
   return 0;
 }
@@ -472,6 +389,9 @@ void DBSCAN::sort_clusters()
     tmpCluster.phi = clusterPhi[i];
     tmpCluster.t = clusterTime[i];
     tmpCluster.tTotal = clusterTimeTotal[i];
+    tmpCluster.tWire = clusterTimeWire[i];
+    tmpCluster.tWirePruned = clusterTimeWirePruned[i];
+
     tmpCluster.MajorAxis = clusterMajorAxis[i];
     tmpCluster.MinorAxis = clusterMinorAxis[i];
     tmpCluster.XSpread = clusterXSpread[i];
@@ -482,8 +402,13 @@ void DBSCAN::sort_clusters()
     tmpCluster.YSpread = clusterYSpread[i];
     tmpCluster.ZSpread = clusterZSpread[i];
     tmpCluster.TSpread = clusterTimeSpread[i];
+    tmpCluster.TWireSpread = clusterTimeWireSpread[i];
+    tmpCluster.TTotalSpread = clusterTimeTotalSpread[i];
+    tmpCluster.TTotalSpreadPruned = clusterTimeTotalSpreadPruned[i];
+
     tmpCluster.EtaPhiSpread = clusterEtaPhiSpread[i];
     tmpCluster.EtaSpread = clusterEtaSpread[i];
+    tmpCluster.DeltaRSpread = clusterDeltaRSpread[i];
     tmpCluster.PhiSpread = clusterPhiSpread[i];
     tmpCluster.nCscSegments = clusterSize[i];
     tmpCluster.Me11Ratio = 1.0*nSegments_Me11/clusterSize[i];
@@ -538,12 +463,15 @@ void DBSCAN::sort_clusters()
     int max_station_segment = 0; // station with the maximum number of cscsegment in this cluster
     tmpCluster.nStation = 0;
     tmpCluster.nStation5 = 0;
+    tmpCluster.nStation10 = 0;
     tmpCluster.nStation10perc = 0;
     tmpCluster.avgStation = 0.0;
     tmpCluster.avgStation5 = 0.0;
+    tmpCluster.avgStation10 = 0.0;
     tmpCluster.avgStation10perc = 0.0;
     int nSeg10perc = 0;
     int nSeg5 = 0;
+    int nSeg10 = 0;
     for (unsigned int l = 0; l < cscStations.size(); l++)
     {
       int counter = 0;
@@ -565,6 +493,11 @@ void DBSCAN::sort_clusters()
         nSeg5 += counter;
 
       }
+      if(counter>=10.0){
+        tmpCluster.avgStation10 += counter * cscStations[l];
+        tmpCluster.nStation10++;
+        nSeg10 += counter;
+      }
       if(1.0*counter/clusterSize[i] > 0.1)
       {
         tmpCluster.avgStation10perc += counter * cscStations[l];
@@ -574,6 +507,7 @@ void DBSCAN::sort_clusters()
     }
     tmpCluster.avgStation10perc = 1.0* tmpCluster.avgStation10perc/nSeg10perc;
     tmpCluster.avgStation5 = 1.0* tmpCluster.avgStation5/nSeg5;
+    tmpCluster.avgStation10 = 1.0* tmpCluster.avgStation10/nSeg10;
     tmpCluster.avgStation = 1.0* tmpCluster.avgStation/clusterSize[i];
 
     tmpCluster.maxStation = max_station;
