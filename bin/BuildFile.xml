@@ -4,3 +4,15 @@
     <use name="PhysicsTools/TensorFlow" />
     <use name="LLPAnalysis/llpAnalyzer"/>
 </bin>
+<bin name="RunSusyLLPPassFail" file="RunSusyLLPPassFail.cc">
+    <use name="root" />
+    <use name="rootcore" />
+    <use name="PhysicsTools/TensorFlow" />
+    <use name="LLPAnalysis/llpAnalyzer"/>
+</bin>
+<bin name="RunSusyLLPPF" file="RunSusyLLPPF.cc">
+    <use name="root" />
+    <use name="rootcore" />
+    <use name="PhysicsTools/TensorFlow" />
+    <use name="LLPAnalysis/llpAnalyzer"/>
+</bin>
