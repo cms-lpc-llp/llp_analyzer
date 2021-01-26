@@ -60,8 +60,15 @@ then
 		echo "************************************"
 		echo ""
 		echo " "; echo "Starting razor run job now"; echo " ";
-		echo ./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${analyzerTag}
-		./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${analyzerTag}
+		if [ ${analysisType} == "MakeMCPileupDistribution" ]
+		then
+			echo "./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -f=${outputfile}"
+			./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -f=${outputfile}
+		else
+			echo ./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${analyzerTag}
+			./RazorRun_T2 inputfilelistForThisJob_${jobnumber}.txt ${analysisType} -d=${isData} -n=${option} -f=${outputfile} -l=${analyzerTag}
+		fi
+		
 		echo ${outputfile}
 		echo ${outputDirectory}
 		ls *root > output.txt

@@ -146,6 +146,9 @@ void RazorAnalyzer::EnableElectrons(){
     fChain->SetBranchStatus("elePhi", 1);
     fChain->SetBranchStatus("eleCharge", 1);
     fChain->SetBranchStatus("eleEta_SC", 1);
+    fChain->SetBranchStatus("eleE_SC", 1);
+
+
     fChain->SetBranchStatus("eleSigmaIetaIeta", 1);
     fChain->SetBranchStatus("eleFull5x5SigmaIetaIeta", 1);
     fChain->SetBranchStatus("eleR9", 1);
@@ -154,6 +157,9 @@ void RazorAnalyzer::EnableElectrons(){
     fChain->SetBranchStatus("ele_HoverE", 1);
     fChain->SetBranchStatus("ele_d0", 1);
     fChain->SetBranchStatus("ele_dZ", 1);
+    fChain->SetBranchStatus("ele_passCutBasedIDLoose", 1);
+    fChain->SetBranchStatus("ele_passCutBasedIDTight", 1);
+
     fChain->SetBranchStatus("ele_ip3d", 1);
     fChain->SetBranchStatus("ele_ip3dSignificance", 1);
     fChain->SetBranchStatus("ele_pileupIso", 1);
@@ -305,6 +311,13 @@ void RazorAnalyzer::EnableJets(){
     fChain->SetBranchStatus("jetHOEnergyFraction", 1);
     fChain->SetBranchStatus("jetHFHadronEnergyFraction", 1);
     fChain->SetBranchStatus("jetHFEMEnergyFraction", 1);
+    fChain->SetBranchStatus("jetElectronEnergyFraction", 1);
+   fChain->SetBranchStatus("jetPhotonEnergyFraction", 1);
+   fChain->SetBranchStatus("jetChargedHadronMultiplicity", 1);
+   fChain->SetBranchStatus("jetNeutralHadronMultiplicity", 1);
+   fChain->SetBranchStatus("jetPhotonMultiplicity", 1);
+   fChain->SetBranchStatus("jetElectronMultiplicity", 1);
+   fChain->SetBranchStatus("jetMuonMultiplicity", 1);
     fChain->SetBranchStatus("jetAllMuonPt", 1);
     fChain->SetBranchStatus("jetAllMuonEta", 1);
     fChain->SetBranchStatus("jetAllMuonPhi", 1);
@@ -726,6 +739,12 @@ void RazorAnalyzer::EnableGenParticles(){
     fChain->SetBranchStatus("gParticlePt", 1);
     fChain->SetBranchStatus("gParticleEta", 1);
     fChain->SetBranchStatus("gParticlePhi", 1);
+    fChain->SetBranchStatus("gParticleProdVertexX", 1);
+    fChain->SetBranchStatus("gParticleProdVertexY", 1);
+    fChain->SetBranchStatus("gParticleProdVertexZ", 1);
+
+
+
     //fChain->SetBranchStatus("gParticleDecayVertexX", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexY", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexZ", 1);
@@ -740,6 +759,15 @@ void RazorAnalyzer::EnableLLP(){
     fChain->SetBranchStatus("gLLP_decay_vertex_x", 1);
     fChain->SetBranchStatus("gLLP_decay_vertex_y", 1);
     fChain->SetBranchStatus("gLLP_decay_vertex_z", 1);
+    fChain->SetBranchStatus("gLLP_daughter_eta", 1);
+    fChain->SetBranchStatus("gLLP_daughter_phi", 1);
+    fChain->SetBranchStatus("gLLP_daughter_e", 1);
+    fChain->SetBranchStatus("gLLP_daughter_pt", 1);
+    fChain->SetBranchStatus("gLLP_daughter_mass", 1);
+    fChain->SetBranchStatus("gLLP_daughter_id", 1);
+
+
+
     //fChain->SetBranchStatus("gParticleDecayVertexX", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexY", 1);
     //fChain->SetBranchStatus("gParticleDecayVertexZ", 1);
@@ -759,7 +787,87 @@ void RazorAnalyzer::EnableEcalRechits(){
     fChain->SetBranchStatus("ecalRechit_GainSwitch6", 1);
     fChain->SetBranchStatus("ecalRechit_transpCorr", 1);
 }
+//////////////////////////////
+//JETS
+//////////////////////////////
 
+bool RazorAnalyzer::isPFTightJet(int i, bool applyTightLepVeto,string EraName){
+
+
+  double NHF = jetNeutralHadronEnergyFraction[i];
+  double NEMF = jetPhotonEnergyFraction[i];
+  double CHF = jetChargedHadronEnergyFraction[i];
+  double MUF = jetMuonEnergyFraction[i];
+  double CEMF = jetElectronEnergyFraction[i];
+  int NumNeutralParticles =jetNeutralHadronMultiplicity[i]+jetPhotonMultiplicity[i];
+  int CHM = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
+  int NumConst = NumNeutralParticles+CHM;
+  //https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2016
+  if (EraName == "Razor2016_07Aug2017Rereco")
+  {
+    if (fabs(jetEta[i])<=2.7)
+    {
+      if (applyTightLepVeto)return (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((abs(jetEta[i])<=2.4 && CHF>0 && CHM>0 && CEMF<0.90) || abs(jetEta[i])>2.4) && abs(jetEta[i])<=2.7;
+      else return (NHF<0.90 && NEMF<0.90 && NumConst>1) && ((abs(jetEta[i])<=2.4 && CHF>0 && CHM>0 && CEMF<0.99) || abs(jetEta[i])>2.4) && abs(jetEta[i])<=2.7;
+    }
+    else if(abs(jetEta[i])>2.7 && abs(jetEta[i])<=3.0)
+    {
+      return (NHF<0.98 && NEMF>0.01 && NumNeutralParticles>2 && abs(jetEta[i])>2.7 && abs(jetEta[i])<=3.0 );
+
+    }
+    else
+    {
+      return (NEMF<0.90 && NumNeutralParticles>10 && abs(jetEta[i])>3.0 );
+    }
+  }
+  //https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2017#Jet_Identification_for_the_13_Te
+  else if(EraName == "Razor2017_17Nov2017Rereco")
+  {
+    if (fabs(jetEta[i])<=2.7)
+    {
+      if (applyTightLepVeto)return (NHF<0.90 && NEMF<0.90 && NumConst>1 && MUF<0.8) && ((abs(jetEta[i])<=2.4 && CHF>0 && CHM>0 && CEMF<0.80) || abs(jetEta[i])>2.4) && abs(jetEta[i])<=2.7;
+      else return (NHF<0.90 && NEMF<0.90 && NumConst>1) && ((abs(jetEta[i])<=2.4 && CHF>0 && CHM>0) || abs(jetEta[i])>2.4) && abs(jetEta[i])<=2.7;
+    }
+    else if(abs(jetEta[i])>2.7 && abs(jetEta[i])<=3.0)
+    {
+      return (NEMF<0.99 && NEMF>0.02 && NumNeutralParticles>2 && abs(jetEta[i])>2.7 && abs(jetEta[i])<=3.0 );
+
+    }
+    else
+    {
+      return (NEMF<0.90 && NHF > 0.02 && NumNeutralParticles>10 && abs(jetEta[i])>3.0 );
+    }
+  }
+  //https://twiki.cern.ch/twiki/bin/view/CMS/JetID13TeVRun2018
+  else if(EraName == "Razor2018_17SeptEarlyReReco")
+  {
+    if (fabs(jetEta[i])<=2.6)
+    {
+      if (applyTightLepVeto)return (abs(jetEta[i])<=2.6 && CEMF<0.8 && CHM>0 && CHF>0 && NumConst>1 && NEMF<0.9 && MUF <0.8 && NHF < 0.9 );
+      else return (abs(jetEta[i])<=2.6 && CHM>0 && CHF>0 && NumConst>1 && NEMF<0.9  && NHF < 0.9 );
+    }
+    else if(abs(jetEta[i])>2.6 && abs(jetEta[i])<=2.7)
+    {
+      if (applyTightLepVeto) return ( abs(jetEta[i])>2.6 && abs(jetEta[i])<=2.7 && CEMF<0.8 && CHM>0 && NEMF<0.99 && MUF <0.8 && NHF < 0.9 );
+      else return ( abs(jetEta[i])>2.6 && abs(jetEta[i])<=2.7  && CHM>0 && NEMF<0.99 && NHF < 0.9 );
+    }
+    else if(abs(jetEta[i])>2.7 && abs(jetEta[i])<=3.0)
+    {
+      return ( NEMF>0.02 && NEMF<0.99 && NumNeutralParticles>2 && abs(jetEta[i])>2.7 && abs(jetEta[i])<=3.0 );
+    }
+    else
+    {
+      return (NEMF<0.90 && NHF>0.2 && NumNeutralParticles>10 && abs(jetEta[i])>3.0 );
+    }
+
+  }
+  else
+  {
+    cout<<"WRONG ERA NAME"<<endl;
+    return false;
+  }
+
+}
 
 //////////////////////////////
 //ELECTRON
@@ -786,20 +894,37 @@ float RazorAnalyzer::GetElectronEffectiveAreaMean(int i, bool use25nsCuts ){
     if (use25nsCuts) {
         // These are the Spring15 25ns effective areas reported in this presentation:
         // https://indico.cern.ch/event/369239/contributions/874575/attachments/1134761/1623262/talk_effective_areas_25ns.pdf
+        // if (fabs(eleEta_SC[i]) < 1.0) {
+        //     effArea = 0.1752;
+        // } else if (fabs(eleEta_SC[i]) < 1.479) {
+        //     effArea = 0.1862;
+        // } else if (fabs(eleEta_SC[i]) < 2.0) {
+        //     effArea = 0.1411;
+        // } else if (fabs(eleEta_SC[i]) < 2.2) {
+        //     effArea = 0.1534;
+        // } else if (fabs(eleEta_SC[i]) < 2.3) {
+        //     effArea = 0.1903;
+        // } else if (fabs(eleEta_SC[i]) < 2.4) {
+        //     effArea = 0.2243;
+        // } else if (fabs(eleEta_SC[i]) < 2.5) {
+        //     effArea = 0.2687;
+        // }
+        // return effArea;
+        // Fall17
         if (fabs(eleEta_SC[i]) < 1.0) {
-            effArea = 0.1752;
+            effArea = 0.1440;
         } else if (fabs(eleEta_SC[i]) < 1.479) {
-            effArea = 0.1862;
+            effArea = 0.1562;
         } else if (fabs(eleEta_SC[i]) < 2.0) {
-            effArea = 0.1411;
+            effArea = 0.1032;
         } else if (fabs(eleEta_SC[i]) < 2.2) {
-            effArea = 0.1534;
+            effArea = 0.0859;
         } else if (fabs(eleEta_SC[i]) < 2.3) {
-            effArea = 0.1903;
+            effArea = 0.1116;
         } else if (fabs(eleEta_SC[i]) < 2.4) {
-            effArea = 0.2243;
+            effArea = 0.1321;
         } else if (fabs(eleEta_SC[i]) < 2.5) {
-            effArea = 0.2687;
+            effArea = 0.1654;
         }
         return effArea;
     }
@@ -1197,6 +1322,29 @@ bool RazorAnalyzer::passEGammaPOGLooseElectronID(int i, bool use25nsCuts, string
 	}
       }
     }
+    else if (EraName == "vid") {
+        if(fabs(eleEta_SC[i]) < 1.479) {
+          if(ele_passCutBasedIDLoose[i]
+            && fabs(ele_d0[i]) < 0.05
+     	     && fabs(ele_dZ[i]) < 0.10 )
+           {
+             pass = true;
+           }
+        }
+
+        else{
+          if(ele_passCutBasedIDLoose[i]
+            && fabs(ele_d0[i]) < 0.1
+      	    && fabs(ele_dZ[i]) < 0.2 )
+           {
+             pass = true;
+           }
+
+        }
+
+
+
+    }
 
     return pass;
 }
@@ -1388,7 +1536,7 @@ bool RazorAnalyzer::passEGammaPOGTightElectronID(int i, bool use25nsCuts, string
       if ( fabs(ele_dEta[i]) < 0.00255
 	   && fabs(ele_dPhi[i]) < 0.022
 	   && eleFull5x5SigmaIetaIeta[i] < 0.0104
-	   && ele_HoverE[i] < 0.026 + 1.15 / eleE[i] + 0.0324*fixedGridRhoFastjetAll / eleE[i]
+	   && ele_HoverE[i] < 0.026 + 1.15 / eleE_SC[i] + 0.0324*fixedGridRhoFastjetAll / eleE_SC[i]
 	   && fabs(ele_d0[i]) < 0.05
 	   && fabs(ele_dZ[i]) < 0.10
 	   && fabs(ele_OneOverEminusOneOverP[i]) < 0.159
@@ -1401,7 +1549,7 @@ bool RazorAnalyzer::passEGammaPOGTightElectronID(int i, bool use25nsCuts, string
       if (fabs(ele_dEta[i]) < 0.00501
 	  && fabs(ele_dPhi[i]) < 0.0236
 	  && eleFull5x5SigmaIetaIeta[i] < 0.0353
-	  && ele_HoverE[i] < 0.0188 + 2.06 / eleE[i] + 0.183*fixedGridRhoFastjetAll / eleE[i]
+	  && ele_HoverE[i] < 0.0188 + 2.06 / eleE_SC[i] + 0.183*fixedGridRhoFastjetAll / eleE_SC[i]
 	  && fabs(ele_d0[i]) < 0.1
 	  && fabs(ele_dZ[i]) < 0.2
 	  && fabs(ele_OneOverEminusOneOverP[i]) < 0.0197
@@ -1411,6 +1559,29 @@ bool RazorAnalyzer::passEGammaPOGTightElectronID(int i, bool use25nsCuts, string
 	pass = true;
       }
     }
+  }
+  else if (EraName == "vid") {
+      if(fabs(eleEta_SC[i]) < 1.479) {
+        if(ele_passCutBasedIDTight[i]
+          && fabs(ele_d0[i]) < 0.05
+         && fabs(ele_dZ[i]) < 0.10 )
+         {
+           pass = true;
+         }
+      }
+
+      else{
+        if(ele_passCutBasedIDTight[i]
+          && fabs(ele_d0[i]) < 0.1
+          && fabs(ele_dZ[i]) < 0.2 )
+         {
+           pass = true;
+         }
+
+      }
+
+
+
   }
 
   return pass;
@@ -1649,21 +1820,30 @@ bool RazorAnalyzer::passEGammaPOGMediumElectronIso(int i, bool use25nsCuts){
 }
 
 bool RazorAnalyzer::passEGammaPOGTightElectronIso(int i, bool use25nsCuts){
-    // Recommended for analyses performed on 2016 data using 8XX releases.
+    // Recommended for analyses performed on 2017 data using 94 releases.
     if (!use25nsCuts) {
         std::cerr << "Error: 50ns cuts are not implemented for this electron ID" << std::endl;
         return false;
     }
     bool pass = false;
-
+    float relIso = (ele_chargedIso[i] + fmax(0.0,  ele_photonIso[i] + ele_neutralHadIso[i] - GetElectronEffectiveAreaMean(i)*fixedGridRhoFastjetAll)) / elePt[i];
     if(fabs(eleEta_SC[i]) < 1.479) {
-        if ( (ele_chargedIso[i] + fmax(0.0,  ele_photonIso[i] + ele_neutralHadIso[i] - GetElectronEffectiveAreaMean(i)*fixedGridRhoFastjetAll)) / elePt[i] < 0.0588
-           ) {
+        // if ( (ele_chargedIso[i] + fmax(0.0,  ele_photonIso[i] + ele_neutralHadIso[i] - GetElectronEffectiveAreaMean(i)*fixedGridRhoFastjetAll)) / elePt[i] < 0.0588
+        //    ) {
+        //     pass = true;
+        // }
+        if (  relIso < 0.0287+0.506/elePt[i])
+        {
             pass = true;
         }
+
     } else {
-        if ( (ele_chargedIso[i] + fmax(0.0,  ele_photonIso[i] + ele_neutralHadIso[i] - GetElectronEffectiveAreaMean(i)*fixedGridRhoFastjetAll)) / elePt[i] < 0.0571
-           ) {
+        // if ( (ele_chargedIso[i] + fmax(0.0,  ele_photonIso[i] + ele_neutralHadIso[i] - GetElectronEffectiveAreaMean(i)*fixedGridRhoFastjetAll)) / elePt[i] < 0.0571
+        //    ) {
+        //     pass = true;
+        // }
+        if (  relIso <0.0445+0.963/elePt[i])
+        {
             pass = true;
         }
     }

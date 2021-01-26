@@ -10,7 +10,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=60
+filesPerJob=20
 
 #ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18
 #ggH_HToSSTobbbb_ms55_pl1000 \
@@ -49,86 +49,111 @@ ggH_HToSS_SToKPlusKMinus_ms1p5_pl500
 ggH_HToSS_SToEE_ms0p4_pl500
 )
 listFall18=(
-ttH_HToSS_SToBB_ms15_pl100
-ttH_HToSS_SToBB_ms15_pl1000
-ttH_HToSS_SToBB_ms15_pl10000
-ttH_HToSS_SToBB_ms15_pl100000
-ttH_HToSS_SToBB_ms40_pl100
-ttH_HToSS_SToBB_ms40_pl1000
-ttH_HToSS_SToBB_ms40_pl10000
-ttH_HToSS_SToBB_ms40_pl100000
-ttH_HToSS_SToBB_ms55_pl100
-ttH_HToSS_SToBB_ms55_pl1000
-ttH_HToSS_SToBB_ms55_pl10000
-ttH_HToSS_SToBB_ms55_pl100000
-WminusHToSS_SToBB_ms15_pl100
-WminusHToSS_SToBB_ms15_pl1000
-WminusHToSS_SToBB_ms15_pl10000
-WminusHToSS_SToBB_ms15_pl100000
-WminusHToSS_SToBB_ms40_pl100
-WminusHToSS_SToBB_ms40_pl1000
-WminusHToSS_SToBB_ms40_pl10000
-WminusHToSS_SToBB_ms40_pl100000
-WminusHToSS_SToBB_ms55_pl100
-WminusHToSS_SToBB_ms55_pl1000
-WminusHToSS_SToBB_ms55_pl10000
-WminusHToSS_SToBB_ms55_pl100000
-WplusHToSS_SToBB_ms15_pl100
-WplusHToSS_SToBB_ms15_pl1000
-WplusHToSS_SToBB_ms15_pl10000
-WplusHToSS_SToBB_ms15_pl100000
-WplusHToSS_SToBB_ms40_pl100
-WplusHToSS_SToBB_ms40_pl1000
-WplusHToSS_SToBB_ms40_pl10000
-WplusHToSS_SToBB_ms40_pl100000
-WplusHToSS_SToBB_ms55_pl100
+#ttH_HToSS_SToBB_ms15_pl100
+#ttH_HToSS_SToBB_ms15_pl1000
+#ttH_HToSS_SToBB_ms15_pl10000
+#ttH_HToSS_SToBB_ms15_pl100000
+#ttH_HToSS_SToBB_ms40_pl100
+#ttH_HToSS_SToBB_ms40_pl1000
+#ttH_HToSS_SToBB_ms40_pl10000
+#ttH_HToSS_SToBB_ms40_pl100000
+#ttH_HToSS_SToBB_ms55_pl100
+#ttH_HToSS_SToBB_ms55_pl1000
+#ttH_HToSS_SToBB_ms55_pl10000
+#ttH_HToSS_SToBB_ms55_pl100000
+#WminusHToSS_SToBB_ms15_pl100
+#WminusHToSS_SToBB_ms15_pl1000
+#WminusHToSS_SToBB_ms15_pl10000
+#WminusHToSS_SToBB_ms15_pl100000
+#WminusHToSS_SToBB_ms40_pl100
+#WminusHToSS_SToBB_ms40_pl1000
+#WminusHToSS_SToBB_ms40_pl10000
+#WminusHToSS_SToBB_ms40_pl100000
+#WminusHToSS_SToBB_ms55_pl100
+#WminusHToSS_SToBB_ms55_pl1000
+#WminusHToSS_SToBB_ms55_pl10000
+#WminusHToSS_SToBB_ms55_pl100000
+#WplusHToSS_SToBB_ms15_pl100
+#WplusHToSS_SToBB_ms15_pl1000
+#WplusHToSS_SToBB_ms15_pl10000
+#WplusHToSS_SToBB_ms15_pl100000
+#WplusHToSS_SToBB_ms40_pl100
+#WplusHToSS_SToBB_ms40_pl1000
+#WplusHToSS_SToBB_ms40_pl10000
+#WplusHToSS_SToBB_ms40_pl100000
+#WplusHToSS_SToBB_ms55_pl100
 WplusHToSS_SToBB_ms55_pl1000
-WplusHToSS_SToBB_ms55_pl10000
-WplusHToSS_SToBB_ms55_pl100000
-ZHToSS_SToBB_ms15_pl100
-ZHToSS_SToBB_ms15_pl1000
-ZHToSS_SToBB_ms15_pl10000
-ZHToSS_SToBB_ms15_pl100000
-ZHToSS_SToBB_ms40_pl100
-ZHToSS_SToBB_ms40_pl1000
-ZHToSS_SToBB_ms40_pl10000
-ZHToSS_SToBB_ms40_pl100000
-ZHToSS_SToBB_ms55_pl100
-ZHToSS_SToBB_ms55_pl1000
-ZHToSS_SToBB_ms55_pl10000
-ZHToSS_SToBB_ms55_pl100000
+#WplusHToSS_SToBB_ms55_pl10000
+#WplusHToSS_SToBB_ms55_pl100000
+#ZHToSS_SToBB_ms15_pl100
+#ZHToSS_SToBB_ms15_pl1000
+#ZHToSS_SToBB_ms15_pl10000
+#ZHToSS_SToBB_ms15_pl100000
+#ZHToSS_SToBB_ms40_pl100
+#ZHToSS_SToBB_ms40_pl1000
+#ZHToSS_SToBB_ms40_pl10000
+#ZHToSS_SToBB_ms40_pl100000
+#ZHToSS_SToBB_ms55_pl100
+#ZHToSS_SToBB_ms55_pl1000
+#ZHToSS_SToBB_ms55_pl10000
+#ZHToSS_SToBB_ms55_pl100000
 )
-listFall17=(
-ZToMuMu_NNPDF31_13TeV-powheg_M_120_200 
-ZToMuMu_NNPDF31_13TeV-powheg_M_200_400 
-ZToMuMu_NNPDF31_13TeV-powheg_M_3500_4500
-ZToMuMu_NNPDF31_13TeV-powheg_M_50_120
-ZToMuMu_NNPDF31_13TeV-powheg_M_1400_2300
-ZToMuMu_NNPDF31_13TeV-powheg_M_2300_3500
-ZToMuMu_NNPDF31_13TeV-powheg_M_4500_6000
-ZToMuMu_NNPDF31_13TeV-powheg_M_6000_Inf
-ZToMuMu_NNPDF31_13TeV-powheg_M_400_800
+listFall18=(
+ggZHToSS_SToBB_ZToQQ_ms15_pl100
+ggZHToSS_SToBB_ZToQQ_ms15_pl1000
+ggZHToSS_SToBB_ZToQQ_ms15_pl10000
+ggZHToSS_SToBB_ZToQQ_ms15_pl100000
+ggZHToSS_SToBB_ZToQQ_ms40_pl100
+ggZHToSS_SToBB_ZToQQ_ms40_pl1000
+ggZHToSS_SToBB_ZToQQ_ms40_pl10000
+ggZHToSS_SToBB_ZToQQ_ms40_pl100000
+ggZHToSS_SToBB_ZToQQ_ms55_pl100
+ggZHToSS_SToBB_ZToQQ_ms55_pl1000
+ggZHToSS_SToBB_ZToQQ_ms55_pl10000
+ggZHToSS_SToBB_ZToQQ_ms55_pl100000
 )
-#listFall18=(
-#ggH_HToSSTobbbb_ms1_pl1000
-#)
+# listFall17=(
+# ZToMuMu_NNPDF31_13TeV-powheg_M_120_200
+# ZToMuMu_NNPDF31_13TeV-powheg_M_200_400
+# ZToMuMu_NNPDF31_13TeV-powheg_M_3500_4500
+# ZToMuMu_NNPDF31_13TeV-powheg_M_50_120
+# ZToMuMu_NNPDF31_13TeV-powheg_M_1400_2300
+# ZToMuMu_NNPDF31_13TeV-powheg_M_2300_3500
+# ZToMuMu_NNPDF31_13TeV-powheg_M_4500_6000
+# ZToMuMu_NNPDF31_13TeV-powheg_M_6000_Inf
+# ZToMuMu_NNPDF31_13TeV-powheg_M_400_800
+# )
+# #listFall18=(
+# #ggH_HToSSTobbbb_ms1_pl1000
+# #)
+# listFall18=(
+# QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8
+# QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8
+# )
+# listFall18=(
+# VBFHToSS_STodd_ms40_pl100
+# VBFHToSS_STodd_ms40_pl1000
+# VBFHToSS_STodd_ms40_pl10000
+# VBFHToSS_STodd_ms40_pl100000
+# )
+listBkg_Fall18=(
+WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+)
 for year in \
-Summer16 \
-Fall17 \
 Fall18
 do
         echo ${year}
         sampleList=list${year}[@]
-        sampleList=listFall18[@]
+        #sampleList=listFall18[@]
 	for sample in "${!sampleList}"
         do
 
 		echo "Sample " ${sample}
-		version=/V1p17/MC_${year}/v1/
-		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v70/${sample}
+		version=/V1p17/MC_${year}/v2/
+		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v77/${sample}
 		echo ${output}
-	        #inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
-		inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple//V1p17/MC_Fall18/v1//sixie/${sample}.txt
+	  	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
+		#inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple//V1p17/MC_Fall18/v1//sixie/${sample}.txt
 		nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
         	maxjob=`python -c "print int($nfiles.0/$filesPerJob)+1"`
         	mod=`python -c "print int($nfiles.0%$filesPerJob)"`
@@ -137,21 +162,24 @@ do
         	        maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
         	fi
 		analyzer=llp_MuonSystem_cluster
-		if [ ${year} == "Fall18" ]
+		if [[ ${year} == "Fall18" || ${year}=="Bkg_Fall18" ]]
         	then
         	        echo ${year}
         	        analyzerTag=Razor2018_17SeptEarlyReReco
         	elif [ ${year} == "Fall17" ]
         	then
         	        echo ${year}
-        	        analyzerTag=Razor2017_Source2018
+        	        # analyzerTag=Razor2017_Source2018
+                	analyzerTag=Razor2017_17Nov2017Rereco
         	elif [ ${year} == 'Summer16' ]
         	then
         	        echo ${year}
-        	        analyzerTag=Razor2016_Source2018
+        	        # analyzerTag=Razor2016_Source2018
+                	analyzerTag=Razor2016_07Aug2017Rereco
         	else
         	        echo "ERROR: NEED TO SET CORRECT YEAR"
         	fi
+		echo ${analyzerTag}
 		rm -f submit/${analyzer}_${sample}_Job*.jdl
 		rm -f log/${analyzer}_${sample}_Job*
 

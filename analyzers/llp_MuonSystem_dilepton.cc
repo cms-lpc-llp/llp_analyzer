@@ -34,9 +34,17 @@ void llp_MuonSystem_dilepton::Analyze(bool isData, int Option, string outputfile
     float lep2Eta = -1;
     float lep2Phi = -1;
     float dileptonMass = -1;
+    float dileptonPt = -1.;
     float MET = -1;
     int NJets = 0;
     int NBTags = 0;
+    float gLepPt[2];
+    float gLepPhi[2];
+    float gLepE[2];
+    float gLepEta[2];
+    float gZmass = -1.;
+    float gZPt = -1.;
+
 
     //------------------------
     //set branches on big tree
@@ -51,9 +59,18 @@ void llp_MuonSystem_dilepton::Analyze(bool isData, int Option, string outputfile
     outputTree->Branch("lep2Eta", &lep2Eta, "lep2Eta/F");
     outputTree->Branch("lep2Phi", &lep2Phi, "lep2Phi/F");
     outputTree->Branch("dileptonMass", &dileptonMass, "dileptonMass/F");
+    outputTree->Branch("dileptonPt", &dileptonPt, "dileptonPt/F");
+
     outputTree->Branch("MET", &MET, "MET/F");
     outputTree->Branch("NJets", &NJets, "NJets/I");
     outputTree->Branch("NBTags", &NBTags, "NBTags/I");
+
+    outputTree->Branch("gLepPt", &gLepPt, "gLepPt[2]/F");
+    outputTree->Branch("gLepPhi", &gLepPhi, "gLepPhi[2]/F");
+    outputTree->Branch("gLepE", &gLepE, "gLepE[2]/F");
+    outputTree->Branch("gLepEta", &gLepEta, "gLepEta[2]/F");
+    outputTree->Branch("gZmass", &gZmass, "gZmass/F");
+    outputTree->Branch("gZPt", &gZPt, "gZPt/F");
 
   //   outputTree->Branch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ",                                        &HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ,                                       "HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL_DZ/O");
   // outputTree->Branch("HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL",                                        &HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL,                                       "HLT_Mu23_TrkIsoVVL_Ele12_CaloIdL_TrackIdL_IsoVL/O");
@@ -93,9 +110,46 @@ void llp_MuonSystem_dilepton::Analyze(bool isData, int Option, string outputfile
       lep2Eta = -1;
       lep2Phi = -1;
       dileptonMass = -1;
+      dileptonPt = -1.;
       MET = -1;
       NJets = 0;
       NBTags = 0;
+      for(int i = 0; i <2;i++)
+      {
+        gLepPt[i] = 0.0;
+        gLepPhi[i] = 0.0;
+        gLepE[i] = 0.0;
+        gLepEta[i] = 0.0;
+      }
+      gZPt = -999.;
+      gZmass = -999.;
+
+
+      int count = 0;
+      for (int i=0; i < nGenParticle; i++)
+      {
+        if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 23)
+        {
+          gLepPt[count] = gParticlePt[i];
+          gLepPhi[count] = gParticlePhi[i];
+          gLepE[count] = gParticleE[i];
+          gLepEta[count] = gParticleEta[i];
+          count++;
+
+
+        }
+        else if (abs(gParticleId[i]) == 23)
+        {
+          TLorentzVector genZ; genZ.SetPtEtaPhiE(gParticlePt[i], gParticleEta[i], gParticlePhi[i], gParticleE[i]);
+          gZmass = genZ.M();
+          gZPt = gParticlePt[i];
+
+        }
+
+      }
+
+
+
 
 
       //***********************
@@ -161,6 +215,7 @@ void llp_MuonSystem_dilepton::Analyze(bool isData, int Option, string outputfile
       }
 
       dileptonMass = (lep1+lep2).M();
+      dileptonPt = (lep1+lep2).Pt();
       MET = metType1Pt;
 
 

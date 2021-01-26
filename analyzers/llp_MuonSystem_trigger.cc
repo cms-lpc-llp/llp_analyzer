@@ -325,19 +325,42 @@ void llp_MuonSystem_trigger::Analyze(bool isData, int options, string outputfile
     MuonSystem->HLT_IsoEle = HLTDecision[87];
   }
 
+  //
+  // if (eMuFlag)
+  // {
+  //   if (!HLTDecision[136])continue;
+  //   if (nMuons!=1)continue;
+  // }
+  // else{
+  //   if (!MuonSystem->HLT_IsoEle)continue;
+  //   if (nElectrons!=1)continue;
+  // }
 
-  if (eMuFlag)
+
+  if (!isData)
   {
-    if (!HLTDecision[136])continue;
-    if (nMuons!=1)continue;
+    for (int i=0; i < nGenParticle; i++)
+    {
+
+      if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 24)
+      { // choosing only the W->munu events
+        wzFlag = true;
+        MuonSystem->gLepId = gParticleId[i];
+        MuonSystem->gLepPt = gParticlePt[i];
+        MuonSystem->gLepEta = gParticleEta[i];
+        MuonSystem->gLepE = gParticleE[i];
+        MuonSystem->gLepPhi = gParticlePhi[i];
+      }
+      else if (abs(gParticleId[i]) == 15 && gParticleStatus[i] == 2 && abs(gParticleMotherId[i]) == 24){
+        wzFlag = true;
+        MuonSystem->gLepId = gParticleId[i];
+        MuonSystem->gLepPt = gParticlePt[i];
+        MuonSystem->gLepEta = gParticleEta[i];
+        MuonSystem->gLepE = gParticleE[i];
+        MuonSystem->gLepPhi = gParticlePhi[i];
+      }
+    }
   }
-  else{
-    if (!MuonSystem->HLT_IsoEle)continue;
-    if (nElectrons!=1)continue;
-  }
-
-
-
 
     // if (!MuonSystem->Flag2_all) continue;
     //*************************************************************************
@@ -391,8 +414,8 @@ void llp_MuonSystem_trigger::Analyze(bool isData, int options, string outputfile
 
       Leptons.push_back(tmpMuon);
     }
-    if (eMuFlag && Leptons.size() != 1)continue;
-    if (!eMuFlag && Leptons.size() != 0)continue;
+    // if (eMuFlag && Leptons.size() != 1)continue;
+    // if (!eMuFlag && Leptons.size() != 0)continue;
 
     //-------------------------------
     //Electrons
@@ -425,7 +448,7 @@ void llp_MuonSystem_trigger::Analyze(bool isData, int options, string outputfile
       tmpElectron.passVetoId = isEGammaPOGVetoElectron(i, true, true, true, "vid");
       Leptons.push_back(tmpElectron);
     }
-    if (Leptons.size() != 1)continue;
+    // if (Leptons.size() != 1)continue;
 
 
     sort(Leptons.begin(), Leptons.end(), my_largest_pt);

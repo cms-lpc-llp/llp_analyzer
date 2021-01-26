@@ -1,5 +1,5 @@
 ver=V1p17
-ver2=/v5/vBDT1/
+ver2=/v5/v100/
 outputRoot=Run2_displacedJetMuonNtupler_${ver}_Data2016_Data2017_Data2018-HighMET_goodLumi.root
 dir1=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/Data2016/${ver2}/normalized/
 dir2=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/Data2017/${ver2}/normalized/

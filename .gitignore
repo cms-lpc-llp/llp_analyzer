@@ -2,7 +2,7 @@
 *.d
 
 # local files
-*.root
+#*.root
 *.list
 # Compiled Object files
 *.slo

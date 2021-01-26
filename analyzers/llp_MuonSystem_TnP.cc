@@ -404,8 +404,14 @@ void llp_MuonSystem_TnP::Analyze(bool isData, int options, string outputfilename
     //-------------------------------
     //Muons
     //-------------------------------
+    MuonSystem->nMuons = 0;
     for( int i = 0; i < nMuons; i++ )
     {
+      if(muonPt[i] < 20) continue;
+      MuonSystem->muonPt[MuonSystem->nMuons] = muonPt[i];
+      MuonSystem->muonEta[MuonSystem->nMuons] = muonEta[i];
+      MuonSystem->muonPhi[MuonSystem->nMuons] = muonPhi[i];
+      MuonSystem->nMuons++;
       float muonIso = (muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i];
 
 
@@ -597,8 +603,8 @@ void llp_MuonSystem_TnP::Analyze(bool isData, int options, string outputfilename
       if(!isData)
       {
         for (int i=0; i < nGenParticle; i++)
-        {
-          if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && abs(gParticleMotherId[i]) == 23) MuonSystem->lepFromZ[MuonSystem->nLeptons] = true;
+        { float tmpDR = deltaR(gParticleEta[i],gParticlePhi[i],MuonSystem->lepEta[MuonSystem->nLeptons],MuonSystem->lepPhi[MuonSystem->nLeptons]);
+          if ((abs(gParticleId[i]) == 13) && abs(gParticleMotherId[i]) == 23 && tmpDR<0.4) MuonSystem->lepFromZ[MuonSystem->nLeptons] = true;
         }
       }
       MuonSystem->nLeptons++;
@@ -862,7 +868,7 @@ void llp_MuonSystem_TnP::Analyze(bool isData, int options, string outputfilename
     if ( MuonSystem->nCscRechitsChamberMinus41 > 50) MuonSystem->nCscRings++;
     if ( MuonSystem->nCscRechitsChamberMinus42 > 50) MuonSystem->nCscRings++;
     //Do DBSCAN Clustering
-    int min_point = 50;  //minimum number of segments to call it a cluster
+    int min_point = 130;  //minimum number of segments to call it a cluster
     float epsilon = 0.2; //cluster radius parameter
     DBSCAN ds(min_point, epsilon, points);
     ds.run();
@@ -879,9 +885,9 @@ void llp_MuonSystem_TnP::Analyze(bool isData, int options, string outputfilename
 
     MuonSystem->nCscRechitClusters3 = 0;
     for ( auto &tmp : ds.CscCluster ) {
-        if (abs(tmp.tTotal) > 12.5)continue;
+        // if (abs(tmp.tTotal) > 12.5)continue;
         if(abs(tmp.eta)>=2.0) continue;
-        if(tmp.TSpread > 20)continue;
+        // if(tmp.TSpread > 20)continue;
         if (abs(tmp.maxChamber)<=12)continue;
         if (abs(tmp.nCscSegments) < min_point)continue;
 
@@ -890,6 +896,9 @@ void llp_MuonSystem_TnP::Analyze(bool isData, int options, string outputfilename
         MuonSystem->cscRechitCluster3Z[MuonSystem->nCscRechitClusters3] =tmp.z;
         MuonSystem->cscRechitCluster3Time[MuonSystem->nCscRechitClusters3] = tmp.t;
         MuonSystem->cscRechitCluster3TimeTotal[MuonSystem->nCscRechitClusters3] = tmp.tTotal;
+        MuonSystem->cscRechitCluster3TimeWire[MuonSystem->nCscRechitClusters3] = tmp.tWire;
+        MuonSystem->cscRechitCluster3TimeWirePruned[MuonSystem->nCscRechitClusters3] = tmp.tWirePruned;
+
         MuonSystem->cscRechitCluster3Eta[MuonSystem->nCscRechitClusters3] =tmp.eta;
         MuonSystem->cscRechitCluster3Phi[MuonSystem->nCscRechitClusters3] = tmp.phi;
         MuonSystem->cscRechitCluster3MajorAxis[MuonSystem->nCscRechitClusters3] =tmp.MajorAxis;
@@ -905,6 +914,11 @@ void llp_MuonSystem_TnP::Analyze(bool isData, int options, string outputfilename
         MuonSystem->cscRechitCluster3EtaSpread[MuonSystem->nCscRechitClusters3] =tmp.EtaSpread;
         MuonSystem->cscRechitCluster3PhiSpread[MuonSystem->nCscRechitClusters3] = tmp.PhiSpread;
         MuonSystem->cscRechitCluster3TimeSpread[MuonSystem->nCscRechitClusters3] = tmp.TSpread;
+        MuonSystem->cscRechitCluster3TimeWireSpread[MuonSystem->nCscRechitClusters3] = tmp.TWireSpread;
+
+        MuonSystem->cscRechitCluster3TimeTotalSpread[MuonSystem->nCscRechitClusters3] = tmp.TTotalSpread;
+        MuonSystem->cscRechitCluster3TimeTotalSpreadPruned[MuonSystem->nCscRechitClusters3] = tmp.TTotalSpreadPruned;
+
         MuonSystem->cscRechitCluster3Size[MuonSystem->nCscRechitClusters3] = tmp.nCscSegments;
 
         MuonSystem->cscRechitCluster3NRechitChamberPlus11[MuonSystem->nCscRechitClusters3] = tmp.nCscSegmentChamberPlus11;

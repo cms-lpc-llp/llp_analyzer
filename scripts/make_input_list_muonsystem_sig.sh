@@ -37,11 +37,10 @@
 #MC_Summer16 \
 #MC_Fall17 \
 for year in \
-MC_Fall18 \
-MC_Fall17 \
-MC_Summer16
+Data2018ABC_AOD \
+Data2018D_AOD
 do
-	version=displacedJetMuonNtuple/V1p17/${year}/v1/sixie/
+	version=displacedJetMuonNtuple/V1p17/${year}/v5/sixie/EGamma/
 	root_dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/${version}/
 	list_dir=$CMSSW_BASE/src/llp_analyzer/lists/${version}
 	echo $list_dir
@@ -53,12 +52,17 @@ do
 	else
 		tune=TuneCP5
 	fi
+	#VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8 \
+        #VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
+        #ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
+        #ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8 \
+	#ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
 	for sample in \
-	VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8 \
-        VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-        ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-        ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8 \
-	ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
+	Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018A-17Sep2018-v2_part2_v5_v2 \
+	Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018A-17Sep2018-v2_v5_v2 \
+	Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018B-17Sep2018-v1_v5_v4 \
+	Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018C-17Sep2018-v1_v5_v3 \
+	Run2_displacedJetMuonNtupler_V1p17_Data2018D_17Sept2018_AOD_Run2018D-PromptReco-v2_v5_v5	
 	do
 	        echo "${list_dir}${sample}.txt"
 	        rm -f ${list_dir}${sample}.txt

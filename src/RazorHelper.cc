@@ -76,6 +76,14 @@ RazorHelper::RazorHelper(std::string tag_, bool isData_, bool isFastsim_):
     else if (tag == "Razor2018_17SeptEarlyReReco"){
       loadTag_Razor2018_17SeptEarlyReReco();
     }
+    else if(tag == "Razor2016_Source2018")
+    {
+      loadTag_Razor2016_Source2018();
+    }
+    else if(tag == "Razor2017_Source2018")
+    {
+      loadTag_Razor2017_Source2018();
+    }
    // tag not found
     else {
         std::cout << "Error in RazorHelper::RazorHelper : specified tag " << tag << " is not supported!" << std::endl;
@@ -599,13 +607,35 @@ void RazorHelper::loadJECs_Razor2015_76X() {
 ////////////////////////////////////////////////
 ////  2016 17Aug2017 Rereco
 //////////////////////////////////////////////////
+void RazorHelper::loadTag_Razor2016_Source2018() {
+    loadPileup_Razor2016_07Aug2017Rereco();
+    // loadLepton_Razor2016_MoriondRereco();
+    // loadPhoton_Razor2016_07Aug2017Rereco_DelayedPhoton();
+    // loadBTag_Razor2016_MoriondRereco();
+    loadTrigger_Razor2016_07Aug2017Rereco();
+    loadJECs_Razor2016_07Aug2017Rereco();
+    loadHiggsPt();
+    // loadAK8JetTag_Razor2016_MoriondRereco();
+}
+void RazorHelper::loadPileup_Razor2016_Source2018() {
+    // pileup weights
+    // LAST UPDATED: 18 October 2016
+    std::cout << "RazorHelper: loading pileup weight histograms" << std::endl;
 
+
+    pileupWeightFile = TFile::Open("PileupReweight_source18_target16.root.root");
+    pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+    pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+    pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+    std::cout << "PileupReweight_source18_target16.root.root\n";
+
+}
 void RazorHelper::loadTag_Razor2016_07Aug2017Rereco() {
     loadPileup_Razor2016_07Aug2017Rereco();
     // loadLepton_Razor2016_MoriondRereco();
     // loadPhoton_Razor2016_07Aug2017Rereco_DelayedPhoton();
     // loadBTag_Razor2016_MoriondRereco();
-    // loadTrigger_Razor2016_07Aug2017Rereco_DelayedPhoton();
+    loadTrigger_Razor2016_07Aug2017Rereco();
     loadJECs_Razor2016_07Aug2017Rereco();
     loadHiggsPt();
     // loadAK8JetTag_Razor2016_MoriondRereco();
@@ -626,6 +656,13 @@ void RazorHelper::loadPileup_Razor2016_07Aug2017Rereco() {
 
 
 
+
+}
+void RazorHelper::loadTrigger_Razor2016_07Aug2017Rereco() {
+    // single lepton trigger scale factors
+    std::cout << "RazorHelper: loading trigger efficiency histograms" << std::endl;
+    metTriggerSFFile = TFile::Open("METTriggers_SF.root");
+    metTriggerSFHist = (TH1F*)metTriggerSFFile->Get("trigger_efficiency_Fall17");
 
 }
 void RazorHelper::loadJECs_Razor2016_07Aug2017Rereco() {
@@ -2001,14 +2038,39 @@ void RazorHelper::loadPhoton_Razor2017_92X(){
 ////////////////////////////////////////////////
 void RazorHelper::loadTag_Razor2017_17Nov2017Rereco() {
   loadPileup_Razor2017_17Nov2017Rereco();
-  // loadLepton_Razor2017_17Nov2017Rereco();
+  loadLepton_Razor2017_17Nov2017Rereco();
   // loadPhoton_Razor2017_92X();
   // loadBTag_Razor2017_17Nov2017Rereco();
   // loadTrigger_Razor2017_92X();
+  loadTrigger_Razor2017_17Nov2017Rereco();
+  loadJECs_Razor2017_17Nov2017Rereco();
+  loadHiggsPt();
+}
+void RazorHelper::loadTag_Razor2017_Source2018() {
+  loadPileup_Razor2017_Source2018();
+  loadLepton_Razor2017_17Nov2017Rereco();
+  // loadPhoton_Razor2017_92X();
+  // loadBTag_Razor2017_17Nov2017Rereco();
+  // loadTrigger_Razor2017_92X();
+  loadTrigger_Razor2017_17Nov2017Rereco();
   loadJECs_Razor2017_17Nov2017Rereco();
   loadHiggsPt();
 }
 
+void RazorHelper::loadPileup_Razor2017_Source2018() {
+    // pileup weights
+    // LAST UPDATED: 06 July 2018
+    std::cout << "RazorHelper: loading pileup weight histograms" << std::endl;
+
+
+      // Will do something for Fastsim in the future
+    pileupWeightFile = TFile::Open("PileupReweight_source18_target17.root.root");
+    pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+    pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+    pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+    std::cout << "PileupReweight_source18_target17.root.root\n";
+
+}
 void RazorHelper::loadPileup_Razor2017_17Nov2017Rereco() {
     // pileup weights
     // LAST UPDATED: 06 July 2018
@@ -2023,66 +2085,44 @@ void RazorHelper::loadPileup_Razor2017_17Nov2017Rereco() {
     std::cout << "PileupReweight_MC_Fall17_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root\n";
 
 }
+void RazorHelper::loadTrigger_Razor2017_17Nov2017Rereco() {
+    // single lepton trigger scale factors
+    std::cout << "RazorHelper: loading trigger efficiency histograms" << std::endl;
+    metTriggerSFFile = TFile::Open("METTriggers_SF.root");
+    metTriggerSFHist = (TH1F*)metTriggerSFFile->Get("trigger_efficiency_Fall17");
 
+}
 void RazorHelper::loadLepton_Razor2017_17Nov2017Rereco(){
 
-    // electron efficiencies and scale factors
-    // LAST UPDATED: 31 August 2018
-    std::cout << "RazorHelper: loading 2017 electron efficiency histograms" << std::endl;
-    //eleTightEfficiencyFile = TFile::Open("ElectronEffFastsimToFullsimCorrectionFactors.2016.root");
-    //eleLooseEfficiencyFile = TFile::Open("ElectronEffFastsimToFullsimCorrectionFactors.2016.root");
-    //eleVetoEfficiencyFile = TFile::Open("ElectronMVAIDScaleFactor_SUSYVLoose_2017_17Nov2017Rereco.root");
-    eleGSFTrackEffFile = TFile::Open("Efficiency_PromptElectron_TTJets_25ns_Reco_Fullsim.root");
-    eleEffSFFile = TFile::Open("ElectronScaleFactors_Run2017_17Nov2017.root");
-    looseEleEffSFFile = TFile::Open("efficiency_results_LooseElectronSelectionEffDenominatorGen_2017_17Nov2017Rereco_Golden.root");
-    vetoEleEffSFFile = TFile::Open("ElectronMVAIDScaleFactor_SUSYVLoose_2017_17Nov2017Rereco.root");
-    eleGSFTrackEffSFFile = TFile::Open("ElectronRecoEffScaleFactors_Run2017.root");
-    eleTightEffFastsimSFFile = TFile::Open("ElectronEffFastsimToFullsimCorrectionFactors.2016.root");
-    eleLooseEffFastsimSFFile = TFile::Open("ElectronEffFastsimToFullsimCorrectionFactors.2016.root");
-    eleVetoEffFastsimSFFile = TFile::Open("ElectronEffFastsimToFullsimCorrectionFactors.2016.root");
+    // LAST UPDATED: 18 August 2020
 
-    // eleTightEfficiencyHist = (TH2D*)eleTightEfficiencyFile->Get("ElectronEff_Tight_Fullsim");
-    // eleLooseEfficiencyHist = (TH2D*)eleTightEfficiencyFile->Get("ElectronEff_Loose_Fullsim");
-    // eleVetoEfficiencyHist = (TH2D*)eleVetoEfficiencyFile->Get("ElectronEff_Veto_Fullsim");
-    // eleGSFTrackEffHist = (TH2D*)eleGSFTrackEffFile->Get("Efficiency_PtEta");
-    // We don't have ID scale factors for Fastsim yet.
-    eleTightEffSFHist = (TH2D*)eleEffSFFile->Get("ScaleFactor_TightElectronSelectionEffDenominatorGen");
-    eleLooseEffSFHist = (TH2D*)eleEffSFFile->Get("ScaleFactor_LooseElectronSelectionEffDenominatorGen");
-    eleVetoEffSFHist = (TH2D*)vetoEleEffSFFile->Get("ScaleFactor_VetoElectronSelectionEffDenominatorGen");
-    eleGSFTrackEffSFHist = (TH2D*)eleGSFTrackEffSFFile->Get("h2_scaleFactorsEGamma");
-    eleTightEffFastsimSFHist =  (TH2D*)eleTightEffFastsimSFFile->Get("ElectronTight_FastsimScaleFactor");
-    eleLooseEffFastsimSFHist =  (TH2D*)eleLooseEffFastsimSFFile->Get("ElectronLoose_FastsimScaleFactor");
-    eleVetoEffFastsimSFHist = (TH2D*)eleVetoEffFastsimSFFile->Get("ElectronEff_Veto_Fullsim");
-
-    // muon efficiencies and scale factors
-    // LAST UPDATED: 18 October 2016
     std::cout << "RazorHelper: loading 2017 muon efficiency histograms" << std::endl;
-    muTightEfficiencyFile = TFile::Open("MuonIsoScaleFactor_2017_17Nov2017Rereco.root");
-    muVetoEfficiencyFile = TFile::Open("MuonIsoScaleFactor_2017_17Nov2017Rereco.root");
-    muEffSFFile = TFile::Open("efficiency_results_TightMuonSelectionEffDenominatorGen_2017_17Nov2017Rereco_Golden.root");
-    vetoMuEffSFFile = TFile::Open("efficiency_results_VetoMuonSelectionEffDenominatorGen_2017_17Nov2017Rereco_Golden.root");
-    muTrackEffSFFile = TFile::Open("efficiencySF_muEleTracking_2016_average.root");
-    muTrackEffFile = TFile::Open("Efficiency_PromptMuon_TTJets_25ns_Reco_Fullsim.root");
-    muTightEffFastsimSFFile = TFile::Open("MuonEffFastsimToFullsimCorrectionFactors.2016.root");
-    muVetoEffFastsimSFFile = TFile::Open("MuonEffFastsimToFullsimCorrectionFactors.2016.root");
 
-    muTightEfficiencyHist = (TH2D*)muTightEfficiencyFile->Get("MuonEff_Tight_Fullsim");
-    muVetoEfficiencyHist = (TH2D*)muVetoEfficiencyFile->Get("MuonEff_Veto_Fullsim");
-    // We don't have ID scale factors for Fastsim yet.
-    muTightEffFastsimSFHist = (TH2D*)muTightEffFastsimSFFile->Get("MuonTight_FastsimScaleFactor");
-    muVetoEffFastsimSFHist = (TH2D*)muVetoEffFastsimSFFile->Get("MuonVeto_FastsimScaleFactor");
-    //muTightEffSFHist = (TH2D*)muEffSFFile->Get("ScaleFactor_TightMuonSelectionEffDenominatorGen");
-    muVetoEffSFHist = (TH2D*)vetoMuEffSFFile->Get("ScaleFactor_VetoMuonSelectionEffDenominatorGen");
-    muTrackEffHist = (TH2D*)muTrackEffFile->Get("Efficiency_PtEta");
-    // These scale factors are weighted according to the fraction of the 2016 run affected
-    // by the 'HIP' issue, under the assumption that tracking scale factors are 1 for runs
-    // not affected by the 'HIP'.
-    muTrackEffSFHist = (TH2D*)muTrackEffSFFile->Get("muon");
 
-    // tau efficiencies and scale factors
-    std::cout << "RazorHelper: loading tau efficiency histograms" << std::endl;
-    tauEfficiencyFile = TFile::Open("TauEffFastsimToFullsimCorrectionFactors.2016.root");
-    tauLooseEfficiencyHist = (TH2D*)tauEfficiencyFile->Get("TauEff_Loose_Fullsim");
+    muTriggerEfficiencyFile = TFile::Open("MuonEfficienciesAndSF_RunBtoF_Nov17Nov2017.root");
+    muIdEfficiencyFile = TFile::Open("MuonRunBCDEF_mc_ID.2017.root");
+    muIsoEfficiencyFile = TFile::Open("MuonRunBCDEF_mc_ISO.2017.root");
+    muIdSFFile = TFile::Open("MuonRunBCDEF_SF_ID.2017.root");
+    muIsoSFFile = TFile::Open("MuonRunBCDEF_SF_ISO.2017.root");
+
+
+    muTriggerEfficiencyDir = muTriggerEfficiencyFile ->GetDirectory("IsoMu27_PtEtaBins");
+    muTriggerSFHist =  (TH2D*)muTriggerEfficiencyDir->Get("pt_abseta_ratio");//pt on xaxis and eta on yaxis
+    muTriggerEfficiencyHist =  (TH2D*)muTriggerEfficiencyDir->GetDirectory("efficienciesMC")->Get("pt_abseta_MC");//pt on xaxis and eta on yaxis
+
+
+    muLooseIdEfficiencyHist = (TH2D*)muIdEfficiencyFile->Get("NUM_LooseID_DEN_genTracks_pt_abseta");
+    muTightIdEfficiencyHist = (TH2D*)muIdEfficiencyFile->Get("NUM_TightID_DEN_genTracks_pt_abseta");
+    muLooseIsoEfficiencyHist = (TH2D*)muIsoEfficiencyFile->Get("NUM_LooseRelIso_DEN_LooseID_pt_abseta");
+    muTightIsoEfficiencyHist = (TH2D*)muIsoEfficiencyFile->Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
+
+    muLooseIdSFHist = (TH2D*)muIdSFFile->Get("NUM_LooseID_DEN_genTracks_pt_abseta");
+    muTightIdSFHist = (TH2D*)muIdSFFile->Get("NUM_TightID_DEN_genTracks_pt_abseta");
+    muLooseIsoSFHist = (TH2D*)muIsoSFFile->Get("NUM_LooseRelIso_DEN_LooseID_pt_abseta");
+    muTightIsoSFHist = (TH2D*)muIsoSFFile->Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
+
+
+
 
 }
 
@@ -2526,12 +2566,16 @@ void RazorHelper::loadJECs_Razor2017_31Mar2018Rereco() {
 ////////////////////////////////////////////////
 //  2018
 ////////////////////////////////////////////////
+
+
+
+
 void RazorHelper::loadTag_Razor2018_17SeptEarlyReReco() {
   loadPileup_Razor2018_17SeptEarlyReReco();
   // loadLepton_Razor2016_MoriondRereco();
   // loadPhoton_Razor2017_92X();
   // loadBTag_Razor2016_MoriondRereco();
-  // loadTrigger_Razor2018_17SeptEarlyReReco();
+  loadTrigger_Razor2018_17SeptEarlyReReco();
   loadJECs_Razor2018_17SeptEarlyReReco();
   loadHiggsPt();
 }
@@ -2541,6 +2585,7 @@ void RazorHelper::loadPileup_Razor2018_17SeptEarlyReReco() {
     // LAST UPDATED: 9 Dec 2019
     std::cout << "RazorHelper: loading pileup weight histograms" << std::endl;
     pileupWeightFile = TFile::Open("PileupReweight_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root");
+    // pileupWeightFile = TFile::Open("PileupReweight_source16_target18.root");
 
     // pileupWeightFile = TFile::Open("/storage/user/christiw/login-1/christiw/LLP/CMSSW_9_4_4/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18.root");
     pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
@@ -2548,6 +2593,14 @@ void RazorHelper::loadPileup_Razor2018_17SeptEarlyReReco() {
     pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
     std::cout << "PileupReweight_MC_ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18.root\n";
 }
+void RazorHelper::loadTrigger_Razor2018_17SeptEarlyReReco() {
+    // single lepton trigger scale factors
+    std::cout << "RazorHelper: loading trigger efficiency histograms" << std::endl;
+    metTriggerSFFile = TFile::Open("METTriggers_SF.root");
+    metTriggerSFHist = (TH1F*)metTriggerSFFile->Get("trigger_efficiency_Fall18");
+
+}
+
 
 void RazorHelper::loadJECs_Razor2018_17SeptEarlyReReco() {
     std::cout << "RazorHelper: loading jet energy correction constants, using 2018_17SeptEarlyReReco" << std::endl;
@@ -2883,17 +2936,26 @@ double RazorHelper::getPileupWeightDown(int NPU) {
     }
 }
 
+double RazorHelper::getMetTriggerSF(float met) {
+    if (metTriggerSFHist) {
+        return metTriggerSFHist->GetBinContent(metTriggerSFHist->GetXaxis()->FindFixBin(met));
+    }
+    else {
+        std::cout << "RazorHelper error: MET trigger SF requested, but no histogram available!" << std::endl;
+        return 0;
+    }
+}
+
+
 // Get scale factor from a histogram with pt on the x-axis and eta on the y-axis
 double RazorHelper::lookupPtEtaScaleFactor(TH2D *hist, double pt, double eta, double ptmin, double ptmax, bool useAbsEta) {
     if (hist) {
       // constrain to histogram bounds
-      if( ptmax > hist->GetXaxis()->GetXmax() * 0.999 ) {
-	ptmax = hist->GetXaxis()->GetXmax() * 0.999;
-      }
+      ptmax = hist->GetXaxis()->GetXmax() * 0.999;
       double etaToUse = eta;
       if( useAbsEta ) {
-	etaToUse = fabs(eta);
-	  }
+	       etaToUse = fabs(eta);
+      }
 
       return hist->GetBinContent(
 				 hist->GetXaxis()->FindFixBin( fmax( fmin(pt,ptmax), ptmin ) ),
@@ -3093,6 +3155,10 @@ double RazorHelper::getLeptonScaleFactor(TH2D *effHist, TH2D *sfHist, TH2D *fast
     return getPassOrFailScaleFactor( eff, effSF, passes );
 }
 
+double RazorHelper::getLeptonScaleFactor(TH2D *sfHist, double pt, double eta) {
+    return lookupPtEtaScaleFactor( sfHist, pt, eta );
+}
+
 double RazorHelper::getLeptonScaleFactorError(TH2D *effHist, TH2D *sfHist, TH2D *fastsimHist,
        double pt, double eta, bool passes) {
     if( effHist == NULL ) return -999;
@@ -3104,6 +3170,25 @@ double RazorHelper::getLeptonScaleFactorError(TH2D *effHist, TH2D *sfHist, TH2D 
 
     return unc;
 }
+
+double RazorHelper::getMuonScaleFactor(float pt, float eta, bool isTrigger, bool id, bool isTight) {
+
+    if (isTrigger) return getLeptonScaleFactor( muTriggerSFHist, pt, eta );
+    else if (id && !isTight) return getLeptonScaleFactor( muLooseIdSFHist, pt, eta );
+    else if (id && isTight) return getLeptonScaleFactor( muTightIdSFHist, pt, eta );
+    else if (!id && !isTight) return getLeptonScaleFactor( muLooseIsoSFHist, pt, eta );
+    else return getLeptonScaleFactor( muTightIsoSFHist, pt, eta );
+}
+
+
+double RazorHelper::getMuonMCEfficiency(float pt, float eta, bool isTrigger, bool id, bool isTight) {
+    if (isTrigger) return getLeptonScaleFactor( muTriggerEfficiencyHist, pt, eta );
+    else if (id && !isTight) return getLeptonScaleFactor( muLooseIdEfficiencyHist, pt, eta );
+    else if (id && isTight) return getLeptonScaleFactor( muTightIdEfficiencyHist, pt, eta );
+    else if (!id && !isTight) return getLeptonScaleFactor( muLooseIsoEfficiencyHist, pt, eta );
+    else return getLeptonScaleFactor( muTightIsoEfficiencyHist, pt, eta );
+}
+
 
 double RazorHelper::getTightMuonScaleFactor(float pt, float eta, bool isTight) {
     return getLeptonScaleFactor( muTightEfficiencyHist, muTightEffSFHist, muTightEffFastsimSFHist,

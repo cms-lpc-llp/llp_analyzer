@@ -16,6 +16,7 @@ outputDir=$5
 currentDir=`pwd`
 CMSSW_BASE=$6
 homeDir=$7
+xsec=$8
 #user=${homeDir#*/data/}
 user=${homeDir#*/storage/user/}
 runDir=${currentDir}/${user}_${code_dir_suffix}/
@@ -104,12 +105,12 @@ then
 		if [ -f $CMSSW_BASE/src/llp_analyzer/NormalizeNtuple ]
         	then
         	        cp $CMSSW_BASE/src/llp_analyzer/NormalizeNtuple ./
-		        ./NormalizeNtuple ${normalize_file} 1
+		        ./NormalizeNtuple ${normalize_file} ${xsec}
 		else
 			echo "NormalizeNtuple not found"
 		fi
 		echo "Normalization done"
-		output=${output%.root*}_1pb_weighted.root
+		output=${output%.root*}_${xsec}pb_weighted.root
 	fi
 	sleep 2
         echo "I slept for 2 second"

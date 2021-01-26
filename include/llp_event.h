@@ -92,6 +92,7 @@ public :
    Float_t         elePhi[20];   //[nElectrons]
    Float_t         eleCharge[20];   //[nElectrons]
    Float_t         eleEta_SC[20];   //[nElectrons]
+   Float_t         eleE_SC[20];   //[nElectrons]
    Float_t         eleSigmaIetaIeta[20];   //[nElectrons]
    Float_t         eleFull5x5SigmaIetaIeta[20];   //[nElectrons]
    Float_t         eleR9[20];   //[nElectrons]
@@ -100,6 +101,8 @@ public :
    Float_t         ele_HoverE[20];   //[nElectrons]
    Float_t         ele_d0[20];   //[nElectrons]
    Float_t         ele_dZ[20];   //[nElectrons]
+   Bool_t          ele_passCutBasedIDLoose[20];   //[nElectrons]
+   Bool_t          ele_passCutBasedIDTight[20];   //[nElectrons]
    Float_t         ele_ip3d[20];   //[nElectrons]
    Float_t         ele_ip3dSignificance[20];   //[nElectrons]
    Float_t         ele_pileupIso[20];   //[nElectrons]
@@ -533,6 +536,14 @@ public :
    Float_t         jetHOEnergyFraction[100];   //[nJets]
    Float_t         jetHFHadronEnergyFraction[100];   //[nJets]
    Float_t         jetHFEMEnergyFraction[100];   //[nJets]
+   Float_t          jetElectronEnergyFraction[100];   //[nJets]
+  Float_t           jetPhotonEnergyFraction[100];   //[nJets]
+  Int_t           jetChargedHadronMultiplicity[100];   //[nJets]
+  Int_t           jetNeutralHadronMultiplicity[100];   //[nJets]
+  Int_t           jetPhotonMultiplicity[100];   //[nJets]
+  Int_t           jetElectronMultiplicity[100];   //[nJets]
+  Int_t           jetMuonMultiplicity[100];   //[nJets]
+
    Float_t         jetAllMuonPt[100];   //[nJets]
    Float_t         jetAllMuonEta[100];   //[nJets]
    Float_t         jetAllMuonPhi[100];   //[nJets]
@@ -668,20 +679,20 @@ public :
    vector<float>   *pdfWeights;
    vector<float>   *alphasWeights;
    Int_t           nGenParticle;
-   Int_t           gParticleMotherId[2000];   //[nGenParticle]
-   Int_t           gParticleMotherIndex[2000];   //[nGenParticle]
-   Int_t           gParticleId[2000];   //[nGenParticle]
-   Int_t           gParticleStatus[2000];   //[nGenParticle]
-   Float_t         gParticleE[2000];   //[nGenParticle]
-   Float_t         gParticlePt[2000];   //[nGenParticle]
-   Float_t         gParticleEta[2000];   //[nGenParticle]
-   Float_t         gParticlePhi[2000];   //[nGenParticle]
-   Float_t         gParticleProdVertexX[2000];   //[nGenParticle]
-   Float_t         gParticleProdVertexY[2000];   //[nGenParticle]
-   Float_t         gParticleProdVertexZ[2000];   //[nGenParticle]
-   Float_t         gParticleDecayVertexX[2000];   //[nGenParticle]
-   Float_t         gParticleDecayVertexY[2000];   //[nGenParticle]
-   Float_t         gParticleDecayVertexZ[2000];   //[nGenParticle]
+   Int_t           gParticleMotherId[5000];   //[nGenParticle]
+   Int_t           gParticleMotherIndex[5000];   //[nGenParticle]
+   Int_t           gParticleId[5000];   //[nGenParticle]
+   Int_t           gParticleStatus[5000];   //[nGenParticle]
+   Float_t         gParticleE[5000];   //[nGenParticle]
+   Float_t         gParticlePt[5000];   //[nGenParticle]
+   Float_t         gParticleEta[5000];   //[nGenParticle]
+   Float_t         gParticlePhi[5000];   //[nGenParticle]
+   Float_t         gParticleProdVertexX[5000];   //[nGenParticle]
+   Float_t         gParticleProdVertexY[5000];   //[nGenParticle]
+   Float_t         gParticleProdVertexZ[5000];   //[nGenParticle]
+   Float_t         gParticleDecayVertexX[5000];   //[nGenParticle]
+   Float_t         gParticleDecayVertexY[5000];   //[nGenParticle]
+   Float_t         gParticleDecayVertexZ[5000];   //[nGenParticle]
    Float_t         gLLP_decay_vertex_x[2];
    Float_t         gLLP_decay_vertex_y[2];
    Float_t         gLLP_decay_vertex_z[2];
@@ -778,6 +789,7 @@ public :
    TBranch        *b_elePhi;   //!
    TBranch        *b_eleCharge;   //!
    TBranch        *b_eleEta_SC;   //!
+   TBranch        *b_eleE_SC;   //!
    TBranch        *b_eleSigmaIetaIeta;   //!
    TBranch        *b_eleFull5x5SigmaIetaIeta;   //!
    TBranch        *b_eleR9;   //!
@@ -786,6 +798,9 @@ public :
    TBranch        *b_ele_HoverE;   //!
    TBranch        *b_ele_d0;   //!
    TBranch        *b_ele_dZ;   //!
+   TBranch        *b_ele_passCutBasedIDTight;   //!
+   TBranch        *b_ele_passCutBasedIDLoose;   //!
+
    TBranch        *b_ele_ip3d;   //!
    TBranch        *b_ele_ip3dSignificance;   //!
    TBranch        *b_ele_pileupIso;   //!
@@ -1219,6 +1234,14 @@ public :
    TBranch        *b_jetHOEnergyFraction;   //!
    TBranch        *b_jetHFHadronEnergyFraction;   //!
    TBranch        *b_jetHFEMEnergyFraction;   //!
+
+   TBranch        *b_jetElectronEnergyFraction;   //[nJets]
+  TBranch        *b_jetPhotonEnergyFraction;   //[nJets]
+  TBranch        *b_jetChargedHadronMultiplicity;   //[nJets]
+  TBranch        *b_jetNeutralHadronMultiplicity;   //[nJets]
+  TBranch        *b_jetPhotonMultiplicity;   //[nJets]
+  TBranch        *b_jetElectronMultiplicity;   //[nJets]
+  TBranch        *b_jetMuonMultiplicity;   //[nJets]
    TBranch        *b_jetAllMuonPt;   //!
    TBranch        *b_jetAllMuonEta;   //!
    TBranch        *b_jetAllMuonPhi;   //!
@@ -1539,6 +1562,7 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("elePhi", elePhi, &b_elePhi);
    fChain->SetBranchAddress("eleCharge", eleCharge, &b_eleCharge);
    fChain->SetBranchAddress("eleEta_SC", eleEta_SC, &b_eleEta_SC);
+   fChain->SetBranchAddress("eleE_SC", eleE_SC, &b_eleE_SC);
    fChain->SetBranchAddress("eleSigmaIetaIeta", eleSigmaIetaIeta, &b_eleSigmaIetaIeta);
    fChain->SetBranchAddress("eleFull5x5SigmaIetaIeta", eleFull5x5SigmaIetaIeta, &b_eleFull5x5SigmaIetaIeta);
    fChain->SetBranchAddress("eleR9", eleR9, &b_eleR9);
@@ -1547,6 +1571,8 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("ele_HoverE", ele_HoverE, &b_ele_HoverE);
    fChain->SetBranchAddress("ele_d0", ele_d0, &b_ele_d0);
    fChain->SetBranchAddress("ele_dZ", ele_dZ, &b_ele_dZ);
+   fChain->SetBranchAddress("ele_passCutBasedIDLoose", ele_passCutBasedIDLoose, &b_ele_passCutBasedIDLoose);
+   fChain->SetBranchAddress("ele_passCutBasedIDTight", ele_passCutBasedIDTight, &b_ele_passCutBasedIDTight);
    fChain->SetBranchAddress("ele_ip3d", ele_ip3d, &b_ele_ip3d);
    fChain->SetBranchAddress("ele_ip3dSignificance", ele_ip3dSignificance, &b_ele_ip3dSignificance);
    fChain->SetBranchAddress("ele_pileupIso", ele_pileupIso, &b_ele_pileupIso);
@@ -1980,6 +2006,14 @@ void llp_event::Init(TTree *tree)
    fChain->SetBranchAddress("jetHOEnergyFraction", jetHOEnergyFraction, &b_jetHOEnergyFraction);
    fChain->SetBranchAddress("jetHFHadronEnergyFraction", jetHFHadronEnergyFraction, &b_jetHFHadronEnergyFraction);
    fChain->SetBranchAddress("jetHFEMEnergyFraction", jetHFEMEnergyFraction, &b_jetHFEMEnergyFraction);
+
+   fChain->SetBranchAddress("jetElectronEnergyFraction", jetElectronEnergyFraction, &b_jetElectronEnergyFraction);
+   fChain->SetBranchAddress("jetPhotonEnergyFraction", jetPhotonEnergyFraction, &b_jetPhotonEnergyFraction);
+   fChain->SetBranchAddress("jetChargedHadronMultiplicity", jetChargedHadronMultiplicity, &b_jetChargedHadronMultiplicity);
+   fChain->SetBranchAddress("jetNeutralHadronMultiplicity", jetNeutralHadronMultiplicity, &b_jetNeutralHadronMultiplicity);
+   fChain->SetBranchAddress("jetPhotonMultiplicity", jetPhotonMultiplicity, &b_jetPhotonMultiplicity);
+   fChain->SetBranchAddress("jetMuonMultiplicity", jetMuonMultiplicity, &b_jetMuonMultiplicity);
+
    fChain->SetBranchAddress("jetAllMuonPt", jetAllMuonPt, &b_jetAllMuonPt);
    fChain->SetBranchAddress("jetAllMuonEta", jetAllMuonEta, &b_jetAllMuonEta);
    fChain->SetBranchAddress("jetAllMuonPhi", jetAllMuonPhi, &b_jetAllMuonPhi);

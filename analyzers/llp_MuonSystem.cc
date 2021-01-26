@@ -322,7 +322,7 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     else
     {
       // cout<<*lheComments<<endl;
-      
+
       MuonSystem->weight = genWeight;
       NEvents->Fill(1, genWeight);
       // NEvents_genweight->Fill(1);
@@ -732,11 +732,11 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
       MuonSystem->jetPassId[MuonSystem->nJets] = tmp.passId;
       // MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalNRechits;
       // MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalRechitE;
-      MuonSystem->jetChargedEMEnergyFraction[MuonSystem->nJets] = tmp.jetChargedEMEnergyFraction;
-      MuonSystem->jetNeutralEMEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralEMEnergyFraction;
-      MuonSystem->jetChargedHadronEnergyFraction[MuonSystem->nJets] = tmp.jetChargedHadronEnergyFraction;
-      MuonSystem->jetNeutralHadronEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralHadronEnergyFraction;
-      MuonSystem->jetPassMuFrac[MuonSystem->nJets] = tmp.jetPassMuFrac;
+      // MuonSystem->jetChargedEMEnergyFraction[MuonSystem->nJets] = tmp.jetChargedEMEnergyFraction;
+      // MuonSystem->jetNeutralEMEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralEMEnergyFraction;
+      // MuonSystem->jetChargedHadronEnergyFraction[MuonSystem->nJets] = tmp.jetChargedHadronEnergyFraction;
+      // MuonSystem->jetNeutralHadronEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralHadronEnergyFraction;
+      // MuonSystem->jetPassMuFrac[MuonSystem->nJets] = tmp.jetPassMuFrac;
       float min_deltaR = 15.;
       int index = 999;
       // cout<<"nGenJets"<<nGenJets<<endl;

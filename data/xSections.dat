@@ -1,20 +1,20 @@
 ######################################
 ## Cross section in pb for datasets
 ##
-
+HNL_testpoint1									1
 # 13 TeV signals
 #https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBSMAt13TeV
 wH_withISR_mh125								1.475E+00
-wH_withISR_mh300								6.724E-02 
-wH_withISR_mh500								8.621E-03 
-wH_withISR_mh1000								 3.585E-04 
-wH_withISR_mh2000								 5.706E-06 
+wH_withISR_mh300								6.724E-02
+wH_withISR_mh500								8.621E-03
+wH_withISR_mh1000								 3.585E-04
+wH_withISR_mh2000								 5.706E-06
 
-zH_withISR_mh125								 9.095E-01 
-zH_withISR_mh300								 4.132E-02 
-zH_withISR_mh500								 5.256E-03 
-zH_withISR_mh1000								 2.977E-04 
-zH_withISR_mh2000								 7.639E-06 
+zH_withISR_mh125								 9.095E-01
+zH_withISR_mh300								 4.132E-02
+zH_withISR_mh500								 5.256E-03
+zH_withISR_mh1000								 2.977E-04
+zH_withISR_mh2000								 7.639E-06
 
 #privately produced ggH
 #https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt13TeV#ZHllH_H_l_e_or_Process
@@ -60,6 +60,227 @@ n3n2-n1-hbb-hbb_mh127_pl1000_ev100000				10.31*0.5824*0.5824
 n3n2-n1-hbb-hbb_mh200_pl1000_ev100000				1e-03*1335.62*0.5824*0.5824
 n3n2-n1-hbb-hbb_mh400_pl1000_ev100000				1e-03*88.7372*0.5824*0.5824
 
+# private production
+ggZHToSS_SToBB_ZToLL_ms40_pl1000			0.1227*0.100974
+ggZHToSS_SToBB_ZToNuNu_ms40_pl1000			0.1227*0.2
+ggZHToSS_SToBB_ZToQQ_ms40_pl1000			0.1227*0.69911
+
+ggZHToSS_SToBB_ZToQQ_ms15_pl100			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms15_pl1000			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms15_pl10000			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms15_pl100000			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms40_pl100			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms40_pl1000			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms40_pl10000			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms40_pl100000			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms55_pl100			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms55_pl1000			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms55_pl10000			0.1227*0.69911
+ggZHToSS_SToBB_ZToQQ_ms55_pl100000			0.1227*0.69911
+ggZHToSS_SToTauTau_ZToQQ_ms7_pl100			0.1227*0.69911
+ggZHToSS_SToTauTau_ZToQQ_ms7_pl1000			0.1227*0.69911
+ggZHToSS_SToTauTau_ZToQQ_ms7_pl10000			0.1227*0.69911
+ggZHToSS_SToTauTau_ZToQQ_ms7_pl100000			0.1227*0.69911
+
+
+
+ttH_HToSS_SToBB_ms15_pl100				5.071E-01
+ttH_HToSS_SToBB_ms15_pl1000				5.071E-01
+ttH_HToSS_SToBB_ms15_pl10000				5.071E-01
+ttH_HToSS_SToBB_ms15_pl100000				5.071E-01
+ttH_HToSS_SToBB_ms40_pl100				5.071E-01
+ttH_HToSS_SToBB_ms40_pl1000				5.071E-01
+ttH_HToSS_SToBB_ms40_pl10000				5.071E-01
+ttH_HToSS_SToBB_ms40_pl100000				5.071E-01
+ttH_HToSS_SToBB_ms55_pl100				5.071E-01
+ttH_HToSS_SToBB_ms55_pl1000				5.071E-01
+ttH_HToSS_SToBB_ms55_pl10000				5.071E-01
+ttH_HToSS_SToBB_ms55_pl100000				5.071E-01
+ttH_HToSS_STodd_ms15_pl100				5.071E-01
+ttH_HToSS_STodd_ms15_pl1000				5.071E-01
+ttH_HToSS_STodd_ms15_pl10000				5.071E-01
+ttH_HToSS_STodd_ms15_pl100000				5.071E-01
+ttH_HToSS_STodd_ms40_pl100				5.071E-01
+ttH_HToSS_STodd_ms40_pl1000				5.071E-01
+ttH_HToSS_STodd_ms40_pl10000				5.071E-01
+ttH_HToSS_STodd_ms40_pl100000				5.071E-01
+ttH_HToSS_STodd_ms55_pl100				5.071E-01
+ttH_HToSS_STodd_ms55_pl1000				5.071E-01
+ttH_HToSS_STodd_ms55_pl10000				5.071E-01
+ttH_HToSS_STodd_ms55_pl100000				5.071E-01
+ttH_HToSS_STodd_ms7_pl100				5.071E-01
+ttH_HToSS_STodd_ms7_pl1000				5.071E-01
+ttH_HToSS_STodd_ms7_pl10000				5.071E-01
+ttH_HToSS_STodd_ms7_pl100000				5.071E-01
+ttH_HToSS_SToTauTau_ms15_pl100				5.071E-01
+ttH_HToSS_SToTauTau_ms15_pl1000				5.071E-01
+ttH_HToSS_SToTauTau_ms15_pl10000				5.071E-01
+ttH_HToSS_SToTauTau_ms15_pl100000				5.071E-01
+ttH_HToSS_SToTauTau_ms40_pl100				5.071E-01
+ttH_HToSS_SToTauTau_ms40_pl1000				5.071E-01
+ttH_HToSS_SToTauTau_ms40_pl10000				5.071E-01
+ttH_HToSS_SToTauTau_ms40_pl100000				5.071E-01
+ttH_HToSS_SToTauTau_ms55_pl100				5.071E-01
+ttH_HToSS_SToTauTau_ms55_pl1000				5.071E-01
+ttH_HToSS_SToTauTau_ms55_pl10000				5.071E-01
+ttH_HToSS_SToTauTau_ms55_pl100000				5.071E-01
+ttH_HToSS_SToTauTau_ms7_pl100				5.071E-01
+ttH_HToSS_SToTauTau_ms7_pl1000				5.071E-01
+ttH_HToSS_SToTauTau_ms7_pl10000				5.071E-01
+ttH_HToSS_SToTauTau_ms7_pl100000				5.071E-01
+
+WminusHToSS_SToBB_ms15_pl100				5.328e-01
+WminusHToSS_SToBB_ms15_pl1000				5.328e-01
+WminusHToSS_SToBB_ms15_pl10000				5.328e-01
+WminusHToSS_SToBB_ms15_pl100000				5.328e-01
+WminusHToSS_SToBB_ms40_pl100				5.328e-01
+WminusHToSS_SToBB_ms40_pl1000				5.328e-01
+WminusHToSS_SToBB_ms40_pl10000				5.328e-01
+WminusHToSS_SToBB_ms40_pl100000				5.328e-01
+WminusHToSS_SToBB_ms55_pl100				5.328e-01
+WminusHToSS_SToBB_ms55_pl1000				5.328e-01
+WminusHToSS_SToBB_ms55_pl10000				5.328e-01
+WminusHToSS_SToBB_ms55_pl100000				5.328e-01
+WminusHToSS_STodd_ms15_pl100			5.328e-01
+WminusHToSS_STodd_ms15_pl1000			5.328e-01
+WminusHToSS_STodd_ms15_pl10000			5.328e-01
+WminusHToSS_STodd_ms15_pl100000			5.328e-01
+WminusHToSS_STodd_ms40_pl100			5.328e-01
+WminusHToSS_STodd_ms40_pl1000			5.328e-01
+WminusHToSS_STodd_ms40_pl10000			5.328e-01
+WminusHToSS_STodd_ms40_pl100000			5.328e-01
+WminusHToSS_STodd_ms55_pl100			5.328e-01
+WminusHToSS_STodd_ms55_pl1000			5.328e-01
+WminusHToSS_STodd_ms55_pl10000			5.328e-01
+WminusHToSS_STodd_ms55_pl100000			5.328e-01
+WminusHToSS_STodd_ms7_pl100			5.328e-01
+WminusHToSS_STodd_ms7_pl1000			5.328e-01
+WminusHToSS_STodd_ms7_pl10000			5.328e-01
+WminusHToSS_STodd_ms7_pl100000			5.328e-01
+WminusHToSS_SToTauTau_ms15_pl100			5.328e-01
+WminusHToSS_SToTauTau_ms15_pl1000			5.328e-01
+WminusHToSS_SToTauTau_ms15_pl10000			5.328e-01
+WminusHToSS_SToTauTau_ms15_pl100000			5.328e-01
+WminusHToSS_SToTauTau_ms40_pl100			5.328e-01
+WminusHToSS_SToTauTau_ms40_pl1000			5.328e-01
+WminusHToSS_SToTauTau_ms40_pl10000			5.328e-01
+WminusHToSS_SToTauTau_ms40_pl100000			5.328e-01
+WminusHToSS_SToTauTau_ms55_pl100			5.328e-01
+WminusHToSS_SToTauTau_ms55_pl1000			5.328e-01
+WminusHToSS_SToTauTau_ms55_pl10000			5.328e-01
+WminusHToSS_SToTauTau_ms55_pl100000			5.328e-01
+WminusHToSS_SToTauTau_ms7_pl100			5.328e-01
+WminusHToSS_SToTauTau_ms7_pl1000			5.328e-01
+WminusHToSS_SToTauTau_ms7_pl10000			5.328e-01
+WminusHToSS_SToTauTau_ms7_pl100000			5.328e-01
+
+WplusHToSS_SToBB_ms15_pl100				8.400e-01
+WplusHToSS_SToBB_ms15_pl1000				8.400e-01
+WplusHToSS_SToBB_ms15_pl10000				8.400e-01
+WplusHToSS_SToBB_ms15_pl100000				8.400e-01
+WplusHToSS_SToBB_ms40_pl100				8.400e-01
+WplusHToSS_SToBB_ms40_pl1000				8.400e-01
+WplusHToSS_SToBB_ms40_pl10000				8.400e-01
+WplusHToSS_SToBB_ms40_pl100000				8.400e-01
+WplusHToSS_SToBB_ms55_pl100				8.400e-01
+WplusHToSS_SToBB_ms55_pl1000				8.400e-01
+WplusHToSS_SToBB_ms55_pl10000				8.400e-01
+WplusHToSS_SToBB_ms55_pl100000				8.400e-01
+WplusHToSS_STodd_ms15_pl100				8.400e-01
+WplusHToSS_STodd_ms15_pl1000				8.400e-01
+WplusHToSS_STodd_ms15_pl10000				8.400e-01
+WplusHToSS_STodd_ms15_pl100000				8.400e-01
+WplusHToSS_STodd_ms40_pl100				8.400e-01
+WplusHToSS_STodd_ms40_pl1000				8.400e-01
+WplusHToSS_STodd_ms40_pl10000				8.400e-01
+WplusHToSS_STodd_ms40_pl100000				8.400e-01
+WplusHToSS_STodd_ms55_pl100				8.400e-01
+WplusHToSS_STodd_ms55_pl1000				8.400e-01
+WplusHToSS_STodd_ms55_pl10000				8.400e-01
+WplusHToSS_STodd_ms55_pl100000				8.400e-01
+WplusHToSS_STodd_ms7_pl100				8.400e-01
+WplusHToSS_STodd_ms7_pl1000				8.400e-01
+WplusHToSS_STodd_ms7_pl10000				8.400e-01
+WplusHToSS_STodd_ms7_pl100000				8.400e-01
+WplusHToSS_SToTauTau_ms15_pl100				8.400e-01
+WplusHToSS_SToTauTau_ms15_pl1000				8.400e-01
+WplusHToSS_SToTauTau_ms15_pl10000				8.400e-01
+WplusHToSS_SToTauTau_ms15_pl100000				8.400e-01
+WplusHToSS_SToTauTau_ms40_pl100				8.400e-01
+WplusHToSS_SToTauTau_ms40_pl1000				8.400e-01
+WplusHToSS_SToTauTau_ms40_pl10000				8.400e-01
+WplusHToSS_SToTauTau_ms40_pl100000				8.400e-01
+WplusHToSS_SToTauTau_ms55_pl100				8.400e-01
+WplusHToSS_SToTauTau_ms55_pl1000				8.400e-01
+WplusHToSS_SToTauTau_ms55_pl10000				8.400e-01
+WplusHToSS_SToTauTau_ms55_pl100000				8.400e-01
+WplusHToSS_SToTauTau_ms7_pl100				8.400e-01
+WplusHToSS_SToTauTau_ms7_pl1000				8.400e-01
+WplusHToSS_SToTauTau_ms7_pl10000				8.400e-01
+WplusHToSS_SToTauTau_ms7_pl100000				8.400e-01
+
+
+ZHToSS_SToBB_ms15_pl100					0.7612
+ZHToSS_SToBB_ms15_pl1000				0.7612
+ZHToSS_SToBB_ms15_pl10000				0.7612
+ZHToSS_SToBB_ms15_pl100000				0.7612
+ZHToSS_SToBB_ms40_pl100					0.7612
+ZHToSS_SToBB_ms40_pl1000				0.7612
+ZHToSS_SToBB_ms40_pl10000				0.7612
+ZHToSS_SToBB_ms40_pl100000				0.7612
+ZHToSS_SToBB_ms55_pl100					0.7612
+ZHToSS_SToBB_ms55_pl1000				0.7612
+ZHToSS_SToBB_ms55_pl10000				0.7612
+ZHToSS_SToBB_ms55_pl100000				0.7612
+ZHToSS_STodd_ms15_pl100				0.7612
+ZHToSS_STodd_ms15_pl1000				0.7612
+ZHToSS_STodd_ms15_pl10000				0.7612
+ZHToSS_STodd_ms15_pl100000				0.7612
+ZHToSS_STodd_ms40_pl100				0.7612
+ZHToSS_STodd_ms40_pl1000				0.7612
+ZHToSS_STodd_ms40_pl10000				0.7612
+ZHToSS_STodd_ms40_pl100000				0.7612
+ZHToSS_STodd_ms55_pl100				0.7612
+ZHToSS_STodd_ms55_pl1000				0.7612
+ZHToSS_STodd_ms55_pl10000				0.7612
+ZHToSS_STodd_ms55_pl100000				0.7612
+ZHToSS_STodd_ms7_pl100				0.7612
+ZHToSS_STodd_ms7_pl1000				0.7612
+ZHToSS_STodd_ms7_pl10000				0.7612
+ZHToSS_STodd_ms7_pl100000				0.7612
+ZHToSS_SToTauTau_ms15_pl100				0.7612
+ZHToSS_SToTauTau_ms15_pl1000				0.7612
+ZHToSS_SToTauTau_ms15_pl10000				0.7612
+ZHToSS_SToTauTau_ms15_pl100000				0.7612
+ZHToSS_SToTauTau_ms40_pl100				0.7612
+ZHToSS_SToTauTau_ms40_pl1000				0.7612
+ZHToSS_SToTauTau_ms40_pl10000				0.7612
+ZHToSS_SToTauTau_ms40_pl100000				0.7612
+ZHToSS_SToTauTau_ms55_pl100				0.7612
+ZHToSS_SToTauTau_ms55_pl1000				0.7612
+ZHToSS_SToTauTau_ms55_pl10000				0.7612
+ZHToSS_SToTauTau_ms55_pl100000				0.7612
+ZHToSS_SToTauTau_ms7_pl100				0.7612
+ZHToSS_SToTauTau_ms7_pl1000				0.7612
+ZHToSS_SToTauTau_ms7_pl10000				0.7612
+ZHToSS_SToTauTau_ms7_pl100000				0.7612
+
+VBFHToSS_STodd_ms40_pl100				3.78E+00
+VBFHToSS_STodd_ms40_pl1000				3.78E+00
+VBFHToSS_STodd_ms40_pl10000				3.78E+00
+VBFHToSS_STodd_ms40_pl100000				3.78E+00
+VBFHToSS_STodd_ms15_pl100				3.78E+00
+VBFHToSS_STodd_ms15_pl1000				3.78E+00
+VBFHToSS_STodd_ms15_pl10000				3.78E+00
+VBFHToSS_STodd_ms15_pl100000				3.78E+00
+VBFHToSS_STodd_ms55_pl100				3.78E+00
+VBFHToSS_STodd_ms55_pl1000				3.78E+00
+VBFHToSS_STodd_ms55_pl10000				3.78E+00
+VBFHToSS_STodd_ms55_pl100000				3.78E+00
+VBFHToSS_STodd_ms7_pl100				3.78E+00
+VBFHToSS_STodd_ms7_pl1000				3.78E+00
+VBFHToSS_STodd_ms7_pl10000				3.78E+00
+VBFHToSS_STodd_ms7_pl100000				3.78E+00
 # ggH centrally produced
 ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8 		4.858E+01
 ggH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	4.858E+01
@@ -76,7 +297,7 @@ VBFH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	3.78E+00
 VBFH_HToSSTo4Tau_MH-125_TuneCP5_13TeV-powheg-pythia8		3.78E+00
 VBFH_HToSSTo4Tau_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	3.78E+00
 #13 TeV signals from displaced analysis
-WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324  
+WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
 WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8 	5.328E-01*0.324
 WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
 WminusH_HToSSTobbbb_WToLNu_MH-125_MS-15_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8	5.328E-01*0.324
@@ -122,7 +343,7 @@ WplusH_HToSSTobbbb_WToLNu_MH-125_MS-55_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8
 # https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt13TeV#ppWH_Total_Cross_Section_with_ap
 # Z->ll * 3
 ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-0_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
-ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8		0.08946 
+ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-0p05_TuneCUETP8M1_13TeV-powheg-pythia8		0.08946
 ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-10000_TuneCUETP8M1_13TeV-powheg-pythia8 	0.08946
 ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
 ZH_HToSSTobbbb_ZToLL_MH-125_MS-15_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
@@ -166,6 +387,7 @@ ZToMuMu_NNPDF31_13TeV-powheg_M_6000_Inf							1
 
 
 QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8					1005
+QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8                           5962
 
 #13 TeV Spring 15 MC
 QCD_Pt-15to7000_TuneCUETP8M1_Flat_13TeV_pythia8                            2022100000.0
@@ -203,8 +425,8 @@ QCD_Pt_5to10_TuneCUETP8M1_13TeV_pythia8                                   610183
 QCD_Pt_10to15_TuneCUETP8M1_13TeV_pythia8                                   5887580000
 QCD_Pt_15to30_TuneCUETP8M1_13TeV_pythia8                                   1837410000
 QCD_Pt_30to50_TuneCUETP8M1_13TeV_pythia8                                    140932000
-QCD_Pt_50to80_TuneCUETP8M1_13TeV_pythia8                                     19204300    
-QCD_Pt_80to120_TuneCUETP8M1_13TeV_pythia8                                     2762530      
+QCD_Pt_50to80_TuneCUETP8M1_13TeV_pythia8                                     19204300
+QCD_Pt_80to120_TuneCUETP8M1_13TeV_pythia8                                     2762530
 QCD_Pt_120to170_TuneCUETP8M1_13TeV_pythia8                                     471100
 QCD_Pt_170to300_TuneCUETP8M1_13TeV_pythia8                                     117276
 QCD_Pt_300to470_TuneCUETP8M1_13TeV_pythia8                                       7823
@@ -226,6 +448,14 @@ GJets_DR-0p4_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                 
 GJets_DR-0p4_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                  1079
 GJets_DR-0p4_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                   125.9
 GJets_DR-0p4_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                    43.36
+WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8                    1319*1.21
+WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8			1395
+WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8			409.3
+WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8			57.91
+WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8			12.93
+WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8			5.935
+WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8			1.08
+WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8			0.008053
 WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8					56000
 WJetsToLNu_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8                              61526.7
 WJetsToLNu_0J_TuneCP5_13TeV-amcatnloFXFX-pythia8				  5547
@@ -266,8 +496,8 @@ ZJetsToNuNu_HT-100To200_13TeV-madgraph                                          
 ZJetsToNuNu_HT-200To400_13TeV-madgraph                                             77.67*1.23
 ZJetsToNuNu_HT-400To600_13TeV-madgraph                                             10.73*1.23
 ZJetsToNuNu_HT-600ToInf_13TeV-madgraph                                              4.116*1.23
-ZJetsToNuNu_HT-600To800_13TeV-madgraph                                              2.559*1.23    
-ZJetsToNuNu_HT-800To1200_13TeV-madgraph                                             1.1796*1.23 
+ZJetsToNuNu_HT-600To800_13TeV-madgraph                                              2.559*1.23
+ZJetsToNuNu_HT-800To1200_13TeV-madgraph                                             1.1796*1.23
 ZJetsToNuNu_HT-1200To2500_13TeV-madgraph                                            0.28833*1.23
 ZJetsToNuNu_HT-2500ToInf_13TeV-madgraph                                             0.006945*1.23
 ZJetsToNuNu_Zpt-200toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8			     4.28
@@ -301,7 +531,7 @@ TTJets_SingleLeptFromT_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8                
 TTJets_SingleLeptFromTbar_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8               146.34
 TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8                            70.14
 TTJets_SingleLeptFromTbar_genMET-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8	   5.936
-TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8                            87.31 
+TTTo2L2Nu_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8                            87.31
 TTToSemilepton_TuneCUETP8M2_ttHtranche3_13TeV-powheg-pythia8                      320.1
 ST_s-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1                    3.36
 ST_t-channel_4f_leptonDecays_13TeV-amcatnlo-pythia8_TuneCUETP8M1                   70.69
@@ -400,13 +630,13 @@ TTbarDMJets_EFT_M-1_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                      
 TTbarDMJets_EFT_M-200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                        3.827e-06
 
 DMS_NNPDF30_Pseudoscalar_Mphi-500_Mchi-10_gSM-1p0_gDM-1p0_13TeV-powheg              3.17
-DMS_NNPDF30_Scalar_Mphi-500_Mchi-10_gSM-1p0_gDM-1p0_13TeV-powheg                    2.096 
-DMV_NNPDF30_Axial_Mphi-50_Mchi-10_gSM-1p0_gDM-1p0_13TeV-powheg                      93770 
-DMV_NNPDF30_Vector_Mphi-100_Mchi-10_gSM-0p25_gDM-1p0_13TeV-powheg                   13770            
+DMS_NNPDF30_Scalar_Mphi-500_Mchi-10_gSM-1p0_gDM-1p0_13TeV-powheg                    2.096
+DMV_NNPDF30_Axial_Mphi-50_Mchi-10_gSM-1p0_gDM-1p0_13TeV-powheg                      93770
+DMV_NNPDF30_Vector_Mphi-100_Mchi-10_gSM-0p25_gDM-1p0_13TeV-powheg                   13770
 
-#Higgs production -- cross sections assuming a higgs mass of 125.0 GeV, 
+#Higgs production -- cross sections assuming a higgs mass of 125.0 GeV,
 #from https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt1314TeV
-#Higgs branching fraction to gamma gamma taken from 
+#Higgs branching fraction to gamma gamma taken from
 #https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR3
 
 GluGluToHToGG_M-125_13TeV-powheg_pythia8                                            48.58*2.27e-03
@@ -456,96 +686,96 @@ SMS-T2bH_BR-SbottomToTChi-0p5_mSbottom-400              1.83537*2.0*2.270e-3
 SMS-T2bH_BR-SbottomToTChi-0p5_mSbottom-450              0.948333*2.0*2.270e-3
 SMS-T2bH_BR-SbottomToTChi-0p5_mSbottom-500              0.51848*2.0*2.270e-3
 
-GluGluHToGG_M125_13TeV_amcatnloFXFX_pythia8             48.58*2.27e-03 
-VBFHToGG_M125_13TeV_amcatnlo_pythia8                    3.782*2.27e-03 
-VHToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8          2.2569*2.27e-03 
-ttHJetToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8      0.5071*2.27e-03 
+GluGluHToGG_M125_13TeV_amcatnloFXFX_pythia8             48.58*2.27e-03
+VBFHToGG_M125_13TeV_amcatnlo_pythia8                    3.782*2.27e-03
+VHToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8          2.2569*2.27e-03
+ttHJetToGG_M125_13TeV_amcatnloFXFX_madspin_pythia8      0.5071*2.27e-03
 bbHToGG_M-125_4FS_yb2_13TeV_amcatnlo                    0.4880*2.27e-03*(0.3909/(0.3909-0.03293))
 bbHToGG_M-125_4FS_ybyt_13TeV_amcatnlo                   0.4880*2.27e-03*(-0.03293/(0.3909-0.03293))
 DiPhotonJetsBox_M40_80-Sherpa                           299.3
 DiPhotonJets_MGG-80toInf_13TeV_amcatnloFXFX_pythia8     135.1
-ttHToGG_M125_13TeV_powheg_pythia8                       0.5071*2.27e-03 
-ZH_HToGG_ZToAll_M125_13TeV_powheg_pythia8               0.8839*2.27e-03 
-WplusH_HToGG_WToAll_M125_13TeV_powheg_pythia8 		0.8400*2.27e-03 
+ttHToGG_M125_13TeV_powheg_pythia8                       0.5071*2.27e-03
+ZH_HToGG_ZToAll_M125_13TeV_powheg_pythia8               0.8839*2.27e-03
+WplusH_HToGG_WToAll_M125_13TeV_powheg_pythia8 		0.8400*2.27e-03
 WminusH_HToGG_WToAll_M125_13TeV_powheg_pythia8          0.5328*2.27e-03
 THQ_ctcvcp_HToGG_13TeV-madgraph-pythia8_TuneCUETP8M1    0.07425*2.27e-03
 THW_ctcvcp_HToGG_13TeV-madgraph-pythia8_TuneCUETP8M1    0.01517*2.27e-03
 
-					
+
 
 #FastSim SMS
-SMS-TChiHH_127_HToGG                                    7.6022*2*2.27e-03	 
-SMS-TChiHH_150_HToGG                                    3.83231*2*2.27e-03	 
-SMS-TChiHH_175_HToGG                                    2.26794*2*2.27e-03	 
-SMS-TChiHH_200_HToGG                                    1.33561*2*2.27e-03	 
-SMS-TChiHH_225_HToGG                                    0.860597*2*2.27e-03	 
-SMS-TChiHH_250_HToGG                                    0.577313*2*2.27e-03	 
-SMS-TChiHH_275_HToGG                                    0.400107*2*2.27e-03	 
-SMS-TChiHH_300_HToGG                                    0.284857*2*2.27e-03	 
-SMS-TChiHH_325_HToGG                                    0.20736*2*2.27e-03	 
-SMS-TChiHH_350_HToGG                                    0.153835*2*2.27e-03	 
-SMS-TChiHH_375_HToGG                                    0.116006*2*2.27e-03	 
-SMS-TChiHH_400_HToGG                                    0.0887434*2*2.27e-03	 
-SMS-TChiHH_425_HToGG                                    0.0686963*2*2.27e-03	 
-SMS-TChiHH_450_HToGG                                    0.0537508*2*2.27e-03	 
-SMS-TChiHH_475_HToGG                                    0.0424699*2*2.27e-03	 
-SMS-TChiHH_500_HToGG                                    0.0338454*2*2.27e-03	 
-SMS-TChiHH_525_HToGG                                    0.0271867*2*2.27e-03	 
-SMS-TChiHH_550_HToGG                                    0.0219917*2*2.27e-03	 
-SMS-TChiHH_575_HToGG                                    0.0179062*2*2.27e-03	 
-SMS-TChiHH_600_HToGG                                    0.0146602*2*2.27e-03	 
-SMS-TChiHH_625_HToGG                                    0.012062*2*2.27e-03	 
-SMS-TChiHH_650_HToGG                                    0.00997229*2*2.27e-03	 
-SMS-TChiHH_675_HToGG                                    0.00828246*2*2.27e-03	 
-SMS-TChiHH_700_HToGG                                    0.00690746*2*2.27e-03	 
-SMS-TChiHH_725_HToGG                                    0.00578355*2*2.27e-03	 
-SMS-TChiHH_750_HToGG                                    0.00485987*2*2.27e-03	 
-SMS-TChiHH_775_HToGG                                    0.00409781*2*2.27e-03	 
-SMS-TChiHH_800_HToGG                                    0.00343578*2*2.27e-03	 
-SMS-TChiHH_825_HToGG                                    0.0029337*2*2.27e-03	 
-SMS-TChiHH_850_HToGG                                    0.00250407*2*2.27e-03	 
-SMS-TChiHH_875_HToGG                                    0.00213679*2*2.27e-03	 
-SMS-TChiHH_900_HToGG                                    0.00182277*2*2.27e-03	 
-SMS-TChiHH_925_HToGG                                    0.00155453*2*2.27e-03	 
-SMS-TChiHH_950_HToGG                                    0.00132537*2*2.27e-03	 
-SMS-TChiHH_975_HToGG                                    0.00112975*2*2.27e-03	 
-SMS-TChiHH_1000_HToGG                                   0.000972953*2*2.27e-03    
-SMS-TChiHZ_127_HToGG                                    7.6022*2.27e-03	 
-SMS-TChiHZ_150_HToGG                                    3.83231*2.27e-03	 
-SMS-TChiHZ_175_HToGG                                    2.26794*2.27e-03	 
-SMS-TChiHZ_200_HToGG                                    1.33561*2.27e-03	 
-SMS-TChiHZ_225_HToGG                                    0.860597*2.27e-03	 
-SMS-TChiHZ_250_HToGG                                    0.577313*2.27e-03	 
-SMS-TChiHZ_275_HToGG                                    0.400107*2.27e-03	 
-SMS-TChiHZ_300_HToGG                                    0.284857*2.27e-03	 
-SMS-TChiHZ_325_HToGG                                    0.20736*2.27e-03	 
-SMS-TChiHZ_350_HToGG                                    0.153835*2.27e-03	 
-SMS-TChiHZ_375_HToGG                                    0.116006*2.27e-03	 
-SMS-TChiHZ_400_HToGG                                    0.0887434*2.27e-03	 
-SMS-TChiHZ_425_HToGG                                    0.0686963*2.27e-03	 
-SMS-TChiHZ_450_HToGG                                    0.0537508*2.27e-03	 
-SMS-TChiHZ_475_HToGG                                    0.0424699*2.27e-03	 
-SMS-TChiHZ_500_HToGG                                    0.0338454*2.27e-03	 
-SMS-TChiHZ_525_HToGG                                    0.0271867*2.27e-03	 
-SMS-TChiHZ_550_HToGG                                    0.0219917*2.27e-03	 
-SMS-TChiHZ_575_HToGG                                    0.0179062*2.27e-03	 
-SMS-TChiHZ_600_HToGG                                    0.0146602*2.27e-03	 
-SMS-TChiHZ_625_HToGG                                    0.012062*2.27e-03	 
-SMS-TChiHZ_650_HToGG                                    0.00997229*2.27e-03	 
-SMS-TChiHZ_675_HToGG                                    0.00828246*2.27e-03	 
-SMS-TChiHZ_700_HToGG                                    0.00690746*2.27e-03	 
-SMS-TChiHZ_725_HToGG                                    0.00578355*2.27e-03	 
-SMS-TChiHZ_750_HToGG                                    0.00485987*2.27e-03	 
-SMS-TChiHZ_775_HToGG                                    0.00409781*2.27e-03	 
-SMS-TChiHZ_800_HToGG                                    0.00343578*2.27e-03	 
-SMS-TChiHZ_825_HToGG                                    0.0029337*2.27e-03	 
-SMS-TChiHZ_850_HToGG                                    0.00250407*2.27e-03	 
-SMS-TChiHZ_875_HToGG                                    0.00213679*2.27e-03	 
-SMS-TChiHZ_900_HToGG                                    0.00182277*2.27e-03	 
-SMS-TChiHZ_925_HToGG                                    0.00155453*2.27e-03	 
-SMS-TChiHZ_950_HToGG                                    0.00132537*2.27e-03	 
-SMS-TChiHZ_975_HToGG                                    0.00112975*2.27e-03	 
-SMS-TChiHZ_1000_HToGG                                   0.000972953*2.27e-03    
+SMS-TChiHH_127_HToGG                                    7.6022*2*2.27e-03
+SMS-TChiHH_150_HToGG                                    3.83231*2*2.27e-03
+SMS-TChiHH_175_HToGG                                    2.26794*2*2.27e-03
+SMS-TChiHH_200_HToGG                                    1.33561*2*2.27e-03
+SMS-TChiHH_225_HToGG                                    0.860597*2*2.27e-03
+SMS-TChiHH_250_HToGG                                    0.577313*2*2.27e-03
+SMS-TChiHH_275_HToGG                                    0.400107*2*2.27e-03
+SMS-TChiHH_300_HToGG                                    0.284857*2*2.27e-03
+SMS-TChiHH_325_HToGG                                    0.20736*2*2.27e-03
+SMS-TChiHH_350_HToGG                                    0.153835*2*2.27e-03
+SMS-TChiHH_375_HToGG                                    0.116006*2*2.27e-03
+SMS-TChiHH_400_HToGG                                    0.0887434*2*2.27e-03
+SMS-TChiHH_425_HToGG                                    0.0686963*2*2.27e-03
+SMS-TChiHH_450_HToGG                                    0.0537508*2*2.27e-03
+SMS-TChiHH_475_HToGG                                    0.0424699*2*2.27e-03
+SMS-TChiHH_500_HToGG                                    0.0338454*2*2.27e-03
+SMS-TChiHH_525_HToGG                                    0.0271867*2*2.27e-03
+SMS-TChiHH_550_HToGG                                    0.0219917*2*2.27e-03
+SMS-TChiHH_575_HToGG                                    0.0179062*2*2.27e-03
+SMS-TChiHH_600_HToGG                                    0.0146602*2*2.27e-03
+SMS-TChiHH_625_HToGG                                    0.012062*2*2.27e-03
+SMS-TChiHH_650_HToGG                                    0.00997229*2*2.27e-03
+SMS-TChiHH_675_HToGG                                    0.00828246*2*2.27e-03
+SMS-TChiHH_700_HToGG                                    0.00690746*2*2.27e-03
+SMS-TChiHH_725_HToGG                                    0.00578355*2*2.27e-03
+SMS-TChiHH_750_HToGG                                    0.00485987*2*2.27e-03
+SMS-TChiHH_775_HToGG                                    0.00409781*2*2.27e-03
+SMS-TChiHH_800_HToGG                                    0.00343578*2*2.27e-03
+SMS-TChiHH_825_HToGG                                    0.0029337*2*2.27e-03
+SMS-TChiHH_850_HToGG                                    0.00250407*2*2.27e-03
+SMS-TChiHH_875_HToGG                                    0.00213679*2*2.27e-03
+SMS-TChiHH_900_HToGG                                    0.00182277*2*2.27e-03
+SMS-TChiHH_925_HToGG                                    0.00155453*2*2.27e-03
+SMS-TChiHH_950_HToGG                                    0.00132537*2*2.27e-03
+SMS-TChiHH_975_HToGG                                    0.00112975*2*2.27e-03
+SMS-TChiHH_1000_HToGG                                   0.000972953*2*2.27e-03
+SMS-TChiHZ_127_HToGG                                    7.6022*2.27e-03
+SMS-TChiHZ_150_HToGG                                    3.83231*2.27e-03
+SMS-TChiHZ_175_HToGG                                    2.26794*2.27e-03
+SMS-TChiHZ_200_HToGG                                    1.33561*2.27e-03
+SMS-TChiHZ_225_HToGG                                    0.860597*2.27e-03
+SMS-TChiHZ_250_HToGG                                    0.577313*2.27e-03
+SMS-TChiHZ_275_HToGG                                    0.400107*2.27e-03
+SMS-TChiHZ_300_HToGG                                    0.284857*2.27e-03
+SMS-TChiHZ_325_HToGG                                    0.20736*2.27e-03
+SMS-TChiHZ_350_HToGG                                    0.153835*2.27e-03
+SMS-TChiHZ_375_HToGG                                    0.116006*2.27e-03
+SMS-TChiHZ_400_HToGG                                    0.0887434*2.27e-03
+SMS-TChiHZ_425_HToGG                                    0.0686963*2.27e-03
+SMS-TChiHZ_450_HToGG                                    0.0537508*2.27e-03
+SMS-TChiHZ_475_HToGG                                    0.0424699*2.27e-03
+SMS-TChiHZ_500_HToGG                                    0.0338454*2.27e-03
+SMS-TChiHZ_525_HToGG                                    0.0271867*2.27e-03
+SMS-TChiHZ_550_HToGG                                    0.0219917*2.27e-03
+SMS-TChiHZ_575_HToGG                                    0.0179062*2.27e-03
+SMS-TChiHZ_600_HToGG                                    0.0146602*2.27e-03
+SMS-TChiHZ_625_HToGG                                    0.012062*2.27e-03
+SMS-TChiHZ_650_HToGG                                    0.00997229*2.27e-03
+SMS-TChiHZ_675_HToGG                                    0.00828246*2.27e-03
+SMS-TChiHZ_700_HToGG                                    0.00690746*2.27e-03
+SMS-TChiHZ_725_HToGG                                    0.00578355*2.27e-03
+SMS-TChiHZ_750_HToGG                                    0.00485987*2.27e-03
+SMS-TChiHZ_775_HToGG                                    0.00409781*2.27e-03
+SMS-TChiHZ_800_HToGG                                    0.00343578*2.27e-03
+SMS-TChiHZ_825_HToGG                                    0.0029337*2.27e-03
+SMS-TChiHZ_850_HToGG                                    0.00250407*2.27e-03
+SMS-TChiHZ_875_HToGG                                    0.00213679*2.27e-03
+SMS-TChiHZ_900_HToGG                                    0.00182277*2.27e-03
+SMS-TChiHZ_925_HToGG                                    0.00155453*2.27e-03
+SMS-TChiHZ_950_HToGG                                    0.00132537*2.27e-03
+SMS-TChiHZ_975_HToGG                                    0.00112975*2.27e-03
+SMS-TChiHZ_1000_HToGG                                   0.000972953*2.27e-03
 SMS-TChiWH_127_HToGG                                    9.6465*2.27e-03
 SMS-TChiWH_150_HToGG                                    5.18086*2.27e-03
 SMS-TChiWH_175_HToGG                                    2.95328*2.27e-03
@@ -607,12 +837,12 @@ QCD_HT1500to2000_13TeV 121.5
 QCD_HT2000toInf_13TeV  25.42
 WJetsToLNu_HT_100To200_13TeV  1343
 WJetsToLNu_HT_200To400_13TeV 359.6
-WJetsToLNu_HT_400To600_13TeV 48.85  
+WJetsToLNu_HT_400To600_13TeV 48.85
 WJetsToLNu_HT_600To800_13TeV 12.05
 WJetsToLNu_HT_800To1200_13TeV 5.501
 WJetsToLNu_HT_1200To2500_13TeV 1.329
 WJetsToLNu_HT_2500ToInf_13TeV  0.03216
-  
+
 DYJetsToLL_M_50_HT_100to200_13TeV 148.0
 DYJetsToLL_M_50_HT_200to400_13TeV 40.94
 DYJetsToLL_M_50_HT_400to600_13TeV 5.497
@@ -641,19 +871,19 @@ TTJets_13TeV_amcatnloFXFX_pythia8 831.76
 TT_13TeV_powheg 831.76
 TT_13TeV_powheg_pythia8 831.76
 
-WW_13TeV_pythia8 118.7 
-WZ_13TeV 47.2 
-WZ_13TeV_pythia8 47.2 
-ZZ_13TeV 31.8 
-ZZ_13TeV_pythia8 31.8 
-WWTo1L1Nu2Q_13TeV_amcatnlo 0 
-WWTo4Q_13TeV_amcatnlo 51.723 
+WW_13TeV_pythia8 118.7
+WZ_13TeV 47.2
+WZ_13TeV_pythia8 47.2
+ZZ_13TeV 31.8
+ZZ_13TeV_pythia8 31.8
+WWTo1L1Nu2Q_13TeV_amcatnlo 0
+WWTo4Q_13TeV_amcatnlo 51.723
 WWToLNuQQ_13TeV_powheg 49.997
 WZTo1L1Nu2Q_13TeV_amcatnlo 10.71
 WZTo1L3Nu_13TeV_amcatnlo 3.03
 WZTo2L2Q_13TeV_amcatnlo 5.595
 WZTo3LNu_13TeV_amcatnlo 4.42965
-ZZTo2L2Nu_13TeV_powheg 0.564 
+ZZTo2L2Nu_13TeV_powheg 0.564
 ZZTo2L2Q_13TeV_amcatnlo 3.22
 ZZTo2Q2Nu_13TeV_amcatnlo 4.04
 ZZTo4L_13TeV_powheg 1.212

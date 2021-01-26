@@ -27,6 +27,7 @@ struct leptons
   float dZ;
   // bool passLooseId;
   // bool passMediumId;
+  bool passTightIso;
   bool passId;
   bool passVetoId;
 };
@@ -118,8 +119,8 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
   // mh can be 3-4 digits, mx is always 3 digits, ctau is one digit(number of zeros), last digit is condor option
   // mh can be 3-4 digits, mx is always 3 digits, ctau is 6 digit last digit is condor option
   bool brem = int(options/100)==1;//1 is muon brem, 2 is OOT data
-  bool signalScan = int(options/10) == 1;
-  int option = options%10;
+  bool signalScan = int(options/10)%10 == 1; //middle digit
+  int option = options%10;//last digit
 
 
 
@@ -475,7 +476,7 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       if(muonPt[i] < zh_lepton1_cut) continue;
       if(fabs(muonEta[i]) > 2.4) continue;
       float muonIso = (muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i];
-      if (muonIso>=0.15) continue;
+      //if (muonIso>=0.15) continue;
 
       //remove overlaps
       bool overlap = false;
@@ -489,7 +490,9 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       tmpMuon.lepton.SetPtEtaPhiM(muonPt[i],muonEta[i], muonPhi[i], MU_MASS);
       tmpMuon.pdgId = 13 * -1 * muonCharge[i];
       tmpMuon.dZ = muon_dZ[i];
-      tmpMuon.passId = isMuonPOGTightMuon(i);
+      tmpMuon.passId = isMuonPOGTightMuon(i, true,false);
+
+      tmpMuon.passTightIso = muonIso<0.15;
       // tmpMuon.passId = isLooseMuon(i);
       tmpMuon.passVetoId = false;
       // tmpMuon.passVetoPOGId = false;
@@ -568,7 +571,7 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       }
     }
 
-    if (foundZ && ZMass > Z_MASS-30.0 && Leptons.size() == 2 && leadingLepPt > zh_lepton0_cut)
+    if (foundZ && Leptons.size() == 2 && leadingLepPt > zh_lepton0_cut)
     {
       MuonSystem->ZMass = ZMass;
       MuonSystem->ZPt   = ZPt;
@@ -603,8 +606,16 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       MuonSystem->lepPdgId[MuonSystem->nLeptons]  = tmp.pdgId;
       MuonSystem->lepDZ[MuonSystem->nLeptons]     = tmp.dZ;
       MuonSystem->lepPassId[MuonSystem->nLeptons] = tmp.passId;
-      MuonSystem->nLeptons++;
-    }
+      MuonSystem->lepPassTightIso[MuonSystem->nLeptons] = tmp.passTightIso;
+      if(!isData)
+      {
+        for (int i=0; i < nGenParticle; i++)
+        {
+          if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && abs(gParticleMotherId[i]) == 23) MuonSystem->lepFromZ[MuonSystem->nLeptons] = true;
+        }
+      }
+    MuonSystem->nLeptons++;
+   }
 
     TLorentzVector met;
     met.SetPtEtaPhiE(metType1Pt,0,metType1Phi,metType1Pt);
@@ -613,8 +624,9 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       TLorentzVector visible = Leptons[0].lepton;
       MuonSystem->MT = GetMT(visible,met);
     }
-    if(isData && brem && (MuonSystem->category!=2))continue; //only select Z->mumu events if selecting muon brem
-
+    if(brem && (MuonSystem->category!=2))continue; //only select Z->mumu events if selecting muon brem
+    if(brem && (MuonSystem->lepPt[MuonSystem->ZleptonIndex1] < 50 || MuonSystem->lepPt[MuonSystem->ZleptonIndex2] < 50)) continue;
+    if(brem && !isData && !MuonSystem->lepFromZ[MuonSystem->ZleptonIndex1] && !MuonSystem->lepFromZ[MuonSystem->ZleptonIndex2])continue;
   //-----------------------------------------------
   //Select Jets
   //-----------------------------------------------
@@ -714,11 +726,11 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
       MuonSystem->jetPassId[MuonSystem->nJets] = tmp.passId;
       // MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalNRechits;
       // MuonSystem->ecalNRechits[MuonSystem->nJets] = tmp.ecalRechitE;
-      MuonSystem->jetChargedEMEnergyFraction[MuonSystem->nJets] = tmp.jetChargedEMEnergyFraction;
-      MuonSystem->jetNeutralEMEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralEMEnergyFraction;
-      MuonSystem->jetChargedHadronEnergyFraction[MuonSystem->nJets] = tmp.jetChargedHadronEnergyFraction;
-      MuonSystem->jetNeutralHadronEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralHadronEnergyFraction;
-      MuonSystem->jetPassMuFrac[MuonSystem->nJets] = tmp.jetPassMuFrac;
+      // MuonSystem->jetChargedEMEnergyFraction[MuonSystem->nJets] = tmp.jetChargedEMEnergyFraction;
+      // MuonSystem->jetNeutralEMEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralEMEnergyFraction;
+      // MuonSystem->jetChargedHadronEnergyFraction[MuonSystem->nJets] = tmp.jetChargedHadronEnergyFraction;
+      // MuonSystem->jetNeutralHadronEnergyFraction[MuonSystem->nJets] = tmp.jetNeutralHadronEnergyFraction;
+      // MuonSystem->jetPassMuFrac[MuonSystem->nJets] = tmp.jetPassMuFrac;
       float min_deltaR = 15.;
       int index = 999;
       // cout<<"nGenJets"<<nGenJets<<endl;
@@ -877,16 +889,18 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
     //Save cluster information
     MuonSystem->nCscRechitClusters = 0;
     for ( auto &tmp : ds.CscCluster ) {
-        if (isData && !brem && tmp.tTotal > -12.5)continue;
-        if (isData && brem && abs(tmp.tTotal) > 12.5)continue;
-        if (!isData && abs(tmp.tTotal) > 12.5)continue;
-
-        if(tmp.nCscSegmentChamberPlus11 != 0)continue;
-        if(tmp.nCscSegmentChamberPlus12 != 0)continue;
-        if(tmp.nCscSegmentChamberMinus11 != 0)continue;
-        if(tmp.nCscSegmentChamberMinus12 != 0)continue;
+        if (isData && !brem && tmp.tTotal > -12.5)continue;//OOT data
+        if (brem && abs(tmp.tTotal) > 12.5)continue;//ZMu data or DY samples
+        if (!isData && !brem && abs(tmp.tTotal) > 12.5)continue;//actual signal
         if(abs(tmp.eta)>=2.0) continue;
         if(tmp.TSpread > 20)continue;
+
+        if(!brem  && tmp.nCscSegmentChamberPlus11 != 0)continue;
+        if(!brem  && tmp.nCscSegmentChamberPlus12 != 0)continue;
+        if(!brem && tmp.nCscSegmentChamberMinus11 != 0)continue;
+        if(!brem  && tmp.nCscSegmentChamberMinus12 != 0)continue;
+        if (brem && abs(tmp.maxChamber)<=12)continue;
+
 
 
         MuonSystem->cscRechitClusterX[MuonSystem->nCscRechitClusters] =tmp.x;
@@ -979,9 +993,11 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
         MuonSystem->cscRechitClusterMaxStationRatio[MuonSystem->nCscRechitClusters] = 1.0*tmp.maxStationSegment/tmp.nCscSegments;
         MuonSystem->cscRechitClusterNStation[MuonSystem->nCscRechitClusters] = tmp.nStation;
         MuonSystem->cscRechitClusterNStation5[MuonSystem->nCscRechitClusters] = tmp.nStation5;
+        MuonSystem->cscRechitClusterNStation10[MuonSystem->nCscRechitClusters] = tmp.nStation10;
         MuonSystem->cscRechitClusterNStation10perc[MuonSystem->nCscRechitClusters] = tmp.nStation10perc;
         MuonSystem->cscRechitClusterAvgStation[MuonSystem->nCscRechitClusters] = tmp.avgStation;
         MuonSystem->cscRechitClusterAvgStation5[MuonSystem->nCscRechitClusters] = tmp.avgStation5;
+        MuonSystem->cscRechitClusterAvgStation10[MuonSystem->nCscRechitClusters] = tmp.avgStation10;
         MuonSystem->cscRechitClusterAvgStation10perc[MuonSystem->nCscRechitClusters] = tmp.avgStation10perc;
         MuonSystem->cscRechitClusterMe11Ratio[MuonSystem->nCscRechitClusters] = tmp.Me11Ratio;
         MuonSystem->cscRechitClusterMe12Ratio[MuonSystem->nCscRechitClusters] = tmp.Me12Ratio;
@@ -997,7 +1013,6 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
          }
 
        }
-       if (MuonSystem->cscRechitCluster_match_MB1Seg_0p4[MuonSystem->nCscRechitClusters]>0) continue;
        //match to RPC hits in RE1/2
        for (int i = 0; i < nRpc; i++) {
          float rpcR = sqrt(rpcX[i]*rpcX[i] + rpcY[i]*rpcY[i]);
@@ -1015,14 +1030,20 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
          }
 
        }
-       if (MuonSystem->cscRechitCluster_match_RB1_0p4[MuonSystem->nCscRechitClusters]>0) continue;
-       if (MuonSystem->cscRechitCluster_match_RE12_0p4[MuonSystem->nCscRechitClusters]>0) continue;
+       if ( !brem && MuonSystem->cscRechitCluster_match_MB1Seg_0p4[MuonSystem->nCscRechitClusters]>0) continue;
+       if (!brem && MuonSystem->cscRechitCluster_match_RB1_0p4[MuonSystem->nCscRechitClusters]>0) continue;
+       if (!brem && MuonSystem->cscRechitCluster_match_RE12_0p4[MuonSystem->nCscRechitClusters]>0) continue;
 
-       if(MuonSystem->category == 2 && brem && isData)
+       if(MuonSystem->category == 2 && brem)
        {
+	 if (abs(MuonSystem->lepPdgId[MuonSystem->ZleptonIndex1])!=13)continue;
          bool match1 = RazorAnalyzer::deltaR(MuonSystem->lepEta[MuonSystem->ZleptonIndex1], MuonSystem->lepPhi[MuonSystem->ZleptonIndex1], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4;
          bool match2 = RazorAnalyzer::deltaR(MuonSystem->lepEta[MuonSystem->ZleptonIndex2], MuonSystem->lepPhi[MuonSystem->ZleptonIndex2], MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters],MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters]) < 0.4;
-         if(match1==false && match2 == false) continue;
+         //if(match1==false && match2 == false) continue;
+	 // tag and probe
+	 bool sel1 = match1 && MuonSystem->lepPassId[MuonSystem->ZleptonIndex2] && MuonSystem->lepPassTightIso[MuonSystem->ZleptonIndex2];
+	bool sel2 = match2 && MuonSystem->lepPassId[MuonSystem->ZleptonIndex1] && MuonSystem->lepPassTightIso[MuonSystem->ZleptonIndex1];
+	if (!(sel1 || sel2))continue;
        }
 
 
@@ -1069,7 +1090,10 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
             MuonSystem->cscRechitClusterMuonVetoE[MuonSystem->nCscRechitClusters]  = muonE[i];
           }
         }
-        if (isData && brem && MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] < 50)continue;//match to muon the pass tight iso, with pt>50
+        if (brem && MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters] < 50)continue;//match to muon the pass tight iso, with pt>50
+        if (!brem && MuonSystem->cscRechitClusterJetVetoPt[MuonSystem->nCscRechitClusters]>10)continue;
+        if (!brem && MuonSystem->cscRechitClusterMuonVetoPt[MuonSystem->nCscRechitClusters]>20)continue;
+
         // match to gen-level muon
         if(!isData)
         {
@@ -1085,7 +1109,7 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
               MuonSystem->cscRechitClusterGenMuonVetoE[MuonSystem->nCscRechitClusters]  = gParticleE[i];
             }
           }
-
+          if (brem && MuonSystem->cscRechitClusterGenMuonVetoPt[MuonSystem->nCscRechitClusters] < 50)continue;
         }
 
         // match to gen level LLP
@@ -1115,10 +1139,10 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
           MuonSystem->cscRechitCluster_match_gLLP_ctau[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_ctau[index];
           MuonSystem->cscRechitCluster_match_gLLP_beta[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_beta[index];
           MuonSystem->cscRechitCluster_match_gLLP_csc[MuonSystem->nCscRechitClusters] = MuonSystem->gLLP_csc[index];
-          if(!isData && !MuonSystem->gLLP_csc[index]) continue;
+          if(!isData && !brem && !MuonSystem->gLLP_csc[index]) continue;
         }
         else{
-          if (!isData) continue;
+          if (!isData && !brem) continue;
         }
         MuonSystem->cscRechitClusterMet_dPhi[MuonSystem->nCscRechitClusters] =  RazorAnalyzer::deltaPhi(MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters],MuonSystem->metPhi);
 

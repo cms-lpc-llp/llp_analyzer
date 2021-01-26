@@ -75,14 +75,17 @@ void MakePileupReweight(int option = 0, int year = 2018) {
   }
   else if (year == 2017)
   {
-    pileupSourceFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupSource_MC_Fall17_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root", pathname.c_str()), "READ");
+    // pileupSourceFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupSource_MC_Fall17_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root", pathname.c_str()), "READ");
+    pileupSourceFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupSource_MC_Fall17_ZToMuMu_NNPDF31_13TeV-powheg_M_50_120.root", pathname.c_str()), "READ");
+
     if (option == 0) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2017EOYReReco_41p5ifb.root", pathname.c_str()), "READ");
     else if (option == 1) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2017EOYReReco_41p5ifb_SysUp.root", pathname.c_str()), "READ");
     else if (option == 2) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2017EOYReReco_41p5ifb_SysDown.root", pathname.c_str()), "READ");
     else {
       return;
     }
-    file = TFile::Open(Form("%s/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall17_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root", pathname.c_str()), "UPDATE");
+    // file = TFile::Open(Form("%s/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall17_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root", pathname.c_str()), "UPDATE");
+    file = TFile::Open(Form("%s/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall17_ZToMuMu_NNPDF31_13TeV-powheg_M_50_120.root", pathname.c_str()), "UPDATE");
   }
   else if (year == 2016)
   {
@@ -94,6 +97,28 @@ void MakePileupReweight(int option = 0, int year = 2018) {
       return;
     }
     file = TFile::Open(Form("%s/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Summer16_ggH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8.root", pathname.c_str()), "UPDATE");
+  }
+  else if (year == 2019)//source is 2018, target is 2016
+  {
+    pileupSourceFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupSource_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root", pathname.c_str()), "READ");
+    if (option == 0) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2016Rereco_07Aug17.root", pathname.c_str()), "READ");
+    else if (option == 1) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2016Rereco_07Aug17_SysUp.root", pathname.c_str()), "READ");
+    else if (option == 2) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2016Rereco_07Aug17_SysDown.root", pathname.c_str()), "READ");
+    else {
+      return;
+    }
+    file = TFile::Open(Form("%s/src/llp_analyzer/data/PileupWeights/PileupReweight_source18_target16.root", pathname.c_str()), "UPDATE");
+  }
+  else if (year == 2020)//source is 2018, target is 2017
+  {
+    pileupSourceFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupSource_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root", pathname.c_str()), "READ");
+    if (option == 0) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2017EOYReReco_41p5ifb.root", pathname.c_str()), "READ");
+    else if (option == 1) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2017EOYReReco_41p5ifb_SysUp.root", pathname.c_str()), "READ");
+    else if (option == 2) pileupTargetFile = new TFile(Form("%s/src/llp_analyzer/data/PileupWeights/PileupTarget_2017EOYReReco_41p5ifb_SysDown.root", pathname.c_str()), "READ");
+    else {
+      return;
+    }
+    file = TFile::Open(Form("%s/src/llp_analyzer/data/PileupWeights/PileupReweight_source18_target17.root", pathname.c_str()), "UPDATE");
   }
   else{
     cout<<"[ERROR]: YEAR IS NOT CORRECT"<<endl;

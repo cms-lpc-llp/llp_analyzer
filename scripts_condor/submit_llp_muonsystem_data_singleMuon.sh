@@ -36,12 +36,16 @@ Run2_displacedJetMuonNtupler_${ver}_Data2017_Run2017G-ZMu-17Nov2017
 Run2_displacedJetMuonNtupler_${ver}_Data2017_Run2017H-ZMu-17Nov2017
 )
 listData2018=(
+Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018A-ZMu-17Sep2018
 Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018B-ZMu-17Sep2018
+Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018C-ZMu-17Sep2018
 Run2_displacedJetMuonNtupler_${ver}_Data2018D_17Sept2018_Run2018D-ZMu-PromptReco
 )
 
 for year in \
-Data2017
+Data2016 \
+Data2017 \
+Data2018
 do
 	echo ${year}
 	sampleList=list${year}[@]
@@ -50,7 +54,7 @@ do
 		echo "Sample " ${sample}
 		#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
 		version=/${ver}/${year}/v5/
-		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v52/${sample}
+		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v83/${sample}
 		echo ${output}
 		inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${ver}/${year}/${sample}.txt
 		nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
@@ -63,23 +67,23 @@ do
 		analyzer=llp_MuonSystem_TnP
 		if [ ${year} == "Data2018" ]
 	        then
-	                echo "Data18 condition" 
+	                echo "Data18 condition"
 	                analyzerTag=Razor2018_17SeptEarlyReReco
 	        elif [ ${year} == "Data2017" ]
 		then
-	
-			echo "Data17 condition" 
+
+			echo "Data17 condition"
 	                analyzerTag=Razor2017_17Nov2017Rereco
 		elif [ ${year} == 'Data2016' ]
 		then
-			echo "Data16 condition" 
+			echo "Data16 condition"
 	                analyzerTag=Razor2016_07Aug2017Rereco
 		else
 	                echo "ERROR: NEED TO SET CORRECT YEAR"
 	        fi
 		rm -f submit/${analyzer}_${sample}*
 		rm -f log/${analyzer}_${sample}*
-	
+
 		echo "job " ${maxjob}
 	        jdl_file=submit/${analyzer}_${sample}_${maxjob}.jdl
 	        echo "Universe = vanilla" > ${jdl_file}
@@ -90,14 +94,14 @@ do
 	        echo "Log = log/${analyzer}_${sample}_Job\$(ProcId)_Of_${maxjob}_PC.log" >> ${jdl_file}
 	        echo "Output = log/${analyzer}_${sample}_Job\$(ProcId)_Of_${maxjob}_\$(Cluster).\$(Process).out" >> ${jdl_file}
 	        echo "Error = log/${analyzer}_${sample}_Job\$(ProcId)_Of_${maxjob}_\$(Cluster).\$(Process).err" >> ${jdl_file}
-	
+
 	        #echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
 	        echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
-	
+
 	        echo "RequestMemory = 4000" >> ${jdl_file}
 	        echo "RequestCpus = 1" >> ${jdl_file}
 	        echo "RequestDisk = 4" >> ${jdl_file}
-	
+
 	        echo "+RunAsOwner = True" >> ${jdl_file}
 	        echo "+InteractiveUser = true" >> ${jdl_file}
 	        #echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}

@@ -52,6 +52,11 @@ double getNormalizationWeight(string filename, string datasetName, double intLum
   cout << "Original events in the sample: " << NEvents << endl;
   //NEvents = 2000000;
   //Get CrossSection
+  char* cmsswPath;
+  cmsswPath = getenv("CMSSW_BASE");
+  string pathname;
+  if(cmsswPath != NULL) pathname = string(cmsswPath) + "/data/xSections.dat";
+  
   SimpleTable xstab("data/xSections.dat");
   double CrossSection = xstab.Get(datasetName.c_str());  
   double Weight = CrossSection * intLumi / NEvents;

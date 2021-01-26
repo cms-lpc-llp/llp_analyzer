@@ -39,13 +39,13 @@
 for year in \
 MC_Fall18
 do
-	version=displacedJetMuonNtuple/V1p17/${year}/v1/sixie/
+	version=displacedJetMuonNtuple/V1p17/${year}/v2/sixie/
 	root_dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/${version}/
 	list_dir=$CMSSW_BASE/src/llp_analyzer/lists/${version}
 	echo $list_dir
 	mkdir -p $list_dir
-	
-	#ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18	
+
+	#ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18
 	#n3n2-n1-hbb-hbb_mh127_pl1000_ev100000 \
 	#n3n2-n1-hbb-hbb_mh200_pl1000_ev100000 \
 	#n3n2-n1-hbb-hbb_mh400_pl1000_ev100000 \
@@ -69,8 +69,100 @@ do
 	#ggH_HToSSTobbbb_ms1_pl1000 \
 	#WplusH_HToSSTobbbb_ms55_pl10000_ev150000 \
         #WminusH_HToSSTobbbb_ms55_pl10000_ev150000
+	#WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+	#WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+	#WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+	#WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+	#WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+	#WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+	#WJetsToLNu_HT-70To100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8 \
+	#WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8
+	#for sample in \
+	#ggH_HToSSTobbbb_ms1_pl1000 \
+	#ggH_HToSS_SToEE_ms0p1_pl100 \
+	#ggH_HToSS_SToEE_ms0p1_pl500 \
+	#ggH_HToSS_SToPi0Pi0_ms1_pl100 \
+	#ggH_HToSS_SToPi0Pi0_ms1_pl500 \
+	#ggH_HToSS_SToPiPlusPiMinus_ms1_pl500 \
+	#ggH_HToSS_SToKPlusKMinus_ms1p5_pl500 \
+	#ggH_HToSS_SToEE_ms0p4_pl500
+	#do
+	#for sample in \
+	#ZToMuMu_NNPDF31_13TeV-powheg_M_50_120 \
+	#ZToMuMu_NNPDF31_13TeV-powheg_M_120_200 \
+	#ZToMuMu_NNPDF31_13TeV-powheg_M_200_400 \
+	#ZToMuMu_NNPDF31_13TeV-powheg_M_400_800 \
+	#ZToMuMu_NNPDF31_13TeV-powheg_M_1400_2300 \
+	#ZToMuMu_NNPDF31_13TeV-powheg_M_2300_3500 \
+	#ZToMuMu_NNPDF31_13TeV-powheg_M_3500_4500 \
+	#ZToMuMu_NNPDF31_13TeV-powheg_M_4500_6000 \
+	#ZToMuMu_NNPDF31_13TeV-powheg_M_6000_Inf
+	#do
+	#ttH_HToSS_SToBB_ms15_pl100 \
+	#ttH_HToSS_SToBB_ms15_pl1000 \
+	#ttH_HToSS_SToBB_ms15_pl10000 \
+	#ttH_HToSS_SToBB_ms15_pl100000 \
+	#ttH_HToSS_SToBB_ms40_pl100 \
+	#ttH_HToSS_SToBB_ms40_pl1000 \
+	#ttH_HToSS_SToBB_ms40_pl10000 \
+	#ttH_HToSS_SToBB_ms40_pl100000 \
+	#ttH_HToSS_SToBB_ms55_pl100 \
+	#ttH_HToSS_SToBB_ms55_pl1000 \
+	#ttH_HToSS_SToBB_ms55_pl10000 \
+	#ttH_HToSS_SToBB_ms55_pl100000 \
+	#WminusHToSS_SToBB_ms15_pl100 \
+	#WminusHToSS_SToBB_ms15_pl1000 \
+	#WminusHToSS_SToBB_ms15_pl10000 \
+	#WminusHToSS_SToBB_ms15_pl100000 \
+	#WminusHToSS_SToBB_ms40_pl100 \
+	#WminusHToSS_SToBB_ms40_pl1000 \
+	#WminusHToSS_SToBB_ms40_pl10000 \
+	#WminusHToSS_SToBB_ms40_pl100000 \
+	#WminusHToSS_SToBB_ms55_pl100 \
+	#WminusHToSS_SToBB_ms55_pl1000 \
+	#WminusHToSS_SToBB_ms55_pl10000 \
+	#WminusHToSS_SToBB_ms55_pl100000 \
+	#WplusHToSS_SToBB_ms15_pl100 \
+	#WplusHToSS_SToBB_ms15_pl1000 \
+	#WplusHToSS_SToBB_ms15_pl10000 \
+	#WplusHToSS_SToBB_ms15_pl100000 \
+	#WplusHToSS_SToBB_ms40_pl100 \
+	#WplusHToSS_SToBB_ms40_pl1000 \
+	#WplusHToSS_SToBB_ms40_pl10000 \
+	#WplusHToSS_SToBB_ms40_pl100000 \
+	#WplusHToSS_SToBB_ms55_pl100 \
+	#WplusHToSS_SToBB_ms55_pl1000 \
+	#WplusHToSS_SToBB_ms55_pl10000 \
+	#WplusHToSS_SToBB_ms55_pl100000 \
+	#ZHToSS_SToBB_ms15_pl100 \
+	#ZHToSS_SToBB_ms15_pl1000 \
+	#ZHToSS_SToBB_ms15_pl10000 \
+	#ZHToSS_SToBB_ms15_pl100000 \
+	#ZHToSS_SToBB_ms40_pl100 \
+	#ZHToSS_SToBB_ms40_pl1000 \
+	#ZHToSS_SToBB_ms40_pl10000 \
+	#ZHToSS_SToBB_ms40_pl100000 \
+	#ZHToSS_SToBB_ms55_pl100 \
+	#ZHToSS_SToBB_ms55_pl1000 \
+	#ZHToSS_SToBB_ms55_pl10000 \
+	#ZHToSS_SToBB_ms55_pl100000 \
+	##HNL_testpoint1
+	#ggZHToSS_SToBB_ZToLL_ms40_pl1000 \
+	#ggZHToSS_SToBB_ZToNuNu_ms40_pl1000 \
+	#ggZHToSS_SToBB_ZToQQ_ms40_pl1000
 	for sample in \
-	WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+	ggZHToSS_SToBB_ZToQQ_ms15_pl100 \
+	ggZHToSS_SToBB_ZToQQ_ms15_pl1000 \
+	ggZHToSS_SToBB_ZToQQ_ms15_pl10000 \
+	ggZHToSS_SToBB_ZToQQ_ms15_pl100000 \
+	ggZHToSS_SToBB_ZToQQ_ms40_pl100 \
+	ggZHToSS_SToBB_ZToQQ_ms40_pl1000 \
+	ggZHToSS_SToBB_ZToQQ_ms40_pl10000 \
+	ggZHToSS_SToBB_ZToQQ_ms40_pl100000 \
+	ggZHToSS_SToBB_ZToQQ_ms55_pl100 \
+	ggZHToSS_SToBB_ZToQQ_ms55_pl1000 \
+	ggZHToSS_SToBB_ZToQQ_ms55_pl10000 \
+	ggZHToSS_SToBB_ZToQQ_ms55_pl100000
 	do
 	        echo "${list_dir}${sample}.txt"
 	        rm -f ${list_dir}${sample}.txt
@@ -81,4 +173,3 @@ do
 	        echo "input list created for $sample"
 	done
 done
-

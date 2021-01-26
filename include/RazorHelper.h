@@ -30,13 +30,16 @@ class RazorHelper {
 
         double getHiggsPtWeight(float higgsPt);
         double getHiggsPtWeightSys(float higgsPt, int sys_i);
-
+        double getMetTriggerSF(float met);
         // retrieve pileup weights (nominal, up, and down versions)
         double getPileupWeight(int NPU);
         double getPileupWeightUp(int NPU);
         double getPileupWeightDown(int NPU);
 
         // get lepton scale factor (without up/down uncertainties)
+        double getMuonScaleFactor(float pt, float eta, bool isTrigger, bool id, bool isTight);
+        double getMuonMCEfficiency(float pt, float eta, bool isTrigger, bool id, bool isTight);
+
         double getTightMuonScaleFactor(float pt, float eta, bool isTight);
         double getVetoMuonScaleFactor(float pt, float eta, bool isVeto);
         double getVetoMuonScaleFactorError(float pt, float eta, bool isVeto);
@@ -177,6 +180,7 @@ class RazorHelper {
                 double pt, double eta, bool passes, double smear=0.0);
         double getLeptonScaleFactor(TH2D *effHist, TH2D *sfHist, TH2D *fastsimHist,
                 double pt, double eta, bool passes);
+        double getLeptonScaleFactor(TH2D *sfHist,double pt, double eta);
         double getLeptonScaleFactorError(TH2D *effHist, TH2D *sfHist, TH2D *fastsimHist,
               double pt, double eta, bool passes);
         //double getLeptonScaleFactorError(TH2D *sfHist, TH2D *fastsimHist, double pt, double eta);
@@ -263,6 +267,7 @@ class RazorHelper {
 	void loadBTag_Razor2017_17Nov2017Rereco();
         void loadLepton_Razor2017_17Nov2017Rereco();
         void loadJECs_Razor2017_17Nov2017Rereco();
+        void loadTrigger_Razor2017_17Nov2017Rereco();
 
 	// for Razor2017 31Mar2018 Rereco
         void loadPhoton_Razor2017_31Mar2018Rereco();
@@ -271,15 +276,23 @@ class RazorHelper {
 
         //for Razor Razor2018
         void loadPileup_Razor2018_17SeptEarlyReReco();
-        // void loadTrigger_Razor2018_17SeptEarlyReReco();
+        void loadTrigger_Razor2018_17SeptEarlyReReco();
         // void loadLepton_Razor2018();
         void loadJECs_Razor2018_17SeptEarlyReReco();
 
+        void loadPileup_Razor2016_Source2018();
+        void loadPileup_Razor2017_Source2018();
+
+        void loadTag_Razor2016_Source2018();
+        void loadTag_Razor2017_Source2018();
         // member data
         std::string tag;
         bool isData;
         bool isFastsim;
         std::string cmsswPath;
+
+        TFile *metTriggerSFFile;
+        TH1F *metTriggerSFHist;
 
         TFile *higgsPtWeightFile;
         TH1F *higgsPtWeightHist;
@@ -342,6 +355,25 @@ class RazorHelper {
 	double muVetoEffSFMinPt;
 	double muLooseEffSFMinPt;
 
+  TFile *muTriggerEfficiencyFile;
+  TFile *muIdEfficiencyFile;
+  TFile *muIsoEfficiencyFile;
+  TFile *muIdSFFile;
+  TFile *muIsoSFFile;
+
+
+
+  TDirectory *muTriggerEfficiencyDir;
+  TH2D *muTriggerEfficiencyHist;
+  TH2D *muLooseIdEfficiencyHist;
+  TH2D *muTightIdEfficiencyHist;
+  TH2D *muLooseIsoEfficiencyHist;
+  TH2D *muTightIsoEfficiencyHist;
+  TH2D *muTriggerSFHist;
+  TH2D *muLooseIdSFHist;
+  TH2D *muTightIdSFHist;
+  TH2D *muLooseIsoSFHist;
+  TH2D *muTightIsoSFHist;
         // for taus
         TFile *tauEfficiencyFile;
         TH2D *tauLooseEfficiencyHist;

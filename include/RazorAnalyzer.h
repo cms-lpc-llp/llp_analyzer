@@ -55,6 +55,11 @@ class RazorAnalyzer: public llp_event {
         //------ LIST OF ANALYSES ------//
         virtual void Analyze(bool isData, int option, string outputFileName, string label);
 
+
+
+        bool isPFTightJet(int i, bool applyTightLepVeto = true,string EraName = "Summer16");
+
+
         //functions in RazorAuxMuon.cc
 	float GetMuonEffectiveAreaMean(int i, string type );
 	float GetMuonEffectiveArea90(int i, string EraName );
