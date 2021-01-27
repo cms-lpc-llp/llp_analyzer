@@ -124,27 +124,6 @@ public:
   int           nCscRechitsChamberMinus32;
   int           nCscRechitsChamberMinus41;
   int           nCscRechitsChamberMinus42;
-  //
-  //
-  // int           nCscRechitsChamberPlus11[36];
-  // int           nCscRechitsChamberPlus12[36];
-  // int           nCscRechitsChamberPlus13[36];
-  // int           nCscRechitsChamberPlus21[36];
-  // int           nCscRechitsChamberPlus22[36];
-  // int           nCscRechitsChamberPlus31[36];
-  // int           nCscRechitsChamberPlus32[36];
-  // int           nCscRechitsChamberPlus41[36];
-  // int           nCscRechitsChamberPlus42[36];
-  //
-  // int           nCscRechitsChamberMinus11[36];
-  // int           nCscRechitsChamberMinus12[36];
-  // int           nCscRechitsChamberMinus13[36];
-  // int           nCscRechitsChamberMinus21[36];
-  // int           nCscRechitsChamberMinus22[36];
-  // int           nCscRechitsChamberMinus31[36];
-  // int           nCscRechitsChamberMinus32[36];
-  // int           nCscRechitsChamberMinus41[36];
-  // int           nCscRechitsChamberMinus42[36];
 
   int           nDTRechits;
   int           nDtRings;
@@ -248,25 +227,6 @@ public:
     float         cscClusterJetVetoE[N_MAX_CSC];
     float         cscClusterMuonVetoPt[N_MAX_CSC];
     float         cscClusterMuonVetoE[N_MAX_CSC];
-    int           cscClusterNSegmentChamberPlus11[N_MAX_CSC];
-    int           cscClusterNSegmentChamberPlus12[N_MAX_CSC];
-    int           cscClusterNSegmentChamberPlus13[N_MAX_CSC];
-    int           cscClusterNSegmentChamberPlus21[N_MAX_CSC];
-    int           cscClusterNSegmentChamberPlus22[N_MAX_CSC];
-    int           cscClusterNSegmentChamberPlus31[N_MAX_CSC];
-    int           cscClusterNSegmentChamberPlus32[N_MAX_CSC];
-    int           cscClusterNSegmentChamberPlus41[N_MAX_CSC];
-    int           cscClusterNSegmentChamberPlus42[N_MAX_CSC];
-
-    int           cscClusterNSegmentChamberMinus11[N_MAX_CSC];
-    int           cscClusterNSegmentChamberMinus12[N_MAX_CSC];
-    int           cscClusterNSegmentChamberMinus13[N_MAX_CSC];
-    int           cscClusterNSegmentChamberMinus21[N_MAX_CSC];
-    int           cscClusterNSegmentChamberMinus22[N_MAX_CSC];
-    int           cscClusterNSegmentChamberMinus31[N_MAX_CSC];
-    int           cscClusterNSegmentChamberMinus32[N_MAX_CSC];
-    int           cscClusterNSegmentChamberMinus41[N_MAX_CSC];
-    int           cscClusterNSegmentChamberMinus42[N_MAX_CSC];
     float         cscClusterMet_dPhi[N_MAX_CSC];
 
   int           nCscSegClusters;

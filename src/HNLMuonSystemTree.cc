@@ -213,24 +213,6 @@ void HNLMuonSystemTree::InitVariables()
     cscClusterMaxStation[i] = -999;
     cscClusterMe11Ratio[i] = -999.;
     cscClusterMe12Ratio[i] = -999.;
-    cscClusterNSegmentChamberPlus11[i] = -999;
-    cscClusterNSegmentChamberPlus12[i] = -999;
-    cscClusterNSegmentChamberPlus13[i] = -999;
-    cscClusterNSegmentChamberPlus21[i] = -999;
-    cscClusterNSegmentChamberPlus22[i] = -999;
-    cscClusterNSegmentChamberPlus31[i] = -999;
-    cscClusterNSegmentChamberPlus32[i] = -999;
-    cscClusterNSegmentChamberPlus41[i] = -999;
-    cscClusterNSegmentChamberPlus42[i] = -999;
-    cscClusterNSegmentChamberMinus11[i] = -999;
-    cscClusterNSegmentChamberMinus12[i] = -999;
-    cscClusterNSegmentChamberMinus13[i] = -999;
-    cscClusterNSegmentChamberMinus21[i] = -999;
-    cscClusterNSegmentChamberMinus22[i] = -999;
-    cscClusterNSegmentChamberMinus31[i] = -999;
-    cscClusterNSegmentChamberMinus32[i] = -999;
-    cscClusterNSegmentChamberMinus41[i] = -999;
-    cscClusterNSegmentChamberMinus42[i] = -999;
     // cscClusterVertexR[i] = 0.0;
     // cscClusterVertexZ[i] = 0.0;
     // cscClusterVertexDis[i] = 0.0;
@@ -1282,25 +1264,6 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("cscClusterMuonVetoE",             cscClusterMuonVetoE);
   tree_->SetBranchAddress("cscClusterSize",             cscClusterSize);
 
-  tree_->SetBranchAddress("cscClusterNSegmentChamberPlus11",             cscClusterNSegmentChamberPlus11);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberPlus12",             cscClusterNSegmentChamberPlus12);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberPlus13",             cscClusterNSegmentChamberPlus13);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberPlus21",             cscClusterNSegmentChamberPlus21);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberPlus22",             cscClusterNSegmentChamberPlus22);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberPlus31",             cscClusterNSegmentChamberPlus31);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberPlus32",             cscClusterNSegmentChamberPlus32);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberPlus41",             cscClusterNSegmentChamberPlus41);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberPlus42",             cscClusterNSegmentChamberPlus42);
-
-  tree_->SetBranchAddress("cscClusterNSegmentChamberMinus11",             cscClusterNSegmentChamberMinus11);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberMinus12",             cscClusterNSegmentChamberMinus12);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberMinus13",             cscClusterNSegmentChamberMinus13);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberMinus21",             cscClusterNSegmentChamberMinus21);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberMinus22",             cscClusterNSegmentChamberMinus22);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberMinus31",             cscClusterNSegmentChamberMinus31);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberMinus32",             cscClusterNSegmentChamberMinus32);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberMinus41",             cscClusterNSegmentChamberMinus41);
-  tree_->SetBranchAddress("cscClusterNSegmentChamberMinus42",             cscClusterNSegmentChamberMinus42);
 
 
   // CSC CLUSTER
@@ -1976,12 +1939,6 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("cscRechitCluster3MetEENoiseXYCorr_dPhi",             cscRechitCluster3MetEENoiseXYCorr_dPhi);
   tree_->SetBranchAddress("cscRechitCluster3MetJesUp_dPhi",             cscRechitCluster3MetJesUp_dPhi);
   tree_->SetBranchAddress("cscRechitCluster3MetJesDown_dPhi",             cscRechitCluster3MetJesDown_dPhi);
-
-
-
-  tree_->SetBranchAddress("cscITCluster_match_cscCluster_index",             cscITCluster_match_cscCluster_index);
-  tree_->SetBranchAddress("cscITCluster_cscCluster_SizeRatio",             cscITCluster_cscCluster_SizeRatio);
-  */
 
   tree_->SetBranchAddress("gLLP_multiplicity",    gLLP_multiplicity);
 

@@ -903,7 +903,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       MuonSystem->metPhiEENoise    = atan(PFMetYEENoise/PFMetXEENoise);
       if  (PFMetXEENoise < 0.0) MuonSystem->metPhiEENoise = RazorAnalyzer::deltaPhi(TMath::Pi() + MuonSystem->metPhiEENoise,0.0);
 
-      if (!MuonSystem->METNoMuTrigger) continue;
+      if (!MuonSystem->SingleLepTrigger) continue;
       if (MuonSystem->metEENoise < 200) continue;
 
       if(signalScan && !isData)accep_met2D[make_pair(MuonSystem->mX, MuonSystem->ctau)]->Fill(1.0, genWeight*MuonSystem->higgsPtWeight*MuonSystem->pileupWeight*MuonSystem->metSF);
