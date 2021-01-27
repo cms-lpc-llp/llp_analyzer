@@ -3,7 +3,7 @@ SHELL = /bin/sh
 CXX           = g++
 CXXFLAGS      = -O -Wall -fPIC -g -ansi -Wextra
 CXX11FLAGS    = -std=c++0x
-CXX14FLAGS    = -std=c++14
+CXX14FLAGS    = -std=c++17
 LD            = g++
 LDFLAGS       = -O
 LIBDIR       = $(WORKDIR)
@@ -13,7 +13,7 @@ ifeq ($(OS),Darwin)
         SOFLAGS       = -dynamiclib
 else
         SOFLAGS       = -shared
-endif   
+endif
 
 ifndef ROOTSYS
 $(error *** Please set up Root)
@@ -33,7 +33,7 @@ LIBS = -lRooFitCore -lRooFit -lMinuit -lHtml -lMathMore -lPyROOT -lFoam -lRooSta
 ifneq ($(CMSSW_BASE),)
         ROOTFIT_INCLUDE := $(shell cd $(CMSSW_BASE); scram tool info roofitcore | grep INCLUDE= | sed 's|INCLUDE=||')
         ROOTFIT_LIBDIR := $(shell cd $(CMSSW_BASE); scram tool info roofitcore | grep LIBDIR= | sed 's|LIBDIR=||')
-        
+
         CINTINCLUDES := -I$(ROOTFIT_INCLUDE)
         CXXFLAGS     += -I$(ROOTFIT_INCLUDE)
         LDFLAGS      += -L$(ROOTFIT_LIBDIR)
