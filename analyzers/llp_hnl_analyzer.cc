@@ -969,22 +969,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       MuonSystem->nCscRechits  = 0;
 
       for (int i = 0; i < ncscRechits; i++) {
-        // if (cscRechitsQuality[i]!=1) continue;
-        // if (cscRechitsQuality[i]>2) cout<<cscRechitsQuality[i]<<endl;
-        // MuonSystem->cscRechitsPhi[MuonSystem->nCscRechits]           = cscRechitsPhi[i];   //[nCsc]
-        // MuonSystem->cscRechitsEta[MuonSystem->nCscRechits]           = cscRechitsEta[i];   //[nCsc]
-        // MuonSystem->cscRechitsX[MuonSystem->nCscRechits]             = cscRechitsX[i];   //[nCsc]
-        // MuonSystem->cscRechitsY[MuonSystem->nCscRechits]             = cscRechitsY[i];   //[nCsc]
-        // MuonSystem->cscRechitsZ[MuonSystem->nCscRechits]             = cscRechitsZ[i];   //[nCsc]
-        // MuonSystem->cscRechitsTpeak[MuonSystem->nCscRechits] = cscRechitsTpeak[i];
-        // MuonSystem->cscRechitsTwire[MuonSystem->nCscRechits] = cscRechitsTwire[i];
-        // MuonSystem->cscRechitsQuality[MuonSystem->nCscRechits] = cscRechitsQuality[i];
-        // MuonSystem->cscRechitsStation[MuonSystem->nCscRechits] = cscRechitsStation[i];
-        // MuonSystem->cscRechitsChamber[MuonSystem->nCscRechits] = cscRechitsChamber[i];
-        // static int station(int index) { return ((index >> START_STATION) & MASK_STATION); }
-        // cout<<cscRechitsStation[i]<<", " << ((cscRechitsDetId[i] >> 12) & 07)<<","<<((cscRechitsDetId[i] >> 3) & 077)<<endl;
 
-        // MuonSystem->cscRechitsChamber[MuonSystem->nCscRechits] = ((index >> START_CHAMBER) & MASK_CHAMBER);
         //pick out the right bits for chamber
         int chamber = ((cscRechitsDetId[i] >> 3) & 077); //https://github.com/cms-sw/cmssw/blob/master/DataFormats/MuonDetId/interface/CSCDetId.h#L147
         Point p;
@@ -1014,45 +999,9 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
         if (cscRechitsTpeak[i]>12.5)MuonSystem->nLateCscRechits++;
         if (cscRechitsTpeak[i]<-25)MuonSystem->nEarly2CscRechits++;
         if (cscRechitsTpeak[i]>25)MuonSystem->nLate2CscRechits++;
-        if (cscRechitsChamber[i] == 11) MuonSystem->nCscRechitsChamberPlus11++;
-        if (cscRechitsChamber[i] == 12) MuonSystem->nCscRechitsChamberPlus12++;
-        if (cscRechitsChamber[i] == 13) MuonSystem->nCscRechitsChamberPlus13++;
-        if (cscRechitsChamber[i] == 21) MuonSystem->nCscRechitsChamberPlus21++;
-        if (cscRechitsChamber[i] == 22) MuonSystem->nCscRechitsChamberPlus22++;
-        if (cscRechitsChamber[i] == 31) MuonSystem->nCscRechitsChamberPlus31++;
-        if (cscRechitsChamber[i] == 32) MuonSystem->nCscRechitsChamberPlus32++;
-        if (cscRechitsChamber[i] == 41) MuonSystem->nCscRechitsChamberPlus41++;
-        if (cscRechitsChamber[i] == 42) MuonSystem->nCscRechitsChamberPlus42++;
-        if (cscRechitsChamber[i] == -11) MuonSystem->nCscRechitsChamberMinus11++;
-        if (cscRechitsChamber[i] == -12) MuonSystem->nCscRechitsChamberMinus12++;
-        if (cscRechitsChamber[i] == -13) MuonSystem->nCscRechitsChamberMinus13++;
-        if (cscRechitsChamber[i] == -21) MuonSystem->nCscRechitsChamberMinus21++;
-        if (cscRechitsChamber[i] == -22) MuonSystem->nCscRechitsChamberMinus22++;
-        if (cscRechitsChamber[i] == -31) MuonSystem->nCscRechitsChamberMinus31++;
-        if (cscRechitsChamber[i] == -32) MuonSystem->nCscRechitsChamberMinus32++;
-        if (cscRechitsChamber[i] == -41) MuonSystem->nCscRechitsChamberMinus41++;
-        if (cscRechitsChamber[i] == -42) MuonSystem->nCscRechitsChamberMinus42++;
         // MuonSystem->nCscRechits++;
       }
-      MuonSystem->nCscRings = 0;
-      if ( MuonSystem->nCscRechitsChamberPlus11 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberPlus12 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberPlus13 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberPlus21 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberPlus22 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberPlus31 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberPlus32 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberPlus41 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberPlus42 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberMinus11 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberMinus12 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberMinus13 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberMinus21 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberMinus22 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberMinus31 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberMinus32 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberMinus41 > 50) MuonSystem->nCscRings++;
-      if ( MuonSystem->nCscRechitsChamberMinus42 > 50) MuonSystem->nCscRings++;
+
       //Do DBSCAN Clustering
       int min_point = 50;  //minimum number of segments to call it a cluster
       float epsilon = 0.2; //cluster radius parameter

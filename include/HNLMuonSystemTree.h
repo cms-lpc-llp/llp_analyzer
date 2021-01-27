@@ -102,25 +102,6 @@ public:
   int           nCscNegativeYRechits;
   float         cscPosTpeak;
   float         cscNegTpeak;
-  int           nCscRechitsChamberPlus11;
-  int           nCscRechitsChamberPlus12;
-  int           nCscRechitsChamberPlus13;
-  int           nCscRechitsChamberPlus21;
-  int           nCscRechitsChamberPlus22;
-  int           nCscRechitsChamberPlus31;
-  int           nCscRechitsChamberPlus32;
-  int           nCscRechitsChamberPlus41;
-  int           nCscRechitsChamberPlus42;
-
-  int           nCscRechitsChamberMinus11;
-  int           nCscRechitsChamberMinus12;
-  int           nCscRechitsChamberMinus13;
-  int           nCscRechitsChamberMinus21;
-  int           nCscRechitsChamberMinus22;
-  int           nCscRechitsChamberMinus31;
-  int           nCscRechitsChamberMinus32;
-  int           nCscRechitsChamberMinus41;
-  int           nCscRechitsChamberMinus42;
 
   int           nDTRechits;
   int           nDtRings;
