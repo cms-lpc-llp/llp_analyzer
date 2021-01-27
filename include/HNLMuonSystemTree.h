@@ -961,58 +961,6 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   float     cscRechitCluster3MetJesDown_dPhi[N_MAX_CSC];
 
 
-  // //csc intime cluster
-  // int           nCscITClusters;
-  // float         cscITClusterJetVeto[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterCaloJetVeto[N_MAX_CSC];
-  // float         cscITClusterMuonVeto[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterJetVetoE[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterCaloJetVetoE[N_MAX_CSC];
-  // float         cscITClusterMuonVetoE[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterX[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterY[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterZ[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterRadius[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterTime[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterTimeSpread[N_MAX_CSC];
-  // float         cscITClusterTimeRMS[N_MAX_CSC];
-  // float         cscITClusterGenMuonDeltaR[N_MAX_CSC];
-  // float         cscITClusterMajorAxis[N_MAX_CSC];
-  // float         cscITClusterMinorAxis[N_MAX_CSC];
-  // float         cscITClusterXSpread[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterYSpread[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterZSpread[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterEtaPhiSpread[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterEtaSpread[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterPhiSpread[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterEta[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterPhi[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterSize[N_MAX_CSC];
-  // float         cscITClusterMe11Ratio[N_MAX_CSC];
-  // float         cscITClusterMe12Ratio[N_MAX_CSC];
-  //
-  // float         cscITClusterVertexR[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterVertexZ[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterVertexN[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterVertexN1[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterVertexN5[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterVertexN10[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterVertexN15[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterVertexN20[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterVertexChi2[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterVertexDis[N_MAX_CSC];   //[nCsc]
-  // float         cscITClusterMaxStationRatio[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterMaxStation[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterNStation[N_MAX_CSC];
-  // float         cscITClusterMaxChamberRatio[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterMaxChamber[N_MAX_CSC];   //[nCsc]
-  // int           cscITClusterNChamber[N_MAX_CSC];
-  // int           cscITCluster_match_cscCluster_index[N_MAX_CSC];
-  // float         cscITCluster_cscCluster_SizeRatio[N_MAX_CSC];
-  // int           nCsc_JetVetoITCluster0p4;
-  // int           nCsc_JetMuonVetoITCluster0p4;
-  // int           nCsc_JetVetoITCluster0p4_Me1112Veto;
-  // int           nCsc_JetMuonVetoITCluster0p4_Me1112Veto;
   //gLLP
   float gLLP_eta[2];
   float gLLP_phi[2];
