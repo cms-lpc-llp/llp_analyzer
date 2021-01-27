@@ -1,6 +1,6 @@
-#include "llp_MuonSystem_cluster.h"
+#include "llp_hnl_analyzer.h"
 #include "RazorHelper.h"
-#include "LiteTreeMuonSystem.h"
+#include "HNLMuonSystemTree.h"
 #include "JetCorrectorParameters.h"
 #include "JetCorrectionUncertainty.h"
 #include "BTagCalibrationStandalone.h"
@@ -122,7 +122,7 @@ int cscStation(double x, double y, double z)
 };
 
 
-void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfilename, string analysisTag)
+void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, string analysisTag)
 {
   //initialization: create one TTree for each analysis box
   cout << "Initializing..." << endl;
@@ -191,12 +191,12 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
   //Set up Output File
   //-----------------------------------------------
   string outfilename = outputfilename;
-  if (outfilename == "") outfilename = "MuonSystem_Tree.root";
+  if (outfilename == "") outfilename = "HeavyNeutralLepton_Tree.root";
   TFile *outFile;
   if (isData || !signalScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
 
 
-  LiteTreeMuonSystem *MuonSystem = new LiteTreeMuonSystem;
+  HNLMuonSystemTree *MuonSystem = new HNLMuonSystemTree;
   MuonSystem->CreateTree();
   MuonSystem->tree_->SetAutoFlush(0);
   MuonSystem->InitTree();
