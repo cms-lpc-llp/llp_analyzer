@@ -541,24 +541,21 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       // if (nCscRechitClusters==0) continue;
 
 
-      //Triggers
+      //Triggers (trigger_names_llp_v3.dat!)
       for(int i = 0; i < NTriggersMAX; i++){
         MuonSystem->HLTDecision[i] = HLTDecision[i];
       }
 
-      if (analysisTag=="Razor2016_07Aug2017Rereco" || analysisTag == "Razor2016_Source2018")
-      {
-        MuonSystem->METTrigger = HLTDecision[310] || HLTDecision[467];
-        MuonSystem->METNoMuTrigger = HLTDecision[467];
-      }
-      else
-      {
-        MuonSystem->METTrigger = HLTDecision[310] || HLTDecision[467] || HLTDecision[703] || HLTDecision[717] || HLTDecision[710] || HLTDecision[709];
-        MuonSystem->METNoMuTrigger = HLTDecision[467] ||  HLTDecision[717] || HLTDecision[710];
-
-      }
-
-
+      MuonSystem->SingleMuonTrigger = (HLTDecision[135] or
+                                       HLTDecision[136] or
+                                       HLTDecision[196]);;
+      MuonSystem->SingleEleTrigger = (HLTDecision[87] or
+                                      HLTDecision[521] or
+                                      HLTDecision[516] or
+                                      HLTDecision[867] or
+                                      HLTDecision[868]);
+      MuonSystem->SingleLepTrigger = (MuonSystem->SingleMuonTrigger or
+                                      MuonSystem->SingleEleTrigger);
 
 
       // flags
@@ -603,7 +600,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       for( int i = 0; i < nMuons; i++ )
       {
 
-        if(!isMuonPOGLooseMuon(i)) continue;
+        if(!isMuonPOGTightMuon(i)) continue;
         if(muonPt[i] < 25) continue;
         if(fabs(muonEta[i]) > 2.4) continue;
 
@@ -637,10 +634,7 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       for( int i = 0; i < nElectrons; i++ )
       {
 
-        // if (!isEGammaPOGLooseElectron(i, true, true, true, "Summer16")) continue;
-        // if (!isEGammaPOGLooseElectron(i, true, false, true, "vid")) continue;
-        // if(!isEGammaPOGLooseElectron(i, true, true, true, "2017_94X"))continue;
-        if (!isEGammaPOGLooseElectron(i, true, false, true, "vid")) continue;
+        if (!isEGammaPOGTightElectron(i, true, false, true, "vid")) continue;
 
         if(elePt[i] < 35) continue;
         if(fabs(eleEta[i]) > 2.4) continue;

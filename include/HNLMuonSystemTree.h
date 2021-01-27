@@ -1131,8 +1131,9 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   bool jetPassId[N_MAX_JETS];
   bool jetTightPassId[N_MAX_JETS];
   bool HLTDecision[NTriggersMAX];
-  bool METTrigger;
-  bool METNoMuTrigger;
+  bool SingleMuonTrigger;
+  bool SingleEleTrigger;
+  bool SingleLepTrigger;
   UInt_t wzevtNum,trig, trig_lepId, trig_lepId_dijet; //number of events that pass each criteria
 
 

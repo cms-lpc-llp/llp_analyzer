@@ -1031,8 +1031,9 @@ void HNLMuonSystemTree::InitVariables()
   for(int i = 0; i <NTriggersMAX; i++){
     HLTDecision[i] = false;
   }
-  METTrigger = false;
-  METNoMuTrigger = false;
+  SingleMuonTrigger = false;
+  SingleEleTrigger = false;
+  SingleLepTrigger = false;
 };
 
 void HNLMuonSystemTree::InitTree()
@@ -2160,10 +2161,9 @@ tree_->SetBranchAddress("gLLP_daughter_pt",          gLLP_daughter_pt);
   tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
   // triggers
   tree_->SetBranchAddress("HLTDecision",   HLTDecision);
-  tree_->SetBranchAddress("METTrigger",   &METTrigger);
-  tree_->SetBranchAddress("METNoMuTrigger",   &METNoMuTrigger);
-
-
+  tree_->SetBranchAddress("SingleMuonTrigger",   &SingleMuonTrigger);
+  tree_->SetBranchAddress("SingleEleTrigger",   &SingleEleTrigger);
+  tree_->SetBranchAddress("SingleLepTrigger",   &SingleLepTrigger);
 };
 
 void HNLMuonSystemTree::LoadTree(const char* file)
@@ -3249,8 +3249,9 @@ void HNLMuonSystemTree::CreateTree()
   // tree_->Branch("jetLoosePassId", jetLoosePassId, "jetLoosePassId[nJets]/O");
   tree_->Branch("jetTightPassId", jetTightPassId, "jetTightPassId[nJets]/O");
   tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[982]/O"); //hardcoded
-  tree_->Branch("METTrigger", METTrigger, "METTrigger/O"); //hardcoded
-  tree_->Branch("METNoMuTrigger", METNoMuTrigger, "METNoMuTrigger/O"); //hardcoded
+  tree_->Branch("SingleMuonTrigger", SingleMuonTrigger, "SingleMuonTrigger/O");
+  tree_->Branch("SingleEleTrigger", SingleEleTrigger, "SingleEleTrigger/O");
+  tree_->Branch("SingleLepTrigger", SingleLepTrigger, "SingleLepTrigger/O");
 
   tree_->Branch("jetMuonEnergyFraction",   jetMuonEnergyFraction,   "jetMuonEnergyFraction[nJets]/F");
   tree_->Branch("jetElectronEnergyFraction",   jetElectronEnergyFraction,   "jetElectronEnergyFraction[nJets]/F");
