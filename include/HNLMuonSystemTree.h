@@ -8,9 +8,6 @@
 #define N_MAX_CSC 200
 #define N_MAX_CSCRECHITS 5000
 #define NTriggersMAX 1201 // Number of trigger in the .dat file
-#define N_CSC_CUT 20
-#define JET_PT_CUT 10
-#define MUON_PT_CUT 20
 #define N_MAX_GPARTICLES 5000
 
 #include <iostream>
