@@ -12,7 +12,11 @@
 //ROOT includes
 #include "TH1F.h"
 
+#define dnn_thre 0.990
+
 #define _debug 0
+#define _debug_nj 1
+#define _debug_dnn 0
 #define _debug_pf 0
 #define _debug_lab 0
 #define _debug_npu 0
@@ -77,77 +81,78 @@ struct jets
 {
 	TLorentzVector jet;
 	bool PassFail;
-	//pat::Jet jet;
-	float time;
-	int jetNeutralHadronMultiplicity;
-	int jetChargedHadronMultiplicity;
-	int jetMuonMultiplicity;
-	int jetElectronMultiplicity;
-	int jetPhotonMultiplicity;
-	float jetNeutralHadronEnergyFraction;
-	float jetChargedHadronEnergyFraction;
-	float jetMuonEnergyFraction;
-	float jetElectronEnergyFraction;
-	float jetPhotonEnergyFraction;
-	float jetCSV;
-	int ecalNRechits;
-	float ecalRechitE;
-
-	float jetAlphaMax;
-	float jetBetaMax;
-	float jetGammaMax;
-	float jetGammaMax_Hadronic;
-	float jetGammaMax_EM;
-	float jetGammaMax_ET;
-	float jetPtAllTracks;
-	float jetPtAllPVTracks;
-	float jetMinDeltaRAllTracks;
-	float jetMinDeltaRPVTracks;
-
-	float jetChargedEMEnergyFraction;
-	float jetNeutralEMEnergyFraction;
-
-	int jetChargedMultiplicity;
-	//int jetNHits;
-	//int jetNPixelHits;
-	float jetNPixelHitsMedian;
-	float jetNHitsMedian;
-
-	//int   jetNSV;
-	//int   jetNSVCand;
-	int   jetNVertexTracks;
-	int   jetNSelectedTracks;
-	float jetDRSVJet;
-	//float jetFlightDist2D;
-	//float jetFlightDist2DError;
-	//float jetFlightDist3D;
-	//float jetFlightDist3DError;
-	//float jetSV_x;
-	//float jetSV_y;
-	//float jetSV_z;
-	//int   jetSVNTracks;
-	float jetSVMass;
-
-	//ecal rechits
-	int jetNRecHitsEcal;
-	float jetEnergyRecHitsEcal;
-	float jetTimeRecHitsEcal;
-
-	//hcal hbhe rechits
-	int jetNRecHitsHcal;
-	float jetEnergyRecHitsHcal;
-	float jetTimeRecHitsHcal;
-
-	double jetsig1EB;
-	double jetsig2EB;
-	double jetptDEB;
-	double jetsig1PF;
-	double jetsig2PF;
-	double jetptDPF;
-
-	float dnn_score_v1;
 	float dnn_score_v3;
-	float dnn_score;
+	//pat::Jet jet;
+	//float time;
+	//int jetNeutralHadronMultiplicity;
+	//int jetChargedHadronMultiplicity;
+	//int jetMuonMultiplicity;
+	//int jetElectronMultiplicity;
+	//int jetPhotonMultiplicity;
+	//float jetNeutralHadronEnergyFraction;
+	//float jetChargedHadronEnergyFraction;
+	//float jetMuonEnergyFraction;
+	//float jetElectronEnergyFraction;
+	//float jetPhotonEnergyFraction;
+	//float jetCSV;
+	//int ecalNRechits;
+	//float ecalRechitE;
+
+	//float jetAlphaMax;
+	//float jetBetaMax;
+	//float jetGammaMax;
+	//float jetGammaMax_Hadronic;
+	//float jetGammaMax_EM;
+	//float jetGammaMax_ET;
+	//float jetPtAllTracks;
+	//float jetPtAllPVTracks;
+	//float jetMinDeltaRAllTracks;
+	//float jetMinDeltaRPVTracks;
+
+	//float jetChargedEMEnergyFraction;
+	//float jetNeutralEMEnergyFraction;
+
+	//int jetChargedMultiplicity;
+	////int jetNHits;
+	////int jetNPixelHits;
+	//float jetNPixelHitsMedian;
+	//float jetNHitsMedian;
+
+	////int   jetNSV;
+	////int   jetNSVCand;
+	//int   jetNVertexTracks;
+	//int   jetNSelectedTracks;
+	//float jetDRSVJet;
+	////float jetFlightDist2D;
+	////float jetFlightDist2DError;
+	////float jetFlightDist3D;
+	////float jetFlightDist3DError;
+	////float jetSV_x;
+	////float jetSV_y;
+	////float jetSV_z;
+	////int   jetSVNTracks;
+	//float jetSVMass;
+
+	////ecal rechits
+	//int jetNRecHitsEcal;
+	//float jetEnergyRecHitsEcal;
+	//float jetTimeRecHitsEcal;
+
+	////hcal hbhe rechits
+	//int jetNRecHitsHcal;
+	//float jetEnergyRecHitsHcal;
+	//float jetTimeRecHitsHcal;
+
+	//double jetsig1EB;
+	//double jetsig2EB;
+	//double jetptDEB;
+	//double jetsig1PF;
+	//double jetsig2PF;
+	//double jetptDPF;
+
+	//float dnn_score_v1;
+	//float dnn_score_v3;
+	//float dnn_score;
 };
 
 //pt comparison
@@ -186,58 +191,6 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 	//---------------------------
 	//-----------NN Setup----------
 	//---------------------------
-/*	
-	//-----------v1-----------
-	std::string basePathV1 = std::string(std::getenv("CMSSW_BASE")) + "/src/LLPAnalysis/llpAnalyzer/nn_inference";
-	
-	std::string graphPathV1 = basePathV1 + "/graph_NoHCAL_NoSi.pb";
-	std::string inputTensorNameV1 = "input_input";
-	std::string outputTensorNameV1 = "FCN/output/Softmax";//"FCN/dense_4/Softmax";//or Softmax?
-	
-	// threading setup
-	// to enable tensorflow-native multi-threading, change to "tensorflow" and increase nThreads
-	std::string threadPoolV1 = "no_threads";
-	int nThreadsV1 = 1;
-	
-	std::vector<std::string> inputFeaturesV1 = { "Jet_0_nTrackConstituents","Jet_0_nSelectedTracks", "Jet_0_timeRecHitsEB", "Jet_0_energyRecHitsEB", "Jet_0_nRecHitsEB", "Jet_0_cHadEFrac", "Jet_0_nHadEFrac", "Jet_0_eleEFrac", "Jet_0_photonEFrac", "Jet_0_ptAllTracks", "Jet_0_ptAllPVTracks", "Jet_0_alphaMax", "Jet_0_betaMax", "Jet_0_gammaMax", "Jet_0_gammaMaxEM", "Jet_0_gammaMaxHadronic", "Jet_0_gammaMaxET","Jet_0_minDeltaRAllTracks","Jet_0_minDeltaRPVTracks",};
-
-	int nInputsV1 = inputFeaturesV1.size();
-	std::vector<float> inputValuesV1(nInputsV1);
-	
-	// setup TensorFlow objects
-	tensorflow::setLogging();
-	tensorflow::GraphDef* graphDefV1 = tensorflow::loadGraphDef(graphPathV1);
-	tensorflow::Session* sessionV1 = tensorflow::createSession(graphDefV1, nThreadsV1);
-		
-	// register an input tensor (1 x nInputs) that is filled during the event loop
-	tensorflow::Tensor inputTensorV1(tensorflow::DT_FLOAT, {1, nInputsV1});
-	
-
-	//-----------v2-----------
-	std::string basePath = std::string(std::getenv("CMSSW_BASE")) + "/src/LLPAnalysis/llpAnalyzer/nn_inference/tagger_AK4_v2";
-	
-	std::string graphPath = basePath + "/graph.pb";
-	std::string inputTensorName = "input_input";
-	std::string outputTensorName = "FCN/output/Softmax";//"FCN/dense_4/Softmax";//or Softmax?
-	
-	// threading setup
-	// to enable tensorflow-native multi-threading, change to "tensorflow" and increase nThreads
-	std::string threadPool = "no_threads";
-	int nThreads = 1;
-	
-	std::vector<std::string> inputFeatures = { "Jet_nTrackConstituents", "Jet_nSelectedTracks", "Jet_timeRecHitsEB", "Jet_eFracRecHitsEB", "Jet_nRecHitsEB", "Jet_sig1EB", "Jet_sig2EB", "Jet_ptDEB", "Jet_sig1PF", "Jet_sig2PF", "Jet_ptDPF", "Jet_cHadEFrac", "Jet_nHadEFrac", "Jet_eleEFrac", "Jet_photonEFrac", "Jet_ptAllTracks", "Jet_ptAllPVTracks", "Jet_alphaMax", "Jet_betaMax", "Jet_gammaMax", "Jet_gammaMaxEM", "Jet_gammaMaxHadronic", "Jet_gammaMaxET", "Jet_minDeltaRAllTracks", "Jet_minDeltaRPVTracks",};
-
-	int nInputs = inputFeatures.size();
-	std::vector<float> inputValues(nInputs);
-	
-	// setup TensorFlow objects
-	tensorflow::setLogging();
-	tensorflow::GraphDef* graphDef = tensorflow::loadGraphDef(graphPath);
-	tensorflow::Session* session = tensorflow::createSession(graphDef, nThreads);
-		
-	// register an input tensor (1 x nInputs) that is filled during the event loop
-	tensorflow::Tensor inputTensor(tensorflow::DT_FLOAT, {1, nInputs});
-*/	
 	//-----------v3-----------
 	std::string basePathV3 = std::string(std::getenv("CMSSW_BASE")) + "/src/LLPAnalysis/llpAnalyzer/nn_inference/tagger_AK4_v3";
 	
@@ -557,44 +510,6 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		if(_debug) std::cout << "deb0 " << jentry << std::endl;
 		llp_tree->InitVariables();
 		if(_debug) std::cout << "deb1 " << jentry << std::endl;
-/*
-		//std::cout << *lheComments<<endl;
-		if (!isData && signalScan)
-		{
-
-			string mh_substring = lheComments->substr(lheComments->find("MH-")+3);
-			int mh = stoi(mh_substring.substr(0,mh_substring.find('_')));
-			string mx_substring = lheComments->substr(lheComments->find("MS-")+3);
-			int mx = stoi(mx_substring.substr(0,mx_substring.find('_')));
-			string ctau_substring = lheComments->substr(lheComments->find("ctauS-")+6);
-			int ctau = stoi(ctau_substring.substr(0,ctau_substring.find('_')));
-			llp_tree->mH = mh;
-			llp_tree->mX = mx;
-			llp_tree->ctau = ctau;
-
-
-			pair<int,int> signalPair = make_pair(mx, ctau);
-
-			if (Files2D.count(signalPair) == 0){ //create file and tree
-				//format file name
-				string thisFileName = outfilename;
-				thisFileName.erase(thisFileName.end()-5, thisFileName.end());
-				thisFileName += "_" + to_string(mx) + "_" + to_string(ctau) + ".root";
-
-				Files2D[signalPair] = new TFile(thisFileName.c_str(), "recreate");
-				Trees2D[signalPair] =  llp_tree->tree_->CloneTree(0);
-				NEvents2D[signalPair] = new TH1F(Form("NEvents%d%d", mx, ctau), "NEvents", 1,0.5,1.5);
-
-
-				cout << "Created new output file " << thisFileName << endl;
-			}
-			//Fill NEvents hist
-			NEvents2D[signalPair]->Fill(1.0, genWeight);
-
-
-
-		}
-*/
 
 		if (label =="bkg_wH"|| label == "bkg_zH" || label == "bkg_HH"){
 			if (isData)
@@ -663,79 +578,6 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		if(!isData)
 		{
 
-			//   for(int i=0; i < nGenJets; i++)
-			//   {
-			//   llp_tree->genJetE[llp_tree->nGenJets] = genJetE[i];
-			//   llp_tree->genJetPt[llp_tree->nGenJets] = genJetPt[i];
-			//   llp_tree->genJetEta[llp_tree->nGenJets] = genJetEta[i];
-			//   llp_tree->genJetPhi[llp_tree->nGenJets] = genJetPhi[i];
-			//// llp_tree->nGenJets++;
-			//}
-			/*
-			llp_tree->genMetPtTrue = genMetPtTrue;
-			llp_tree->genMetPhiTrue = genMetPhiTrue;
-			llp_tree->genMetPtCalo = genMetPtCalo;
-			llp_tree->genMetPhiCalo = genMetPhiCalo;
-
-
-			for(int i = 0; i < 2;i++)
-			{
-				//std::cout << "i " << i << std::endl;
-				//std::cout << "gLLP_beta[i] " << gLLP_beta[i] << std::endl;
-				//std::cout << "gLLP_eta[i] " << gLLP_eta[i] << std::endl;
-				//std::cout << "gLLP_phi[i] " << gLLP_phi[i] << std::endl;
-				//std::cout << "gLLP_decay_vertex_x[i] " << gLLP_decay_vertex_x[i] << std::endl;
-				//std::cout << "gLLP_decay_vertex_y[i] " << gLLP_decay_vertex_y[i] << std::endl;
-				//std::cout << "gLLP_decay_vertex_z[i] " << gLLP_decay_vertex_z[i] << std::endl;
-				llp_tree->gLLP_e[i] = gLLP_e[i];
-				llp_tree->gLLP_pt[i] = gLLP_pt[i];
-				llp_tree->gLLP_eta[i] = gLLP_eta[i];
-				llp_tree->gLLP_phi[i] = gLLP_phi[i];
-				llp_tree->gLLP_travel_time[i] = gLLP_travel_time[i];
-				llp_tree->gLLP_decay_vertex_r[i] = sqrt(gLLP_decay_vertex_x[i]*gLLP_decay_vertex_x[i]+gLLP_decay_vertex_y[i]*gLLP_decay_vertex_y[i]);
-				//std::cout << "llp_tree->gLLP_decay_vertex_r[i] " << llp_tree->gLLP_decay_vertex_r[i] << std::endl;
-				llp_tree->gLLP_decay_vertex_x[i] = gLLP_decay_vertex_x[i];
-				llp_tree->gLLP_decay_vertex_y[i] = gLLP_decay_vertex_y[i];
-				llp_tree->gLLP_decay_vertex_z[i] = gLLP_decay_vertex_z[i];
-				//acceptance cut
-				if(llp_tree->gLLP_decay_vertex_r[i] > 30. && llp_tree->gLLP_decay_vertex_r[i] < 184. && abs(llp_tree->gLLP_decay_vertex_z[i]) < 376. && abs(llp_tree->gLLP_eta[i])!=666) {
-					if(i<1) llp_tree->gLLP0_EB = true;
-					else llp_tree->gLLP1_EB = true;
-				}
-
-				float beta = gLLP_beta[i];
-				if(beta<0){
-				TLorentzVector gLLP = makeTLorentzVector( gLLP_pt[i], gLLP_eta[i], gLLP_phi[i], gLLP_e[i] );
-				
-				//std::cout << "gLLP.Px " << gLLP.Px() << std::endl;
-				//std::cout << "gLLP.Py " << gLLP.Py() << std::endl;
-				//std::cout << "gLLP.Pz " << gLLP.Pz() << std::endl;
-				float Px = gLLP.Px();
-				float Py = gLLP.Py();
-				float Pz = gLLP.Pz();
-
-				//float P2 = sqrt(Px*Px+Py*Py+Pz*Pz);
-				//std::cout << "P2 " << P2 << std::endl;
-				//std::cout << "gLLP_e[i] " << gLLP_e[i] << std::endl;
-				beta = sqrt(Px*Px+Py*Py+Pz*Pz)/gLLP_e[i];
-				}
-				float gLLP_decay_vertex = sqrt(pow(llp_tree->gLLP_decay_vertex_r[i], 2) + pow(llp_tree->gLLP_decay_vertex_z[i],2));
-				//std::cout << "gLLP_decay_vertex " << gLLP_decay_vertex << std::endl;
-				float gamma = 1.0/sqrt(1-beta*beta);
-				//std::cout << "beta " << beta << std::endl;
-				//std::cout << "gamma " << gamma << std::endl;
-				llp_tree->gLLP_ctau[i] = gLLP_decay_vertex/(beta * gamma);
-				llp_tree->gLLP_beta[i] = gLLP_beta[i];
-
-				//if (abs(llp_tree->gLLP_eta[i]) < 2.4 && abs(llp_tree->gLLP_eta[i]) > 0.9
-				//  && abs(llp_tree->gLLP_decay_vertex_z[i])<1100 && abs(llp_tree->gLLP_decay_vertex_z[i])>568
-				//  && llp_tree->gLLP_decay_vertex_r[i] < 695.5) llp_tree->gLLP_csc[i] = true;
-
-				if( abs(llp_tree->gLLP_decay_vertex_z[i])<268.3 && llp_tree->gLLP_decay_vertex_r[i] < 129.0 && abs(llp_tree->gLLP_eta[i]) < 1.48 ) llp_tree->gLLP_eb[i] = true;
-
-			}//gLLP 
-
-*/
 
 
 			if(_debug) std::cout << "nBunchXing " << nBunchXing << std::endl;
@@ -777,12 +619,18 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		//if( llp_tree->met < 150. ) continue;
 		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 		if(_debug_lab) std::cout << "met " << llp_tree->met << std::endl;
-		if( (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
-		if( (label=="MR_EMU") && llp_tree->met < 30. ) continue;
-		if( (label.find("MR_Single") != std::string::npos) && llp_tree->met < 40. ) continue;
-		if( (label.find("MR_ZLL") != std::string::npos) && isData && llp_tree->met >= 30. ) continue;
-		if( (label.find("MR_JetHT") != std::string::npos) && llp_tree->met >= 30. ) continue;
-		if( (label=="MR_PHO") && llp_tree->met >= 30. ) continue;
+		//if( (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
+		//if( (label=="MR_EMU") && llp_tree->met < 30. ) continue;
+		//if( (label.find("MR_Single") != std::string::npos) && llp_tree->met < 40. ) continue;
+		//if( (label.find("MR_ZLL") != std::string::npos) && isData && llp_tree->met >= 30. ) continue;
+		//if( (label.find("MR_JetHT") != std::string::npos) && llp_tree->met >= 30. ) continue;
+		//if( (label=="MR_PHO") && llp_tree->met >= 30. ) continue;
+		if( (label.find("MR") == std::string::npos) && metType1Pt < 200. ) continue;
+		if( (label=="MR_EMU") && metType1Pt < 30. ) continue;
+		if( (label.find("MR_Single") != std::string::npos) && metType1Pt < 40. ) continue;
+		if( (label.find("MR_ZLL") != std::string::npos) && isData && metType1Pt >= 30. ) continue;
+		if( (label.find("MR_JetHT") != std::string::npos) && metType1Pt >= 30. ) continue;
+		if( (label=="MR_PHO") && metType1Pt >= 30. ) continue;
 		if(_debug_lab) std::cout << "label " << label.c_str() << "passed "<< std::endl;
 		if(_debug_lab) std::cout << "met " << llp_tree->met << "passed "<< std::endl;
 		if(_debug_met) std::cout << "metType1Pt passed" << metType1Pt << std::endl;
@@ -815,30 +663,15 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			if(_debug) std::cout << "passed nu cuts " << std::endl;
 		}
 
-/*		//met filters
-		llp_tree->Flag2_globalSuperTightHalo2016Filter          = Flag2_globalSuperTightHalo2016Filter;
-		llp_tree->Flag2_globalTightHalo2016Filter               = Flag2_globalTightHalo2016Filter;
-		llp_tree->Flag2_goodVertices                            = Flag2_goodVertices;
-		llp_tree->Flag2_BadChargedCandidateFilter               = Flag2_BadChargedCandidateFilter;
-		llp_tree->Flag2_BadPFMuonFilter                         = Flag2_BadPFMuonFilter;
-		llp_tree->Flag2_EcalDeadCellTriggerPrimitiveFilter      = Flag2_EcalDeadCellTriggerPrimitiveFilter;
-		llp_tree->Flag2_HBHENoiseFilter                         = Flag2_HBHENoiseFilter;
-		llp_tree->Flag2_HBHEIsoNoiseFilter                      = Flag2_HBHEIsoNoiseFilter;
-		llp_tree->Flag2_ecalBadCalibFilter                      = Flag2_ecalBadCalibFilter;
-		llp_tree->Flag2_eeBadScFilter                           = Flag2_eeBadScFilter;
-*/
 		if(!(Flag2_globalSuperTightHalo2016Filter && Flag2_BadPFMuonFilter && Flag2_EcalDeadCellTriggerPrimitiveFilter && Flag2_HBHENoiseFilter && Flag2_HBHEIsoNoiseFilter )) continue;
 		if( (analysisTag.find("2016") == std::string::npos) && !Flag2_ecalBadCalibFilter) continue;
 		if(isData && !Flag2_eeBadScFilter) continue;
 		//Triggers
-/*		for(int i = 0; i < NTriggersMAX; i++){
-			llp_tree->HLTDecision[i] = HLTDecision[i];
-			llp_tree->HLTPrescale[i] = HLTPrescale[i];
-		}
-*/		if(_debug_trg) std::cout << "begin: 310 " << HLTDecision[310] << std::endl;
+		if(_debug_trg) std::cout << "begin: 310 " << HLTDecision[310] << std::endl;
 		if(_debug_trg) std::cout << "begin: 310 " << llp_tree->HLTDecision[310] << std::endl;
 		//if( (label.find("MR") == std::string::npos) && !HLTDecision[310]) continue; 
 		if( (label.find("MR") == std::string::npos) && !HLTDecision[467]) continue; 
+		//if(!HLTDecision[467]) continue; 
 
 		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 		bool triggered = false;
@@ -901,20 +734,6 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 
 		if(_debug) std::cout << "passed trigger " << std::endl;
 
-		//bool triggered = false;
-		//for(int i = 0; i < NTrigger; i++)
-		//{
-		//	if(_debug_trg) std::cout << "i " << i << ", NTrigger "<< NTrigger << std::endl;
-
-		// int trigger_temp = trigger_paths[i];
-		//	if(_debug_trg) std::cout << "temp  " << trigger_paths[i] << ", triggered "<< triggered << std::endl;
-
-		//	triggered = triggered || HLTDecision[trigger_temp];
-		//	if(_debug_trg) std::cout << "is triggered ?"<< triggered << std::endl;
-
-		//}
-		//if (triggered) trig->Fill(1);
-		//if(_debug) std::cout << "triggered " << triggered << std::endl;
 		
 
 		//*************************************************************************
@@ -967,28 +786,15 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			tmpMuon.pdgId = 13 * -1 * muonCharge[i];
 
 			Leptons.push_back(tmpMuon);
-/*
-			llp_tree->muon_pileupIso[llp_tree->nMuons] = muon_pileupIso[i];
-			llp_tree->muon_chargedIso[llp_tree->nMuons] = muon_chargedIso[i];
-			llp_tree->muon_photonIso[llp_tree->nMuons] = muon_photonIso[i];
-			llp_tree->muon_neutralHadIso[llp_tree->nMuons] = muon_neutralHadIso[i];
-
-			llp_tree->muonIsLoose[llp_tree->nMuons] = muonIsLoose[i];
-
-			llp_tree->muonPt[llp_tree->nMuons] = muonPt[i];
-			llp_tree->muonEta[llp_tree->nMuons] = muonEta[i];
-			llp_tree->muonE[llp_tree->nMuons] = muonE[i];
-			llp_tree->muonPhi[llp_tree->nMuons] = muonPhi[i];
-*/
 			llp_tree->nMuons++;
 		}
 		if( (label=="MR_SingleMuon") && llp_tree->nMuons != 1 ) continue;
+		//if( (label=="MR_SingleElectron")  && llp_tree->nMuons != 0 ) continue;
+		//if( (label=="MR_EMU")  && llp_tree->nMuons != 1 ) continue;
 		if(_debug) std::cout << "nMuons " << llp_tree->nMuons << std::endl;
 		//if( (label=="MR_PHO") && llp_tree->nMuons != 0 ) continue;
 		//if( (label.find("MR_SingleElectron") != std::string::npos) && llp_tree->nMuons != 0 ) continue;
-		if( (label=="MR_SingleElectron")  && llp_tree->nMuons != 0 ) continue;
 		//if( (label=="MR_SingleElectron" || label=="MR_JetHT")  && llp_tree->nMuons != 0 ) continue;
-		if( (label=="MR_EMU")  && llp_tree->nMuons != 1 ) continue;
 		//if( (label=="MR_JetHT")  && llp_tree->nMuons != 0 ) continue;
 
 		//-------------------------------
@@ -1022,20 +828,15 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			tmpElectron.lepton.SetPtEtaPhiM(elePt[i],eleEta[i], elePhi[i], ELE_MASS);
 
 			Leptons.push_back(tmpElectron);
-/*
-			llp_tree->ele_passCutBasedIDVeto[llp_tree->nElectrons] = ele_passCutBasedIDVeto[i];
-
-			llp_tree->elePt[llp_tree->nElectrons] = elePt[i];
-			llp_tree->eleEta[llp_tree->nElectrons] = eleEta[i];
-			llp_tree->eleE[llp_tree->nElectrons] = eleE[i];
-			llp_tree->elePhi[llp_tree->nElectrons] = elePhi[i];
-*/
 			llp_tree->nElectrons++;
 		}
 		if( (label=="MR_SingleElectron") && llp_tree->nElectrons != 1 ) continue;
 		if(_debug) std::cout << "nElectrons " << llp_tree->nElectrons << std::endl;
 
 		//if( (label=="MR_PHO") && llp_tree->nElectrons != 0 ) continue;
+		//if( (label=="MR_SingleMuon")  && llp_tree->nElectrons != 0 ) continue;
+		//if( (label=="MR_EMU") && llp_tree->nElectrons != 1 ) continue;
+		//if( (label=="MR_JetHT") && llp_tree->nElectrons != 0 ) continue;
 		//if( (label.find("MR_SingleMuon") != std::string::npos) && llp_tree->nElectrons != 0 ) continue;
 		//if( (label.find("MR_EMU") != std::string::npos) && llp_tree->nElectrons != 1 ) continue;
 		//if( (label.find("MR_JetHT") != std::string::npos) && llp_tree->nElectrons != 0 ) continue;
@@ -1080,14 +881,6 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			tmpTau.tau.SetPtEtaPhiM(tauPt[i],tauEta[i], tauPhi[i], TAU_MASS);
 
 			Taus.push_back(tmpTau);
-/*
-			llp_tree->tau_IsLoose[llp_tree->nTaus] = tau_IsLoose[i];
-
-			llp_tree->tauPt[llp_tree->nTaus] = tauPt[i];
-			llp_tree->tauEta[llp_tree->nTaus] = tauEta[i];
-			llp_tree->tauE[llp_tree->nTaus] = tauE[i];
-			llp_tree->tauPhi[llp_tree->nTaus] = tauPhi[i];
-*/
 			llp_tree->nTaus++;
 		}
 		if(_debug) std::cout << "nTaus " << llp_tree->nTaus << std::endl;
@@ -1137,24 +930,16 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			tmpPhoton.photon.SetPtEtaPhiM(phoPt[i],phoEta[i], phoPhi[i], 0.);
 
 			Photons.push_back(tmpPhoton);
-/*
-			llp_tree->pho_passCutBasedIDLoose[llp_tree->nPhotons] = pho_passCutBasedIDLoose[i];
-
-			llp_tree->phoPt[llp_tree->nPhotons] = phoPt[i];
-			llp_tree->phoEta[llp_tree->nPhotons] = phoEta[i];
-			llp_tree->phoE[llp_tree->nPhotons] = phoE[i];
-			llp_tree->phoPhi[llp_tree->nPhotons] = phoPhi[i];
-*/
 			llp_tree->nPhotons++;
 		}
 		if(_debug) std::cout << "nPhotons " << llp_tree->nPhotons << std::endl;
 		if( (label=="MR_PHO") && llp_tree->nPhotons != 1 ) continue;
-/*
-		if( (label.find("MR_Single") != std::string::npos) && llp_tree->nPhotons != 0 ) continue;
-		if( (label.find("MR_EMU") != std::string::npos) && llp_tree->nPhotons != 0 ) continue;
-		if( (label.find("MR_ZLL") != std::string::npos) && llp_tree->nPhotons != 0 ) continue;
-		if( (label.find("MR_JetHT") != std::string::npos) && llp_tree->nPhotons != 0 ) continue;
-*/
+
+		//if( (label.find("MR_Single") != std::string::npos) && llp_tree->nPhotons != 0 ) continue;
+		//if( (label.find("MR_EMU") != std::string::npos) && llp_tree->nPhotons != 0 ) continue;
+		//if( (label.find("MR_ZLL") != std::string::npos) && llp_tree->nPhotons != 0 ) continue;
+		//if( (label.find("MR_JetHT") != std::string::npos) && llp_tree->nPhotons != 0 ) continue;
+
 		//-------------------------------
 		//Leptons
 		//-------------------------------
@@ -1162,30 +947,21 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		sort(Leptons.begin(), Leptons.end(), my_largest_pt_pf_lep);
 		for ( auto &tmp : Leptons )
 		{
-/*			llp_tree->lepE[llp_tree->nLeptons]      = tmp.lepton.E();
-			llp_tree->lepPt[llp_tree->nLeptons]     = tmp.lepton.Pt();
-			llp_tree->lepEta[llp_tree->nLeptons]    = tmp.lepton.Eta();
-			llp_tree->lepPhi[llp_tree->nLeptons]    = tmp.lepton.Phi();
-			llp_tree->lepPdgId[llp_tree->nLeptons]  = tmp.pdgId;
-			//llp_tree->lepDZ[llp_tree->nLeptons]     = tmp.dZ;
-			//llp_tree->lepPassId[llp_tree->nLeptons] = tmp.passId;
-			if(_debug) std::cout << "lepE " << tmp.lepton.E() << std::endl;
-*/
 			// std::cout << "lepton pdg " << llp_tree->lepPdgId[llp_tree->nLeptons] << std::endl;
 			llp_tree->nLeptons++;
 
 			lepp4 += tmp.lepton;
 		}
 		float dPhi = RazorAnalyzerLLP::deltaPhi(llp_tree->metPhi, lepp4.Phi());
-		float MT = sqrt(2*(llp_tree->met)*lepp4.Pt()*(1-cos(dPhi)));
-		//llp_tree->MT = sqrt(2*(llp_tree->met)*lepp4.Pt()*(1-cos(dPhi)));
+		//float MT = sqrt(2*(llp_tree->met)*lepp4.Pt()*(1-cos(dPhi)));
+		llp_tree->MT = sqrt(2*(llp_tree->met)*lepp4.Pt()*(1-cos(dPhi)));
 		if(_debug_lep) std::cout<<"MT "<<llp_tree->MT<<std::endl;
 		//if (triggered) trig_lepId->Fill(1);
 		if(_debug) std::cout << "nLeptons " << llp_tree->nLeptons << std::endl;
-/*		if( (label.find("MR_Single") != std::string::npos) && MT>=100 ) continue;
-		if( (label=="MR_PHO") && llp_tree->nLeptons != 0 ) continue;
-		if( (label=="MR_JetHT") && llp_tree->nLeptons != 0 ) continue;
-*/
+		//if( (label.find("MR_Single") != std::string::npos) && MT>=100 ) continue;
+		//if( (label=="MR_PHO") && llp_tree->nLeptons != 0 ) continue;
+		//if( (label=="MR_JetHT") && llp_tree->nLeptons != 0 ) continue;
+
 
 		//-------------------------------
 		// reconstruct Z
@@ -1222,16 +998,11 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 				}
 			}
 		}
-/*		if (foundZ && fabs(ZMass-Z_MASS) < 30.0)
-		{
-			llp_tree->ZMass = ZMass;
-			llp_tree->ZPt   = ZPt;
-			llp_tree->ZEta  = ZCandidate.Eta();
-			llp_tree->ZPhi  = ZCandidate.Phi();
-			llp_tree->ZleptonIndex1 = ZCandidateLeptonIndex.first;
-			llp_tree->ZleptonIndex2 = ZCandidateLeptonIndex.second;
-		} // endif foundZ
-*/		if( (label=="MR_ZLL") && isData && !(foundZ && fabs(ZMass-Z_MASS) < 30.0) ) continue;
+		if( (label=="MR_ZLL") && isData && !(foundZ && fabs(ZMass-Z_MASS) < 30.0) ) continue;
+		//if( (label=="MR_SingleMuon") && !(MT<100 && llp_tree->nMuons==1 && llp_tree->nElectrons==0 && llp_tree->nTaus==0 && llp_tree->nPhotons==0) ) continue;
+		//if( (label=="MR_SingleElectron") && !(MT<100 && llp_tree->nMuons==0 && llp_tree->nElectrons==1 && llp_tree->nTaus==0 && llp_tree->nPhotons==0) ) continue;
+		//if( (label=="MR_EMU") && !( llp_tree->nMuons==1 && llp_tree->nElectrons==1 && llp_tree->nTaus==0 && llp_tree->nPhotons==0) ) continue;
+		//if( (label=="MR_PHO") && !( llp_tree->nMuons==0 && llp_tree->nElectrons==0 && llp_tree->nTaus==0 && llp_tree->nPhotons==1) ) continue;
 
 		//-----------------------------------------------
 		//Select Jets
@@ -1239,21 +1010,19 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		//std::vector<double> jetPtVector;
 		//std::vector<double> jetCISVVector;
 		std::vector<jets> Jets;
-		//auto highest = [](auto a, auto b) { return a > b; };
-		//cout <<"nJets :" << nJets << std::endl;
 
 		if(_debug) std::cout << "nJets " << nJets << std::endl;
-		if(_debug_pf) std::cout << "nJets " << nJets << std::endl;
-		if(_debug_jet) std::cout << "nJets " << nJets << std::endl;
-		if(_debug_jet) std::cout << "jetE 0 " << jetE[0] << std::endl;
-		//if(_debug_jet) std::cout << "jetChargedEMEnergyFraction 0 " << jetChargedEMEnergyFraction[0] << std::endl;
-		//if(_debug_jet) std::cout << "jetNeutralEMEnergyFraction 0 " << jetNeutralEMEnergyFraction[0] << std::endl;
 		if(_debug_jet) std::cout << "jetGammaMax_ET 0 " << jetGammaMax_ET[0] << std::endl;
 
 		float ht = 0.;
-
+		//std::vector<jets> Jets;
+		if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
+		if(_debug_nj) std::cout << "nJets " << nJets << std::endl;
+		//Jets.clear();
+		if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
 		for(int i = 0; i < nJets; i++)
 		{
+			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
 
 			ht += jetPt[i];
 
@@ -1292,30 +1061,11 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			//------------------------------------------------------------
 
 			TLorentzVector thisJet = makeTLorentzVector( jetPt[i], jetEta[i], jetPhi[i], jetE[i] );
-			//double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
-			//		fixedGridRhoFastjetAll, jetJetArea[i] , JetCorrector);
-
-			//double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
-			//		fixedGridRhoFastjetAll, jetJetArea[i],
-			//		runNum,
-			//		JetCorrectorIOV,JetCorrector);
-			////cout <<"JEC :" << JEC << std::endl;
-
-			//TLorentzVector thisJet = makeTLorentzVector( jetPt[i]*JEC, jetEta[i], jetPhi[i], jetE[i]*JEC );
+			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
 
 			if( thisJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
-			//if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
 			if( fabs( thisJet.Eta() ) >= 1.48 ) continue;
-			//if( fabs( thisJet.Eta() ) >= 2.4 ) continue;
-			//if( fabs( thisJet.Eta() ) >= 3.0 ) continue;
-			// if ( !jetPassIDLoose[i] ) continue;
-			// if (!(jetRechitE[i] > 0.0)) continue;
-			// if(jetNRechits[i]<10) continue;
-			// if(jetRechitT[i] < 0.0) continue;
-			// if ((jetChargedHadronEnergyFraction[i]+jetChargedEMEnergyFraction[i]) > 0.4) continue;
-			// if ((jetChargedHadronEnergyFraction[i]+jetNeutralHadronEnergyFraction[i])/(jetChargedEMEnergyFraction[i]+jetNeutralEMEnergyFraction[i]) < 0.2) continue;
-
-			// std::cout <<jetRechitT[i] << "," << jetRechitE[i] <<  "," << jetNRechits[i] << std::endl;
+			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
 			//************************************
 			//Compute Rechit Quantities
 			//************************************
@@ -1424,100 +1174,11 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			if(_debug_pf) std::cout << "this jet ptDPF " << jetptDPF << std::endl;
 
 			
-			// cout << thisJet.Pt() << " " << thisJet.Eta() << " " << thisJet.Phi() << " | "
-			//      << jetEnergyRecHitsECAL << " " << jetEnergyRecHitsHCAL << " : " << jetNRecHitsECAL << " " 
-			//      << jetNRecHitsHCAL << " | " 
-			//      << jetTimeRecHitsECAL << " " << jetTimeRecHitsHCAL << "\n";
-
+			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
 			//************************************
 			//Evaluate NN tagger
 			//************************************
-	//std::vector<std::string> inputFeaturesV1 = { "Jet_0_nTrackConstituents","Jet_0_nSelectedTracks", "Jet_0_timeRecHitsEB", "Jet_0_energyRecHitsEB", "Jet_0_nRecHitsEB", "Jet_0_cHadEFrac", "Jet_0_nHadEFrac", "Jet_0_eleEFrac", "Jet_0_photonEFrac", "Jet_0_ptAllTracks", "Jet_0_ptAllPVTracks", "Jet_0_alphaMax", "Jet_0_betaMax", "Jet_0_gammaMax", "Jet_0_gammaMaxEM", "Jet_0_gammaMaxHadronic", "Jet_0_gammaMaxET","Jet_0_minDeltaRAllTracks","Jet_0_minDeltaRPVTracks",};
-/*			inputValuesV1[0] = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
-			inputValuesV1[1] = jetNSelectedTracks[i];
-			  //std::cout<< " input value 1: " << jetNSelectedTracks[i] <<std::endl;
-			inputValuesV1[2] = jetTimeRecHitsECAL;
-			inputValuesV1[3] = (jetEnergyRecHitsECAL == 0) ? -1 : sqrt(jetEnergyRecHitsECAL);
-			inputValuesV1[4] = jetNRecHitsECAL;
-			inputValuesV1[5] = jetChargedHadronEnergyFraction[i];
-			inputValuesV1[6] = jetNeutralHadronEnergyFraction[i];
-			inputValuesV1[7] = jetElectronEnergyFraction[i];
-			inputValuesV1[8] = jetPhotonEnergyFraction[i];
-			inputValuesV1[9] = (jetPtAllTracks[i] == -99) ? -1 : jetPtAllTracks[i];
-			inputValuesV1[10] = (jetPtAllPVTracks[i] == -99 || jetPtAllPVTracks[i] == 0) ? -1 : jetPtAllPVTracks[i];
-			inputValuesV1[11] = (jetAlphaMax[i] == -99) ? -100 : jetAlphaMax[i];
-			inputValuesV1[12] = (jetBetaMax[i] == -99) ? -100 : jetBetaMax[i];
-			inputValuesV1[13] = (jetGammaMax[i] == -99) ? -100 : jetGammaMax[i];
-			inputValuesV1[14] = (jetGammaMax_EM[i] == -99) ? -100 : jetGammaMax_EM[i];
-			inputValuesV1[15] = (jetGammaMax_Hadronic[i] == -99) ? -100 : jetGammaMax_Hadronic[i];
-			inputValuesV1[16] = (jetGammaMax_ET[i] == -99) ? -100 : jetGammaMax_ET[i];
-			inputValuesV1[17] = (jetMinDeltaRAllTracks[i] == -99 || jetMinDeltaRAllTracks[i] == 15) ? 999 : jetMinDeltaRAllTracks[i];
-			inputValuesV1[18] = (jetMinDeltaRPVTracks[i] == -99 || jetMinDeltaRPVTracks[i] == 15) ? 999 : jetMinDeltaRPVTracks[i];
-
-			// fill the input tensor using a data pointer that is shifted consecutively
-			float* dV1 = inputTensorV1.flat<float>().data();
-			for (float vV1 : inputValuesV1) {
-			  //std::cout<< " input value: " << v <<std::endl;
-			  *dV1 = vV1;
-			  dV1++;
-			}
-
-			// run the inference
-			std::vector<tensorflow::Tensor> outputsV1;		
-			tensorflow::run(sessionV1, {{inputTensorNameV1, inputTensorV1}}, {outputTensorNameV1}, &outputsV1, threadPoolV1);
 			
-			// the result
-			double outputValueV1 = outputsV1[0].matrix<float>()(0, 1);
-			//std::cout << "output value: " << outputValue << std::endl;
-			//std::cout << "\n" << std::endl;
-			
-	//std::vector<std::string> inputFeatures = { "Jet_nTrackConstituents", "Jet_nSelectedTracks", "Jet_timeRecHitsEB", "Jet_eFracRecHitsEB", "Jet_nRecHitsEB", "Jet_sig1EB", "Jet_sig2EB", "Jet_ptDEB", "Jet_sig1PF", "Jet_sig2PF", "Jet_ptDPF", "Jet_cHadEFrac", "Jet_nHadEFrac", "Jet_eleEFrac", "Jet_photonEFrac", "Jet_ptAllTracks", "Jet_ptAllPVTracks", "Jet_alphaMax", "Jet_betaMax", "Jet_gammaMax", "Jet_gammaMaxEM", "Jet_gammaMaxHadronic", "Jet_gammaMaxET", "Jet_minDeltaRAllTracks", "Jet_minDeltaRPVTracks",};
-			inputValues[0] = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
-			inputValues[1] = jetNSelectedTracks[i];
-			  //std::cout<< " input value 1: " << jetNSelectedTracks[i] <<std::endl;
-			inputValues[2] = jetTimeRecHitsECAL;
-			inputValues[3] = (jetEnergyRecHitsECAL == 0) ? -1 : (jetEnergyRecHitsECAL/jetE[i]);
-			inputValues[4] = jetNRecHitsECAL;
-			inputValues[5] = jetsig1EB;
-			inputValues[6] = jetsig2EB;
-			inputValues[7] = jetptDEB;
-			inputValues[8] = jetsig1PF;
-			inputValues[9] = jetsig2PF;
-			inputValues[10] = jetptDPF;
-			inputValues[11] = jetChargedHadronEnergyFraction[i];
-			inputValues[12] = jetNeutralHadronEnergyFraction[i];
-			inputValues[13] = jetElectronEnergyFraction[i];
-			inputValues[14] = jetPhotonEnergyFraction[i];
-			inputValues[15] = (jetPtAllTracks[i] == -99) ? -1 : jetPtAllTracks[i];
-			inputValues[16] = (jetPtAllPVTracks[i] == -99 || jetPtAllPVTracks[i] == 0) ? -1 : jetPtAllPVTracks[i];
-			inputValues[17] = (jetAlphaMax[i] == -99) ? -100 : jetAlphaMax[i];
-			inputValues[18] = (jetBetaMax[i] == -99) ? -100 : jetBetaMax[i];
-			inputValues[19] = (jetGammaMax[i] == -99) ? -100 : jetGammaMax[i];
-			inputValues[20] = (jetGammaMax_EM[i] == -99) ? -100 : jetGammaMax_EM[i];
-			inputValues[21] = (jetGammaMax_Hadronic[i] == -99) ? -100 : jetGammaMax_Hadronic[i];
-			inputValues[22] = (jetGammaMax_ET[i] == -99) ? -100 : jetGammaMax_ET[i];
-			inputValues[23] = (jetMinDeltaRAllTracks[i] == -99 || jetMinDeltaRAllTracks[i] == 15) ? 999 : jetMinDeltaRAllTracks[i];
-			inputValues[24] = (jetMinDeltaRPVTracks[i] == -99 || jetMinDeltaRPVTracks[i] == 15) ? 999 : jetMinDeltaRPVTracks[i];
-
-			// fill the input tensor using a data pointer that is shifted consecutively
-			float* d = inputTensor.flat<float>().data();
-			for (float v : inputValues) {
-			  //std::cout<< " input value: " << v <<std::endl;
-			  *d = v;
-			  d++;
-			}
-
-			// run the inference
-			std::vector<tensorflow::Tensor> outputs;		
-			tensorflow::run(session, {{inputTensorName, inputTensor}}, {outputTensorName}, &outputs, threadPool);
-			
-			// the result
-			double outputValue = outputs[0].matrix<float>()(0, 1);
-			//std::cout << "output value: " << outputValue << std::endl;
-			//std::cout << "\n" << std::endl;
-*/			
-			
-	//std::vector<std::string> inputFeaturesV3 = { "Jet_nTrackConstituents", "Jet_nSelectedTracks", "Jet_timeRecHitsEB", "Jet_eFracRecHitsEB", "Jet_nRecHitsEB", "Jet_sig1EB", "Jet_sig2EB", "Jet_ptDEB", "Jet_cHadEFrac", "Jet_nHadEFrac", "Jet_eleEFrac", "Jet_photonEFrac", "Jet_ptAllTracks", "Jet_ptAllPVTracks", "Jet_alphaMax", "Jet_betaMax", "Jet_gammaMax", "Jet_gammaMaxEM", "Jet_gammaMaxHadronic", "Jet_gammaMaxET", "Jet_minDeltaRAllTracks", "Jet_minDeltaRPVTracks",};
 			inputValuesV3[0] = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
 			inputValuesV3[1] = jetNSelectedTracks[i];
 			  //std::cout<< " input value 1: " << jetNSelectedTracks[i] <<std::endl;
@@ -1531,17 +1192,22 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			inputValuesV3[9] = jetNeutralHadronEnergyFraction[i];
 			inputValuesV3[10] = jetElectronEnergyFraction[i];
 			inputValuesV3[11] = jetPhotonEnergyFraction[i];
-			inputValuesV3[12] = (jetPtAllTracks[i] == -99) ? -1 : jetPtAllTracks[i];
+			inputValuesV3[12] = (jetPtAllTracks[i] == -99 || jetPtAllTracks[i] == 0) ? -1 : jetPtAllTracks[i];
 			inputValuesV3[13] = (jetPtAllPVTracks[i] == -99 || jetPtAllPVTracks[i] == 0) ? -1 : jetPtAllPVTracks[i];
-			inputValuesV3[14] = (jetAlphaMax[i] == -99) ? -100 : jetAlphaMax[i];
-			inputValuesV3[15] = (jetBetaMax[i] == -99) ? -100 : jetBetaMax[i];
-			inputValuesV3[16] = (jetGammaMax[i] == -99) ? -100 : jetGammaMax[i];
-			inputValuesV3[17] = (jetGammaMax_EM[i] == -99) ? -100 : jetGammaMax_EM[i];
-			inputValuesV3[18] = (jetGammaMax_Hadronic[i] == -99) ? -100 : jetGammaMax_Hadronic[i];
-			inputValuesV3[19] = (jetGammaMax_ET[i] == -99) ? -100 : jetGammaMax_ET[i];
+			inputValuesV3[14] = (jetAlphaMax[i] == -99 || jetPtAllTracks[i] == 0) ? -100 : jetAlphaMax[i];
+			inputValuesV3[15] = (jetBetaMax[i] == -99 || jetPtAllTracks[i] == 0) ? -100 : jetBetaMax[i];
+			inputValuesV3[16] = (jetGammaMax[i] == -99 || jetPtAllTracks[i] == 0) ? -100 : jetGammaMax[i];
+			inputValuesV3[17] = (jetGammaMax_EM[i] == -99 || jetPtAllTracks[i] == 0 ||jetE[i]*(jetPhotonEnergyFraction[i]+jetElectronEnergyFraction[i]) == 0 || isnan(jetGammaMax_EM[i])) ? -100 : jetGammaMax_EM[i];
+			inputValuesV3[18] = (jetGammaMax_Hadronic[i] == -99 || jetPtAllTracks[i] == 0 || jetE[i]*(jetNeutralHadronEnergyFraction[i]+jetChargedHadronEnergyFraction[i]) == 0) ? -100 : jetGammaMax_Hadronic[i];
+			inputValuesV3[19] = (jetGammaMax_ET[i] == -99 || jetPtAllTracks[i] == 0 || thisJet.Et() == 0) ? -100 : jetGammaMax_ET[i];
 			inputValuesV3[20] = (jetMinDeltaRAllTracks[i] == -99 || jetMinDeltaRAllTracks[i] == 15) ? 999 : jetMinDeltaRAllTracks[i];
 			inputValuesV3[21] = (jetMinDeltaRPVTracks[i] == -99 || jetMinDeltaRPVTracks[i] == 15) ? 999 : jetMinDeltaRPVTracks[i];
-
+			
+			if(_debug_dnn) {
+			 for(int rr=0;rr<22;rr++)
+			{
+			  std::cout<< " input value "<<rr<<" : " << inputValuesV3[rr] <<std::endl;
+			}}
 			// fill the input tensor using a data pointer that is shifted consecutively
 			float* dV3 = inputTensorV3.flat<float>().data();
 			for (float vV3 : inputValuesV3) {
@@ -1556,68 +1222,14 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			
 			// the result
 			double outputValueV3 = outputsV3[0].matrix<float>()(0, 1);
-			//std::cout << "output value: " << outputValue << std::endl;
-			//std::cout << "\n" << std::endl;
+			if(_debug_nj) std::cout << "output value: " << outputValueV3 << std::endl;
+			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
 
 			jets tmpJet;
 			tmpJet.jet    = thisJet;
-/*			tmpJet.time   = jetRechitT[i];
-			tmpJet.ecalNRechits = jetNRechits[i];
-			tmpJet.ecalRechitE = jetRechitE[i];
-			tmpJet.jetNeutralHadronMultiplicity = jetNeutralHadronMultiplicity[i];
-			tmpJet.jetChargedHadronMultiplicity = jetChargedHadronMultiplicity[i];
-			tmpJet.jetMuonMultiplicity = jetMuonMultiplicity[i];
-			tmpJet.jetElectronMultiplicity = jetElectronMultiplicity[i];
-			tmpJet.jetPhotonMultiplicity = jetPhotonMultiplicity[i];
-			tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
-			tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
-			tmpJet.jetMuonEnergyFraction = jetMuonEnergyFraction[i];
-			tmpJet.jetElectronEnergyFraction = jetElectronEnergyFraction[i];
-			tmpJet.jetPhotonEnergyFraction = jetPhotonEnergyFraction[i];
-			tmpJet.jetCSV = jetCISV[i];
-
-
-			tmpJet.jetAlphaMax = jetAlphaMax[i];
-			tmpJet.jetBetaMax = jetBetaMax[i];
-			tmpJet.jetGammaMax = jetGammaMax[i];
-			tmpJet.jetGammaMax_Hadronic = jetGammaMax_Hadronic[i];
-			tmpJet.jetGammaMax_EM = jetGammaMax_EM[i];
-			tmpJet.jetGammaMax_ET = jetGammaMax_ET[i];
-			tmpJet.jetPtAllPVTracks = jetPtAllPVTracks[i];
-			tmpJet.jetPtAllTracks = jetPtAllTracks[i];
-			tmpJet.jetMinDeltaRPVTracks = jetMinDeltaRPVTracks[i];
-			tmpJet.jetMinDeltaRAllTracks = jetMinDeltaRAllTracks[i];
-
-			tmpJet.jetChargedEMEnergyFraction = jetElectronEnergyFraction[i];
-			tmpJet.jetNeutralEMEnergyFraction = jetPhotonEnergyFraction[i];
-
-			tmpJet.jetNVertexTracks = jetNVertexTracks[i];
-			tmpJet.jetNSelectedTracks = jetNSelectedTracks[i];
-			tmpJet.jetDRSVJet = jetDRSVJet[i];
-			tmpJet.jetSVMass = jetSVMass[i];
-
-			tmpJet.jetChargedMultiplicity = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
-			//ecal rechits
-			tmpJet.jetNRecHitsEcal = jetNRecHitsECAL;
-			tmpJet.jetEnergyRecHitsEcal = jetEnergyRecHitsECAL;
-			tmpJet.jetTimeRecHitsEcal = jetTimeRecHitsECAL;
-
-			//hcal hbhe rechits
-		 	tmpJet.jetNRecHitsHcal = jetNRecHitsHCAL;
-			tmpJet.jetEnergyRecHitsHcal = jetEnergyRecHitsHCAL;
-			tmpJet.jetTimeRecHitsHcal = jetTimeRecHitsHCAL;
-
-			tmpJet.jetsig1EB = jetsig1EB;
-			tmpJet.jetsig2EB = jetsig2EB;
-			tmpJet.jetptDEB = jetptDEB;
-			tmpJet.jetsig1PF = jetsig1PF;
-			tmpJet.jetsig2PF = jetsig2PF;
-			tmpJet.jetptDPF = jetptDPF;
-*/
-			//tmpJet.dnn_score_v1 = outputValueV1;
 			tmpJet.dnn_score_v3 = outputValueV3;
 			bool dnn_wp_pass = 0;
-			if(outputValueV3>0.990)
+			if(outputValueV3>dnn_thre)
 			{
 				dnn_wp_pass=1;
 			}
@@ -1626,552 +1238,33 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 				dnn_wp_pass=0;
 			}
 			tmpJet.PassFail = dnn_wp_pass;
-			//tmpJet.dnn_score = outputValue;
-/*
-			if(_debug_trk) std::cout << "nTracks" << nTracks << std::endl;
-			std::vector<float> nPixelHits;
-			std::vector<float> nHits;
-			//int nChargedMultiplicity=0;
-			for(int iTrack=0; iTrack<nTracks; iTrack++)
-			{
-				double thisDR_trk = RazorAnalyzerLLP::deltaR(jetEta[i],jetPhi[i],track_Eta[iTrack], track_Phi[iTrack]);
-				if(thisDR_trk<0.4)
-				{
-					//nChargedMultiplicity++;
-					nPixelHits.push_back(track_nPixelHits[iTrack]);
-					nHits.push_back(track_nHits[iTrack]);
-				}
-
-			}
-
-			std::sort(nPixelHits.begin(), nPixelHits.end());
-			float nPixelHitsMedian = 0;
-			if (nPixelHits.size() > 0) {
-				if (nPixelHits.size() % 2 ==0) nPixelHitsMedian = ((nPixelHits[nPixelHits.size()/2 -1] + nPixelHits[nPixelHits.size()/2]) /2);
-				else nPixelHitsMedian = nPixelHits[nPixelHits.size()/2];
-			}    
-			std::sort(nHits.begin(), nHits.end());
-			float nHitsMedian = 0;
-			if (nHits.size() > 0) {
-				if (nHits.size() % 2 ==0) nHitsMedian = ((nHits[nHits.size()/2 -1] + nHits[nHits.size()/2]) /2);
-				else nHitsMedian = nHits[nHits.size()/2];
-			}
-
-			//tmpJet.jetChargedMultiplicity = nChargedMultiplicity;
-			tmpJet.jetNPixelHitsMedian = nPixelHitsMedian;
-			tmpJet.jetNHitsMedian = nHitsMedian;
-*/
 			Jets.push_back(tmpJet);
+			if(_debug_nj) std::cout << "pushed into Jets " << std::endl;
+			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
 
 		}
-		//llp_tree->HT = ht;
 
 
+		if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
 		sort(Jets.begin(), Jets.end(), my_largest_pt_pf_jet);
-/*
-		if (Jets.size()>0)
-		{
-			llp_tree->jetMet_dPhi = RazorAnalyzerLLP::deltaPhi(jetPhi[0],metType1Phi);
-			//TLorentzVector t1PFMET = makeTLorentzVectorPtEtaPhiM( metType1Pt, 0, metType1Phi, 0 );
-			TLorentzVector jet0 = makeTLorentzVectorPtEtaPhiM( jetPt[0], 0, jetPhi[0], 0 );
-			llp_tree->jetMet_dPhiStar = RazorAnalyzerLLP::deltaPhi(jetPhi[0],  (t1PFMET+jet0).Phi() );
-		}
-		else{
-			llp_tree->jetMet_dPhi = -999.;
-			llp_tree->jetMet_dPhiStar = -999.;
-		}
-*/
-		float jetMet_dPhiMin_temp = 999 ; 
-/*		float jetMet_dPhiStarMin_temp = 999 ; 
-		float jetMet_dPhiMin4_temp = 999 ; 
-*/
+		if(_debug_nj)  std::cout << "sorted Jets " << std::endl;
+
+  		float jetMet_dPhiMin_temp = 999 ; 
+		llp_tree->nJets = 0;
 		for ( auto &tmp : Jets )
 		{
-/*			llp_tree->jetNeutralHadronMultiplicity[llp_tree->nJets] = tmp.jetNeutralHadronMultiplicity;
-			llp_tree->jetChargedHadronMultiplicity[llp_tree->nJets] = tmp.jetChargedHadronMultiplicity;
-			llp_tree->jetMuonMultiplicity[llp_tree->nJets] = tmp.jetMuonMultiplicity;
-			llp_tree->jetElectronMultiplicity[llp_tree->nJets] = tmp.jetElectronMultiplicity;
-			llp_tree->jetPhotonMultiplicity[llp_tree->nJets] = tmp.jetPhotonMultiplicity;
-			llp_tree->jetNeutralHadronEnergyFraction[llp_tree->nJets] = tmp.jetNeutralHadronEnergyFraction;
-			llp_tree->jetChargedHadronEnergyFraction[llp_tree->nJets] = tmp.jetChargedHadronEnergyFraction;
-			llp_tree->jetMuonEnergyFraction[llp_tree->nJets] = tmp.jetMuonEnergyFraction;
-			llp_tree->jetElectronEnergyFraction[llp_tree->nJets] = tmp.jetElectronEnergyFraction;
-			llp_tree->jetPhotonEnergyFraction[llp_tree->nJets] = tmp.jetPhotonEnergyFraction;
-			llp_tree->jetCSV[llp_tree->nJets] = tmp.jetCSV;
-*/
 			llp_tree->jetPt[llp_tree->nJets] = tmp.jet.Pt();
-			llp_tree->jetPass[llp_tree->nJets] = tmp.PassFail;
-/*			llp_tree->jetEta[llp_tree->nJets] = tmp.jet.Eta();
-			llp_tree->jetE[llp_tree->nJets] = tmp.jet.E();
 			llp_tree->jetPhi[llp_tree->nJets] = tmp.jet.Phi();
-			llp_tree->jetTime[llp_tree->nJets] = tmp.time;
-			llp_tree->ecalNRechits[llp_tree->nJets] = tmp.ecalNRechits;
-			llp_tree->ecalRechitE[llp_tree->nJets] = tmp.ecalRechitE;
-
-			llp_tree->jetAlphaMax[llp_tree->nJets] = tmp.jetAlphaMax;
-			llp_tree->jetBetaMax[llp_tree->nJets] = tmp.jetBetaMax;
-			llp_tree->jetGammaMax[llp_tree->nJets] = tmp.jetGammaMax;
-			llp_tree->jetGammaMax_Hadronic[llp_tree->nJets] = tmp.jetGammaMax_Hadronic;
-			llp_tree->jetGammaMax_EM[llp_tree->nJets] = tmp.jetGammaMax_EM;
-			llp_tree->jetGammaMax_ET[llp_tree->nJets] = tmp.jetGammaMax_ET;
-			llp_tree->jetPtAllPVTracks[llp_tree->nJets] = tmp.jetPtAllPVTracks;
-			llp_tree->jetPtAllTracks[llp_tree->nJets] = tmp.jetPtAllTracks;
-			llp_tree->jetMinDeltaRAllTracks[llp_tree->nJets] = tmp.jetMinDeltaRAllTracks;
-			llp_tree->jetMinDeltaRPVTracks[llp_tree->nJets] = tmp.jetMinDeltaRPVTracks;
-
-			llp_tree->jetChargedEMEnergyFraction[llp_tree->nJets] = tmp.jetChargedEMEnergyFraction;
-			llp_tree->jetNeutralEMEnergyFraction[llp_tree->nJets] = tmp.jetNeutralEMEnergyFraction;
-
-			llp_tree->jetEcalE[llp_tree->nJets] = tmp.jet.E()*(tmp.jetElectronEnergyFraction+tmp.jetPhotonEnergyFraction);
-			llp_tree->jetHcalE[llp_tree->nJets] = tmp.jet.E()*(tmp.jetNeutralHadronEnergyFraction+tmp.jetChargedHadronEnergyFraction);
-
-			llp_tree->jetNVertexTracks[llp_tree->nJets] = tmp.jetNVertexTracks;
-			llp_tree->jetNSelectedTracks[llp_tree->nJets] = tmp.jetNSelectedTracks;
-			llp_tree->jetDRSVJet[llp_tree->nJets] = tmp.jetDRSVJet;
-			llp_tree->jetSVMass[llp_tree->nJets] = tmp.jetSVMass;
-
-			llp_tree->jetChargedMultiplicity[llp_tree->nJets] = tmp.jetChargedMultiplicity;
-			llp_tree->jetNPixelHitsMedian[llp_tree->nJets] = tmp.jetNPixelHitsMedian;
-			llp_tree->jetNHitsMedian[llp_tree->nJets] = tmp.jetNHitsMedian;
-
-			//ecal rechits
-			llp_tree->jetNRecHitsEcal[llp_tree->nJets] = tmp.jetNRecHitsEcal;
-			llp_tree->jetEnergyRecHitsEcal[llp_tree->nJets] = tmp.jetEnergyRecHitsEcal;
-			llp_tree->jetTimeRecHitsEcal[llp_tree->nJets] = tmp.jetTimeRecHitsEcal;
-
-			//hcal hbhe rechits
-			llp_tree->jetNRecHitsHcal[llp_tree->nJets] = tmp.jetNRecHitsHcal;
-			llp_tree->jetEnergyRecHitsHcal[llp_tree->nJets] = tmp.jetEnergyRecHitsHcal;
-			llp_tree->jetTimeRecHitsHcal[llp_tree->nJets] = tmp.jetTimeRecHitsHcal;
-
-			llp_tree->jet_sig_et1[llp_tree->nJets] = tmp.jetsig1EB;
-			llp_tree->jet_sig_et2[llp_tree->nJets] = tmp.jetsig2EB;
-			llp_tree->jet_pt_deb[llp_tree->nJets] = tmp.jetptDEB;
-			llp_tree->jet_sig_pt1[llp_tree->nJets] = tmp.jetsig1PF;
-			llp_tree->jet_sig_pt2[llp_tree->nJets] = tmp.jetsig2PF;
-			llp_tree->jet_pt_dpf[llp_tree->nJets] = tmp.jetptDPF;
-*/
-			//llp_tree->jetDNNScoreV1[llp_tree->nJets] = tmp.dnn_score_v1;
+			llp_tree->jetPass[llp_tree->nJets] = tmp.PassFail;
 			llp_tree->jetDNNScoreV3[llp_tree->nJets] = tmp.dnn_score_v3;
-			//llp_tree->jetDNNScore[llp_tree->nJets] = tmp.dnn_score;
 
-			//std::cout << "jetEta " << tmp.jet.Eta() << std::endl;
-			//std::cout << "jetEta " << llp_tree->jetEta[llp_tree->nJets] << std::endl;
-/*
-			if(jetMet_dPhiMin4_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),metType1Phi)) && llp_tree->nJets < 4)
-			{
-				jetMet_dPhiMin4_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),metType1Phi));
-			}
-*/			if (jetMet_dPhiMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),metType1Phi)))
+			if (jetMet_dPhiMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),metType1Phi)))
 			{
 				jetMet_dPhiMin_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),metType1Phi));
 			}     
-/*			TLorentzVector jet_temp = makeTLorentzVectorPtEtaPhiM( tmp.jet.Pt(), 0, tmp.jet.Phi(), 0 );
-			if (jetMet_dPhiStarMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() )))
-			{
-				jetMet_dPhiStarMin_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() ));
-			}     
-*/
 			llp_tree->nJets++;
 		}
-/*
-		//fatjets
-		std::vector<fatjets> FatJets;
-		for(int i = 0; i < nFatJets; i++)
-		{
-
-			//------------------------------------------------------------
-			//exclude selected muons and electrons from the jet collection
-			//------------------------------------------------------------
-			double deltaR = -1;
-			for(auto& lep : Leptons){
-				double thisDR = RazorAnalyzerLLP::deltaR(fatJetEta[i],fatJetPhi[i],lep.lepton.Eta(),lep.lepton.Phi());
-				if(deltaR < 0 || thisDR < deltaR) deltaR = thisDR;
-			}
-			if(deltaR > 0 && deltaR < 0.4) continue; //jet matches a selected lepton
-
-			//------------------------------------------------------------
-			//exclude selected taus from the jet collection
-			//------------------------------------------------------------
-			double deltaR_tau = -1;
-			for(auto& tau : Taus){
-				double thisDR_tau = RazorAnalyzerLLP::deltaR(fatJetEta[i],fatJetPhi[i],tau.tau.Eta(),tau.tau.Phi());
-				if(deltaR_tau < 0 || thisDR_tau < deltaR_tau) deltaR_tau = thisDR_tau;
-			}
-			if(deltaR_tau > 0 && deltaR_tau < 0.4) continue; //jet matches a selected tau
-
-			//------------------------------------------------------------
-			//exclude selected photons from the jet collection
-			//------------------------------------------------------------
-			double deltaR_pho = -1;
-			for(auto& pho : Photons){
-				double thisDR_pho = RazorAnalyzerLLP::deltaR(fatJetEta[i],fatJetPhi[i],pho.photon.Eta(),pho.photon.Phi());
-				if(deltaR_pho < 0 || thisDR_pho < deltaR_pho) deltaR_pho = thisDR_pho;
-			}
-			if(deltaR_pho > 0 && deltaR_pho < 0.4) continue; //jet matches a selected photon
-
-			//------------------------------------------------------------
-			//Apply Jet Energy and Resolution Corrections
-			//------------------------------------------------------------
-
-			TLorentzVector thisFatJet = makeTLorentzVector( fatJetPt[i], fatJetEta[i], fatJetPhi[i], fatJetE[i] );
-
-			if( thisFatJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
-			if( fabs( thisFatJet.Eta() ) >= 1.48 ) continue;
-
-			//std::cout <<fatJetPt[i] << "," << fatJetE[i] <<  "," << fatJetEta[i] << std::endl;
-
-			//************************************
-			//Compute Rechit Quantities
-			//************************************
-			double fatjetEnergyRecHitsECAL = 0;
-			double fatjetEnergyRecHitsHCAL = 0;
-			double fatjetTimeRecHitsECAL = -100;
-			double fatjetTimeRecHitsHCAL = -100;
-			double tmpFatJetTimeEnergyRecHitsECAL = 0;
-			double tmpFatJetTimeEnergyRecHitsHCAL = 0;
- 			int fatjetNRecHitsECAL = 0;
- 			int fatjetNRecHitsHCAL = 0;
-
-			//Loop over ECAL rechits
-			for (int q=0; q < nRechits; q++) {
-			  if (ecalRechit_E[q] <= 0.5) continue;
-			  double tmpDR = RazorAnalyzerLLP::deltaR(thisFatJet.Eta(), thisFatJet.Phi(), ecalRechit_Eta[q], ecalRechit_Phi[q]);
-			  if (tmpDR > 0.8) continue;			  
-			  if (ecalRechit_kSaturatedflag[q] || 
-			      ecalRechit_kLeadingEdgeRecoveredflag[q] || 
-			      ecalRechit_kPoorRecoflag[q] ||
-			      ecalRechit_kWeirdflag[q] || 
-			      ecalRechit_kDiWeirdflag[q]) continue;
-			  if (ecalRechit_T_Error[q] < 0 || ecalRechit_T_Error[q] > 100) continue;
-			  if (abs(ecalRechit_T[q]) > 12.5) continue;
-			  if (abs(ecalRechit_Eta[q]) > 1.5) continue;
-
-			  //cout << "Rechit " << q << " : " << ecalRechit_E[q] << "\n";
-		 
-			  fatjetEnergyRecHitsECAL += ecalRechit_E[q];
-			  fatjetNRecHitsECAL++;
-			  tmpFatJetTimeEnergyRecHitsECAL += ecalRechit_E[q]*ecalRechit_T[q];
-			}  
-
-			if (fatjetEnergyRecHitsECAL > 0) {
-			  fatjetTimeRecHitsECAL = tmpFatJetTimeEnergyRecHitsECAL / fatjetEnergyRecHitsECAL;
-			} else {
-			  fatjetEnergyRecHitsECAL = -1;
-			  fatjetTimeRecHitsECAL = -100;
-			}
-
-			//if (fatjetNRecHitsECAL == 0) {
-			//  fatjetEnergyRecHitsECAL = -1;
-			//}
-			//if (isnan(fatjetRechitT[i]) || jetRechitE[i] == 0) {
-			//  fatjetTimeRecHitsECAL = -100;
-			//} else {
-			//  fatjetTimeRecHitsECAL = jetRechitT[i];
-			//}
-
-			//Loop over HCAL rechits
-			for (int q=0; q < nHBHERechits; q++) {
-			  if (hbheRechit_E[q] <= 0.1) continue;
-			  double tmpDR = RazorAnalyzerLLP::deltaR(thisFatJet.Eta(), thisFatJet.Phi(), hbheRechit_Eta[q], hbheRechit_Phi[q]);
-			  if (tmpDR > 0.8) continue;
-
-			  fatjetEnergyRecHitsHCAL += hbheRechit_E[q];
-			  fatjetNRecHitsHCAL++;
-			  tmpFatJetTimeEnergyRecHitsHCAL += hbheRechit_E[q]*hbheRechit_T[q];
-			}
-
-			if (fatjetEnergyRecHitsHCAL > 0) {
-			  fatjetTimeRecHitsHCAL = tmpFatJetTimeEnergyRecHitsHCAL / fatjetEnergyRecHitsHCAL;
-			} else {
-			  fatjetEnergyRecHitsHCAL = -1;
-			  fatjetTimeRecHitsHCAL = -100;
-			}
-
-
-			fatjets tmpFatJet;
-			tmpFatJet.fatjet    = thisFatJet;
-			tmpFatJet.CorrectedPt   = fatJetCorrectedPt[i];
-
-			//ecal rechits
-			tmpFatJet.fatjetNRecHitsEcal = fatjetNRecHitsECAL;
-			tmpFatJet.fatjetEnergyRecHitsEcal = fatjetEnergyRecHitsECAL;
-			tmpFatJet.fatjetTimeRecHitsEcal = fatjetTimeRecHitsECAL;
-
-			//hcal hbhe rechits
-			tmpFatJet.fatjetNRecHitsHcal = fatjetNRecHitsHCAL;
-			tmpFatJet.fatjetEnergyRecHitsHcal = fatjetEnergyRecHitsHCAL;
-			tmpFatJet.fatjetTimeRecHitsHcal = fatjetTimeRecHitsHCAL;
-
-			
-			FatJets.push_back(tmpFatJet);
-		}
-
-		sort(FatJets.begin(), FatJets.end(), my_largest_pt_pf_fatjet);
-		for ( auto &tmp : FatJets )
-		{
-
-			llp_tree->fatJetPt[llp_tree->nFatJets] = tmp.fatjet.Pt();
-			llp_tree->fatJetEta[llp_tree->nFatJets] = tmp.fatjet.Eta();
-			llp_tree->fatJetE[llp_tree->nFatJets] = tmp.fatjet.E();
-			llp_tree->fatJetPhi[llp_tree->nFatJets] = tmp.fatjet.Phi();
-			llp_tree->fatJetCorrectedPt[llp_tree->nFatJets] = tmp.CorrectedPt;
-			
-			//ecal rechits
-			llp_tree->fatjetNRecHitsEcal[llp_tree->nFatJets] = tmp.fatjetNRecHitsEcal;
-			llp_tree->fatjetEnergyRecHitsEcal[llp_tree->nFatJets] = tmp.fatjetEnergyRecHitsEcal;
-			llp_tree->fatjetTimeRecHitsEcal[llp_tree->nFatJets] = tmp.fatjetTimeRecHitsEcal;
-
-			//hcal hbhe rechits
-			llp_tree->fatjetNRecHitsHcal[llp_tree->nFatJets] = tmp.fatjetNRecHitsHcal;
-			llp_tree->fatjetEnergyRecHitsHcal[llp_tree->nFatJets] = tmp.fatjetEnergyRecHitsHcal;
-			llp_tree->fatjetTimeRecHitsHcal[llp_tree->nFatJets] = tmp.fatjetTimeRecHitsHcal;
-
-			llp_tree->nFatJets++;
-		}
-
-		//match fatjet (above 250) to ak4 jets with dR 0.4
-		//jetIn250AK8[i] = -1;
-		for(int i = 0; i < llp_tree->nFatJets; i++){
-			//cout << "fatjet i pt " << i << " : " << llp_tree->fatJetPt[i] << "\n";
-			if(llp_tree->fatJetPt[i]<250) continue;
-			for(int j = 0; j < llp_tree->nJets; j++){
-				//cout << "ak4jet j pt " << j << " : " << llp_tree->jetPt[j] << "\n";
-				double tmpdR = RazorAnalyzerLLP::deltaR(llp_tree->fatJetEta[i], llp_tree->fatJetPhi[i], llp_tree->jetEta[j], llp_tree->jetPhi[j]);
-				//cout << "ak4jet j dR " << j << " : " << tmpdR << "\n";
-				if(tmpdR<0.4){
-					llp_tree->jetIn250AK8[j] = 1;
-				}
-				//cout << "ak4jet j bool " << j << " : " << llp_tree->jetIn250AK8[j] << "\n";
-			}
-		}
-	
-
-		//gLLP grandaughters
-		double ecal_radius = 129.0;
-		//double hcal_radius = 179.0;
-		double EB_z = 268.36447217; // 129*sinh(1.479)
-		double EE_z = 298.5; //where Ecal Endcap starts in z direction
-		if(!isData){
-			llp_tree->genVertexX = genVertexX;
-			llp_tree->genVertexY = genVertexY;
-			llp_tree->genVertexZ = genVertexZ;
-			llp_tree->genVertexT = genVertexT;
-
-			//gLLP daughters
-			for(int i = 0; i <4; i++){
-				llp_tree->gLLP_daughter_id[i] = gLLP_daughter_id[i];
-				llp_tree->gLLP_daughter_mass[i] = gLLP_daughter_mass[i];
-				llp_tree->gLLP_daughter_e[i] = gLLP_daughter_e[i];
-				llp_tree->gLLP_daughter_pt[i] = gLLP_daughter_pt[i];
-				llp_tree->gLLP_daughter_eta[i] = gLLP_daughter_eta[i];
-				llp_tree->gLLP_daughter_phi[i] = gLLP_daughter_phi[i];
-
-				TLorentzVector tmpdau = makeTLorentzVectorPtEtaPhiM(gLLP_daughter_pt[i], gLLP_daughter_eta[i], gLLP_daughter_phi[i], gLLP_daughter_mass[i]);
-				int llp_index=0;
-				if(i>1) llp_index=1;
-				double radius = sqrt( pow(gLLP_decay_vertex_x[llp_index],2) + pow(gLLP_decay_vertex_y[llp_index],2) );
-				llp_tree->gLLP_daughter_travel_time_EB[i] = (1./30.)*fabs(ecal_radius-radius)/(tmpdau.Pt()/tmpdau.E());// - (1./30.) * ecal_radius * cosh(tmp.Eta());//1/30 is to convert cm to ns
-				//Calculate dt from generation point to ECAL face
-				double x_ecal = gLLP_decay_vertex_x[llp_index] + 30. * (tmpdau.Px()/tmpdau.E())*(llp_tree->gLLP_daughter_travel_time_EB[i]);
-				double y_ecal = gLLP_decay_vertex_y[llp_index] + 30. * (tmpdau.Py()/tmpdau.E())*(llp_tree->gLLP_daughter_travel_time_EB[i]);
-				double z_ecal = gLLP_decay_vertex_z[llp_index] + 30. * (tmpdau.Pz()/tmpdau.E())*(llp_tree->gLLP_daughter_travel_time_EB[i]);
-
-
-				if( fabs(z_ecal) < EB_z && radius <= ecal_radius &&  fabs(gLLP_decay_vertex_z[llp_index]) < EE_z) {
-					llp_tree->gLLP_daughter_photon_travel_time_EB[i] = (1./30) * sqrt(pow(ecal_radius,2)+pow(z_ecal,2));
-					if(genVertexT==-999) genVertexT=0;
-					llp_tree->gen_time_daughter_EB[i] = gLLP_travel_time[llp_index] + (llp_tree->gLLP_daughter_travel_time_EB[i]) - llp_tree->gLLP_daughter_photon_travel_time_EB[i] + genVertexT;
-
-				} else {
-					llp_tree->gLLP_daughter_travel_time_EB[i] = -666;
-					llp_tree->gen_time_daughter_EB[i] = -666.;
-					llp_tree->gLLP_daughter_photon_travel_time_EB[i] = -666.;
-				}
-
-				// Correction of eta and phi based on ecal points
-				double phi = atan((y_ecal-genVertexY)/(x_ecal-genVertexX));
-				if  (x_ecal < 0.0) {
-					phi = TMath::Pi() + phi;
-				}
-				phi = deltaPhi(phi,0.0);
-
-				double theta = atan(sqrt(pow(x_ecal-genVertexX,2)+pow(y_ecal-genVertexY,2))/abs(z_ecal-genVertexZ));
-				double eta = -1.0*TMath::Sign(1.0, z_ecal-genVertexZ)*log(tan(theta/2));
-				llp_tree->gLLP_daughter_eta_ecalcorr[i] = eta;
-				llp_tree->gLLP_daughter_phi_ecalcorr[i] = phi;
-
-				//match to AK4
-				double min_delta_r = 666.;
-				int match_jet_index = -666;
-				for ( int i_jet = 0; i_jet < llp_tree->nJets; i_jet++ )
-				{
-					double current_delta_r = deltaR(llp_tree->gLLP_daughter_eta_ecalcorr[i], llp_tree->gLLP_daughter_phi_ecalcorr[i], llp_tree->jetEta[i_jet], llp_tree->jetPhi[i_jet]);
-					if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r <<", current_delta_r "<< current_delta_r << std::endl;
-					if ( current_delta_r < min_delta_r )
-					{
-						min_delta_r = current_delta_r;
-						match_jet_index = i_jet;
-					}
-					if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
-				}//end matching to jets 
-
-				if ( min_delta_r < 0.4 )
-					//if ( min_delta_r < 20 )
-				{
-					llp_tree->gLLP_daughter_match_jet_index[i] = match_jet_index;
-					llp_tree->gLLP_daughter_min_delta_r_match_jet[i] = min_delta_r;
-					//llp_tree->matched[match_jet_index] = true;
-					if(i<2) llp_tree->jet_matched_gLLP0_daughter[match_jet_index] = true;
-					else llp_tree->jet_matched_gLLP1_daughter[match_jet_index] = true;
-					if(_debug_match) std::cout << " i " << i << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
-				}
-
-				//match to AK8
-				double fatjet_min_delta_r = 666.;
-				int match_fatjet_index = -666;
-				for ( int i_fatjet = 0; i_fatjet < llp_tree->nFatJets; i_fatjet++ )
-				{
-					double current_delta_r = deltaR(llp_tree->gLLP_daughter_eta_ecalcorr[i], llp_tree->gLLP_daughter_phi_ecalcorr[i], llp_tree->fatJetEta[i_fatjet], llp_tree->fatJetPhi[i_fatjet]);
-					if(_debug_match) std::cout << " i_fatjet " << i_fatjet << ", match_fatjet_index " << match_fatjet_index << ", fatjet_min_delta_r " << fatjet_min_delta_r <<", current_delta_r "<< current_delta_r << std::endl;
-					if ( current_delta_r < fatjet_min_delta_r )
-					{
-						fatjet_min_delta_r = current_delta_r;
-						match_fatjet_index = i_fatjet;
-					}
-					if(_debug_match) std::cout << " i_fatjet " << i_fatjet << ", match_fatjet_index " << match_fatjet_index << ", fatjet_min_delta_r " << fatjet_min_delta_r << std::endl;
-				}//end matching to jets 
-
-				if ( fatjet_min_delta_r < 0.8 )
-				{
-					llp_tree->gLLP_daughter_match_fatjet_index[i] = match_fatjet_index;
-					llp_tree->gLLP_daughter_min_delta_r_match_fatjet[i] = fatjet_min_delta_r;
-					//llp_tree->matched[match_fatjet_index] = true;
-					if(i<2) llp_tree->fatjet_matched_gLLP0_daughter[match_fatjet_index] = true;
-					else llp_tree->fatjet_matched_gLLP1_daughter[match_fatjet_index] = true;
-					if(_debug_match) std::cout << " i " << i << ", match_fatjet_index " << match_fatjet_index << ", fatjet_min_delta_r " << fatjet_min_delta_r << std::endl;
-				}
-
-
-			}//end of loop over daughters
-
-			//gLLP grandaughters
-			for(int i = 0; i <4; i++){
-				llp_tree->gLLP_grandaughter_id[i] = gLLP_grandaughter_id[i];
-				llp_tree->gLLP_grandaughter_mass[i] = gLLP_grandaughter_mass[i];
-				llp_tree->gLLP_grandaughter_e[i] = gLLP_grandaughter_e[i];
-				llp_tree->gLLP_grandaughter_pt[i] = gLLP_grandaughter_pt[i];
-				llp_tree->gLLP_grandaughter_eta[i] = gLLP_grandaughter_eta[i];
-				llp_tree->gLLP_grandaughter_phi[i] = gLLP_grandaughter_phi[i];
-				//llp_tree->gLLP_grandaughter_eta_ecalcorr[i] = gLLP_grandaughter_eta_ecalcorr[i];
-				//llp_tree->gLLP_grandaughter_phi_ecalcorr[i] = gLLP_grandaughter_phi_ecalcorr[i];
-
-				TLorentzVector tmpdau = makeTLorentzVectorPtEtaPhiM(gLLP_grandaughter_pt[i], gLLP_grandaughter_eta[i], gLLP_grandaughter_phi[i], gLLP_grandaughter_mass[i]);
-				int llp_index=0;
-				if(i>1) llp_index=1;
-				double radius = sqrt( pow(gLLP_decay_vertex_x[llp_index],2) + pow(gLLP_decay_vertex_y[llp_index],2) );
-				llp_tree->gLLP_grandaughter_travel_time_EB[i] = (1./30.)*fabs(ecal_radius-radius)/(tmpdau.Pt()/tmpdau.E());// - (1./30.) * ecal_radius * cosh(tmp.Eta());//1/30 is to convert cm to ns
-				//Calculate dt from generation point to ECAL face
-				double x_ecal = gLLP_decay_vertex_x[llp_index] + 30. * (tmpdau.Px()/tmpdau.E())*(llp_tree->gLLP_grandaughter_travel_time_EB[i]);
-				double y_ecal = gLLP_decay_vertex_y[llp_index] + 30. * (tmpdau.Py()/tmpdau.E())*(llp_tree->gLLP_grandaughter_travel_time_EB[i]);
-				double z_ecal = gLLP_decay_vertex_z[llp_index] + 30. * (tmpdau.Pz()/tmpdau.E())*(llp_tree->gLLP_grandaughter_travel_time_EB[i]);
-
-
-				if( fabs(z_ecal) < EB_z && radius <= ecal_radius &&  fabs(gLLP_decay_vertex_z[llp_index]) < EE_z) {
-					llp_tree->gLLP_grandaughter_photon_travel_time_EB[i] = (1./30) * sqrt(pow(ecal_radius,2)+pow(z_ecal,2));
-					//llp_tree->photon_travel_time_dau_pv[i] = (1./30) * sqrt(pow(x_ecal-genVertexX,2) + pow(y_ecal-genVertexY,2) + pow(z_ecal-genVertexZ,2));
-					//llp_tree->gen_time_dau_pv[i] =  gLLP_travel_time[llp_index] + (llp_tree->gLLP_grandaughter_travel_time_EB[i]) - photon_travel_time_dau_pv[i] + genVertexT;
-					if(genVertexT==-999) genVertexT=0;
-					llp_tree->gen_time_grandaughter_EB[i] = gLLP_travel_time[llp_index] + (llp_tree->gLLP_grandaughter_travel_time_EB[i]) - llp_tree->gLLP_grandaughter_photon_travel_time_EB[i] + genVertexT;
-
-				} else {
-					llp_tree->gLLP_grandaughter_travel_time_EB[i] = -666;
-					//llp_tree->gen_time_dau_pv[i] = -666.;
-					llp_tree->gen_time_grandaughter_EB[i] = -666.;
-					llp_tree->gLLP_grandaughter_photon_travel_time_EB[i] = -666.;
-					//llp_tree->photon_travel_time_dau_pv[i] = -666.;
-				}
-
-				// Correction of eta and phi based on ecal points
-				double phi = atan((y_ecal-genVertexY)/(x_ecal-genVertexX));
-				if  (x_ecal < 0.0) {
-					phi = TMath::Pi() + phi;
-				}
-				phi = deltaPhi(phi,0.0);
-
-				//std::cout << "phi " << phi 
-				//	<< ", x_ecal " << x_ecal
-				//	<< ", y_ecal " << y_ecal
-				//	<< ", z_ecal " << z_ecal
-				//	<< ", genVertexX " << genVertexX
-				//	<< ", genVertexY " << genVertexY
-				//	<< ", genVertexZ " << genVertexZ
-				//	<< ", genVertexT " << genVertexT
-				//	<< std::endl;
-				double theta = atan(sqrt(pow(x_ecal-genVertexX,2)+pow(y_ecal-genVertexY,2))/abs(z_ecal-genVertexZ));
-				double eta = -1.0*TMath::Sign(1.0, z_ecal-genVertexZ)*log(tan(theta/2));
-				llp_tree->gLLP_grandaughter_eta_ecalcorr[i] = eta;
-				llp_tree->gLLP_grandaughter_phi_ecalcorr[i] = phi;
-
-				//llp_tree->gLLP_grandaughter_EB[i] = gLLP_grandaughter_EB[i];
-				//llp_tree->gLLP_grandaughter_ETL[i] = gLLP_grandaughter_ETL[i];
-				//llp_tree->gLLP_grandaughter_photon_travel_time_EB[i] = gLLP_grandaughter_photon_travel_time_EB[i];
-				//llp_tree->gLLP_grandaughter_photon_travel_time_ETL[i] = gLLP_grandaughter_photon_travel_time_ETL[i];
-				//llp_tree->gLLP_grandaughter_travel_time_EB[i] = gLLP_grandaughter_travel_time_EB[i];
-				//llp_tree->gLLP_grandaughter_travel_time_ETL[i] = gLLP_grandaughter_travel_time_ETL[i];
-				//llp_tree->gen_time_grandaughter_EB[i] = gen_time_grandaughter_EB[i];
-				//llp_tree->gen_time_grandaughter_ETL[i] = gen_time_grandaughter_ETL[i];
-				//llp_tree->gLLP_grandaughter_match_jet_index[i] = gLLP_grandaughter_match_jet_index[i];
-
-				if(_debug_match) std::cout << "evt: "<<llp_tree->evtNum <<" n_jet " << llp_tree->nJets << std::endl; 
-				double min_delta_r = 666.;
-				int match_jet_index = -666;
-				for ( int i_jet = 0; i_jet < llp_tree->nJets; i_jet++ )
-				{
-					double current_delta_r = deltaR(llp_tree->gLLP_grandaughter_eta_ecalcorr[i], llp_tree->gLLP_grandaughter_phi_ecalcorr[i], llp_tree->jetEta[i_jet], llp_tree->jetPhi[i_jet]);
-					if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r <<", current_delta_r "<< current_delta_r << std::endl;
-					if ( current_delta_r < min_delta_r )
-					{
-						min_delta_r = current_delta_r;
-						match_jet_index = i_jet;
-					}
-					if(_debug_match) std::cout << " i_jet " << i_jet << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
-				}//end matching to jets 
-
-				if ( min_delta_r < 0.4 )
-					//if ( min_delta_r < 20 )
-				{
-					llp_tree->gLLP_grandaughter_match_jet_index[i] = match_jet_index;
-					llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = min_delta_r;
-					//llp_tree->matched[match_jet_index] = true;
-					if(i<2) llp_tree->jet_matched_gLLP0_grandaughter[match_jet_index] = true;
-					else llp_tree->jet_matched_gLLP1_grandaughter[match_jet_index] = true;
-					if(_debug_match) std::cout << " i " << i << ", match_jet_index " << match_jet_index << ", min_delta_r " << min_delta_r << std::endl;
-				}
-				//llp_tree->gLLP_grandaughter_min_delta_r_match_jet[i] = gLLP_grandaughter_min_delta_r_match_jet[i];
-
-			}//loop over grandaughters
-
-			//tagged?
-			for(int i=0;i<4;i++)
-			{
-				int llp_index=0;
-				if(i>1) llp_index=1;
-				if(llp_tree->gLLP_grandaughter_match_jet_index[i]>-666)
-				{
-					int jet_index = llp_tree->gLLP_grandaughter_match_jet_index[i];
-					if(llp_tree->jetTime[jet_index] > 0.09 
-							&& llp_tree->jetMinDeltaRPVTracks[jet_index] > 0.06
-							&& llp_tree->jetGammaMax_ET[jet_index] < 0.16
-							&& llp_tree->jetChargedHadronEnergyFraction[jet_index] < 0.06)
-					{
-						llp_tree->gLLP_tagged[llp_index] = true;
-					}
-				}
-			}
-
-		}//finished gen part
-*/
+			if(_debug_nj) std::cout << "filled Jets " << std::endl;
 		if(llp_tree->nJets ==0 ) continue;
 		if( (label=="MR_JetHT") && llp_tree->nJets != 2 ) continue;
 		float jet2_dPhi_temp = 0;
@@ -2191,41 +1284,16 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 
 		if(label=="MR_PHO"){
 			TLorentzVector photon0 = makeTLorentzVectorPtEtaPhiM(llp_tree->phoPt[0],llp_tree->phoEta[0], llp_tree->phoPhi[0], 0.);
-/*
-			if (Jets.size()>0)
-			{
-				llp_tree->jetPho_dPhi = RazorAnalyzerLLP::deltaPhi(jetPhi[0], llp_tree->phoPhi[0]);
-				TLorentzVector jet0 = makeTLorentzVectorPtEtaPhiM( jetPt[0], 0, jetPhi[0], 0 );
-				llp_tree->jetPho_dPhiStar = RazorAnalyzerLLP::deltaPhi(jetPhi[0],  (photon0+jet0).Phi() );
-			}
-			else{
-				llp_tree->jetPho_dPhi = -999.;
-				llp_tree->jetPho_dPhiStar = -999.;
-			}
-*/
 			float jetPho_dPhiMin_temp = 999 ; 
-/*			float jetPho_dPhiStarMin_temp = 999 ; 
-			float jetPho_dPhiMin4_temp = 999 ; 
-*/
 
 			int MR_PHO_nJets = 0;
 			for ( auto &tmp : Jets )
 			{
 
-/*				if(jetPho_dPhiMin4_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),llp_tree->phoPhi[0])) && MR_PHO_nJets < 4)
-				{
-					jetPho_dPhiMin4_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),llp_tree->phoPhi[0]));
-				}
-*/				if (jetPho_dPhiMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),llp_tree->phoPhi[0])))
+				if (jetPho_dPhiMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),llp_tree->phoPhi[0])))
 				{
 					jetPho_dPhiMin_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),llp_tree->phoPhi[0]));
 				}     
-/*				TLorentzVector jet_temp = makeTLorentzVectorPtEtaPhiM( tmp.jet.Pt(), 0, tmp.jet.Phi(), 0 );
-				if (jetPho_dPhiStarMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(), (photon0+jet_temp).Phi() )))
-				{
-					jetPho_dPhiStarMin_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(), (photon0+jet_temp).Phi() ));
-				}     
-*/
 				MR_PHO_nJets++;
 
 			}
@@ -2258,17 +1326,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 
 	if(!isData && signalScan)
 	{
-/*
-		for(auto &filePtr : Files2D)
-		{
-			cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
-			filePtr.second->cd();
-			Trees2D[filePtr.first]->Write();
-			NEvents2D[filePtr.first]->Write("NEvents");
-			filePtr.second->Close();
-
-		}
-*/	}
+	}
 	else
 	{
 		cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
