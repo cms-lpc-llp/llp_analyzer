@@ -12,10 +12,10 @@
 //ROOT includes
 #include "TH1F.h"
 
-#define dnn_thre 0.990
+#define dnn_thre 0.996
 
 #define _debug 0
-#define _debug_nj 1
+#define _debug_nj 0
 #define _debug_dnn 0
 #define _debug_pf 0
 #define _debug_lab 0
@@ -59,100 +59,13 @@ struct photons
 	TLorentzVector photon;
 };
 
-struct fatjets
-{
-	TLorentzVector fatjet;
-	float CorrectedPt;
-
-	//ecal rechits
-	int fatjetNRecHitsEcal;
-	float fatjetEnergyRecHitsEcal;
-	float fatjetTimeRecHitsEcal;
-
-	//hcal hbhe rechits
-	int fatjetNRecHitsHcal;
-	float fatjetEnergyRecHitsHcal;
-	float fatjetTimeRecHitsHcal;
-
-};
 
 
-struct jets
+struct ak4jets
 {
 	TLorentzVector jet;
 	bool PassFail;
 	float dnn_score_v3;
-	//pat::Jet jet;
-	//float time;
-	//int jetNeutralHadronMultiplicity;
-	//int jetChargedHadronMultiplicity;
-	//int jetMuonMultiplicity;
-	//int jetElectronMultiplicity;
-	//int jetPhotonMultiplicity;
-	//float jetNeutralHadronEnergyFraction;
-	//float jetChargedHadronEnergyFraction;
-	//float jetMuonEnergyFraction;
-	//float jetElectronEnergyFraction;
-	//float jetPhotonEnergyFraction;
-	//float jetCSV;
-	//int ecalNRechits;
-	//float ecalRechitE;
-
-	//float jetAlphaMax;
-	//float jetBetaMax;
-	//float jetGammaMax;
-	//float jetGammaMax_Hadronic;
-	//float jetGammaMax_EM;
-	//float jetGammaMax_ET;
-	//float jetPtAllTracks;
-	//float jetPtAllPVTracks;
-	//float jetMinDeltaRAllTracks;
-	//float jetMinDeltaRPVTracks;
-
-	//float jetChargedEMEnergyFraction;
-	//float jetNeutralEMEnergyFraction;
-
-	//int jetChargedMultiplicity;
-	////int jetNHits;
-	////int jetNPixelHits;
-	//float jetNPixelHitsMedian;
-	//float jetNHitsMedian;
-
-	////int   jetNSV;
-	////int   jetNSVCand;
-	//int   jetNVertexTracks;
-	//int   jetNSelectedTracks;
-	//float jetDRSVJet;
-	////float jetFlightDist2D;
-	////float jetFlightDist2DError;
-	////float jetFlightDist3D;
-	////float jetFlightDist3DError;
-	////float jetSV_x;
-	////float jetSV_y;
-	////float jetSV_z;
-	////int   jetSVNTracks;
-	//float jetSVMass;
-
-	////ecal rechits
-	//int jetNRecHitsEcal;
-	//float jetEnergyRecHitsEcal;
-	//float jetTimeRecHitsEcal;
-
-	////hcal hbhe rechits
-	//int jetNRecHitsHcal;
-	//float jetEnergyRecHitsHcal;
-	//float jetTimeRecHitsHcal;
-
-	//double jetsig1EB;
-	//double jetsig2EB;
-	//double jetptDEB;
-	//double jetsig1PF;
-	//double jetsig2PF;
-	//double jetptDPF;
-
-	//float dnn_score_v1;
-	//float dnn_score_v3;
-	//float dnn_score;
 };
 
 //pt comparison
@@ -171,14 +84,9 @@ struct largest_pt_pf_lep
 //jet highest pt comparator
 struct largest_pt_pf_jet
 {
-	inline bool operator() (const jets& p1, const jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
+	inline bool operator() (const ak4jets& p1, const ak4jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
 } my_largest_pt_pf_jet;
 
-//fatjet highest pt comparator
-struct largest_pt_pf_fatjet
-{
-	inline bool operator() (const fatjets& p1, const fatjets& p2){return p1.fatjet.Pt() > p2.fatjet.Pt();}
-} my_largest_pt_pf_fatjet;
 
 //Analyze
 void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string analysisTag, string process)
@@ -203,7 +111,6 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 	std::string threadPoolV3 = "no_threads";
 	int nThreadsV3 = 1;
 	
-	//std::vector<std::string> inputFeaturesV3 = { "Jet_nTrackConstituents", "Jet_nSelectedTracks", "Jet_timeRecHitsEB", "Jet_eFracRecHitsEB", "Jet_nRecHitsEB", "Jet_sig1EB", "Jet_sig2EB", "Jet_ptDEB", "Jet_cHadEFrac", "Jet_nHadEFrac", "Jet_eleEFrac", "Jet_photonEFrac", "Jet_ptAllTracks", "Jet_ptAllPVTracks", "Jet_alphaMax", "Jet_betaMax", "Jet_gammaMax", "Jet_gammaMaxEM", "Jet_gammaMaxHadronic", "Jet_gammaMaxET", "Jet_minDeltaRAllTracks", "Jet_minDeltaRPVTracks",};
 	std::vector<std::string> inputFeaturesV3 = { "Jet_nTrackConstituents", "Jet_nSelectedTracks", "Jet_timeRecHitsEB", "Jet_eFracRecHitsEB", "Jet_nRecHitsEB", "Jet_sig1EB", "Jet_sig2EB", "Jet_ptDEB", "Jet_cHadEFrac", "Jet_nHadEFrac", "Jet_eleEFrac", "Jet_photonEFrac", "Jet_ptAllTracks", "Jet_ptAllPVTracks", "Jet_alphaMax", "Jet_betaMax", "Jet_gammaMax", "Jet_gammaMaxEM", "Jet_gammaMaxHadronic", "Jet_gammaMaxET", "Jet_minDeltaRAllTracks", "Jet_minDeltaRPVTracks",};
 
 	int nInputsV3 = inputFeaturesV3.size();
@@ -548,8 +455,6 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			bool wzFlag = false;
 			for (int i=0; i < nGenParticle; ++i)
 			{
-				// if (abs(gParticleId[i]) == wzId && gParticleStatus[i] == 22)
-				//if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == wzId)
 				if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] && abs(gParticleMotherId[i]) == wzId)
 				{
 					wzFlag = true;
@@ -1009,20 +914,22 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		//-----------------------------------------------
 		//std::vector<double> jetPtVector;
 		//std::vector<double> jetCISVVector;
-		std::vector<jets> Jets;
+		std::vector<ak4jets> AK4Jets;
 
 		if(_debug) std::cout << "nJets " << nJets << std::endl;
 		if(_debug_jet) std::cout << "jetGammaMax_ET 0 " << jetGammaMax_ET[0] << std::endl;
 
 		float ht = 0.;
 		//std::vector<jets> Jets;
-		if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
+		if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
 		if(_debug_nj) std::cout << "nJets " << nJets << std::endl;
 		//Jets.clear();
-		if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
+		//Jets.empty();
+		if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
+
 		for(int i = 0; i < nJets; i++)
 		{
-			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
+			if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
 
 			ht += jetPt[i];
 
@@ -1061,11 +968,12 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			//------------------------------------------------------------
 
 			TLorentzVector thisJet = makeTLorentzVector( jetPt[i], jetEta[i], jetPhi[i], jetE[i] );
-			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
+			if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
 
 			if( thisJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
 			if( fabs( thisJet.Eta() ) >= 1.48 ) continue;
-			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
+			if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
+
 			//************************************
 			//Compute Rechit Quantities
 			//************************************
@@ -1174,7 +1082,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			if(_debug_pf) std::cout << "this jet ptDPF " << jetptDPF << std::endl;
 
 			
-			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
+			if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
 			//************************************
 			//Evaluate NN tagger
 			//************************************
@@ -1223,12 +1131,14 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			// the result
 			double outputValueV3 = outputsV3[0].matrix<float>()(0, 1);
 			if(_debug_nj) std::cout << "output value: " << outputValueV3 << std::endl;
-			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
+			if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
 
-			jets tmpJet;
+			ak4jets tmpJet;
 			tmpJet.jet    = thisJet;
+			//tmpJet.dnn_score_v3 = 0;
 			tmpJet.dnn_score_v3 = outputValueV3;
 			bool dnn_wp_pass = 0;
+
 			if(outputValueV3>dnn_thre)
 			{
 				dnn_wp_pass=1;
@@ -1237,21 +1147,23 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			{
 				dnn_wp_pass=0;
 			}
+
 			tmpJet.PassFail = dnn_wp_pass;
-			Jets.push_back(tmpJet);
-			if(_debug_nj) std::cout << "pushed into Jets " << std::endl;
-			if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
+			AK4Jets.push_back(tmpJet);
+
+			if(_debug_nj) std::cout << "pushed into AK4Jets " << std::endl;
+			if(_debug_nj) std::cout << "len AK4Jets " << AK4Jets.size() << std::endl;
 
 		}
 
 
-		if(_debug_nj) std::cout << "len Jets " << Jets.size() << std::endl;
-		sort(Jets.begin(), Jets.end(), my_largest_pt_pf_jet);
-		if(_debug_nj)  std::cout << "sorted Jets " << std::endl;
+		if(_debug_nj) std::cout << "len AK4Jets " << AK4Jets.size() << std::endl;
+		sort(AK4Jets.begin(), AK4Jets.end(), my_largest_pt_pf_jet);
+		if(_debug_nj)  std::cout << "sorted AK4Jets " << std::endl;
 
   		float jetMet_dPhiMin_temp = 999 ; 
 		llp_tree->nJets = 0;
-		for ( auto &tmp : Jets )
+		for ( auto &tmp : AK4Jets )
 		{
 			llp_tree->jetPt[llp_tree->nJets] = tmp.jet.Pt();
 			llp_tree->jetPhi[llp_tree->nJets] = tmp.jet.Phi();
@@ -1287,7 +1199,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			float jetPho_dPhiMin_temp = 999 ; 
 
 			int MR_PHO_nJets = 0;
-			for ( auto &tmp : Jets )
+			for ( auto &tmp : AK4Jets )
 			{
 
 				if (jetPho_dPhiMin_temp > abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(),llp_tree->phoPhi[0])))
@@ -1338,6 +1250,4 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		outFile->Close();
 	}
 
-	//if (helper) delete helper; //for some reason this is causing crashes. something is 
-	//                             not done corrector in the RazorHelper destructor
 }
