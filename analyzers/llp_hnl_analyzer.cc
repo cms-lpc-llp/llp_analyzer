@@ -1047,16 +1047,10 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
           MuonSystem->cscRechitCluster3MaxChamber[MuonSystem->nCscRechitClusters3] = tmp.maxChamber;
           MuonSystem->cscRechitCluster3NChamber[MuonSystem->nCscRechitClusters3] = tmp.nChamber;
           MuonSystem->cscRechitCluster3MaxStation[MuonSystem->nCscRechitClusters3] = tmp.maxStation;
-          MuonSystem->cscRechitCluster3NStation[MuonSystem->nCscRechitClusters2] = tmp.nStation;
-          MuonSystem->cscRechitCluster3NStation5[MuonSystem->nCscRechitClusters2] = tmp.nStation5;
-          MuonSystem->cscRechitCluster3NStation10perc[MuonSystem->nCscRechitClusters2] = tmp.nStation10perc;
           MuonSystem->cscRechitCluster3NStation10[MuonSystem->nCscRechitClusters3] = tmp.nStation10;
           MuonSystem->cscRechitCluster3AvgStation10[MuonSystem->nCscRechitClusters3] = tmp.avgStation10;
 
 
-          MuonSystem->cscRechitCluster3AvgStation[MuonSystem->nCscRechitClusters2] = tmp.avgStation;
-          MuonSystem->cscRechitCluster3AvgStation5[MuonSystem->nCscRechitClusters2] = tmp.avgStation5;
-          MuonSystem->cscRechitCluster3AvgStation10perc[MuonSystem->nCscRechitClusters2] = tmp.avgStation10perc;
           MuonSystem->cscRechitCluster3Me11Ratio[MuonSystem->nCscRechitClusters3] = tmp.Me11Ratio;
           MuonSystem->cscRechitCluster3Me12Ratio[MuonSystem->nCscRechitClusters3] = tmp.Me12Ratio;
 
