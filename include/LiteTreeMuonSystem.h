@@ -790,6 +790,8 @@ public:
   float         cscRechitCluster3_match_gLLP_ctau[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_beta[N_MAX_CSC];
   bool         cscRechitCluster3_match_gLLP_csc[N_MAX_CSC];
+  int         cscRechitCluster3_match_gLLP_multiplicity[N_MAX_CSC];
+  int         cscRechitCluster3_match_gLLP_EM_multiplicity[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_e[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_pt[N_MAX_CSC];
   float         cscRechitCluster3_match_gLLP_EMFracE[N_MAX_CSC];
@@ -922,6 +924,7 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   bool          cscRechitCluster3MuonVetoVVTightIso[N_MAX_CSC];
   bool          cscRechitCluster3MuonVetoTightId[N_MAX_CSC];
   bool          cscRechitCluster3MuonVetoLooseId[N_MAX_CSC];
+  bool          cscRechitCluster3MuonVetoGlobal[N_MAX_CSC];
 
   bool          cscRechitCluster3MuonVetoIso[N_MAX_CSC];
   float         cscRechitCluster3IsoMuonVetoPt[N_MAX_CSC];
@@ -1030,6 +1033,7 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   float gLLP_pt[2];
   float gLLP_lepdPhi[2];
   int gLLP_multiplicity[2];
+  int gLLP_EM_multiplicity[2];
 
 
 
