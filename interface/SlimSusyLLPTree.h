@@ -1,7 +1,7 @@
 // Class to manage files for b-tag scale factors, lepton scale factors, pileup weights, and other information
 
-#ifndef SusyLLPTree_H
-#define SusyLLPTree_H
+#ifndef SlimSusyLLPTree_H
+#define SlimSusyLLPTree_H
 
 #define LLP_ARRAY_SIZE 2
 #define LLP_DAUGHTER_ARRAY_SIZE 4
@@ -50,12 +50,12 @@
 #include "LLPAnalysis/llpAnalyzer/interface/RazorAnalyzerLLP.h"
 #include "LLPAnalysis/llpAnalyzer/interface/RazorHelper.h"
 
-class SusyLLPTree
+class SlimSusyLLPTree
 {
 
 	public:
-		SusyLLPTree();
-		~SusyLLPTree();
+		SlimSusyLLPTree();
+		~SlimSusyLLPTree();
 
 		//tree
 		TTree *tree_;

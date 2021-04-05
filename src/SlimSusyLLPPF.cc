@@ -1,6 +1,6 @@
-#include "LLPAnalysis/llpAnalyzer/interface/SusyLLPPF.h"
+#include "LLPAnalysis/llpAnalyzer/interface/SlimSusyLLPPF.h"
 #include "LLPAnalysis/llpAnalyzer/interface/RazorHelper.h"
-#include "LLPAnalysis/llpAnalyzer/interface/SusyLLPPFTree.h"
+#include "LLPAnalysis/llpAnalyzer/interface/SlimSusyLLPPFTree.h"
 #include "LLPAnalysis/llpAnalyzer/interface/JetCorrectorParameters.h"
 #include "LLPAnalysis/llpAnalyzer/interface/JetCorrectionUncertainty.h"
 #include "LLPAnalysis/llpAnalyzer/interface/BTagCalibrationStandalone.h"
@@ -68,7 +68,7 @@ struct photons
 
 
 
-struct ak4jets
+struct slim_ak4jets
 {
 	TLorentzVector jet;
 	bool PassFail;
@@ -83,20 +83,20 @@ struct greater_than_pt
 };
 
 //lepton highest pt comparator
-struct largest_pt_pf_lep
+struct largest_pt_slimpf_lep
 {
 	inline bool operator() (const leptons& p1, const leptons& p2){return p1.lepton.Pt() > p2.lepton.Pt();}
-} my_largest_pt_pf_lep;
+} my_largest_pt_slimpf_lep;
 
 //jet highest pt comparator
-struct largest_pt_pf_jet
+struct largest_pt_slimpf_jet
 {
-	inline bool operator() (const ak4jets& p1, const ak4jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
-} my_largest_pt_pf_jet;
+	inline bool operator() (const slim_ak4jets& p1, const slim_ak4jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
+} my_largest_pt_slimpf_jet;
 
 
 //Analyze
-void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string analysisTag, string process)
+void SlimSusyLLPPF::Analyze(bool isData, int options, string outputfilename, string analysisTag, string process)
 {
 	//initialization: create one TTree for each analysis box
 	cout << "Initializing..." << endl;
@@ -385,11 +385,11 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 	//Set up Output File
 	//-----------------------------------------------
 	string outfilename = outputfilename;
-	if (outfilename == "") outfilename = "SusyLLPPFTree.root";
+	if (outfilename == "") outfilename = "SlimSusyLLPPFTree.root";
 	TFile *outFile;
 	if(!signalScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
 
-	SusyLLPPFTree *llp_tree = new SusyLLPPFTree;
+	SlimSusyLLPPFTree *llp_tree = new SlimSusyLLPPFTree;
 	llp_tree->CreateTree();
 	llp_tree->tree_->SetAutoFlush(0);
 	llp_tree->InitTree();
@@ -545,7 +545,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		if( (label.find("MR_Single") != std::string::npos) && metType1Pt < 40. ) continue;
 		if( (label.find("MR_ZLL") != std::string::npos) && isData && metType1Pt >= 30. ) continue;
 		if( (label.find("MR_JetHT") != std::string::npos) && metType1Pt >= 30. ) continue;
-		if( (label=="MR_PHO") && metType1Pt >= 30. ) continue;
+		//if( (label=="MR_PHO") && metType1Pt >= 30. ) continue;
 		if(_debug_lab) std::cout << "label " << label.c_str() << "passed "<< std::endl;
 		if(_debug_lab) std::cout << "met " << llp_tree->met << "passed "<< std::endl;
 		if(_debug_met) std::cout << "metType1Pt passed" << metType1Pt << std::endl;
@@ -712,7 +712,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		//if( (label=="MR_SingleElectron")  && llp_tree->nMuons != 0 ) continue;
 		//if( (label=="MR_EMU")  && llp_tree->nMuons != 1 ) continue;
 		if(_debug) std::cout << "nMuons " << llp_tree->nMuons << std::endl;
-		//if( (label=="MR_PHO") && llp_tree->nMuons != 0 ) continue;
+		if( (label=="MR_PHO") && llp_tree->nMuons != 0 ) continue;
 		//if( (label.find("MR_SingleElectron") != std::string::npos) && llp_tree->nMuons != 0 ) continue;
 		//if( (label=="MR_SingleElectron" || label=="MR_JetHT")  && llp_tree->nMuons != 0 ) continue;
 		//if( (label=="MR_JetHT")  && llp_tree->nMuons != 0 ) continue;
@@ -759,7 +759,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		if( (label=="MR_SingleElectron") && llp_tree->nElectrons != 1 ) continue;
 		if(_debug||_debug_ee) std::cout << "nElectrons " << llp_tree->nElectrons << std::endl;
 
-		//if( (label=="MR_PHO") && llp_tree->nElectrons != 0 ) continue;
+		if( (label=="MR_PHO") && llp_tree->nElectrons != 0 ) continue;
 		//if( (label=="MR_SingleMuon")  && llp_tree->nElectrons != 0 ) continue;
 		//if( (label=="MR_EMU") && llp_tree->nElectrons != 1 ) continue;
 		//if( (label=="MR_JetHT") && llp_tree->nElectrons != 0 ) continue;
@@ -881,7 +881,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		//Leptons
 		//-------------------------------
 		TLorentzVector lepp4;
-		sort(Leptons.begin(), Leptons.end(), my_largest_pt_pf_lep);
+		sort(Leptons.begin(), Leptons.end(), my_largest_pt_slimpf_lep);
 		for ( auto &tmp : Leptons )
 		{
 			// std::cout << "lepton pdg " << llp_tree->lepPdgId[llp_tree->nLeptons] << std::endl;
@@ -896,7 +896,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		//if (triggered) trig_lepId->Fill(1);
 		if(_debug) std::cout << "nLeptons " << llp_tree->nLeptons << std::endl;
 		//if( (label.find("MR_Single") != std::string::npos) && MT>=100 ) continue;
-		//if( (label=="MR_PHO") && llp_tree->nLeptons != 0 ) continue;
+		if( (label=="MR_PHO") && llp_tree->nLeptons != 0 ) continue;
 		//if( (label=="MR_JetHT") && llp_tree->nLeptons != 0 ) continue;
 
 
@@ -947,7 +947,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		//-----------------------------------------------
 		//std::vector<double> jetPtVector;
 		//std::vector<double> jetCISVVector;
-		std::vector<ak4jets> AK4Jets;
+		std::vector<slim_ak4jets> AK4Jets;
 
 		if(_debug) std::cout << "nJets " << nJets << std::endl;
 		if(_debug_jet) std::cout << "jetGammaMax_ET 0 " << jetGammaMax_ET[0] << std::endl;
@@ -1006,6 +1006,8 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			if( thisJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
 			if( fabs( thisJet.Eta() ) >= 1.48 ) continue;
 			if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
+			//
+			//if( (label.find("MR") != std::string::npos) && jetMuonEnergyFraction[i]>=0.6 ) continue;
 			if( jetRechitT[i]<=-1 ) continue;
 			if( jetMuonEnergyFraction[i]>=0.6 ) continue;
 			if( jetElectronEnergyFraction[i]>=0.6 ) continue;
@@ -1170,7 +1172,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			if(_debug_nj) std::cout << "output value: " << outputValueV3 << std::endl;
 			if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
 
-			ak4jets tmpJet;
+			slim_ak4jets tmpJet;
 			tmpJet.jet    = thisJet;
 			//tmpJet.dnn_score_v3 = 0;
 			tmpJet.dnn_score_v3 = outputValueV3;
@@ -1195,7 +1197,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 
 
 		if(_debug_nj) std::cout << "len AK4Jets " << AK4Jets.size() << std::endl;
-		sort(AK4Jets.begin(), AK4Jets.end(), my_largest_pt_pf_jet);
+		sort(AK4Jets.begin(), AK4Jets.end(), my_largest_pt_slimpf_jet);
 		if(_debug_nj)  std::cout << "sorted AK4Jets " << std::endl;
 
   		float jetMet_dPhiMin_temp = 999 ; 

@@ -16,3 +16,15 @@
     <use name="PhysicsTools/TensorFlow" />
     <use name="LLPAnalysis/llpAnalyzer"/>
 </bin>
+<bin name="RunSlimSusyLLP" file="RunSlimSusyLLP.cc">
+    <use name="root" />
+    <use name="rootcore" />
+    <use name="PhysicsTools/TensorFlow" />
+    <use name="LLPAnalysis/llpAnalyzer"/>
+</bin>
+<bin name="RunSlimSusyLLPPF" file="RunSlimSusyLLPPF.cc">
+    <use name="root" />
+    <use name="rootcore" />
+    <use name="PhysicsTools/TensorFlow" />
+    <use name="LLPAnalysis/llpAnalyzer"/>
+</bin>

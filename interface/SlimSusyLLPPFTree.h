@@ -1,7 +1,7 @@
 // Class to manage files for b-tag scale factors, lepton scale factors, pileup weights, and other information
 
-#ifndef SusyLLPTree_H
-#define SusyLLPTree_H
+#ifndef SlimSusyLLPPFTree_H
+#define SlimSusyLLPPFTree_H
 
 #define LLP_ARRAY_SIZE 2
 #define LLP_DAUGHTER_ARRAY_SIZE 4
@@ -50,12 +50,12 @@
 #include "LLPAnalysis/llpAnalyzer/interface/RazorAnalyzerLLP.h"
 #include "LLPAnalysis/llpAnalyzer/interface/RazorHelper.h"
 
-class SusyLLPTree
+class SlimSusyLLPPFTree
 {
 
 	public:
-		SusyLLPTree();
-		~SusyLLPTree();
+		SlimSusyLLPPFTree();
+		~SlimSusyLLPPFTree();
 
 		//tree
 		TTree *tree_;
@@ -497,11 +497,11 @@ class SusyLLPTree
 		float jetTimeRecHitsHcal[N_MAX_JETS];
 
 		float jetDNNScoreV1[N_MAX_JETS];
-		float jetDNNScore[N_MAX_JETS];
 		float jetDNNScoreV3[N_MAX_JETS];
-		float jetDNNScoreV3miniAOD[N_MAX_JETS];
+		float jetDNNScore[N_MAX_JETS];
 
 		bool jetIn250AK8[N_MAX_JETS];
+		bool jetPass[N_MAX_JETS];
 
 		//PFCandidates
 		int   nPFCandidates;

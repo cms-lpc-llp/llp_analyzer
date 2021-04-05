@@ -1,6 +1,6 @@
-#include "LLPAnalysis/llpAnalyzer/interface/SusyLLP.h"
+#include "LLPAnalysis/llpAnalyzer/interface/SlimSusyLLP.h"
 #include "LLPAnalysis/llpAnalyzer/interface/RazorHelper.h"
-#include "LLPAnalysis/llpAnalyzer/interface/SusyLLPTree.h"
+#include "LLPAnalysis/llpAnalyzer/interface/SlimSusyLLPTree.h"
 #include "LLPAnalysis/llpAnalyzer/interface/JetCorrectorParameters.h"
 #include "LLPAnalysis/llpAnalyzer/interface/JetCorrectionUncertainty.h"
 #include "LLPAnalysis/llpAnalyzer/interface/BTagCalibrationStandalone.h"
@@ -12,7 +12,7 @@
 //ROOT includes
 #include "TH1F.h"
 
-#define xclean 0
+#define xclean 1
 #define _debug 0
 #define _debug_pf 0
 #define _debug_lab 0
@@ -74,81 +74,81 @@ struct fatjets
 };
 
 
-struct jets
+struct slimjets
 {
 	TLorentzVector jet;
 	//pat::Jet jet;
 	float time;
-	int jetNeutralHadronMultiplicity;
-	int jetChargedHadronMultiplicity;
-	int jetMuonMultiplicity;
-	int jetElectronMultiplicity;
-	int jetPhotonMultiplicity;
-	float jetNeutralHadronEnergyFraction;
-	float jetChargedHadronEnergyFraction;
+	//int jetNeutralHadronMultiplicity;
+	//int jetChargedHadronMultiplicity;
+	//int jetMuonMultiplicity;
+	//int jetElectronMultiplicity;
+	//int jetPhotonMultiplicity;
+	//float jetNeutralHadronEnergyFraction;
+	//float jetChargedHadronEnergyFraction;
 	float jetMuonEnergyFraction;
 	float jetElectronEnergyFraction;
 	float jetPhotonEnergyFraction;
-	float jetCSV;
-	int ecalNRechits;
-	float ecalRechitE;
+	//float jetCSV;
+	//int ecalNRechits;
+	//float ecalRechitE;
 
-	float jetAlphaMax;
-	float jetBetaMax;
-	float jetGammaMax;
-	float jetGammaMax_Hadronic;
-	float jetGammaMax_EM;
-	float jetGammaMax_ET;
-	float jetPtAllTracks;
-	float jetPtAllPVTracks;
-	float jetMinDeltaRAllTracks;
-	float jetMinDeltaRPVTracks;
+	//float jetAlphaMax;
+	//float jetBetaMax;
+	//float jetGammaMax;
+	//float jetGammaMax_Hadronic;
+	//float jetGammaMax_EM;
+	//float jetGammaMax_ET;
+	//float jetPtAllTracks;
+	//float jetPtAllPVTracks;
+	//float jetMinDeltaRAllTracks;
+	//float jetMinDeltaRPVTracks;
 
-	float jetChargedEMEnergyFraction;
-	float jetNeutralEMEnergyFraction;
+	//float jetChargedEMEnergyFraction;
+	//float jetNeutralEMEnergyFraction;
 
-	int jetChargedMultiplicity;
-	//int jetNHits;
-	//int jetNPixelHits;
-	float jetNPixelHitsMedian;
-	float jetNHitsMedian;
+	//int jetChargedMultiplicity;
+	////int jetNHits;
+	////int jetNPixelHits;
+	//float jetNPixelHitsMedian;
+	//float jetNHitsMedian;
 
-	//int   jetNSV;
-	//int   jetNSVCand;
-	int   jetNVertexTracks;
-	int   jetNSelectedTracks;
-	float jetDRSVJet;
-	//float jetFlightDist2D;
-	//float jetFlightDist2DError;
-	//float jetFlightDist3D;
-	//float jetFlightDist3DError;
-	//float jetSV_x;
-	//float jetSV_y;
-	//float jetSV_z;
-	//int   jetSVNTracks;
-	float jetSVMass;
+	////int   jetNSV;
+	////int   jetNSVCand;
+	//int   jetNVertexTracks;
+	//int   jetNSelectedTracks;
+	//float jetDRSVJet;
+	////float jetFlightDist2D;
+	////float jetFlightDist2DError;
+	////float jetFlightDist3D;
+	////float jetFlightDist3DError;
+	////float jetSV_x;
+	////float jetSV_y;
+	////float jetSV_z;
+	////int   jetSVNTracks;
+	//float jetSVMass;
 
-	//ecal rechits
-	int jetNRecHitsEcal;
-	float jetEnergyRecHitsEcal;
-	float jetTimeRecHitsEcal;
+	////ecal rechits
+	//int jetNRecHitsEcal;
+	//float jetEnergyRecHitsEcal;
+	//float jetTimeRecHitsEcal;
 
-	//hcal hbhe rechits
-	int jetNRecHitsHcal;
-	float jetEnergyRecHitsHcal;
-	float jetTimeRecHitsHcal;
+	////hcal hbhe rechits
+	//int jetNRecHitsHcal;
+	//float jetEnergyRecHitsHcal;
+	//float jetTimeRecHitsHcal;
 
-	double jetsig1EB;
-	double jetsig2EB;
-	double jetptDEB;
-	double jetsig1PF;
-	double jetsig2PF;
-	double jetptDPF;
+	//double jetsig1EB;
+	//double jetsig2EB;
+	//double jetptDEB;
+	//double jetsig1PF;
+	//double jetsig2PF;
+	//double jetptDPF;
 
 	//float dnn_score_v1;
 	//float dnn_score;
 	float dnn_score_v3;
-	float dnn_score_v3_miniAOD;
+	//float dnn_score_v3_miniAOD;
 };
 
 //pt comparison
@@ -159,25 +159,25 @@ struct greater_than_pt
 };
 
 //lepton highest pt comparator
-struct largest_pt_lep
+struct largest_slimpt_lep
 {
 	inline bool operator() (const leptons& p1, const leptons& p2){return p1.lepton.Pt() > p2.lepton.Pt();}
-} my_largest_pt_lep;
+} my_largest_slimpt_lep;
 
 //jet highest pt comparator
-struct largest_pt_jet
+struct largest_slimpt_jet
 {
-	inline bool operator() (const jets& p1, const jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
-} my_largest_pt_jet;
+	inline bool operator() (const slimjets& p1, const slimjets& p2){return p1.jet.Pt() > p2.jet.Pt();}
+} my_largest_slimpt_jet;
 
 //fatjet highest pt comparator
-struct largest_pt_fatjet
+struct largest_slimpt_fatjet
 {
 	inline bool operator() (const fatjets& p1, const fatjets& p2){return p1.fatjet.Pt() > p2.fatjet.Pt();}
-} my_largest_pt_fatjet;
+} my_largest_slimpt_fatjet;
 
 //Analyze
-void SusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag, string process)
+void SlimSusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag, string process)
 {
 	//initialization: create one TTree for each analysis box
 	cout << "Initializing..." << endl;
@@ -267,30 +267,30 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 
 	//-----------v3 miniAOD-----------
-	std::string basePathV3miniAOD = std::string(std::getenv("CMSSW_BASE")) + "/src/LLPAnalysis/llpAnalyzer/nn_inference/tagger_AK4_miniAOD_v3";
-	
-	std::string graphPathV3miniAOD = basePathV3miniAOD + "/graph.pb";
-	std::string inputTensorNameV3miniAOD = "input_input";
-	std::string outputTensorNameV3miniAOD = "FCN/output/Softmax";//"FCN/dense_4/Softmax";//or Softmax?
-	
-	// threading setup
-	// to enable tensorflow-native multi-threading, change to "tensorflow" and increase nThreads
-	std::string threadPoolV3miniAOD = "no_threads";
-	int nThreadsV3miniAOD = 1;
-	
-	//'Jet_nTrackConstituents', 'Jet_nSelectedTracks', 'Jet_timeRecHitsEB', 'Jet_eFracRecHitsEB', 'Jet_nRecHitsEB', 'Jet_sig1EB', 'Jet_sig2EB', 'Jet_ptDEB', 'Jet_cHadEFrac', 'Jet_nHadEFrac', 'Jet_eleEFrac', 'Jet_photonEFrac'
-	std::vector<std::string> inputFeaturesV3miniAOD = { "Jet_nTrackConstituents", "Jet_nSelectedTracks", "Jet_timeRecHitsEB", "Jet_eFracRecHitsEB", "Jet_nRecHitsEB", "Jet_sig1EB", "Jet_sig2EB", "Jet_ptDEB", "Jet_cHadEFrac", "Jet_nHadEFrac", "Jet_eleEFrac", "Jet_photonEFrac",};
+	//std::string basePathV3miniAOD = std::string(std::getenv("CMSSW_BASE")) + "/src/LLPAnalysis/llpAnalyzer/nn_inference/tagger_AK4_miniAOD_v3";
+	//
+	//std::string graphPathV3miniAOD = basePathV3miniAOD + "/graph.pb";
+	//std::string inputTensorNameV3miniAOD = "input_input";
+	//std::string outputTensorNameV3miniAOD = "FCN/output/Softmax";//"FCN/dense_4/Softmax";//or Softmax?
+	//
+	//// threading setup
+	//// to enable tensorflow-native multi-threading, change to "tensorflow" and increase nThreads
+	//std::string threadPoolV3miniAOD = "no_threads";
+	//int nThreadsV3miniAOD = 1;
+	//
+	////'Jet_nTrackConstituents', 'Jet_nSelectedTracks', 'Jet_timeRecHitsEB', 'Jet_eFracRecHitsEB', 'Jet_nRecHitsEB', 'Jet_sig1EB', 'Jet_sig2EB', 'Jet_ptDEB', 'Jet_cHadEFrac', 'Jet_nHadEFrac', 'Jet_eleEFrac', 'Jet_photonEFrac'
+	//std::vector<std::string> inputFeaturesV3miniAOD = { "Jet_nTrackConstituents", "Jet_nSelectedTracks", "Jet_timeRecHitsEB", "Jet_eFracRecHitsEB", "Jet_nRecHitsEB", "Jet_sig1EB", "Jet_sig2EB", "Jet_ptDEB", "Jet_cHadEFrac", "Jet_nHadEFrac", "Jet_eleEFrac", "Jet_photonEFrac",};
 
-	int nInputsV3miniAOD = inputFeaturesV3miniAOD.size();
-	std::vector<float> inputValuesV3miniAOD(nInputsV3miniAOD);
-	
-	// setup TensorFlow objects
-	tensorflow::setLogging();
-	tensorflow::GraphDef* graphDefV3miniAOD = tensorflow::loadGraphDef(graphPathV3miniAOD);
-	tensorflow::Session* sessionV3miniAOD = tensorflow::createSession(graphDefV3miniAOD, nThreadsV3miniAOD);
-		
-	// register an input tensor (1 x nInputs) that is filled during the event loop
-	tensorflow::Tensor inputTensorV3miniAOD(tensorflow::DT_FLOAT, {1, nInputsV3miniAOD});
+	//int nInputsV3miniAOD = inputFeaturesV3miniAOD.size();
+	//std::vector<float> inputValuesV3miniAOD(nInputsV3miniAOD);
+	//
+	//// setup TensorFlow objects
+	//tensorflow::setLogging();
+	//tensorflow::GraphDef* graphDefV3miniAOD = tensorflow::loadGraphDef(graphPathV3miniAOD);
+	//tensorflow::Session* sessionV3miniAOD = tensorflow::createSession(graphDefV3miniAOD, nThreadsV3miniAOD);
+	//	
+	//// register an input tensor (1 x nInputs) that is filled during the event loop
+	//tensorflow::Tensor inputTensorV3miniAOD(tensorflow::DT_FLOAT, {1, nInputsV3miniAOD});
 
 	//---------------------------
 	//-----------option----------
@@ -542,11 +542,11 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	//Set up Output File
 	//-----------------------------------------------
 	string outfilename = outputfilename;
-	if (outfilename == "") outfilename = "SusyLLPTree.root";
+	if (outfilename == "") outfilename = "SlimSusyLLPTree.root";
 	TFile *outFile;
 	if(!signalScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
 
-	SusyLLPTree *llp_tree = new SusyLLPTree;
+	SlimSusyLLPTree *llp_tree = new SlimSusyLLPTree;
 	llp_tree->CreateTree();
 	llp_tree->tree_->SetAutoFlush(0);
 	llp_tree->InitTree();
@@ -800,7 +800,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//if( llp_tree->met < 150. ) continue;
 		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 		if(_debug_lab) std::cout << "met " << llp_tree->met << std::endl;
-		if( (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
+		if( (label.find("MR") == std::string::npos) && llp_tree->met < 40. ) continue;
+		//if( (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
 		if( (label=="MR_EMU") && llp_tree->met < 30. ) continue;
 		if( (label.find("MR_Single") != std::string::npos) && llp_tree->met < 40. ) continue;
 		if( (label.find("MR_ZLL") != std::string::npos) && isData && llp_tree->met >= 30. ) continue;
@@ -1178,7 +1179,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//Leptons
 		//-------------------------------
 		TLorentzVector lepp4;
-		sort(Leptons.begin(), Leptons.end(), my_largest_pt_lep);
+		sort(Leptons.begin(), Leptons.end(), my_largest_slimpt_lep);
 		for ( auto &tmp : Leptons )
 		{
 			llp_tree->lepE[llp_tree->nLeptons]      = tmp.lepton.E();
@@ -1252,7 +1253,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//-----------------------------------------------
 		//std::vector<double> jetPtVector;
 		//std::vector<double> jetCISVVector;
-		std::vector<jets> Jets;
+		std::vector<slimjets> Jets;
 		//auto highest = [](auto a, auto b) { return a > b; };
 		//cout <<"nJets :" << nJets << std::endl;
 
@@ -1632,129 +1633,129 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			//std::cout << "\n" << std::endl;
 
 			//---------v3 miniAOD--------
-			inputValuesV3miniAOD[0] = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
-			inputValuesV3miniAOD[1] = jetNSelectedTracks[i];
-			  //std::cout<< " input value 1: " << jetNSelectedTracks[i] <<std::endl;
-			inputValuesV3miniAOD[2] = jetTimeRecHitsECAL;
-			inputValuesV3miniAOD[3] = (jetEnergyRecHitsECAL == 0) ? -1 : (jetEnergyRecHitsECAL/jetE[i]);
-			inputValuesV3miniAOD[4] = jetNRecHitsECAL;
-			inputValuesV3miniAOD[5] = jetsig1EB;
-			inputValuesV3miniAOD[6] = jetsig2EB;
-			inputValuesV3miniAOD[7] = jetptDEB;
-			inputValuesV3miniAOD[8] = jetChargedHadronEnergyFraction[i];
-			inputValuesV3miniAOD[9] = jetNeutralHadronEnergyFraction[i];
-			inputValuesV3miniAOD[10] = jetElectronEnergyFraction[i];
-			inputValuesV3miniAOD[11] = jetPhotonEnergyFraction[i];
+			//inputValuesV3miniAOD[0] = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
+			//inputValuesV3miniAOD[1] = jetNSelectedTracks[i];
+			//  //std::cout<< " input value 1: " << jetNSelectedTracks[i] <<std::endl;
+			//inputValuesV3miniAOD[2] = jetTimeRecHitsECAL;
+			//inputValuesV3miniAOD[3] = (jetEnergyRecHitsECAL == 0) ? -1 : (jetEnergyRecHitsECAL/jetE[i]);
+			//inputValuesV3miniAOD[4] = jetNRecHitsECAL;
+			//inputValuesV3miniAOD[5] = jetsig1EB;
+			//inputValuesV3miniAOD[6] = jetsig2EB;
+			//inputValuesV3miniAOD[7] = jetptDEB;
+			//inputValuesV3miniAOD[8] = jetChargedHadronEnergyFraction[i];
+			//inputValuesV3miniAOD[9] = jetNeutralHadronEnergyFraction[i];
+			//inputValuesV3miniAOD[10] = jetElectronEnergyFraction[i];
+			//inputValuesV3miniAOD[11] = jetPhotonEnergyFraction[i];
 
-			// fill the input tensor using a data pointer that is shifted consecutively
-			float* dV3miniAOD = inputTensorV3miniAOD.flat<float>().data();
-			for (float vV3miniAOD : inputValuesV3miniAOD) {
-			  //std::cout<< " input value: " << v <<std::endl;
-			  *dV3miniAOD = vV3miniAOD;
-			  dV3miniAOD++;
-			}
+			//// fill the input tensor using a data pointer that is shifted consecutively
+			//float* dV3miniAOD = inputTensorV3miniAOD.flat<float>().data();
+			//for (float vV3miniAOD : inputValuesV3miniAOD) {
+			//  //std::cout<< " input value: " << v <<std::endl;
+			//  *dV3miniAOD = vV3miniAOD;
+			//  dV3miniAOD++;
+			//}
 
-			// run the inference
-			std::vector<tensorflow::Tensor> outputsV3miniAOD;		
-			tensorflow::run(sessionV3miniAOD, {{inputTensorNameV3miniAOD, inputTensorV3miniAOD}}, {outputTensorNameV3miniAOD}, &outputsV3miniAOD, threadPoolV3miniAOD);
-			
-			// the result
-			double outputValueV3miniAOD = outputsV3miniAOD[0].matrix<float>()(0, 1);
+			//// run the inference
+			//std::vector<tensorflow::Tensor> outputsV3miniAOD;		
+			//tensorflow::run(sessionV3miniAOD, {{inputTensorNameV3miniAOD, inputTensorV3miniAOD}}, {outputTensorNameV3miniAOD}, &outputsV3miniAOD, threadPoolV3miniAOD);
+			//
+			//// the result
+			//double outputValueV3miniAOD = outputsV3miniAOD[0].matrix<float>()(0, 1);
 			//std::cout << "output value: " << outputValue << std::endl;
 			//std::cout << "\n" << std::endl;
 
-			jets tmpJet;
+			slimjets tmpJet;
 			tmpJet.jet    = thisJet;
 			tmpJet.time   = jetRechitT[i];
-			tmpJet.ecalNRechits = jetNRechits[i];
-			tmpJet.ecalRechitE = jetRechitE[i];
-			tmpJet.jetNeutralHadronMultiplicity = jetNeutralHadronMultiplicity[i];
-			tmpJet.jetChargedHadronMultiplicity = jetChargedHadronMultiplicity[i];
-			tmpJet.jetMuonMultiplicity = jetMuonMultiplicity[i];
-			tmpJet.jetElectronMultiplicity = jetElectronMultiplicity[i];
-			tmpJet.jetPhotonMultiplicity = jetPhotonMultiplicity[i];
-			tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
-			tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
+			//tmpJet.ecalNRechits = jetNRechits[i];
+			//tmpJet.ecalRechitE = jetRechitE[i];
+			//tmpJet.jetNeutralHadronMultiplicity = jetNeutralHadronMultiplicity[i];
+			//tmpJet.jetChargedHadronMultiplicity = jetChargedHadronMultiplicity[i];
+			//tmpJet.jetMuonMultiplicity = jetMuonMultiplicity[i];
+			//tmpJet.jetElectronMultiplicity = jetElectronMultiplicity[i];
+			//tmpJet.jetPhotonMultiplicity = jetPhotonMultiplicity[i];
+			//tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
+			//tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
 			tmpJet.jetMuonEnergyFraction = jetMuonEnergyFraction[i];
 			tmpJet.jetElectronEnergyFraction = jetElectronEnergyFraction[i];
 			tmpJet.jetPhotonEnergyFraction = jetPhotonEnergyFraction[i];
-			tmpJet.jetCSV = jetCISV[i];
+			//tmpJet.jetCSV = jetCISV[i];
 
 
-			tmpJet.jetAlphaMax = jetAlphaMax[i];
-			tmpJet.jetBetaMax = jetBetaMax[i];
-			tmpJet.jetGammaMax = jetGammaMax[i];
-			tmpJet.jetGammaMax_Hadronic = jetGammaMax_Hadronic[i];
-			tmpJet.jetGammaMax_EM = jetGammaMax_EM[i];
-			tmpJet.jetGammaMax_ET = jetGammaMax_ET[i];
-			tmpJet.jetPtAllPVTracks = jetPtAllPVTracks[i];
-			tmpJet.jetPtAllTracks = jetPtAllTracks[i];
-			tmpJet.jetMinDeltaRPVTracks = jetMinDeltaRPVTracks[i];
-			tmpJet.jetMinDeltaRAllTracks = jetMinDeltaRAllTracks[i];
+			//tmpJet.jetAlphaMax = jetAlphaMax[i];
+			//tmpJet.jetBetaMax = jetBetaMax[i];
+			//tmpJet.jetGammaMax = jetGammaMax[i];
+			//tmpJet.jetGammaMax_Hadronic = jetGammaMax_Hadronic[i];
+			//tmpJet.jetGammaMax_EM = jetGammaMax_EM[i];
+			//tmpJet.jetGammaMax_ET = jetGammaMax_ET[i];
+			//tmpJet.jetPtAllPVTracks = jetPtAllPVTracks[i];
+			//tmpJet.jetPtAllTracks = jetPtAllTracks[i];
+			//tmpJet.jetMinDeltaRPVTracks = jetMinDeltaRPVTracks[i];
+			//tmpJet.jetMinDeltaRAllTracks = jetMinDeltaRAllTracks[i];
 
-			tmpJet.jetChargedEMEnergyFraction = jetElectronEnergyFraction[i];
-			tmpJet.jetNeutralEMEnergyFraction = jetPhotonEnergyFraction[i];
+			//tmpJet.jetChargedEMEnergyFraction = jetElectronEnergyFraction[i];
+			//tmpJet.jetNeutralEMEnergyFraction = jetPhotonEnergyFraction[i];
 
-			tmpJet.jetNVertexTracks = jetNVertexTracks[i];
-			tmpJet.jetNSelectedTracks = jetNSelectedTracks[i];
-			tmpJet.jetDRSVJet = jetDRSVJet[i];
-			tmpJet.jetSVMass = jetSVMass[i];
+			//tmpJet.jetNVertexTracks = jetNVertexTracks[i];
+			//tmpJet.jetNSelectedTracks = jetNSelectedTracks[i];
+			//tmpJet.jetDRSVJet = jetDRSVJet[i];
+			//tmpJet.jetSVMass = jetSVMass[i];
 
-			tmpJet.jetChargedMultiplicity = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
-			//ecal rechits
-			tmpJet.jetNRecHitsEcal = jetNRecHitsECAL;
-			tmpJet.jetEnergyRecHitsEcal = jetEnergyRecHitsECAL;
-			tmpJet.jetTimeRecHitsEcal = jetTimeRecHitsECAL;
+			//tmpJet.jetChargedMultiplicity = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
+			////ecal rechits
+			//tmpJet.jetNRecHitsEcal = jetNRecHitsECAL;
+			//tmpJet.jetEnergyRecHitsEcal = jetEnergyRecHitsECAL;
+			//tmpJet.jetTimeRecHitsEcal = jetTimeRecHitsECAL;
 
-			//hcal hbhe rechits
-		 	tmpJet.jetNRecHitsHcal = jetNRecHitsHCAL;
-			tmpJet.jetEnergyRecHitsHcal = jetEnergyRecHitsHCAL;
-			tmpJet.jetTimeRecHitsHcal = jetTimeRecHitsHCAL;
+			////hcal hbhe rechits
+		 	//tmpJet.jetNRecHitsHcal = jetNRecHitsHCAL;
+			//tmpJet.jetEnergyRecHitsHcal = jetEnergyRecHitsHCAL;
+			//tmpJet.jetTimeRecHitsHcal = jetTimeRecHitsHCAL;
 
-			tmpJet.jetsig1EB = jetsig1EB;
-			tmpJet.jetsig2EB = jetsig2EB;
-			tmpJet.jetptDEB = jetptDEB;
-			tmpJet.jetsig1PF = jetsig1PF;
-			tmpJet.jetsig2PF = jetsig2PF;
-			tmpJet.jetptDPF = jetptDPF;
+			//tmpJet.jetsig1EB = jetsig1EB;
+			//tmpJet.jetsig2EB = jetsig2EB;
+			//tmpJet.jetptDEB = jetptDEB;
+			//tmpJet.jetsig1PF = jetsig1PF;
+			//tmpJet.jetsig2PF = jetsig2PF;
+			//tmpJet.jetptDPF = jetptDPF;
 
 			//tmpJet.dnn_score_v1 = outputValueV1;
 			//tmpJet.dnn_score = outputValue;
 			tmpJet.dnn_score_v3 = outputValueV3;
-			tmpJet.dnn_score_v3_miniAOD = outputValueV3miniAOD;
+			//tmpJet.dnn_score_v3_miniAOD = outputValueV3miniAOD;
 
-			if(_debug_trk) std::cout << "nTracks" << nTracks << std::endl;
-			std::vector<float> nPixelHits;
-			std::vector<float> nHits;
-			//int nChargedMultiplicity=0;
-			for(int iTrack=0; iTrack<nTracks; iTrack++)
-			{
-				double thisDR_trk = RazorAnalyzerLLP::deltaR(jetEta[i],jetPhi[i],track_Eta[iTrack], track_Phi[iTrack]);
-				if(thisDR_trk<0.4)
-				{
-					//nChargedMultiplicity++;
-					nPixelHits.push_back(track_nPixelHits[iTrack]);
-					nHits.push_back(track_nHits[iTrack]);
-				}
+			//if(_debug_trk) std::cout << "nTracks" << nTracks << std::endl;
+			//std::vector<float> nPixelHits;
+			//std::vector<float> nHits;
+			////int nChargedMultiplicity=0;
+			//for(int iTrack=0; iTrack<nTracks; iTrack++)
+			//{
+			//	double thisDR_trk = RazorAnalyzerLLP::deltaR(jetEta[i],jetPhi[i],track_Eta[iTrack], track_Phi[iTrack]);
+			//	if(thisDR_trk<0.4)
+			//	{
+			//		//nChargedMultiplicity++;
+			//		nPixelHits.push_back(track_nPixelHits[iTrack]);
+			//		nHits.push_back(track_nHits[iTrack]);
+			//	}
 
-			}
+			//}
 
-			std::sort(nPixelHits.begin(), nPixelHits.end());
-			float nPixelHitsMedian = 0;
-			if (nPixelHits.size() > 0) {
-				if (nPixelHits.size() % 2 ==0) nPixelHitsMedian = ((nPixelHits[nPixelHits.size()/2 -1] + nPixelHits[nPixelHits.size()/2]) /2);
-				else nPixelHitsMedian = nPixelHits[nPixelHits.size()/2];
-			}    
-			std::sort(nHits.begin(), nHits.end());
-			float nHitsMedian = 0;
-			if (nHits.size() > 0) {
-				if (nHits.size() % 2 ==0) nHitsMedian = ((nHits[nHits.size()/2 -1] + nHits[nHits.size()/2]) /2);
-				else nHitsMedian = nHits[nHits.size()/2];
-			}
+			//std::sort(nPixelHits.begin(), nPixelHits.end());
+			//float nPixelHitsMedian = 0;
+			//if (nPixelHits.size() > 0) {
+			//	if (nPixelHits.size() % 2 ==0) nPixelHitsMedian = ((nPixelHits[nPixelHits.size()/2 -1] + nPixelHits[nPixelHits.size()/2]) /2);
+			//	else nPixelHitsMedian = nPixelHits[nPixelHits.size()/2];
+			//}    
+			//std::sort(nHits.begin(), nHits.end());
+			//float nHitsMedian = 0;
+			//if (nHits.size() > 0) {
+			//	if (nHits.size() % 2 ==0) nHitsMedian = ((nHits[nHits.size()/2 -1] + nHits[nHits.size()/2]) /2);
+			//	else nHitsMedian = nHits[nHits.size()/2];
+			//}
 
 			//tmpJet.jetChargedMultiplicity = nChargedMultiplicity;
-			tmpJet.jetNPixelHitsMedian = nPixelHitsMedian;
-			tmpJet.jetNHitsMedian = nHitsMedian;
+			//tmpJet.jetNPixelHitsMedian = nPixelHitsMedian;
+			//tmpJet.jetNHitsMedian = nHitsMedian;
 
 			Jets.push_back(tmpJet);
 
@@ -1762,7 +1763,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->HT = ht;
 
 
-		sort(Jets.begin(), Jets.end(), my_largest_pt_jet);
+		sort(Jets.begin(), Jets.end(), my_largest_slimpt_jet);
 
 		if (Jets.size()>0)
 		{
@@ -1782,73 +1783,73 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 		for ( auto &tmp : Jets )
 		{
-			llp_tree->jetNeutralHadronMultiplicity[llp_tree->nJets] = tmp.jetNeutralHadronMultiplicity;
-			llp_tree->jetChargedHadronMultiplicity[llp_tree->nJets] = tmp.jetChargedHadronMultiplicity;
-			llp_tree->jetMuonMultiplicity[llp_tree->nJets] = tmp.jetMuonMultiplicity;
-			llp_tree->jetElectronMultiplicity[llp_tree->nJets] = tmp.jetElectronMultiplicity;
-			llp_tree->jetPhotonMultiplicity[llp_tree->nJets] = tmp.jetPhotonMultiplicity;
-			llp_tree->jetNeutralHadronEnergyFraction[llp_tree->nJets] = tmp.jetNeutralHadronEnergyFraction;
-			llp_tree->jetChargedHadronEnergyFraction[llp_tree->nJets] = tmp.jetChargedHadronEnergyFraction;
+			//llp_tree->jetNeutralHadronMultiplicity[llp_tree->nJets] = tmp.jetNeutralHadronMultiplicity;
+			//llp_tree->jetChargedHadronMultiplicity[llp_tree->nJets] = tmp.jetChargedHadronMultiplicity;
+			//llp_tree->jetMuonMultiplicity[llp_tree->nJets] = tmp.jetMuonMultiplicity;
+			//llp_tree->jetElectronMultiplicity[llp_tree->nJets] = tmp.jetElectronMultiplicity;
+			//llp_tree->jetPhotonMultiplicity[llp_tree->nJets] = tmp.jetPhotonMultiplicity;
+			//llp_tree->jetNeutralHadronEnergyFraction[llp_tree->nJets] = tmp.jetNeutralHadronEnergyFraction;
+			//llp_tree->jetChargedHadronEnergyFraction[llp_tree->nJets] = tmp.jetChargedHadronEnergyFraction;
 			llp_tree->jetMuonEnergyFraction[llp_tree->nJets] = tmp.jetMuonEnergyFraction;
 			llp_tree->jetElectronEnergyFraction[llp_tree->nJets] = tmp.jetElectronEnergyFraction;
 			llp_tree->jetPhotonEnergyFraction[llp_tree->nJets] = tmp.jetPhotonEnergyFraction;
-			llp_tree->jetCSV[llp_tree->nJets] = tmp.jetCSV;
+			//llp_tree->jetCSV[llp_tree->nJets] = tmp.jetCSV;
 
 			llp_tree->jetPt[llp_tree->nJets] = tmp.jet.Pt();
 			llp_tree->jetEta[llp_tree->nJets] = tmp.jet.Eta();
 			llp_tree->jetE[llp_tree->nJets] = tmp.jet.E();
 			llp_tree->jetPhi[llp_tree->nJets] = tmp.jet.Phi();
 			llp_tree->jetTime[llp_tree->nJets] = tmp.time;
-			llp_tree->ecalNRechits[llp_tree->nJets] = tmp.ecalNRechits;
-			llp_tree->ecalRechitE[llp_tree->nJets] = tmp.ecalRechitE;
+			//llp_tree->ecalNRechits[llp_tree->nJets] = tmp.ecalNRechits;
+			//llp_tree->ecalRechitE[llp_tree->nJets] = tmp.ecalRechitE;
 
-			llp_tree->jetAlphaMax[llp_tree->nJets] = tmp.jetAlphaMax;
-			llp_tree->jetBetaMax[llp_tree->nJets] = tmp.jetBetaMax;
-			llp_tree->jetGammaMax[llp_tree->nJets] = tmp.jetGammaMax;
-			llp_tree->jetGammaMax_Hadronic[llp_tree->nJets] = tmp.jetGammaMax_Hadronic;
-			llp_tree->jetGammaMax_EM[llp_tree->nJets] = tmp.jetGammaMax_EM;
-			llp_tree->jetGammaMax_ET[llp_tree->nJets] = tmp.jetGammaMax_ET;
-			llp_tree->jetPtAllPVTracks[llp_tree->nJets] = tmp.jetPtAllPVTracks;
-			llp_tree->jetPtAllTracks[llp_tree->nJets] = tmp.jetPtAllTracks;
-			llp_tree->jetMinDeltaRAllTracks[llp_tree->nJets] = tmp.jetMinDeltaRAllTracks;
-			llp_tree->jetMinDeltaRPVTracks[llp_tree->nJets] = tmp.jetMinDeltaRPVTracks;
+			//llp_tree->jetAlphaMax[llp_tree->nJets] = tmp.jetAlphaMax;
+			//llp_tree->jetBetaMax[llp_tree->nJets] = tmp.jetBetaMax;
+			//llp_tree->jetGammaMax[llp_tree->nJets] = tmp.jetGammaMax;
+			//llp_tree->jetGammaMax_Hadronic[llp_tree->nJets] = tmp.jetGammaMax_Hadronic;
+			//llp_tree->jetGammaMax_EM[llp_tree->nJets] = tmp.jetGammaMax_EM;
+			//llp_tree->jetGammaMax_ET[llp_tree->nJets] = tmp.jetGammaMax_ET;
+			//llp_tree->jetPtAllPVTracks[llp_tree->nJets] = tmp.jetPtAllPVTracks;
+			//llp_tree->jetPtAllTracks[llp_tree->nJets] = tmp.jetPtAllTracks;
+			//llp_tree->jetMinDeltaRAllTracks[llp_tree->nJets] = tmp.jetMinDeltaRAllTracks;
+			//llp_tree->jetMinDeltaRPVTracks[llp_tree->nJets] = tmp.jetMinDeltaRPVTracks;
 
-			llp_tree->jetChargedEMEnergyFraction[llp_tree->nJets] = tmp.jetChargedEMEnergyFraction;
-			llp_tree->jetNeutralEMEnergyFraction[llp_tree->nJets] = tmp.jetNeutralEMEnergyFraction;
+			//llp_tree->jetChargedEMEnergyFraction[llp_tree->nJets] = tmp.jetChargedEMEnergyFraction;
+			//llp_tree->jetNeutralEMEnergyFraction[llp_tree->nJets] = tmp.jetNeutralEMEnergyFraction;
 
-			llp_tree->jetEcalE[llp_tree->nJets] = tmp.jet.E()*(tmp.jetElectronEnergyFraction+tmp.jetPhotonEnergyFraction);
-			llp_tree->jetHcalE[llp_tree->nJets] = tmp.jet.E()*(tmp.jetNeutralHadronEnergyFraction+tmp.jetChargedHadronEnergyFraction);
+			//llp_tree->jetEcalE[llp_tree->nJets] = tmp.jet.E()*(tmp.jetElectronEnergyFraction+tmp.jetPhotonEnergyFraction);
+			//llp_tree->jetHcalE[llp_tree->nJets] = tmp.jet.E()*(tmp.jetNeutralHadronEnergyFraction+tmp.jetChargedHadronEnergyFraction);
 
-			llp_tree->jetNVertexTracks[llp_tree->nJets] = tmp.jetNVertexTracks;
-			llp_tree->jetNSelectedTracks[llp_tree->nJets] = tmp.jetNSelectedTracks;
-			llp_tree->jetDRSVJet[llp_tree->nJets] = tmp.jetDRSVJet;
-			llp_tree->jetSVMass[llp_tree->nJets] = tmp.jetSVMass;
+			//llp_tree->jetNVertexTracks[llp_tree->nJets] = tmp.jetNVertexTracks;
+			//llp_tree->jetNSelectedTracks[llp_tree->nJets] = tmp.jetNSelectedTracks;
+			//llp_tree->jetDRSVJet[llp_tree->nJets] = tmp.jetDRSVJet;
+			//llp_tree->jetSVMass[llp_tree->nJets] = tmp.jetSVMass;
 
-			llp_tree->jetChargedMultiplicity[llp_tree->nJets] = tmp.jetChargedMultiplicity;
-			llp_tree->jetNPixelHitsMedian[llp_tree->nJets] = tmp.jetNPixelHitsMedian;
-			llp_tree->jetNHitsMedian[llp_tree->nJets] = tmp.jetNHitsMedian;
+			//llp_tree->jetChargedMultiplicity[llp_tree->nJets] = tmp.jetChargedMultiplicity;
+			//llp_tree->jetNPixelHitsMedian[llp_tree->nJets] = tmp.jetNPixelHitsMedian;
+			//llp_tree->jetNHitsMedian[llp_tree->nJets] = tmp.jetNHitsMedian;
 
-			//ecal rechits
-			llp_tree->jetNRecHitsEcal[llp_tree->nJets] = tmp.jetNRecHitsEcal;
-			llp_tree->jetEnergyRecHitsEcal[llp_tree->nJets] = tmp.jetEnergyRecHitsEcal;
-			llp_tree->jetTimeRecHitsEcal[llp_tree->nJets] = tmp.jetTimeRecHitsEcal;
+			////ecal rechits
+			//llp_tree->jetNRecHitsEcal[llp_tree->nJets] = tmp.jetNRecHitsEcal;
+			//llp_tree->jetEnergyRecHitsEcal[llp_tree->nJets] = tmp.jetEnergyRecHitsEcal;
+			//llp_tree->jetTimeRecHitsEcal[llp_tree->nJets] = tmp.jetTimeRecHitsEcal;
 
-			//hcal hbhe rechits
-			llp_tree->jetNRecHitsHcal[llp_tree->nJets] = tmp.jetNRecHitsHcal;
-			llp_tree->jetEnergyRecHitsHcal[llp_tree->nJets] = tmp.jetEnergyRecHitsHcal;
-			llp_tree->jetTimeRecHitsHcal[llp_tree->nJets] = tmp.jetTimeRecHitsHcal;
+			////hcal hbhe rechits
+			//llp_tree->jetNRecHitsHcal[llp_tree->nJets] = tmp.jetNRecHitsHcal;
+			//llp_tree->jetEnergyRecHitsHcal[llp_tree->nJets] = tmp.jetEnergyRecHitsHcal;
+			//llp_tree->jetTimeRecHitsHcal[llp_tree->nJets] = tmp.jetTimeRecHitsHcal;
 
-			llp_tree->jet_sig_et1[llp_tree->nJets] = tmp.jetsig1EB;
-			llp_tree->jet_sig_et2[llp_tree->nJets] = tmp.jetsig2EB;
-			llp_tree->jet_pt_deb[llp_tree->nJets] = tmp.jetptDEB;
-			llp_tree->jet_sig_pt1[llp_tree->nJets] = tmp.jetsig1PF;
-			llp_tree->jet_sig_pt2[llp_tree->nJets] = tmp.jetsig2PF;
-			llp_tree->jet_pt_dpf[llp_tree->nJets] = tmp.jetptDPF;
+			//llp_tree->jet_sig_et1[llp_tree->nJets] = tmp.jetsig1EB;
+			//llp_tree->jet_sig_et2[llp_tree->nJets] = tmp.jetsig2EB;
+			//llp_tree->jet_pt_deb[llp_tree->nJets] = tmp.jetptDEB;
+			//llp_tree->jet_sig_pt1[llp_tree->nJets] = tmp.jetsig1PF;
+			//llp_tree->jet_sig_pt2[llp_tree->nJets] = tmp.jetsig2PF;
+			//llp_tree->jet_pt_dpf[llp_tree->nJets] = tmp.jetptDPF;
 
 			//llp_tree->jetDNNScoreV1[llp_tree->nJets] = tmp.dnn_score_v1;
 			//llp_tree->jetDNNScore[llp_tree->nJets] = tmp.dnn_score;
 			llp_tree->jetDNNScoreV3[llp_tree->nJets] = tmp.dnn_score_v3;
-			llp_tree->jetDNNScoreV3miniAOD[llp_tree->nJets] = tmp.dnn_score_v3_miniAOD;
+			//llp_tree->jetDNNScoreV3miniAOD[llp_tree->nJets] = tmp.dnn_score_v3_miniAOD;
 
 			//std::cout << "jetEta " << tmp.jet.Eta() << std::endl;
 			//std::cout << "jetEta " << llp_tree->jetEta[llp_tree->nJets] << std::endl;
@@ -2002,7 +2003,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			FatJets.push_back(tmpFatJet);
 		}
 
-		sort(FatJets.begin(), FatJets.end(), my_largest_pt_fatjet);
+		sort(FatJets.begin(), FatJets.end(), my_largest_slimpt_fatjet);
 		for ( auto &tmp : FatJets )
 		{
 

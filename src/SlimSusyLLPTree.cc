@@ -1,21 +1,21 @@
 #include "LLPAnalysis/llpAnalyzer/interface/RazorHelper.h"
-#include "LLPAnalysis/llpAnalyzer/interface/SusyLLPTree.h"
+#include "LLPAnalysis/llpAnalyzer/interface/SlimSusyLLPTree.h"
 #include "assert.h"
 #include "TTree.h"
 
 // Constructor
-SusyLLPTree::SusyLLPTree()
+SlimSusyLLPTree::SlimSusyLLPTree()
 {
 	InitVariables();
 };
 
-SusyLLPTree::~SusyLLPTree()
+SlimSusyLLPTree::~SlimSusyLLPTree()
 {
 	if (f_) f_->Close();
 };
 
 //Initialize
-void SusyLLPTree::InitVariables()
+void SlimSusyLLPTree::InitVariables()
 { 
 	//evnt info
 	lheComments=0;
@@ -482,7 +482,7 @@ void SusyLLPTree::InitVariables()
 };
 
 //SetBranchAddress
-void SusyLLPTree::InitTree()
+void SlimSusyLLPTree::InitTree()
 {
 	assert(tree_);
 	InitVariables();
@@ -908,20 +908,20 @@ void SusyLLPTree::InitTree()
 };
 
 //LoadTree
-void SusyLLPTree::LoadTree(const char* file)
+void SlimSusyLLPTree::LoadTree(const char* file)
 {
 	f_ = TFile::Open(file);
 	assert(f_);
-	tree_ = dynamic_cast<TTree*>(f_->Get("SusyLLPTree"));
+	tree_ = dynamic_cast<TTree*>(f_->Get("SlimSusyLLPTree"));
 	InitTree();
 	assert(tree_);
 };
 
 //CreateTree
-void SusyLLPTree::CreateTree()
+void SlimSusyLLPTree::CreateTree()
 {
 	//tree
-	tree_ = new TTree("SusyLLPTree","SusyLLPTree");
+	tree_ = new TTree("SlimSusyLLPTree","SlimSusyLLPTree");
 	f_ = 0;
 
 	//event info
@@ -1093,146 +1093,146 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("jetPt", jetPt,"jetPt[nJets]/F");
 	tree_->Branch("jetEta", jetEta,"jetEta[nJets]/F");
 
-	tree_->Branch("jetEcalE", jetEcalE,"jetEcalE[nJets]/F");
-	tree_->Branch("jetHcalE", jetHcalE,"jetHcalE[nJets]/F");
+	//tree_->Branch("jetEcalE", jetEcalE,"jetEcalE[nJets]/F");
+	//tree_->Branch("jetHcalE", jetHcalE,"jetHcalE[nJets]/F");
 
 	tree_->Branch("jetPhi", jetPhi,"jetPhi[nJets]/F");
-	tree_->Branch("jetCSV", jetCSV,"jetCSV[nJets]/F");
-	tree_->Branch("jetCISV", jetCISV,"jetCISV[nJets]/F");
-	tree_->Branch("jetProbb", jetProbb,"jetProbb[nJets]/F");
-	tree_->Branch("jetProbc", jetProbc,"jetProbc[nJets]/F");
-	tree_->Branch("jetProbudsg", jetProbudsg,"jetProbudsg[nJets]/F");
-	tree_->Branch("jetProbbb", jetProbbb,"jetProbbb[nJets]/F");
-	tree_->Branch("jetMass", jetMass, "jetMass[nJets]/F");
-	tree_->Branch("jetJetArea", jetJetArea, "jetJetArea[nJets]/F");
-	tree_->Branch("jetPileupE", jetPileupE, "jetPileupE[nJets]/F");
-	tree_->Branch("jetPileupId", jetPileupId, "jetPileupId[nJets]/F");
-	tree_->Branch("jetPileupIdFlag", jetPileupIdFlag, "jetPileupIdFlag[nJets]/I");
-	tree_->Branch("jetPassIDLoose", jetPassIDLoose, "jetPassIDLoose[nJets]/O");
-	tree_->Branch("jetPassIDTight", jetPassIDTight, "jetPassIDTight[nJets]/O");
-	tree_->Branch("jetPassMuFrac", jetPassMuFrac, "jetPassMuFrac[nJets]/O");
-	tree_->Branch("jetPassEleFrac", jetPassEleFrac, "jetPassEleFrac[nJets]/O");
-	tree_->Branch("jetPartonFlavor", jetPartonFlavor, "jetPartonFlavor[nJets]/I");
-	tree_->Branch("jetHadronFlavor", jetHadronFlavor, "jetHadronFlavor[nJets]/I");
+	//tree_->Branch("jetCSV", jetCSV,"jetCSV[nJets]/F");
+	//tree_->Branch("jetCISV", jetCISV,"jetCISV[nJets]/F");
+	//tree_->Branch("jetProbb", jetProbb,"jetProbb[nJets]/F");
+	//tree_->Branch("jetProbc", jetProbc,"jetProbc[nJets]/F");
+	//tree_->Branch("jetProbudsg", jetProbudsg,"jetProbudsg[nJets]/F");
+	//tree_->Branch("jetProbbb", jetProbbb,"jetProbbb[nJets]/F");
+	//tree_->Branch("jetMass", jetMass, "jetMass[nJets]/F");
+	//tree_->Branch("jetJetArea", jetJetArea, "jetJetArea[nJets]/F");
+	//tree_->Branch("jetPileupE", jetPileupE, "jetPileupE[nJets]/F");
+	//tree_->Branch("jetPileupId", jetPileupId, "jetPileupId[nJets]/F");
+	//tree_->Branch("jetPileupIdFlag", jetPileupIdFlag, "jetPileupIdFlag[nJets]/I");
+	//tree_->Branch("jetPassIDLoose", jetPassIDLoose, "jetPassIDLoose[nJets]/O");
+	//tree_->Branch("jetPassIDTight", jetPassIDTight, "jetPassIDTight[nJets]/O");
+	//tree_->Branch("jetPassMuFrac", jetPassMuFrac, "jetPassMuFrac[nJets]/O");
+	//tree_->Branch("jetPassEleFrac", jetPassEleFrac, "jetPassEleFrac[nJets]/O");
+	//tree_->Branch("jetPartonFlavor", jetPartonFlavor, "jetPartonFlavor[nJets]/I");
+	//tree_->Branch("jetHadronFlavor", jetHadronFlavor, "jetHadronFlavor[nJets]/I");
 	tree_->Branch("jetElectronEnergyFraction", jetElectronEnergyFraction, "jetElectronEnergyFraction[nJets]/F");
 	tree_->Branch("jetPhotonEnergyFraction", jetPhotonEnergyFraction, "jetPhotonEnergyFraction[nJets]/F");
-	tree_->Branch("jetChargedHadronEnergyFraction", jetChargedHadronEnergyFraction, "jetChargedHadronEnergyFraction[nJets]/F");
-	tree_->Branch("jetNeutralHadronEnergyFraction", jetNeutralHadronEnergyFraction, "jetNeutralHadronEnergyFraction[nJets]/F");
+	//tree_->Branch("jetChargedHadronEnergyFraction", jetChargedHadronEnergyFraction, "jetChargedHadronEnergyFraction[nJets]/F");
+	//tree_->Branch("jetNeutralHadronEnergyFraction", jetNeutralHadronEnergyFraction, "jetNeutralHadronEnergyFraction[nJets]/F");
 	tree_->Branch("jetMuonEnergyFraction", jetMuonEnergyFraction, "jetMuonEnergyFraction[nJets]/F");
-	tree_->Branch("jetHOEnergyFraction", jetHOEnergyFraction, "jetHOEnergyFraction[nJets]/F");
-	tree_->Branch("jetHFHadronEnergyFraction", jetHFHadronEnergyFraction, "jetHFHadronEnergyFraction[nJets]/F");
-	tree_->Branch("jetHFEMEnergyFraction",jetHFEMEnergyFraction, "jetHFEMEnergyFraction[nJets]/F");
-	tree_->Branch("jetChargedHadronMultiplicity", jetChargedHadronMultiplicity, "jetChargedHadronMultiplicity[nJets]/I");
-	tree_->Branch("jetNeutralHadronMultiplicity", jetNeutralHadronMultiplicity, "jetNeutralHadronMultiplicity[nJets]/I");
-	tree_->Branch("jetPhotonMultiplicity", jetPhotonMultiplicity, "jetPhotonMultiplicity[nJets]/I");
-	tree_->Branch("jetElectronMultiplicity", jetElectronMultiplicity, "jetElectronMultiplicity[nJets]/I");
-	tree_->Branch("jetMuonMultiplicity", jetMuonMultiplicity, "jetMuonMultiplicity[nJets]/I");
-	//tree_->Branch("jetQGLikelihood", jetQGLikelihood,"jetQGLikelihood[nJets]/F");
-	tree_->Branch("jetNSV", jetNSV, "jetNSV[nJets]/I");
-	tree_->Branch("jetNSVCand", jetNSVCand, "jetNSVCand[nJets]/I");
-	tree_->Branch("jetNVertexTracks", jetNVertexTracks, "jetNVertexTracks[nJets]/I");
-	tree_->Branch("jetNSelectedTracks", jetNSelectedTracks, "jetNSelectedTracks[nJets]/I");
-	tree_->Branch("jetDRSVJet", jetDRSVJet, "jetDRSVJet[nJets]/F");
-	tree_->Branch("jetFlightDist2D", jetFlightDist2D, "jetFlightDist2D[nJets]/F");
-	tree_->Branch("jetFlightDist2DError", jetFlightDist2DError, "jetFlightDist2DError[nJets]/F");
-	tree_->Branch("jetFlightDist3D", jetFlightDist3D, "jetFlightDist3D[nJets]/F");
-	tree_->Branch("jetFlightDist3DError", jetFlightDist3DError, "jetFlightDist3DError[nJets]/F");
-	tree_->Branch("jetSV_x", jetSV_x, "jetSV_x[nJets]/F");
-	tree_->Branch("jetSV_y", jetSV_y, "jetSV_y[nJets]/F");
-	tree_->Branch("jetSV_z", jetSV_z, "jetSV_z[nJets]/F");
-	tree_->Branch("jetSVNTracks", jetSVNTracks, "jetSVNTracks[nJets]/I");
-	tree_->Branch("jetSVMass", jetSVMass, "jetSVMass[nJets]/F");
-	tree_->Branch("jetAllMuonPt", jetAllMuonPt,"jetAllMuonPt[nJets]/F");
-	tree_->Branch("jetAllMuonEta", jetAllMuonEta,"jetAllMuonEta[nJets]/F");
-	tree_->Branch("jetAllMuonPhi", jetAllMuonPhi,"jetAllMuonPhi[nJets]/F");
-	tree_->Branch("jetAllMuonM", jetAllMuonM,"jetAllMuonM[nJets]/F");
-	tree_->Branch("jetPtWeightedDZ", jetPtWeightedDZ,"jetPtWeightedDZ[nJets]/F");
-	tree_->Branch("jetNRechits", jetNRechits,"jetNRechits[nJets]/I");
-	tree_->Branch("jetRechitE", jetRechitE,"jetRechitE[nJets]/F");
-	tree_->Branch("jetRechitT", jetRechitT,"jetRechitT[nJets]/F");
-	tree_->Branch("jetRechitT_rms", jetRechitT_rms,"jetRechitT_rms[nJets]/F");
+	//tree_->Branch("jetHOEnergyFraction", jetHOEnergyFraction, "jetHOEnergyFraction[nJets]/F");
+	//tree_->Branch("jetHFHadronEnergyFraction", jetHFHadronEnergyFraction, "jetHFHadronEnergyFraction[nJets]/F");
+	//tree_->Branch("jetHFEMEnergyFraction",jetHFEMEnergyFraction, "jetHFEMEnergyFraction[nJets]/F");
+	//tree_->Branch("jetChargedHadronMultiplicity", jetChargedHadronMultiplicity, "jetChargedHadronMultiplicity[nJets]/I");
+	//tree_->Branch("jetNeutralHadronMultiplicity", jetNeutralHadronMultiplicity, "jetNeutralHadronMultiplicity[nJets]/I");
+	//tree_->Branch("jetPhotonMultiplicity", jetPhotonMultiplicity, "jetPhotonMultiplicity[nJets]/I");
+	//tree_->Branch("jetElectronMultiplicity", jetElectronMultiplicity, "jetElectronMultiplicity[nJets]/I");
+	//tree_->Branch("jetMuonMultiplicity", jetMuonMultiplicity, "jetMuonMultiplicity[nJets]/I");
+	////tree_->Branch("jetQGLikelihood", jetQGLikelihood,"jetQGLikelihood[nJets]/F");
+	//tree_->Branch("jetNSV", jetNSV, "jetNSV[nJets]/I");
+	//tree_->Branch("jetNSVCand", jetNSVCand, "jetNSVCand[nJets]/I");
+	//tree_->Branch("jetNVertexTracks", jetNVertexTracks, "jetNVertexTracks[nJets]/I");
+	//tree_->Branch("jetNSelectedTracks", jetNSelectedTracks, "jetNSelectedTracks[nJets]/I");
+	//tree_->Branch("jetDRSVJet", jetDRSVJet, "jetDRSVJet[nJets]/F");
+	//tree_->Branch("jetFlightDist2D", jetFlightDist2D, "jetFlightDist2D[nJets]/F");
+	//tree_->Branch("jetFlightDist2DError", jetFlightDist2DError, "jetFlightDist2DError[nJets]/F");
+	//tree_->Branch("jetFlightDist3D", jetFlightDist3D, "jetFlightDist3D[nJets]/F");
+	//tree_->Branch("jetFlightDist3DError", jetFlightDist3DError, "jetFlightDist3DError[nJets]/F");
+	//tree_->Branch("jetSV_x", jetSV_x, "jetSV_x[nJets]/F");
+	//tree_->Branch("jetSV_y", jetSV_y, "jetSV_y[nJets]/F");
+	//tree_->Branch("jetSV_z", jetSV_z, "jetSV_z[nJets]/F");
+	//tree_->Branch("jetSVNTracks", jetSVNTracks, "jetSVNTracks[nJets]/I");
+	//tree_->Branch("jetSVMass", jetSVMass, "jetSVMass[nJets]/F");
+	//tree_->Branch("jetAllMuonPt", jetAllMuonPt,"jetAllMuonPt[nJets]/F");
+	//tree_->Branch("jetAllMuonEta", jetAllMuonEta,"jetAllMuonEta[nJets]/F");
+	//tree_->Branch("jetAllMuonPhi", jetAllMuonPhi,"jetAllMuonPhi[nJets]/F");
+	//tree_->Branch("jetAllMuonM", jetAllMuonM,"jetAllMuonM[nJets]/F");
+	//tree_->Branch("jetPtWeightedDZ", jetPtWeightedDZ,"jetPtWeightedDZ[nJets]/F");
+	//tree_->Branch("jetNRechits", jetNRechits,"jetNRechits[nJets]/I");
+	//tree_->Branch("jetRechitE", jetRechitE,"jetRechitE[nJets]/F");
+	//tree_->Branch("jetRechitT", jetRechitT,"jetRechitT[nJets]/F");
+	//tree_->Branch("jetRechitT_rms", jetRechitT_rms,"jetRechitT_rms[nJets]/F");
 
-	tree_->Branch("jetRechitE_Error", jetRechitE_Error,"jetRechitE_Error[nJets]/F");
-	tree_->Branch("jetRechitT_Error", jetRechitT_Error,"jetRechitT_Error[nJets]/F");
-	tree_->Branch("jetAlphaMax",jetAlphaMax,"jetAlphaMax[nJets]/F");
-	tree_->Branch("jetBetaMax",jetBetaMax,"jetBetaMax[nJets]/F");
-	tree_->Branch("jetGammaMax_ET",jetGammaMax_ET,"jetGammaMax_ET[nJets]/F");
-	tree_->Branch("jetGammaMax_EM",jetGammaMax_EM,"jetGammaMax_EM[nJets]/F");
-	tree_->Branch("jetGammaMax_Hadronic",jetGammaMax_Hadronic,"jetGammaMax_Hadronic[nJets]/F");
-	tree_->Branch("jetGammaMax",jetGammaMax,"jetGammaMax[nJets]/F");
-	tree_->Branch("jetPtAllTracks",jetPtAllTracks,"jetPtAllTracks[nJets]/F");
-	tree_->Branch("jetPtAllPVTracks",jetPtAllPVTracks,"jetPtAllPVTracks[nJets]/F");
-	tree_->Branch("jetMedianTheta2D",jetMedianTheta2D,"jetMedianTheta2D[nJets]/F");
-	tree_->Branch("jetMedianIP",jetMedianIP,"jetMedianIP[nJets]/F");
-	tree_->Branch("jetMinDeltaRAllTracks",jetMinDeltaRAllTracks,"jetMinDeltaRAllTracks[nJets]/F");
-	tree_->Branch("jetMinDeltaRPVTracks",jetMinDeltaRPVTracks,"jetMinDeltaRPVTracks[nJets]/F");
-	tree_->Branch("jet_sig_et1",jet_sig_et1,"jet_sig_et1[nJets]/F");
-	tree_->Branch("jet_sig_et2",jet_sig_et2,"jet_sig_et2[nJets]/F");
-	tree_->Branch("jet_pt_deb",jet_pt_deb,"jet_pt_deb[nJets]/F");
-	tree_->Branch("jet_sig_pt1",jet_sig_pt1,"jet_sig_pt1[nJets]/F");
-	tree_->Branch("jet_sig_pt2",jet_sig_pt2,"jet_sig_pt2[nJets]/F");
-	tree_->Branch("jet_pt_dpf",jet_pt_dpf,"jet_pt_dpf[nJets]/F");
-	tree_->Branch("jet_energy_frac",jet_energy_frac,"jet_energy_frac[nJets]/F");
+	//tree_->Branch("jetRechitE_Error", jetRechitE_Error,"jetRechitE_Error[nJets]/F");
+	//tree_->Branch("jetRechitT_Error", jetRechitT_Error,"jetRechitT_Error[nJets]/F");
+	//tree_->Branch("jetAlphaMax",jetAlphaMax,"jetAlphaMax[nJets]/F");
+	//tree_->Branch("jetBetaMax",jetBetaMax,"jetBetaMax[nJets]/F");
+	//tree_->Branch("jetGammaMax_ET",jetGammaMax_ET,"jetGammaMax_ET[nJets]/F");
+	//tree_->Branch("jetGammaMax_EM",jetGammaMax_EM,"jetGammaMax_EM[nJets]/F");
+	//tree_->Branch("jetGammaMax_Hadronic",jetGammaMax_Hadronic,"jetGammaMax_Hadronic[nJets]/F");
+	//tree_->Branch("jetGammaMax",jetGammaMax,"jetGammaMax[nJets]/F");
+	//tree_->Branch("jetPtAllTracks",jetPtAllTracks,"jetPtAllTracks[nJets]/F");
+	//tree_->Branch("jetPtAllPVTracks",jetPtAllPVTracks,"jetPtAllPVTracks[nJets]/F");
+	//tree_->Branch("jetMedianTheta2D",jetMedianTheta2D,"jetMedianTheta2D[nJets]/F");
+	//tree_->Branch("jetMedianIP",jetMedianIP,"jetMedianIP[nJets]/F");
+	//tree_->Branch("jetMinDeltaRAllTracks",jetMinDeltaRAllTracks,"jetMinDeltaRAllTracks[nJets]/F");
+	//tree_->Branch("jetMinDeltaRPVTracks",jetMinDeltaRPVTracks,"jetMinDeltaRPVTracks[nJets]/F");
+	//tree_->Branch("jet_sig_et1",jet_sig_et1,"jet_sig_et1[nJets]/F");
+	//tree_->Branch("jet_sig_et2",jet_sig_et2,"jet_sig_et2[nJets]/F");
+	//tree_->Branch("jet_pt_deb",jet_pt_deb,"jet_pt_deb[nJets]/F");
+	//tree_->Branch("jet_sig_pt1",jet_sig_pt1,"jet_sig_pt1[nJets]/F");
+	//tree_->Branch("jet_sig_pt2",jet_sig_pt2,"jet_sig_pt2[nJets]/F");
+	//tree_->Branch("jet_pt_dpf",jet_pt_dpf,"jet_pt_dpf[nJets]/F");
+	//tree_->Branch("jet_energy_frac",jet_energy_frac,"jet_energy_frac[nJets]/F");
 
-	tree_->Branch("jetNPFCands",jetNPFCands,"jetNPFCands[nJets]/I");
-	tree_->Branch("jetPFCandIndex",jetPFCandIndex,Form("jetPFCandIndex[nJets][%d]/I",MAX_NPFCAND));
+	//tree_->Branch("jetNPFCands",jetNPFCands,"jetNPFCands[nJets]/I");
+	//tree_->Branch("jetPFCandIndex",jetPFCandIndex,Form("jetPFCandIndex[nJets][%d]/I",MAX_NPFCAND));
 
-	tree_->Branch("jetAlphaMax_wp",jetAlphaMax_wp,"jetAlphaMax_wp[nJets]/F");
-	tree_->Branch("jetBetaMax_wp",jetBetaMax_wp,"jetBetaMax_wp[nJets]/F");
-	tree_->Branch("jetGammaMax_ET_wp",jetGammaMax_ET_wp,"jetGammaMax_ET_wp[nJets]/F");
-	tree_->Branch("jetGammaMax_EM_wp",jetGammaMax_EM_wp,"jetGammaMax_EM_wp[nJets]/F");
-	tree_->Branch("jetGammaMax_Hadronic_wp",jetGammaMax_Hadronic_wp,"jetGammaMax_Hadronic_wp[nJets]/F");
-	tree_->Branch("jetGammaMax_wp",jetGammaMax_wp,"jetGammaMax_wp[nJets]/F");
-	tree_->Branch("jetPtAllTracks_wp",jetPtAllTracks_wp,"jetPtAllTracks_wp[nJets]/F");
-	tree_->Branch("jetPtAllPVTracks_wp",jetPtAllPVTracks_wp,"jetPtAllPVTracks_wp[nJets]/F");
-	tree_->Branch("jetMedianTheta2D_wp",jetMedianTheta2D_wp,"jetMedianTheta2D_wp[nJets]/F");
-	tree_->Branch("jetMedianIP_wp",jetMedianIP_wp,"jetMedianIP_wp[nJets]/F");
-	tree_->Branch("jetMinDeltaRAllTracks_wp",jetMinDeltaRAllTracks_wp,"jetMinDeltaRAllTracks_wp[nJets]/F");
-	tree_->Branch("jetMinDeltaRPVTracks_wp",jetMinDeltaRPVTracks_wp,"jetMinDeltaRPVTracks_wp[nJets]/F");
+	//tree_->Branch("jetAlphaMax_wp",jetAlphaMax_wp,"jetAlphaMax_wp[nJets]/F");
+	//tree_->Branch("jetBetaMax_wp",jetBetaMax_wp,"jetBetaMax_wp[nJets]/F");
+	//tree_->Branch("jetGammaMax_ET_wp",jetGammaMax_ET_wp,"jetGammaMax_ET_wp[nJets]/F");
+	//tree_->Branch("jetGammaMax_EM_wp",jetGammaMax_EM_wp,"jetGammaMax_EM_wp[nJets]/F");
+	//tree_->Branch("jetGammaMax_Hadronic_wp",jetGammaMax_Hadronic_wp,"jetGammaMax_Hadronic_wp[nJets]/F");
+	//tree_->Branch("jetGammaMax_wp",jetGammaMax_wp,"jetGammaMax_wp[nJets]/F");
+	//tree_->Branch("jetPtAllTracks_wp",jetPtAllTracks_wp,"jetPtAllTracks_wp[nJets]/F");
+	//tree_->Branch("jetPtAllPVTracks_wp",jetPtAllPVTracks_wp,"jetPtAllPVTracks_wp[nJets]/F");
+	//tree_->Branch("jetMedianTheta2D_wp",jetMedianTheta2D_wp,"jetMedianTheta2D_wp[nJets]/F");
+	//tree_->Branch("jetMedianIP_wp",jetMedianIP_wp,"jetMedianIP_wp[nJets]/F");
+	//tree_->Branch("jetMinDeltaRAllTracks_wp",jetMinDeltaRAllTracks_wp,"jetMinDeltaRAllTracks_wp[nJets]/F");
+	//tree_->Branch("jetMinDeltaRPVTracks_wp",jetMinDeltaRPVTracks_wp,"jetMinDeltaRPVTracks_wp[nJets]/F");
 
 	tree_->Branch("jetTime",   jetTime,   "jetTime[nJets]/F");
-	tree_->Branch("ecalNRechits",   ecalNRechits,   "ecalNRechits[nJets]/F");
-	tree_->Branch("ecalRechitE", ecalRechitE, "ecalRechitE[nJets]/F");
+	//tree_->Branch("ecalNRechits",   ecalNRechits,   "ecalNRechits[nJets]/F");
+	//tree_->Branch("ecalRechitE", ecalRechitE, "ecalRechitE[nJets]/F");
 
-	tree_->Branch("jetChargedEMEnergyFraction",   jetChargedEMEnergyFraction,   "jetChargedEMEnergyFraction[nJets]/F");
-	tree_->Branch("jetNeutralEMEnergyFraction",   jetNeutralEMEnergyFraction,   "jetNeutralEMEnergyFraction[nJets]/F");
+	//tree_->Branch("jetChargedEMEnergyFraction",   jetChargedEMEnergyFraction,   "jetChargedEMEnergyFraction[nJets]/F");
+	//tree_->Branch("jetNeutralEMEnergyFraction",   jetNeutralEMEnergyFraction,   "jetNeutralEMEnergyFraction[nJets]/F");
 
-	tree_->Branch("jetChargedMultiplicity",   jetChargedMultiplicity,   "jetChargedMultiplicity[nJets]/I");
-	//tree_->Branch("jetNPixelHits",   jetNPixelHits,   "jetNPixelHits[nJets]/I");
-	//tree_->Branch("jetNHits",   jetNHits,   "jetNHits[nJets]/I");
-	tree_->Branch("jetNPixelHitsMedian",   jetNPixelHitsMedian,   "jetNPixelHitsMedian[nJets]/F");
-	tree_->Branch("jetNHitsMedian",   jetNHitsMedian,   "jetNHitsMedian[nJets]/F");
+	//tree_->Branch("jetChargedMultiplicity",   jetChargedMultiplicity,   "jetChargedMultiplicity[nJets]/I");
+	////tree_->Branch("jetNPixelHits",   jetNPixelHits,   "jetNPixelHits[nJets]/I");
+	////tree_->Branch("jetNHits",   jetNHits,   "jetNHits[nJets]/I");
+	//tree_->Branch("jetNPixelHitsMedian",   jetNPixelHitsMedian,   "jetNPixelHitsMedian[nJets]/F");
+	//tree_->Branch("jetNHitsMedian",   jetNHitsMedian,   "jetNHitsMedian[nJets]/F");
 
-	tree_->Branch("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter,"jet_matched_gLLP0_daughter[nJets]/O");
-	tree_->Branch("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter,"jet_matched_gLLP1_daughter[nJets]/O");
-	tree_->Branch("jet_matched_gLLP0_grandaughter", jet_matched_gLLP0_grandaughter,"jet_matched_gLLP0_grandaughter[nJets]/O");
-	tree_->Branch("jet_matched_gLLP1_grandaughter", jet_matched_gLLP1_grandaughter,"jet_matched_gLLP1_grandaughter[nJets]/O");
+	//tree_->Branch("jet_matched_gLLP0_daughter", jet_matched_gLLP0_daughter,"jet_matched_gLLP0_daughter[nJets]/O");
+	//tree_->Branch("jet_matched_gLLP1_daughter", jet_matched_gLLP1_daughter,"jet_matched_gLLP1_daughter[nJets]/O");
+	//tree_->Branch("jet_matched_gLLP0_grandaughter", jet_matched_gLLP0_grandaughter,"jet_matched_gLLP0_grandaughter[nJets]/O");
+	//tree_->Branch("jet_matched_gLLP1_grandaughter", jet_matched_gLLP1_grandaughter,"jet_matched_gLLP1_grandaughter[nJets]/O");
 
-	//ecal rechits
-	tree_->Branch("jetNRecHitsEcal",   jetNRecHitsEcal,   "jetNRecHitsEcal[nJets]/I");
-	tree_->Branch("jetEnergyRecHitsEcal",   jetEnergyRecHitsEcal,   "jetEnergyRecHitsEcal[nJets]/F");
-	tree_->Branch("jetTimeRecHitsEcal",   jetTimeRecHitsEcal,   "jetTimeRecHitsEcal[nJets]/F");
+	////ecal rechits
+	//tree_->Branch("jetNRecHitsEcal",   jetNRecHitsEcal,   "jetNRecHitsEcal[nJets]/I");
+	//tree_->Branch("jetEnergyRecHitsEcal",   jetEnergyRecHitsEcal,   "jetEnergyRecHitsEcal[nJets]/F");
+	//tree_->Branch("jetTimeRecHitsEcal",   jetTimeRecHitsEcal,   "jetTimeRecHitsEcal[nJets]/F");
 
-	//hcal hbhe rechits
-	tree_->Branch("jetNRecHitsHcal",   jetNRecHitsHcal,   "jetNRecHitsHcal[nJets]/I");
-	tree_->Branch("jetEnergyRecHitsHcal",   jetEnergyRecHitsHcal,   "jetEnergyRecHitsHcal[nJets]/F");
-	tree_->Branch("jetTimeRecHitsHcal",   jetTimeRecHitsHcal,   "jetTimeRecHitsHcal[nJets]/F");
+	////hcal hbhe rechits
+	//tree_->Branch("jetNRecHitsHcal",   jetNRecHitsHcal,   "jetNRecHitsHcal[nJets]/I");
+	//tree_->Branch("jetEnergyRecHitsHcal",   jetEnergyRecHitsHcal,   "jetEnergyRecHitsHcal[nJets]/F");
+	//tree_->Branch("jetTimeRecHitsHcal",   jetTimeRecHitsHcal,   "jetTimeRecHitsHcal[nJets]/F");
 
-	tree_->Branch("jetDNNScoreV1",   jetDNNScoreV1,   "jetDNNScoreV1[nJets]/F");
+	//tree_->Branch("jetDNNScoreV1",   jetDNNScoreV1,   "jetDNNScoreV1[nJets]/F");
 	tree_->Branch("jetDNNScoreV3",   jetDNNScoreV3,   "jetDNNScoreV3[nJets]/F");
-	tree_->Branch("jetDNNScoreV3miniAOD",   jetDNNScoreV3miniAOD,   "jetDNNScoreV3miniAOD[nJets]/F");
-	tree_->Branch("jetDNNScore",   jetDNNScore,   "jetDNNScore[nJets]/F");
+	//tree_->Branch("jetDNNScoreV3miniAOD",   jetDNNScoreV3miniAOD,   "jetDNNScoreV3miniAOD[nJets]/F");
+	//tree_->Branch("jetDNNScore",   jetDNNScore,   "jetDNNScore[nJets]/F");
 
-	tree_->Branch("jetIn250AK8",   jetIn250AK8,   "jetIn250AK8[nJets]/O");
+	//tree_->Branch("jetIn250AK8",   jetIn250AK8,   "jetIn250AK8[nJets]/O");
 
-        //PFCandidates
-        tree_->Branch("nPFCandidates", &nPFCandidates, "nPFCandidates/I");
-        tree_->Branch("PFCandidatePdgId", PFCandidatePdgId, "PFCandidatePdgId[nPFCandidates]/I");
-        tree_->Branch("PFCandidatePt", PFCandidatePt, "PFCandidatePt[nPFCandidates]/F");
-        tree_->Branch("PFCandidateEta", PFCandidateEta, "PFCandidateEta[nPFCandidates]/F");
-        tree_->Branch("PFCandidatePhi", PFCandidatePhi, "PFCandidatePhi[nPFCandidates]/F");
-        tree_->Branch("PFCandidateTrackIndex", PFCandidateTrackIndex, "PFCandidateTrackIndex[nPFCandidates]/I");
-        tree_->Branch("PFCandidatePVIndex", PFCandidatePVIndex, "PFCandidatePVIndex[nPFCandidates]/I");
+        ////PFCandidates
+        //tree_->Branch("nPFCandidates", &nPFCandidates, "nPFCandidates/I");
+        //tree_->Branch("PFCandidatePdgId", PFCandidatePdgId, "PFCandidatePdgId[nPFCandidates]/I");
+        //tree_->Branch("PFCandidatePt", PFCandidatePt, "PFCandidatePt[nPFCandidates]/F");
+        //tree_->Branch("PFCandidateEta", PFCandidateEta, "PFCandidateEta[nPFCandidates]/F");
+        //tree_->Branch("PFCandidatePhi", PFCandidatePhi, "PFCandidatePhi[nPFCandidates]/F");
+        //tree_->Branch("PFCandidateTrackIndex", PFCandidateTrackIndex, "PFCandidateTrackIndex[nPFCandidates]/I");
+        //tree_->Branch("PFCandidatePVIndex", PFCandidatePVIndex, "PFCandidatePVIndex[nPFCandidates]/I");
 
 	//HLT
 	tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[1201]/O"); //hardcoded
