@@ -970,7 +970,25 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   float     cscRechitCluster3MetJesUp_dPhi[N_MAX_CSC];
   float     cscRechitCluster3MetJesDown_dPhi[N_MAX_CSC];
 
+  int           cscRechitCluster3NLayersChamberPlus11[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberPlus12[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberPlus13[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberPlus21[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberPlus22[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberPlus31[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberPlus32[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberPlus41[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberPlus42[N_MAX_CSC];
 
+  int           cscRechitCluster3NLayersChamberMinus11[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberMinus12[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberMinus13[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberMinus21[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberMinus22[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberMinus31[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberMinus32[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberMinus41[N_MAX_CSC];
+  int           cscRechitCluster3NLayersChamberMinus42[N_MAX_CSC];
   // //csc intime cluster
   // int           nCscITClusters;
   // float         cscITClusterJetVeto[N_MAX_CSC];   //[nCsc]
@@ -1028,11 +1046,17 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   float gLLP_phi[2];
   float gLLP_csc[2];
   float gLLP_beta[2];
+  float gLLP_maxMatchedDis[2];
+
+
+
   float gLLP_e[2];
   bool gLLP_daughterKaon[2];
   float gLLP_pt[2];
   float gLLP_lepdPhi[2];
   int gLLP_multiplicity[2];
+  int gLLP_multiplicity20[2];
+
   int gLLP_EM_multiplicity[2];
 
 
@@ -1047,6 +1071,7 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   float gLLP_EMFracP[2];
   float gLLP_EMFracPz[2];
   float gLLP_visE[2];
+  float gLLP_visE20[2];
   float gLLP_visEz[2];
   float gLLP_visP[2];
   float gLLP_visPz[2];
@@ -1063,6 +1088,9 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   float gHiggsPhi;
   float gHiggsE;
 
+  float gLLP_match_jet_minDeltaR[2];
+  int gLLP_match_jet_index[2];
+  float gLLP_match_jet_pt[2];
   //leptons
   int nMuons;
   float muonPt[N_MAX_LEPTONS];
@@ -1122,22 +1150,21 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   float jetEJESDown[N_MAX_JETS];
   float JecUnc[N_MAX_JETS];
 
-
-  float ecalNRechits[N_MAX_JETS];
-  float ecalRechitE[N_MAX_JETS];
-  float jetElectronEnergyFraction[N_MAX_JETS];
-  float jetPhotonEnergyFraction[N_MAX_JETS];
+  float jetChargedEMEnergyFraction[N_MAX_JETS];
+  float jetNeutralEMEnergyFraction[N_MAX_JETS];
   float jetChargedHadronEnergyFraction[N_MAX_JETS];
   float jetNeutralHadronEnergyFraction[N_MAX_JETS];
 
-  float jetMuonEnergyFraction[N_MAX_JETS];
 
 
   bool jetPassMuFrac[N_MAX_JETS];
+  float jet_match_llp_minDeltaR[N_MAX_JETS];
+  int jet_match_llp_index[N_MAX_JETS];
+  float jet_match_llp_pt[N_MAX_JETS];
+
   float jet_match_genJet_minDeltaR[N_MAX_JETS];
   int jet_match_genJet_index[N_MAX_JETS];
   float jet_match_genJet_pt[N_MAX_JETS];
-
   // bool jetLoosePassId[N_MAX_JETS];
   bool jetPassId[N_MAX_JETS];
   bool jetTightPassId[N_MAX_JETS];

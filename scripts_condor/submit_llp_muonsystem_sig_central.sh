@@ -13,13 +13,8 @@ job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
 filesPerJob=20
 #Fall17 \
 #Fall18
-#for year in \
-#Summer16 \
-#Fall17 \
-#Fall18
-#do
 for year in \
-Fall18_FullGenParticles
+Fall18
 do
 	if [ ${year} == "Summer16" ]
         then
@@ -33,15 +28,14 @@ do
 				#ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
         #ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
         for sample in \
-	ggH_HToSSTodddd_MH-125_TuneCP5_13TeV-powheg-pythia8
+	ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
 	do
 		echo "Sample " ${sample}
 		version=/V1p17/MC_${year}/v1/
-		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v102/${sample}
+		output=/storage/cms/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v116/${sample}
 		#${sample%_HToSS*}_HToSSTobbbb_MH-125_MS-${mx}_ctau-${ctau_cm}_${tune}_13TeV-powheg-pythia8
 		echo ${output}
 		inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
-		#inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p17/MC_Fall18/v1/sixie/${sample}.txt
 		nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
 		maxjob=`python -c "print int($nfiles.0/$filesPerJob)+1"`
 		mod=`python -c "print int($nfiles.0%$filesPerJob)"`
@@ -49,7 +43,7 @@ do
 		then
 		        maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 		fi
-		analyzer=llp_MuonSystem_hnl
+		analyzer=llp_MuonSystem_cluster
 		if [[ ${year} == "Fall18" || ${year} == "Fall18_FullGenParticles" ]]
 		then
 		        echo ${year}
@@ -65,21 +59,6 @@ do
 		else
 		        echo "ERROR: NEED TO SET CORRECT YEAR"
 		fi
-#		if [ ${year} == "Fall18" ]
-#                then
-#                        echo ${year}
-#                        analyzerTag=Razor2018_17SeptEarlyReReco
-#		elif [ ${year} == "Fall17" ]
-#                then
-#                        echo ${year}
-#                        analyzerTag=Razor2017_Source2018
-#                elif [ ${year} == 'Summer16' ]
-#                then
-#                        echo ${year}
-#                        analyzerTag=Razor2016_Source2018
-#		else
-#                        echo "ERROR: NEED TO SET CORRECT YEAR"
-#                fi
 
 		rm -f submit/${analyzer}_${year}_${sample}_Job*.jdl
 		rm -f log/${analyzer}_${year}_${sample}_Job*

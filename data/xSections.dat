@@ -18,6 +18,7 @@ zH_withISR_mh2000								 7.639E-06
 
 #privately produced ggH
 #https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageAt13TeV#ZHllH_H_l_e_or_Process
+ggH_HToSS_SToEE_ms0p4_pl10							4.858E+01
 ggH_HToSS_SToEE_ms0p1_pl500    							4.858E+01
 ggH_HToSS_SToPi0Pi0_ms1_pl500							4.858E+01
 ggH_HToSS_SToEE_ms0p1_pl100                          				4.858E+01
@@ -359,6 +360,14 @@ ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-1000_TuneCUETP8M1_13TeV-powheg-pythia8 	
 ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-100_TuneCUETP8M1_13TeV-powheg-pythia8 		0.08946
 ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-10_TuneCUETP8M1_13TeV-powheg-pythia8		0.08946
 ZH_HToSSTobbbb_ZToLL_MH-125_MS-55_ctauS-1_TuneCUETP8M1_13TeV-powheg-pythia8		0.08946
+
+###
+TChiHH_mass127_pl1000 	10.31*0.5824*0.5824
+TChiHH_mass150_pl1000 	1e-03*3832.31*0.5824*0.5824
+TChiHH_mass200_pl1000 	1e-03*1335.62*0.5824*0.5824
+TChiHH_mass300_pl1000 	1e-03*284.855*0.5824*0.5824
+TChiHH_mass400_pl1000 	1e-03*88.7372*0.5824*0.5824
+
 
 
 #2017 samples, xsec taken from AN-18-008

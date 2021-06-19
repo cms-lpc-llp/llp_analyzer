@@ -37,38 +37,49 @@
 #MC_Summer16 \
 #MC_Fall17 \
 for year in \
-Data2018ABC_AOD \
-Data2018D_AOD
+MC_Fall18
 do
-	version=displacedJetMuonNtuple/V1p17/${year}/v5/sixie/EGamma/
+	version=displacedJetMuonNtuple/V1p17/${year}/v2/sixie/
 	root_dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/${version}/
 	list_dir=$CMSSW_BASE/src/llp_analyzer/lists/${version}
 	echo $list_dir
 	mkdir -p $list_dir
-	#ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18	
-	if [ ${year} == "MC_Summer16" ]
-	then
-		tune=TuneCUETP8M1
-	else
-		tune=TuneCP5
-	fi
-	#VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8 \
-        #VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-        #ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-        #ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8 \
-	#ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
-	for sample in \
-	Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018A-17Sep2018-v2_part2_v5_v2 \
-	Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018A-17Sep2018-v2_v5_v2 \
-	Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018B-17Sep2018-v1_v5_v4 \
-	Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018C-17Sep2018-v1_v5_v3 \
-	Run2_displacedJetMuonNtupler_V1p17_Data2018D_17Sept2018_AOD_Run2018D-PromptReco-v2_v5_v5	
+	for mode in \
+	ZHToSS \
+	WplusHToSS \
+	WminusHToSS \
+	VBFHToSS \
+	ttH_HToSS \
+	ggZHToSS_SToBB_ZToQQ
 	do
-	        echo "${list_dir}${sample}.txt"
-	        rm -f ${list_dir}${sample}.txt
-	        find ${root_dir}${sample}/ -name "*.root" -size +1000c >> ${list_dir}${sample}.txt
-	        sed -i '/failed/d' ${list_dir}${sample}.txt
-	        echo "input list created for $sample"
+		for decay in \
+		STodd \
+		SToTauTau
+		do
+			for m in \
+			7 \
+			15 \
+			40 \
+			55
+			do
+				for ctau in \
+				100 \
+				1000 \
+				10000 \
+				100000
+				do				
+					sample=${mode}_${decay}_ms${m}_pl${ctau}
+	        			echo "${list_dir}${sample}.txt"
+	        			rm -f ${list_dir}${sample}.txt
+					sample=${sample%.txt}
+	        			#find ${root_dir}${sample%_batch*}/*${sample##*ev150000_}*/ -name "*.root" -size +1000c >> ${list_dir}${sample}.txt
+					find ${root_dir}${sample}/ -name "*.root" -size +1000c >> ${list_dir}${sample}.txt
+					sed -i '/failed/d' ${list_dir}${sample}.txt
+	        			echo "input list created for $sample"
+					cat ${list_dir}${sample}.txt | wc
+				done
+			done
+		done
 	done
 done
 

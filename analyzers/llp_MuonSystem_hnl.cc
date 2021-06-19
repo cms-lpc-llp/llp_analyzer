@@ -432,7 +432,7 @@ void llp_MuonSystem_hnl::Analyze(bool isData, int options, string outputfilename
         // if (abs(MuonSystem->gLLP_eta[i]) < 2.4 && abs(MuonSystem->gLLP_eta[i]) > 0.9
         //   && abs(MuonSystem->gLLP_decay_vertex_z[i])<1100 && abs(MuonSystem->gLLP_decay_vertex_z[i])>568
         //   && MuonSystem->gLLP_decay_vertex_r[i] < 695.5) MuonSystem->gLLP_csc[i] = true;
-          if (abs(MuonSystem->gLLP_eta[i]) < 2.4 
+          if (abs(MuonSystem->gLLP_eta[i]) < 2.4
             && abs(MuonSystem->gLLP_decay_vertex_z[i])<1100 && abs(MuonSystem->gLLP_decay_vertex_z[i])>400
             && MuonSystem->gLLP_decay_vertex_r[i] < 695.5) MuonSystem->gLLP_csc[i] = true;
 
@@ -509,8 +509,8 @@ void llp_MuonSystem_hnl::Analyze(bool isData, int options, string outputfilename
             // if (RazorAnalyzer::deltaR(gParticleEta[i],gParticlePhi[i], gLLP_eta[0], gLLP_phi[0]) < 0.4 && llp0_dis<100) matched_llp0 = true;
             // if (RazorAnalyzer::deltaR(gParticleEta[i],gParticlePhi[i], gLLP_eta[1], gLLP_phi[1]) < 0.4 && llp1_dis<100) matched_llp1 = true;
 
-            if (llp0_dis<100) matched_llp0 = true;
-            if (llp1_dis<100) matched_llp1 = true;
+            if (llp0_dis<10) matched_llp0 = true;
+            if (llp1_dis<10) matched_llp1 = true;
 
             if (matched_llp0 && matched_llp1) //both matched
             {
@@ -535,6 +535,24 @@ void llp_MuonSystem_hnl::Analyze(bool isData, int options, string outputfilename
             MuonSystem->gLLP_visEz[llp_index] += gParticleE[i]/cosh(gParticleEta[i])*sinh(gParticleEta[i]);
             MuonSystem->gLLP_visP[llp_index] += gParticlePt[i]*cosh(gParticleEta[i]);
             MuonSystem->gLLP_visPz[llp_index] += gParticlePt[i]*sinh(gParticleEta[i]);
+
+            if ((llp_index == 0 && llp0_dis<20) || (llp_index == 1 && llp1_dis<20))
+            {
+              MuonSystem->gLLP_multiplicity20[llp_index] += 1;
+
+              MuonSystem->gLLP_visE20[llp_index] += gParticleE[i];
+
+            }
+
+            if (llp_index == 0 && llp0_dis>MuonSystem->gLLP_maxMatchedDis[0])
+            {
+              MuonSystem->gLLP_maxMatchedDis[0] = llp0_dis;
+            }
+            else if(llp_index == 1 && llp1_dis>MuonSystem->gLLP_maxMatchedDis[1])
+            {
+              MuonSystem->gLLP_maxMatchedDis[1] = llp1_dis;
+            }
+
 
             if (abs(gParticleId[i])==11 || abs(gParticleId[i])==22 || abs(gParticleId[i])==111) //EM don't count muon energy abs(gParticleId[i])==13 ||
             {

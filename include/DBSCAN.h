@@ -25,10 +25,15 @@ struct cscCluster
   int nCscSegments;
   float jetVeto, calojetVeto, muonVeto;
   int maxChamber, maxChamberSegment, nChamber;
+  // vector<int> cscChambers;
   int maxStation, maxStationSegment, nStation, nStation5, nStation10, nStation10perc;
   float avgStation, avgStation5, avgStation10, avgStation10perc;
   int nCscSegmentChamberPlus11, nCscSegmentChamberPlus12, nCscSegmentChamberPlus13, nCscSegmentChamberPlus21, nCscSegmentChamberPlus22, nCscSegmentChamberPlus31, nCscSegmentChamberPlus32, nCscSegmentChamberPlus41, nCscSegmentChamberPlus42;
   int nCscSegmentChamberMinus11, nCscSegmentChamberMinus12, nCscSegmentChamberMinus13, nCscSegmentChamberMinus21, nCscSegmentChamberMinus22, nCscSegmentChamberMinus31, nCscSegmentChamberMinus32, nCscSegmentChamberMinus41, nCscSegmentChamberMinus42;
+
+  int nLayersChamberPlus11, nLayersChamberPlus12, nLayersChamberPlus13, nLayersChamberPlus21, nLayersChamberPlus22, nLayersChamberPlus31, nLayersChamberPlus32, nLayersChamberPlus41, nLayersChamberPlus42;
+  int nLayersChamberMinus11, nLayersChamberMinus12, nLayersChamberMinus13, nLayersChamberMinus21, nLayersChamberMinus22, nLayersChamberMinus31, nLayersChamberMinus32, nLayersChamberMinus41, nLayersChamberMinus42;
+
 
   float Me11Ratio, Me12Ratio;
   float MajorAxis, MinorAxis, EtaSpread, PhiSpread, EtaPhiSpread, XYSpread, DeltaRSpread;
@@ -72,7 +77,7 @@ typedef struct Point_
     float x, y, z, t, twire;  // X, Y, Z position
     float eta,phi;
     float dirX, dirY, dirZ;
-    int station, chamber;
+    int station, chamber, layer;
     int clusterID;  // clustered ID
 }Point;
 
@@ -115,91 +120,6 @@ public:
     vector<float>clusterDeltaRSpread;
 
 
-
-
-    // vector<float>clusterXSpread_phi0p5;
-    // vector<float>clusterYSpread_phi0p5;
-    // vector<float>clusterXYSpread_phi0p5;
-    // vector<float>clusterPhiSpread_phi0p5;
-    // vector<float>clusterEtaPhiSpread_phi0p5;
-    //
-    // vector<float>clusterXSpread_phi0p55;
-    // vector<float>clusterYSpread_phi0p55;
-    // vector<float>clusterXYSpread_phi0p55;
-    // vector<float>clusterPhiSpread_phi0p55;
-    // vector<float>clusterEtaPhiSpread_phi0p55;
-    //
-    // vector<float>clusterXSpread_phi0p6;
-    // vector<float>clusterYSpread_phi0p6;
-    // vector<float>clusterXYSpread_phi0p6;
-    // vector<float>clusterPhiSpread_phi0p6;
-    // vector<float>clusterEtaPhiSpread_phi0p6;
-    //
-    // vector<float>clusterXSpread_phi0p65;
-    // vector<float>clusterYSpread_phi0p65;
-    // vector<float>clusterXYSpread_phi0p65;
-    // vector<float>clusterPhiSpread_phi0p65;
-    // vector<float>clusterEtaPhiSpread_phi0p65;
-    //
-    // vector<float>clusterXSpread_phi0p7;
-    // vector<float>clusterYSpread_phi0p7;
-    // vector<float>clusterXYSpread_phi0p7;
-    // vector<float>clusterPhiSpread_phi0p7;
-    // vector<float>clusterEtaPhiSpread_phi0p7;
-    //
-    // vector<float>clusterXSpread_phi0p75;
-    // vector<float>clusterYSpread_phi0p75;
-    // vector<float>clusterXYSpread_phi0p75;
-    // vector<float>clusterPhiSpread_phi0p75;
-    // vector<float>clusterEtaPhiSpread_phi0p75;
-    //
-    // vector<float>clusterXSpread_phi0p7_r1p3;
-    // vector<float>clusterYSpread_phi0p7_r1p3;
-    // vector<float>clusterXYSpread_phi0p7_r1p3;
-    // vector<float>clusterEtaSpread_phi0p7_r1p3;
-    // vector<float>clusterPhiSpread_phi0p7_r1p3;
-    // vector<float>clusterEtaPhiSpread_phi0p7_r1p3;
-    // vector<float>clusterRSpread_phi0p7_r1p3;
-    //
-    // vector<float>clusterXSpread_phi0p7_r1p2;
-    // vector<float>clusterYSpread_phi0p7_r1p2;
-    // vector<float>clusterXYSpread_phi0p7_r1p2;
-    // vector<float>clusterEtaSpread_phi0p7_r1p2;
-    // vector<float>clusterPhiSpread_phi0p7_r1p2;
-    // vector<float>clusterEtaPhiSpread_phi0p7_r1p2;
-    // vector<float>clusterRSpread_phi0p7_r1p2;
-    //
-    // vector<float>clusterXSpread_phi0p7_r1p1;
-    // vector<float>clusterYSpread_phi0p7_r1p1;
-    // vector<float>clusterXYSpread_phi0p7_r1p1;
-    // vector<float>clusterEtaSpread_phi0p7_r1p1;
-    // vector<float>clusterPhiSpread_phi0p7_r1p1;
-    // vector<float>clusterEtaPhiSpread_phi0p7_r1p1;
-    // vector<float>clusterRSpread_phi0p7_r1p1;
-    //
-    // vector<float>clusterXSpread_phi0p7_r1p15;
-    // vector<float>clusterYSpread_phi0p7_r1p15;
-    // vector<float>clusterXYSpread_phi0p7_r1p15;
-    // vector<float>clusterEtaSpread_phi0p7_r1p15;
-    // vector<float>clusterPhiSpread_phi0p7_r1p15;
-    // vector<float>clusterEtaPhiSpread_phi0p7_r1p15;
-    // vector<float>clusterRSpread_phi0p7_r1p15;
-    //
-    // vector<float>clusterXSpread_phi0p7_r1p25;
-    // vector<float>clusterYSpread_phi0p7_r1p25;
-    // vector<float>clusterXYSpread_phi0p7_r1p25;
-    // vector<float>clusterEtaSpread_phi0p7_r1p25;
-    // vector<float>clusterPhiSpread_phi0p7_r1p25;
-    // vector<float>clusterEtaPhiSpread_phi0p7_r1p25;
-    // vector<float>clusterRSpread_phi0p7_r1p25;
-    //
-    // vector<float>clusterXSpread_r1p2;
-    // vector<float>clusterYSpread_r1p2;
-    // vector<float>clusterXYSpread_r1p2;
-    // vector<float>clusterEtaSpread_r1p2;
-    // vector<float>clusterEtaPhiSpread_r1p2;
-    // vector<float>clusterRSpread_r1p2;
-    // vector<float>clusterPhiSpread_r1p2;
 
     vector<vector<vector<float>>>clusterXSpread_corr;
     vector<vector<vector<float>>>clusterYSpread_corr;
