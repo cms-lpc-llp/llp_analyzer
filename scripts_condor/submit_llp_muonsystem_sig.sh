@@ -10,7 +10,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=20
+filesPerJob=10
 
 #ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18
 #ggH_HToSSTobbbb_ms55_pl1000 \
@@ -48,70 +48,70 @@ ggH_HToSS_SToPiPlusPiMinus_ms1_pl500
 ggH_HToSS_SToKPlusKMinus_ms1p5_pl500
 ggH_HToSS_SToEE_ms0p4_pl500
 )
-listFall18=(
-#ttH_HToSS_SToBB_ms15_pl100
-#ttH_HToSS_SToBB_ms15_pl1000
-#ttH_HToSS_SToBB_ms15_pl10000
-#ttH_HToSS_SToBB_ms15_pl100000
-#ttH_HToSS_SToBB_ms40_pl100
-#ttH_HToSS_SToBB_ms40_pl1000
-#ttH_HToSS_SToBB_ms40_pl10000
-#ttH_HToSS_SToBB_ms40_pl100000
-#ttH_HToSS_SToBB_ms55_pl100
-#ttH_HToSS_SToBB_ms55_pl1000
-#ttH_HToSS_SToBB_ms55_pl10000
-#ttH_HToSS_SToBB_ms55_pl100000
-#WminusHToSS_SToBB_ms15_pl100
-#WminusHToSS_SToBB_ms15_pl1000
-#WminusHToSS_SToBB_ms15_pl10000
-#WminusHToSS_SToBB_ms15_pl100000
-#WminusHToSS_SToBB_ms40_pl100
-#WminusHToSS_SToBB_ms40_pl1000
-#WminusHToSS_SToBB_ms40_pl10000
-#WminusHToSS_SToBB_ms40_pl100000
-#WminusHToSS_SToBB_ms55_pl100
-#WminusHToSS_SToBB_ms55_pl1000
-#WminusHToSS_SToBB_ms55_pl10000
-#WminusHToSS_SToBB_ms55_pl100000
-#WplusHToSS_SToBB_ms15_pl100
-#WplusHToSS_SToBB_ms15_pl1000
-#WplusHToSS_SToBB_ms15_pl10000
-#WplusHToSS_SToBB_ms15_pl100000
-#WplusHToSS_SToBB_ms40_pl100
-#WplusHToSS_SToBB_ms40_pl1000
-#WplusHToSS_SToBB_ms40_pl10000
-#WplusHToSS_SToBB_ms40_pl100000
-#WplusHToSS_SToBB_ms55_pl100
-WplusHToSS_SToBB_ms55_pl1000
-#WplusHToSS_SToBB_ms55_pl10000
-#WplusHToSS_SToBB_ms55_pl100000
-#ZHToSS_SToBB_ms15_pl100
-#ZHToSS_SToBB_ms15_pl1000
-#ZHToSS_SToBB_ms15_pl10000
-#ZHToSS_SToBB_ms15_pl100000
-#ZHToSS_SToBB_ms40_pl100
-#ZHToSS_SToBB_ms40_pl1000
-#ZHToSS_SToBB_ms40_pl10000
-#ZHToSS_SToBB_ms40_pl100000
-#ZHToSS_SToBB_ms55_pl100
-#ZHToSS_SToBB_ms55_pl1000
-#ZHToSS_SToBB_ms55_pl10000
-#ZHToSS_SToBB_ms55_pl100000
-)
-listFall18=(
-ggZHToSS_SToBB_ZToQQ_ms15_pl100
-ggZHToSS_SToBB_ZToQQ_ms15_pl1000
-ggZHToSS_SToBB_ZToQQ_ms15_pl10000
-ggZHToSS_SToBB_ZToQQ_ms15_pl100000
-ggZHToSS_SToBB_ZToQQ_ms40_pl100
-ggZHToSS_SToBB_ZToQQ_ms40_pl1000
-ggZHToSS_SToBB_ZToQQ_ms40_pl10000
-ggZHToSS_SToBB_ZToQQ_ms40_pl100000
-ggZHToSS_SToBB_ZToQQ_ms55_pl100
-ggZHToSS_SToBB_ZToQQ_ms55_pl1000
-ggZHToSS_SToBB_ZToQQ_ms55_pl10000
-ggZHToSS_SToBB_ZToQQ_ms55_pl100000
-)
+#listFall18=(
+##ttH_HToSS_SToBB_ms15_pl100
+##ttH_HToSS_SToBB_ms15_pl1000
+##ttH_HToSS_SToBB_ms15_pl10000
+##ttH_HToSS_SToBB_ms15_pl100000
+##ttH_HToSS_SToBB_ms40_pl100
+##ttH_HToSS_SToBB_ms40_pl1000
+##ttH_HToSS_SToBB_ms40_pl10000
+##ttH_HToSS_SToBB_ms40_pl100000
+##ttH_HToSS_SToBB_ms55_pl100
+##ttH_HToSS_SToBB_ms55_pl1000
+##ttH_HToSS_SToBB_ms55_pl10000
+##ttH_HToSS_SToBB_ms55_pl100000
+##WminusHToSS_SToBB_ms15_pl100
+##WminusHToSS_SToBB_ms15_pl1000
+##WminusHToSS_SToBB_ms15_pl10000
+##WminusHToSS_SToBB_ms15_pl100000
+##WminusHToSS_SToBB_ms40_pl100
+##WminusHToSS_SToBB_ms40_pl1000
+##WminusHToSS_SToBB_ms40_pl10000
+##WminusHToSS_SToBB_ms40_pl100000
+##WminusHToSS_SToBB_ms55_pl100
+##WminusHToSS_SToBB_ms55_pl1000
+##WminusHToSS_SToBB_ms55_pl10000
+##WminusHToSS_SToBB_ms55_pl100000
+##WplusHToSS_SToBB_ms15_pl100
+##WplusHToSS_SToBB_ms15_pl1000
+##WplusHToSS_SToBB_ms15_pl10000
+##WplusHToSS_SToBB_ms15_pl100000
+##WplusHToSS_SToBB_ms40_pl100
+##WplusHToSS_SToBB_ms40_pl1000
+##WplusHToSS_SToBB_ms40_pl10000
+##WplusHToSS_SToBB_ms40_pl100000
+##WplusHToSS_SToBB_ms55_pl100
+#WplusHToSS_SToBB_ms55_pl1000
+##WplusHToSS_SToBB_ms55_pl10000
+##WplusHToSS_SToBB_ms55_pl100000
+##ZHToSS_SToBB_ms15_pl100
+##ZHToSS_SToBB_ms15_pl1000
+##ZHToSS_SToBB_ms15_pl10000
+##ZHToSS_SToBB_ms15_pl100000
+##ZHToSS_SToBB_ms40_pl100
+##ZHToSS_SToBB_ms40_pl1000
+##ZHToSS_SToBB_ms40_pl10000
+##ZHToSS_SToBB_ms40_pl100000
+##ZHToSS_SToBB_ms55_pl100
+##ZHToSS_SToBB_ms55_pl1000
+##ZHToSS_SToBB_ms55_pl10000
+##ZHToSS_SToBB_ms55_pl100000
+#)
+#listFall18=(
+#ggZHToSS_SToBB_ZToQQ_ms15_pl100
+#ggZHToSS_SToBB_ZToQQ_ms15_pl1000
+#ggZHToSS_SToBB_ZToQQ_ms15_pl10000
+#ggZHToSS_SToBB_ZToQQ_ms15_pl100000
+#ggZHToSS_SToBB_ZToQQ_ms40_pl100
+#ggZHToSS_SToBB_ZToQQ_ms40_pl1000
+#ggZHToSS_SToBB_ZToQQ_ms40_pl10000
+#ggZHToSS_SToBB_ZToQQ_ms40_pl100000
+#ggZHToSS_SToBB_ZToQQ_ms55_pl100
+#ggZHToSS_SToBB_ZToQQ_ms55_pl1000
+#ggZHToSS_SToBB_ZToQQ_ms55_pl10000
+#ggZHToSS_SToBB_ZToQQ_ms55_pl100000
+#)
 # listFall17=(
 # ZToMuMu_NNPDF31_13TeV-powheg_M_120_200
 # ZToMuMu_NNPDF31_13TeV-powheg_M_200_400
@@ -126,18 +126,24 @@ ggZHToSS_SToBB_ZToQQ_ms55_pl100000
 # #listFall18=(
 # #ggH_HToSSTobbbb_ms1_pl1000
 # #)
-# listFall18=(
-# QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8
-# QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8
-# )
-# listFall18=(
-# VBFHToSS_STodd_ms40_pl100
-# VBFHToSS_STodd_ms40_pl1000
-# VBFHToSS_STodd_ms40_pl10000
-# VBFHToSS_STodd_ms40_pl100000
-# )
-listBkg_Fall18=(
-WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+listFall18=(
+QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8
+QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8
+)
+#listFall18=(
+#TChiHH_mass127_pl1000
+#TChiHH_mass150_pl1000
+#TChiHH_mass200_pl1000
+#TChiHH_mass300_pl1000
+#TChiHH_mass400_pl1000
+#)
+#
+#
+#listBkg_Fall18=(
+#WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+#)
+listFall18=(
+ggH_HToSS_SToEE_ms0p4_pl10
 )
 for year in \
 Fall18
@@ -150,7 +156,7 @@ do
 
 		echo "Sample " ${sample}
 		version=/V1p17/MC_${year}/v2/
-		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v77/${sample}
+		output=/storage/cms/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v118/${sample}
 		echo ${output}
 	  	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
 		#inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple//V1p17/MC_Fall18/v1//sixie/${sample}.txt

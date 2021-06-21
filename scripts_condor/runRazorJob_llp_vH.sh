@@ -82,14 +82,14 @@ then
 		echo "I slept for 2 second"
 
 		##job finished, copy file to T2
-		echo "copying output file to /mnt/hadoop/${outputDirectory}"
+		echo "copying output file to ${outputDirectory}"
 		eval `scram unsetenv -sh`
-		gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}	
+		gfal-mkdir -p gsiftp://transfer-lb.ultralight.org//${outputDirectory}	
 		while IFS= read -r line
 		do
         		echo $line	
-			gfal-copy --checksum-mode=both ${line} gsiftp://transfer.ultralight.org//${outputDirectory}/${line}
-			if [ -f /mnt/hadoop/${outputDirectory}/${line} ]
+			gfal-copy -f --checksum-mode=both ${line} gsiftp://transfer-lb.ultralight.org//${outputDirectory}/${line}
+			if [ -f ${outputDirectory}/${line} ]
 			then
 				echo ${line} "copied"
 			else

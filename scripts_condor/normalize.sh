@@ -50,20 +50,11 @@ then
 		tune=${sample#*_MH-125_}
 		tune=${tune%_mx*}
 		output=${sample%_MH-125*}_MH-125_MS-${mx}_ctau-${ctau}_${tune}.root
-		echo "/mnt/hadoop/${inputDir}/*_Job*_${mx}_${ctau}.root"
-		hadd ${output} /mnt/hadoop/${inputDir}/*_Job*_${mx}_${ctau}.root
-	elif [ ${mode} == "central_bdt" ]
-	then
-		mx=${sample#*_mx}
-                tune=${sample#*_MH-125_}
-                tune=${tune%_mx*}
-                output=${sample%_MH-125*}_MH-125_MS-${mx}_${tune}.root
-                echo "/mnt/hadoop/${inputDir}/*_Job*_${mx}.root"
-                hadd ${output} /mnt/hadoop/${inputDir}/*_Job*_${mx}.root
-
+		echo "${inputDir}/*_Job*_${mx}_${ctau}.root"
+		hadd ${output} ${inputDir}/*_Job*_${mx}_${ctau}.root
 	else
-		echo "/mnt/hadoop/${inputDir}/${sample}*_Job*.root"
-		hadd ${sample}.root /mnt/hadoop/${inputDir}/*_Job*.root
+		echo "${inputDir}/${sample}*_Job*.root"
+		hadd ${sample}.root ${inputDir}/*_Job*.root
 		output=${sample}.root
 	fi
 	if [ ${isData} == "no" ]
@@ -117,11 +108,11 @@ then
 	
 	# copy normalized file back to hadoop
 	eval `scram unsetenv -sh`
-        gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDir}
-	gfal-copy --checksum-mode=both ${runDir}/${output} gsiftp://transfer.ultralight.org//${outputDir}/${output}
+        gfal-mkdir -p gsiftp://transfer-lb.ultralight.org//${outputDir}
+	gfal-copy --checksum-mode=both ${runDir}/${output} gsiftp://transfer-lb.ultralight.org//${outputDir}/${output}
 	
 
-	if [ -f /mnt/hadoop/${outputDir}/${output} ]
+	if [ -f ${outputDir}/${output} ]
 	then
 	        echo "copied succeed"
 	else

@@ -105,10 +105,10 @@ ZToMuMu_NNPDF31_13TeV-powheg_M_400_800
 #listFall18=(
 #ggH_HToSSTo4Tau_MH-125_TuneCP5_13TeV-powheg-pythia8
 #)
-#listFall18=(
-#QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8
-#QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8
-#)
+listFall18=(
+QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8
+QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8
+)
 #listBkg_Fall18=(
 #WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
 #)
@@ -122,22 +122,33 @@ ZToMuMu_NNPDF31_13TeV-powheg_M_400_800
 #ggH_HToSS_SToKPlusKMinus_ms1p5_pl500
 #ggH_HToSS_SToEE_ms0p4_pl500
 #)
+#listFall18=(
+#ggZHToSS_SToBB_ZToQQ_ms15_pl100
+#ggZHToSS_SToBB_ZToQQ_ms15_pl1000
+#ggZHToSS_SToBB_ZToQQ_ms15_pl10000
+#ggZHToSS_SToBB_ZToQQ_ms15_pl100000
+#ggZHToSS_SToBB_ZToQQ_ms40_pl100
+#ggZHToSS_SToBB_ZToQQ_ms40_pl1000
+#ggZHToSS_SToBB_ZToQQ_ms40_pl10000
+#ggZHToSS_SToBB_ZToQQ_ms40_pl100000
+#ggZHToSS_SToBB_ZToQQ_ms55_pl100
+#ggZHToSS_SToBB_ZToQQ_ms55_pl1000
+#ggZHToSS_SToBB_ZToQQ_ms55_pl10000
+#ggZHToSS_SToBB_ZToQQ_ms55_pl100000
+#)
+#listFall18=(
+#TChiHH_mass127_pl1000
+#TChiHH_mass150_pl1000
+#TChiHH_mass200_pl1000
+#TChiHH_mass300_pl1000
+#TChiHH_mass400_pl1000
+#)
+#listFall18_FullGenParticles=(
+#ggH_HToSSTodddd_MH-125_TuneCP5_13TeV-powheg-pythia8
+#ggH_HToSSTo4Tau_MH-125_TuneCP5_13TeV-powheg-pythia8
+#)
 listFall18=(
-ggZHToSS_SToBB_ZToQQ_ms15_pl100
-ggZHToSS_SToBB_ZToQQ_ms15_pl1000
-ggZHToSS_SToBB_ZToQQ_ms15_pl10000
-ggZHToSS_SToBB_ZToQQ_ms15_pl100000
-ggZHToSS_SToBB_ZToQQ_ms40_pl100
-ggZHToSS_SToBB_ZToQQ_ms40_pl1000
-ggZHToSS_SToBB_ZToQQ_ms40_pl10000
-ggZHToSS_SToBB_ZToQQ_ms40_pl100000
-ggZHToSS_SToBB_ZToQQ_ms55_pl100
-ggZHToSS_SToBB_ZToQQ_ms55_pl1000
-ggZHToSS_SToBB_ZToQQ_ms55_pl10000
-ggZHToSS_SToBB_ZToQQ_ms55_pl100000
-)
-listFall18_FullGenParticles=(
-ggH_HToSSTodddd_MH-125_TuneCP5_13TeV-powheg-pythia8
+ggH_HToSS_SToEE_ms0p4_pl10
 )
 for year in \
 Fall18
@@ -147,11 +158,11 @@ do
         for sample in "${!sampleList}"
         do
 
-		inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p17/MC_${year}/v2/v77/
+		inputDir=/storage/cms/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p17/MC_${year}/v2/v118/
 		outputDir=${inputDir}normalized
 		echo ${inputDir}
 		echo "Sample " ${sample}
-		analyzer=llp_MuonSystem
+		analyzer=llp_MuonSystem_cluster
 		rm -f submit/${analyzer}_normalize_${sample}*.jdl
 		rm -f log/${analyzer}_normalize_${sample}*
 

@@ -21,7 +21,7 @@ ctau_VBF=(
 #Fall18
 ctau_ggH=(1 10 100 1000 10000 100000)
 for year in \
-Fall18_FullGenParticles
+Fall18
 do
         if [ ${year} == "Summer16" ]
         then
@@ -45,7 +45,7 @@ do
                 echo "ERROR: NEED TO SET CORRECT YEAR"
         fi
 	xsec=137000
-	tune=TuneCP5
+	#tune=TuneCP5
 	#VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
 	#VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8 \
 	#ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
@@ -53,7 +53,7 @@ do
 
         #ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
         for sample in \
-        ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
+        ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
 	do
 
 		mass=()
@@ -71,7 +71,7 @@ do
 				echo "Sample " ${sample} "mx " ${mx} "ctau " ${ctau}
 				sample_long=${sample%_MH125*}_MH-125_MS-${mx}_ctau-${ctau}_${tune}_13TeV-powheg-pythia8
 				analyzer=llp_MuonSystem_bdt
-				inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p17/MC_${year}/v1/v102/
+				inputDir=/storage/cms/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p17/MC_${year}/v1/v117/
 				outputDir=${inputDir}normalized
 				echo ${inputDir}
 				rm -f submit/${analyzer}_normalize_${year}_${sample_long}.jdl

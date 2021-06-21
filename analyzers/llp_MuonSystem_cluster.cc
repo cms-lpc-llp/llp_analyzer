@@ -80,48 +80,6 @@ struct largest_pt_jet
   inline bool operator() (const jets& p1, const jets& p2){return p1.jet.Pt() > p2.jet.Pt();}
 } my_largest_pt_jet;
 
-int cscChamber(double x, double y, double z)
-{
-  double r = sqrt(x*x+y*y);
-  int sign_z = TMath::Sign(1.0, z);
-  // if (r > 80 && r < 283 && abs(z) > 568  && abs(z) < 632) return sign_z*11;
-  // if (r > 255 && r < 465.0 && abs(z) > 668.3 && abs(z) < 724) return sign_z*12;
-  // if (r > 485.5 && r < 695.5 && abs(z) > 686 && abs(z) < 724) return sign_z*13;
-  // if (r > 118.5 && r < 345 && abs(z) > 791 && abs(z) < 849.5) return sign_z*21;
-  // if (r > 337.5 && r < 695.5 && abs(z) > 791 && abs(z) < 849.5) return sign_z*22;
-  // if (r > 140.5 && r < 345 && abs(z) > 911.5 && abs(z) < 970) return sign_z*31;
-  // if (r > 337.5 && r < 695.5 && abs(z) > 911.5 && abs(z) < 970) return sign_z*32;
-  // if (r > 157.5 && r < 345 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*41;
-  // if (r > 337.5 && r < 695.5 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*42;
-  if (r < 283 && abs(z) > 568  && abs(z) < 632) return sign_z*11;
-  if (r < 470.0 && abs(z) > 668.3 && abs(z) < 724) return sign_z*12;
-  if (r > 480.0 && abs(z) > 686 && abs(z) < 724) return sign_z*13;
-  if (r < 345 && abs(z) > 791 && abs(z) < 849.5) return sign_z*21;
-  if (r > 337.5 && abs(z) > 791 && abs(z) < 849.5) return sign_z*22;
-  if (r < 345 && abs(z) > 911.5 && abs(z) < 970) return sign_z*31;
-  if (r > 337.5 && abs(z) > 911.5 && abs(z) < 970) return sign_z*32;
-  if (r < 345 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*41;
-  if (r > 337.5 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*42;
-  return -999;
-};
-int cscStation(double x, double y, double z)
-{
-  double r = sqrt(x*x+y*y);
-  // z = abs(z);
-  int sign_z = TMath::Sign(1.0, z);
-  if (r < 283 && abs(z) > 568  && abs(z) < 632) return sign_z*1;
-  if (r < 470.0 && abs(z) > 668.3 && abs(z) < 724) return sign_z*1;
-  if (r > 480.0 && abs(z) > 686 && abs(z) < 724) return sign_z*1;
-  if (r < 345 && abs(z) > 791 && abs(z) < 849.5) return sign_z*2;
-  if (r > 337.5 && abs(z) > 791 && abs(z) < 849.5) return sign_z*2;
-  if (r < 345 && abs(z) > 911.5 && abs(z) < 970) return sign_z*3;
-  if (r > 337.5 && abs(z) > 911.5 && abs(z) < 970) return sign_z*3;
-  if (r < 345 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*4;
-  if (r > 337.5 && abs(z) > 1002 && abs(z) < 1060.5) return sign_z*4;
-  return -999;
-};
-
-
 void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfilename, string analysisTag)
 {
   //initialization: create one TTree for each analysis box
@@ -407,23 +365,23 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
           MuonSystem->gHiggsE = gParticleE[i];
 
         }
-        if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 23)
-        { //  Z->mumu/Z->ee
-          MuonSystem->ZCategory  = 0;
-
-        }
-        else if (abs(gParticleId[i]) == 15 && gParticleStatus[i] == 2 && abs(gParticleMotherId[i]) == 23){
-          //  Z->tautau
-          MuonSystem->ZCategory  = 0;
-        }
-        else if ((abs(gParticleId[i]) == 12 || abs(gParticleId[i]) == 14 || abs(gParticleId[i]) == 16) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 23){
-          //Z->nunu
-          MuonSystem->ZCategory  = 1;
-        }
-        else if ((abs(gParticleId[i]) < 6) && gParticleStatus[i] == 23 && abs(gParticleMotherId[i]) == 23){
-          //Z->qq
-          MuonSystem->ZCategory  = 2;
-        }
+        // if ((abs(gParticleId[i]) == 13 || abs(gParticleId[i]) == 11) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 23)
+        // { //  Z->mumu/Z->ee
+        //   MuonSystem->ZCategory  = 0;
+        //
+        // }
+        // else if (abs(gParticleId[i]) == 15 && gParticleStatus[i] == 2 && abs(gParticleMotherId[i]) == 23){
+        //   //  Z->tautau
+        //   MuonSystem->ZCategory  = 0;
+        // }
+        // else if ((abs(gParticleId[i]) == 12 || abs(gParticleId[i]) == 14 || abs(gParticleId[i]) == 16) && gParticleStatus[i] == 1 && abs(gParticleMotherId[i]) == 23){
+        //   //Z->nunu
+        //   MuonSystem->ZCategory  = 1;
+        // }
+        // else if ((abs(gParticleId[i]) < 6) && gParticleStatus[i] == 23 && abs(gParticleMotherId[i]) == 23){
+        //   //Z->qq
+        //   MuonSystem->ZCategory  = 2;
+        // }
 
 
 
@@ -474,15 +432,19 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
       {
         MuonSystem->gLLP_eta[i] = gLLP_eta[i];
         MuonSystem->gLLP_phi[i] = gLLP_phi[i];
+        MuonSystem->gLLP_e[i] = gLLP_e[i];
+        MuonSystem->gLLP_pt[i] = gLLP_pt[i];
+
+
         MuonSystem->gLLP_decay_vertex_r[i] = sqrt(gLLP_decay_vertex_x[i]*gLLP_decay_vertex_x[i]+gLLP_decay_vertex_y[i]*gLLP_decay_vertex_y[i]);
         MuonSystem->gLLP_decay_vertex_x[i] = gLLP_decay_vertex_x[i];
         MuonSystem->gLLP_decay_vertex_y[i] = gLLP_decay_vertex_y[i];
         MuonSystem->gLLP_decay_vertex_z[i] = gLLP_decay_vertex_z[i];
         float beta = gLLP_beta[i];
         float gLLP_decay_vertex = sqrt(pow(MuonSystem->gLLP_decay_vertex_r[i], 2) + pow(MuonSystem->gLLP_decay_vertex_z[i],2));
-          float gamma = 1.0/sqrt(1-beta*beta);
-          MuonSystem->gLLP_ctau[i] = gLLP_decay_vertex/(beta * gamma);
-          MuonSystem->gLLP_beta[i] = gLLP_beta[i];
+        float gamma = 1.0/sqrt(1-beta*beta);
+        MuonSystem->gLLP_ctau[i] = gLLP_decay_vertex/(beta * gamma);
+        MuonSystem->gLLP_beta[i] = gLLP_beta[i];
 
           // if (abs(MuonSystem->gLLP_eta[i]) < 2.4 && abs(MuonSystem->gLLP_eta[i]) > 0.9
           //   && abs(MuonSystem->gLLP_decay_vertex_z[i])<1100 && abs(MuonSystem->gLLP_decay_vertex_z[i])>568
@@ -527,10 +489,10 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
       MuonSystem->metSF = helper->getMetTriggerSF(MuonSystem->met);
 
       if(signalScan && !isData)Total2D[make_pair(MuonSystem->mX, MuonSystem->ctau)]->Fill(1.0, genWeight*MuonSystem->higgsPtWeight*MuonSystem->pileupWeight);
-      if(!isData)
-      {
-        if (MuonSystem->gLLP_csc[0] == false && MuonSystem->gLLP_csc[1] == false)continue;
-      }
+      // if(!isData)
+      // {
+      //   if (MuonSystem->gLLP_csc[0] == false && MuonSystem->gLLP_csc[1] == false)continue;
+      // }
 
       if(signalScan && !isData)accep2D[make_pair(MuonSystem->mX, MuonSystem->ctau)]->Fill(1.0, genWeight*MuonSystem->higgsPtWeight*MuonSystem->pileupWeight);
      else if (!isData) accep->Fill(1.0, genWeight*MuonSystem->higgsPtWeight*MuonSystem->pileupWeight);
@@ -861,24 +823,6 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
 
         // MuonSystem->jetPassMuFrac[MuonSystem->nJets] = tmp.jetPassMuFrac;
 
-        float min_deltaR = 15.;
-        int index = 999;
-        for(int i=0; i < nGenJets; i++)
-        {
-
-          double current_delta_r = RazorAnalyzer::deltaPhi(genJetPhi[i],jetPhi[MuonSystem->nJets]);
-          if (current_delta_r < min_deltaR)
-          {
-            min_deltaR = current_delta_r;
-            index = i;
-          }
-        }
-        if (min_deltaR < 0.4)
-        {
-          MuonSystem->jet_match_genJet_minDeltaR[MuonSystem->nJets] = min_deltaR;
-          MuonSystem->jet_match_genJet_index[MuonSystem->nJets] = index;
-          MuonSystem->jet_match_genJet_pt[MuonSystem->nJets] = jetPt[index];
-        }
 
         MuonSystem->nJets++;
       }
@@ -1004,6 +948,9 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
         // MuonSystem->cscRechitsChamber[MuonSystem->nCscRechits] = ((index >> START_CHAMBER) & MASK_CHAMBER);
         //pick out the right bits for chamber
         int chamber = ((cscRechitsDetId[i] >> 3) & 077); //https://github.com/cms-sw/cmssw/blob/master/DataFormats/MuonDetId/interface/CSCDetId.h#L147
+
+        int layer = (cscRechitsDetId[i] & 07);
+
         Point p;
         p.phi = cscRechitsPhi[i];
         p.eta = cscRechitsEta[i];
@@ -1014,6 +961,7 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
         p.twire = cscRechitsTwire[i];
         p.station = cscRechitsStation[i];
         p.chamber = cscRechitsChamber[i];
+        p.layer = layer;
         p.clusterID = UNCLASSIFIED;
         points.push_back(p);
         cscRechitsClusterId.push_back(-1);
@@ -1149,6 +1097,25 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
           MuonSystem->cscRechitCluster3Me11Ratio[MuonSystem->nCscRechitClusters3] = tmp.Me11Ratio;
           MuonSystem->cscRechitCluster3Me12Ratio[MuonSystem->nCscRechitClusters3] = tmp.Me12Ratio;
 
+
+          MuonSystem->cscRechitCluster3NLayersChamberPlus11[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberPlus11;
+          MuonSystem->cscRechitCluster3NLayersChamberPlus12[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberPlus12;
+          MuonSystem->cscRechitCluster3NLayersChamberPlus13[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberPlus13;
+          MuonSystem->cscRechitCluster3NLayersChamberPlus21[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberPlus21;
+          MuonSystem->cscRechitCluster3NLayersChamberPlus22[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberPlus22;
+          MuonSystem->cscRechitCluster3NLayersChamberPlus31[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberPlus31;
+          MuonSystem->cscRechitCluster3NLayersChamberPlus32[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberPlus32;
+          MuonSystem->cscRechitCluster3NLayersChamberPlus41[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberPlus41;
+          MuonSystem->cscRechitCluster3NLayersChamberPlus42[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberPlus42;
+          MuonSystem->cscRechitCluster3NLayersChamberMinus11[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberMinus11;
+          MuonSystem->cscRechitCluster3NLayersChamberMinus12[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberMinus12;
+          MuonSystem->cscRechitCluster3NLayersChamberMinus13[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberMinus13;
+          MuonSystem->cscRechitCluster3NLayersChamberMinus21[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberMinus21;
+          MuonSystem->cscRechitCluster3NLayersChamberMinus22[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberMinus22;
+          MuonSystem->cscRechitCluster3NLayersChamberMinus31[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberMinus31;
+          MuonSystem->cscRechitCluster3NLayersChamberMinus32[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberMinus32;
+          MuonSystem->cscRechitCluster3NLayersChamberMinus41[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberMinus41;
+          MuonSystem->cscRechitCluster3NLayersChamberMinus42[MuonSystem->nCscRechitClusters3] = tmp.nLayersChamberMinus42;
           //  for (unsigned int j = 0; j < tmp.segment_id.size(); j++)
           // {
           //   MuonSystem->cscRechitsCluster2Id[tmp.segment_id[j]] = MuonSystem->nCscRechitClusters2;
@@ -1369,7 +1336,7 @@ void llp_MuonSystem_cluster::Analyze(bool isData, int options, string outputfile
       //   MuonSystem->cscRechitsCluster2Id[tmp.segment_id[j]] = MuonSystem->nCscRechitClusters2;
       // }
       // if(isData && MuonSystem->nCscRechitClusters3==0) continue;
-      if(isData&& MuonSystem->nCscRechitClusters3==0 && MuonSystem->nCscRechitClusters2==0 && MuonSystem->nCscRechitClusters==0) continue;
+      // if(isData&& MuonSystem->nCscRechitClusters3==0 && MuonSystem->nCscRechitClusters2==0 && MuonSystem->nCscRechitClusters==0) continue;
       // if( MuonSystem->nCscRechitClusters3==0 && MuonSystem->nCscRechitClusters2==0 && MuonSystem->nCscRechitClusters==0) continue;
 
       if(!isData && signalScan)

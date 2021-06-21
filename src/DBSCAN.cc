@@ -319,6 +319,26 @@ void DBSCAN::sort_clusters()
     vector<int>cscStations_copy;
     vector<int>cscChambers;
     vector<int>cscChambers_copy;
+    vector<int>cscLayersPlus11;
+    vector<int>cscLayersPlus12;
+    vector<int>cscLayersPlus13;
+    vector<int>cscLayersPlus21;
+    vector<int>cscLayersPlus22;
+    vector<int>cscLayersPlus31;
+    vector<int>cscLayersPlus32;
+    vector<int>cscLayersPlus41;
+    vector<int>cscLayersPlus42;
+
+    vector<int>cscLayersMinus11;
+    vector<int>cscLayersMinus12;
+    vector<int>cscLayersMinus13;
+    vector<int>cscLayersMinus21;
+    vector<int>cscLayersMinus22;
+    vector<int>cscLayersMinus31;
+    vector<int>cscLayersMinus32;
+    vector<int>cscLayersMinus41;
+    vector<int>cscLayersMinus42;
+
     vector<int>segment_index;
     int nSegments_Me11 = 0;
     int nSegments_Me12 = 0;
@@ -354,6 +374,27 @@ void DBSCAN::sort_clusters()
         cscStations_copy.push_back(m_points[l].station);
         cscChambers_copy.push_back(m_points[l].chamber);
         segment_index.push_back(l);
+
+        if (m_points[l].chamber == 11) cscLayersPlus11.push_back(m_points[l].layer);
+        if (m_points[l].chamber == 12) cscLayersPlus12.push_back(m_points[l].layer);
+        if (m_points[l].chamber == 13) cscLayersPlus13.push_back(m_points[l].layer);
+        if (m_points[l].chamber == 21) cscLayersPlus21.push_back(m_points[l].layer);
+      	if (m_points[l].chamber == 22) cscLayersPlus22.push_back(m_points[l].layer);
+        if (m_points[l].chamber == 31) cscLayersPlus31.push_back(m_points[l].layer);
+      	if (m_points[l].chamber == 32) cscLayersPlus32.push_back(m_points[l].layer);
+        if (m_points[l].chamber == 41) cscLayersPlus41.push_back(m_points[l].layer);
+      	if (m_points[l].chamber == 42) cscLayersPlus42.push_back(m_points[l].layer);
+
+        if (m_points[l].chamber == -11) cscLayersMinus11.push_back(m_points[l].layer);
+        if (m_points[l].chamber == -12) cscLayersMinus12.push_back(m_points[l].layer);
+        if (m_points[l].chamber == -13) cscLayersMinus13.push_back(m_points[l].layer);
+        if (m_points[l].chamber == -21) cscLayersMinus21.push_back(m_points[l].layer);
+      	if (m_points[l].chamber == -22) cscLayersMinus22.push_back(m_points[l].layer);
+        if (m_points[l].chamber == -31) cscLayersMinus31.push_back(m_points[l].layer);
+      	if (m_points[l].chamber == -32) cscLayersMinus32.push_back(m_points[l].layer);
+        if (m_points[l].chamber == -41) cscLayersMinus41.push_back(m_points[l].layer);
+      	if (m_points[l].chamber == -42) cscLayersMinus42.push_back(m_points[l].layer);
+
         if (abs(m_points[l].chamber) == 11) nSegments_Me11++;
         if (abs(m_points[l].chamber) == 12) nSegments_Me12++;
       	if (m_points[l].chamber == 11) tmpCluster.nCscSegmentChamberPlus11++;
@@ -374,6 +415,7 @@ void DBSCAN::sort_clusters()
       	if (m_points[l].chamber == -32) tmpCluster.nCscSegmentChamberMinus32++;
       	if (m_points[l].chamber == -41) tmpCluster.nCscSegmentChamberMinus41++;
       	if (m_points[l].chamber == -42) tmpCluster.nCscSegmentChamberMinus42++;
+
 
         // if (m_points[l].station == 1) tmpCluster.nDtSegmentStation1++;
         // if (m_points[l].station == 2) tmpCluster.nDtSegmentStation2++;
@@ -414,6 +456,7 @@ void DBSCAN::sort_clusters()
     tmpCluster.Me11Ratio = 1.0*nSegments_Me11/clusterSize[i];
     tmpCluster.Me12Ratio = 1.0*nSegments_Me12/clusterSize[i];
 
+    // tmpCluster.cscChambers = cscChambers;
     for (int j = 0; j < N_phicorr; j++)
     {
       for (int k = 0; k < N_rcorr; k++)
@@ -428,6 +471,48 @@ void DBSCAN::sort_clusters()
       }
     }
 
+
+
+    // count number of cscLayers
+    std::sort(cscLayersPlus11.begin(), cscLayersPlus11.end());
+    std::sort(cscLayersPlus12.begin(), cscLayersPlus12.end());
+    std::sort(cscLayersPlus13.begin(), cscLayersPlus13.end());
+    std::sort(cscLayersPlus21.begin(), cscLayersPlus21.end());
+    std::sort(cscLayersPlus22.begin(), cscLayersPlus22.end());
+    std::sort(cscLayersPlus31.begin(), cscLayersPlus31.end());
+    std::sort(cscLayersPlus32.begin(), cscLayersPlus32.end());
+    std::sort(cscLayersPlus41.begin(), cscLayersPlus41.end());
+    std::sort(cscLayersPlus42.begin(), cscLayersPlus42.end());
+
+    std::sort(cscLayersMinus11.begin(), cscLayersMinus11.end());
+    std::sort(cscLayersMinus12.begin(), cscLayersMinus12.end());
+    std::sort(cscLayersMinus13.begin(), cscLayersMinus13.end());
+    std::sort(cscLayersMinus21.begin(), cscLayersMinus21.end());
+    std::sort(cscLayersMinus22.begin(), cscLayersMinus22.end());
+    std::sort(cscLayersMinus31.begin(), cscLayersMinus31.end());
+    std::sort(cscLayersMinus32.begin(), cscLayersMinus32.end());
+    std::sort(cscLayersMinus41.begin(), cscLayersMinus41.end());
+    std::sort(cscLayersMinus42.begin(), cscLayersMinus42.end());
+
+
+    tmpCluster.nLayersChamberPlus11 = std::unique(cscLayersPlus11.begin(), cscLayersPlus11.end())-cscLayersPlus11.begin();
+    tmpCluster.nLayersChamberPlus12 = std::unique(cscLayersPlus12.begin(), cscLayersPlus12.end())-cscLayersPlus12.begin();
+    tmpCluster.nLayersChamberPlus13 = std::unique(cscLayersPlus13.begin(), cscLayersPlus13.end())-cscLayersPlus13.begin();
+    tmpCluster.nLayersChamberPlus21 = std::unique(cscLayersPlus21.begin(), cscLayersPlus21.end())-cscLayersPlus21.begin();
+    tmpCluster.nLayersChamberPlus22 = std::unique(cscLayersPlus22.begin(), cscLayersPlus22.end())-cscLayersPlus22.begin();
+    tmpCluster.nLayersChamberPlus31 = std::unique(cscLayersPlus31.begin(), cscLayersPlus31.end())-cscLayersPlus31.begin();
+    tmpCluster.nLayersChamberPlus32 = std::unique(cscLayersPlus32.begin(), cscLayersPlus32.end())-cscLayersPlus32.begin();
+    tmpCluster.nLayersChamberPlus41 = std::unique(cscLayersPlus41.begin(), cscLayersPlus41.end())-cscLayersPlus41.begin();
+    tmpCluster.nLayersChamberPlus42 = std::unique(cscLayersPlus42.begin(), cscLayersPlus42.end())-cscLayersPlus42.begin();
+    tmpCluster.nLayersChamberMinus11 = std::unique(cscLayersMinus11.begin(), cscLayersMinus11.end())-cscLayersMinus11.begin();
+    tmpCluster.nLayersChamberMinus12 = std::unique(cscLayersMinus12.begin(), cscLayersMinus12.end())-cscLayersMinus12.begin();
+    tmpCluster.nLayersChamberMinus13 = std::unique(cscLayersMinus13.begin(), cscLayersMinus13.end())-cscLayersMinus13.begin();
+    tmpCluster.nLayersChamberMinus21 = std::unique(cscLayersMinus21.begin(), cscLayersMinus21.end())-cscLayersMinus21.begin();
+    tmpCluster.nLayersChamberMinus22 = std::unique(cscLayersMinus22.begin(), cscLayersMinus22.end())-cscLayersMinus22.begin();
+    tmpCluster.nLayersChamberMinus31 = std::unique(cscLayersMinus31.begin(), cscLayersMinus31.end())-cscLayersMinus31.begin();
+    tmpCluster.nLayersChamberMinus32 = std::unique(cscLayersMinus32.begin(), cscLayersMinus32.end())-cscLayersMinus32.begin();
+    tmpCluster.nLayersChamberMinus41 = std::unique(cscLayersMinus41.begin(), cscLayersMinus41.end())-cscLayersMinus41.begin();
+    tmpCluster.nLayersChamberMinus42 = std::unique(cscLayersMinus42.begin(), cscLayersMinus42.end())-cscLayersMinus42.begin();
     tmpCluster.segment_id = segment_index;
 
     // count the number of chambers and max chamber segments
