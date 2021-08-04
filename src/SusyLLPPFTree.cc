@@ -25,6 +25,12 @@ void SusyLLPPFTree::InitVariables()
 	pileupWeight = 1; pileupWeightUp = 1; pileupWeightDown = 1;
 	met=-1; metPhi=-1;
 	HT=-1;
+        jetMet_dPhiMin_pt_20_eta_2p4=999.;
+        jetMet_dPhiMin_pt_20_eta_3=999.;
+        jetMet_dPhiMin_pt_20_eta_all=999.;
+        jetMet_dPhiMin_eta_2p4=999.;
+        jetMet_dPhiMin_eta_3=999.;
+        jetMet_dPhiMin_eta_all=999.;
 	jetMet_dPhi=-999.; jetMet_dPhiMin=999.; jetMet_dPhiMin4=999.;
 	jetMet_dPhiStar=-999.; jetMet_dPhiStarMin=999.; 
 
@@ -167,6 +173,18 @@ void SusyLLPPFTree::InitVariables()
 
 	//jets
 	nJets = 0;
+	nCHSJets_in_HEM = 0;
+	nCHSJets_in_HEM_eta_2p4 = 0;
+	nCHSJets_in_HEM_eta_2p5 = 0;
+	nCHSJets_in_HEM_eta_3 = 0;
+	nCHSJets_in_HEM_pt_20 = 0;
+	nCHSJets_in_HEM_pt_20_eta_2p4 = 0;
+	nCHSJets_in_HEM_pt_20_eta_2p5 = 0;
+	nCHSJets_in_HEM_pt_20_eta_3 = 0;
+	nCHSJets_in_HEM_pt_30 = 0;
+	nCHSJets_in_HEM_pt_30_eta_2p4 = 0;
+	nCHSJets_in_HEM_pt_30_eta_2p5 = 0;
+	nCHSJets_in_HEM_pt_30_eta_3 = 0;
 	//nBJets = 0;
 	//nCaloJets = 0;
 	for( int i = 0; i < N_MAX_JETS; i++ )
@@ -619,6 +637,18 @@ void SusyLLPPFTree::InitTree()
 
 	//jets
 	tree_->SetBranchAddress("nJets",     &nJets);
+	tree_->Branch("nCHSJets_in_HEM", &nCHSJets_in_HEM,"nCHSJets_in_HEM/I");
+	tree_->Branch("nCHSJets_in_HEM_eta_2p4", &nCHSJets_in_HEM_eta_2p4,"nCHSJets_in_HEM_eta_2p4/I");
+	tree_->Branch("nCHSJets_in_HEM_eta_2p5", &nCHSJets_in_HEM_eta_2p5,"nCHSJets_in_HEM_eta_2p5/I");
+	tree_->Branch("nCHSJets_in_HEM_eta_3", &nCHSJets_in_HEM_eta_3,"nCHSJets_in_HEM_eta_3/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_20", &nCHSJets_in_HEM_pt_20,"nCHSJets_in_HEM_pt_20/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_20_eta_2p4", &nCHSJets_in_HEM_pt_20_eta_2p4,"nCHSJets_in_HEM_pt_20_eta_2p4/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_20_eta_2p5", &nCHSJets_in_HEM_pt_20_eta_2p5,"nCHSJets_in_HEM_pt_20_eta_2p5/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_20_eta_3", &nCHSJets_in_HEM_pt_20_eta_3,"nCHSJets_in_HEM_pt_20_eta_3/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_30", &nCHSJets_in_HEM_pt_30,"nCHSJets_in_HEM_pt_30/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_30_eta_2p4", &nCHSJets_in_HEM_pt_30_eta_2p4,"nCHSJets_in_HEM_pt_30_eta_2p4/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_30_eta_2p5", &nCHSJets_in_HEM_pt_30_eta_2p5,"nCHSJets_in_HEM_pt_30_eta_2p5/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_30_eta_3", &nCHSJets_in_HEM_pt_30_eta_3,"nCHSJets_in_HEM_pt_30_eta_3/I");
 	tree_->SetBranchAddress("jetE", jetE);
 	tree_->SetBranchAddress("jetPt", jetPt);
 	tree_->SetBranchAddress("jetEta", jetEta);
@@ -927,12 +957,20 @@ void SusyLLPPFTree::CreateTree()
 
 	//event info
 	tree_->Branch("evtNum",      &evtNum,     "evtNum/i");      // event number
+	tree_->Branch("runNum",      &runNum,     "runNum/i");      // event number
 	tree_->Branch("pileupWeight",      &pileupWeight,     "pileupWeight/F");
 	tree_->Branch("weight",      &weight,     "weight/F");
 	tree_->Branch("met",         &met,        "met/F");         // MET
 	tree_->Branch("MT",    &MT,    "MT/F");
+	tree_->Branch("ZMass",      &ZMass,  "ZMass/F");
 	tree_->Branch("jetMet_dPhiMin",    &jetMet_dPhiMin,    "jetMet_dPhiMin/F");
 	tree_->Branch("jetPho_dPhiMin",    &jetPho_dPhiMin,    "jetPho_dPhiMin/F");
+	tree_->Branch("jetMet_dPhiMin_pt_20_eta_2p4",    &jetMet_dPhiMin_pt_20_eta_2p4,    "jetMet_dPhiMin_pt_20_eta_2p4/F");
+	tree_->Branch("jetMet_dPhiMin_pt_20_eta_3",    &jetMet_dPhiMin_pt_20_eta_3,    "jetMet_dPhiMin_pt_20_eta_3/F");
+	tree_->Branch("jetMet_dPhiMin_pt_20_eta_all",    &jetMet_dPhiMin_pt_20_eta_all,    "jetMet_dPhiMin_pt_20_eta_all/F");
+	tree_->Branch("jetMet_dPhiMin_eta_2p4",    &jetMet_dPhiMin_eta_2p4,    "jetMet_dPhiMin_eta_2p4/F");
+	tree_->Branch("jetMet_dPhiMin_eta_3",    &jetMet_dPhiMin_eta_3,    "jetMet_dPhiMin_eta_3/F");
+	tree_->Branch("jetMet_dPhiMin_eta_all",    &jetMet_dPhiMin_eta_all,    "jetMet_dPhiMin_eta_all/F");
 
 	tree_->Branch("jet2_dPhi",    &jet2_dPhi,    "jet2_dPhi/F");
 	//leptons
@@ -951,6 +989,7 @@ void SusyLLPPFTree::CreateTree()
 	tree_->Branch("nJets", &nJets,"nJets/I");
 	tree_->Branch("jetPt", jetPt,"jetPt[nJets]/F");
 	tree_->Branch("jetPhi", jetPhi,"jetPhi[nJets]/F");
+	tree_->Branch("jetEta", jetEta,"jetEta[nJets]/F");
 	tree_->Branch("jetDNNScoreV3",   jetDNNScoreV3,   "jetDNNScoreV3[nJets]/F");
 	tree_->Branch("jetPass", jetPass,"jetPass[nJets]/O");
 

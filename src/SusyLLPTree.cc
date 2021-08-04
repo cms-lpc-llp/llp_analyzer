@@ -25,6 +25,12 @@ void SusyLLPTree::InitVariables()
 	pileupWeight = 1; pileupWeightUp = 1; pileupWeightDown = 1;
 	met=-1; metPhi=-1;
 	HT=-1;
+	jetMet_dPhiMin_pt_20_eta_2p4=999.;
+	jetMet_dPhiMin_pt_20_eta_3=999.;
+	jetMet_dPhiMin_pt_20_eta_all=999.;
+	jetMet_dPhiMin_eta_2p4=999.;
+	jetMet_dPhiMin_eta_3=999.;
+	jetMet_dPhiMin_eta_all=999.;
 	jetMet_dPhi=-999.; jetMet_dPhiMin=999.; jetMet_dPhiMin4=999.;
 	jetMet_dPhiStar=-999.; jetMet_dPhiStarMin=999.; 
 
@@ -33,6 +39,7 @@ void SusyLLPTree::InitVariables()
 
 	jet2_dPhi=999.;
 
+	sig_label = -1;
 	gLLP0_EB =false;
 	gLLP1_EB =false;
 
@@ -124,6 +131,7 @@ void SusyLLPTree::InitVariables()
 		tau_passMuVetoLoose[i] = 0;
 		tau_passMuVetoMedium[i] = 0;
 		tau_passMuVetoTight[i] = 0;
+		tau_ID[i] = 0;
 	}
 
 	//photons
@@ -139,6 +147,41 @@ void SusyLLPTree::InitVariables()
 		pho_passCutBasedIDTight[i] = 0;
 		pho_passMVAIDWP80[i] = 0;
 		pho_passMVAIDWP90[i] = 0;
+	}
+	//Muon System
+
+	//CSC Seg
+	nCscSeg = 0;
+	for( int i = 0; i < N_MAX_SEGS; i++ )
+	{
+		cscSegPhi[i] = 0.0;
+		cscSegEta[i] = 0.0;
+		cscSegX[i] = 0.0;
+		cscSegY[i] = 0.0;
+		cscSegZ[i] = 0.0;
+		cscSegDirectionX[i] = 0.0;
+		cscSegDirectionY[i] = 0.0;
+		cscSegDirectionZ[i] = 0.0;
+		cscSegT[i] = 0.0;
+		cscSegChi2[i] = 0.0;
+		cscSegNRecHits[i] = 0;
+		cscSegStation[i] = 0;
+		cscSegChamber[i] = 0;
+	}
+
+	//DT Seg
+	nDtSeg = 0;
+	for( int i = 0; i < N_MAX_SEGS; i++ )
+	{
+		dtSegPhi[i] = 0.0;
+		dtSegEta[i] = 0.0;
+		dtSegX[i] = 0.0;
+		dtSegY[i] = 0.0;
+		dtSegZ[i] = 0.0;
+		dtSegStation[i] = 0;
+		dtSegWheel[i] = 0;
+		dtSegTime[i] = -9999.0;
+		dtSegTimeError[i] = -9999.0;
 	}
 
 	//fatjets
@@ -167,6 +210,18 @@ void SusyLLPTree::InitVariables()
 
 	//jets
 	nJets = 0;
+	nCHSJets_in_HEM = 0;
+	nCHSJets_in_HEM_eta_2p4 = 0;
+	nCHSJets_in_HEM_eta_2p5 = 0;
+	nCHSJets_in_HEM_eta_3 = 0;
+	nCHSJets_in_HEM_pt_20 = 0;
+	nCHSJets_in_HEM_pt_20_eta_2p4 = 0;
+	nCHSJets_in_HEM_pt_20_eta_2p5 = 0;
+	nCHSJets_in_HEM_pt_20_eta_3 = 0;
+	nCHSJets_in_HEM_pt_30 = 0;
+	nCHSJets_in_HEM_pt_30_eta_2p4 = 0;
+	nCHSJets_in_HEM_pt_30_eta_2p5 = 0;
+	nCHSJets_in_HEM_pt_30_eta_3 = 0;
 	//nBJets = 0;
 	//nCaloJets = 0;
 	for( int i = 0; i < N_MAX_JETS; i++ )
@@ -303,6 +358,9 @@ void SusyLLPTree::InitVariables()
 		jetDNNScoreV3miniAOD[i] = -1;
 
 		jetIn250AK8[i] = 0;
+
+		jetCscEF[i] = -1;
+		jetDtEF[i] = -1;
 	}
 
 	//PFCandidates
@@ -595,6 +653,7 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("tau_passMuVetoLoose",         tau_passMuVetoLoose); 
 	tree_->SetBranchAddress("tau_passMuVetoMedium",        tau_passMuVetoMedium); 
 	tree_->SetBranchAddress("tau_passMuVetoTight  ",       tau_passMuVetoTight  );
+	tree_->SetBranchAddress("tau_ID",                 tau_ID); 
 
 	//photons
 	tree_->SetBranchAddress("nPhotons",                   &nPhotons); 
@@ -607,6 +666,33 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("pho_passCutBasedIDLoose",    pho_passCutBasedIDLoose); 
 	tree_->SetBranchAddress("pho_passCutBasedIDMedium",   pho_passCutBasedIDMedium); 
 	tree_->SetBranchAddress("pho_passCutBasedIDTight ",   pho_passCutBasedIDTight ); 
+
+	//Muon System
+	//csc seg
+	tree_->SetBranchAddress("nCscSeg",&nCscSeg);
+	tree_->SetBranchAddress("cscSegPhi",cscSegPhi);
+	tree_->SetBranchAddress("cscSegEta",cscSegEta);
+	tree_->SetBranchAddress("cscSegX",cscSegX);
+	tree_->SetBranchAddress("cscSegY",cscSegY);
+	tree_->SetBranchAddress("cscSegZ",cscSegZ);
+	tree_->SetBranchAddress("cscSegT",cscSegT);
+	tree_->SetBranchAddress("cscSegChi2",cscSegChi2);
+	tree_->SetBranchAddress("cscSegChamber",cscSegChamber);
+	tree_->SetBranchAddress("cscSegStation",cscSegStation);
+
+	tree_->SetBranchAddress("cscSegNRecHits",cscSegNRecHits);
+
+	//dt seg
+	tree_->SetBranchAddress("nDtSeg",&nDtSeg);
+	tree_->SetBranchAddress("dtSegPhi",dtSegPhi);
+	tree_->SetBranchAddress("dtSegEta",dtSegEta);
+	tree_->SetBranchAddress("dtSegX",dtSegX);
+	tree_->SetBranchAddress("dtSegY",dtSegY);
+	tree_->SetBranchAddress("dtSegZ",dtSegZ);
+	tree_->SetBranchAddress("dtSegStation",dtSegStation);
+	tree_->SetBranchAddress("dtSegWheel",dtSegWheel);
+	tree_->SetBranchAddress("dtSegTime",dtSegTime);
+	tree_->Branch("dtSegTimeError",dtSegTimeError);
 
 	//fatjets
 	tree_->SetBranchAddress("nFatJets",     &nFatJets);
@@ -946,6 +1032,12 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("jetMet_dPhi",    &jetMet_dPhi,    "jetMet_dPhi/F");
 	tree_->Branch("jetMet_dPhiStar",    &jetMet_dPhiStar,    "jetMet_dPhiStar/F");
 	tree_->Branch("jetMet_dPhiMin",    &jetMet_dPhiMin,    "jetMet_dPhiMin/F");
+	tree_->Branch("jetMet_dPhiMin_pt_20_eta_2p4",    &jetMet_dPhiMin_pt_20_eta_2p4,    "jetMet_dPhiMin_pt_20_eta_2p4/F");
+	tree_->Branch("jetMet_dPhiMin_pt_20_eta_3",    &jetMet_dPhiMin_pt_20_eta_3,    "jetMet_dPhiMin_pt_20_eta_3/F");
+	tree_->Branch("jetMet_dPhiMin_pt_20_eta_all",    &jetMet_dPhiMin_pt_20_eta_all,    "jetMet_dPhiMin_pt_20_eta_all/F");
+	tree_->Branch("jetMet_dPhiMin_eta_2p4",    &jetMet_dPhiMin_eta_2p4,    "jetMet_dPhiMin_eta_2p4/F");
+	tree_->Branch("jetMet_dPhiMin_eta_3",    &jetMet_dPhiMin_eta_3,    "jetMet_dPhiMin_eta_3/F");
+	tree_->Branch("jetMet_dPhiMin_eta_all",    &jetMet_dPhiMin_eta_all,    "jetMet_dPhiMin_eta_all/F");
 	tree_->Branch("jetMet_dPhiStarMin",    &jetMet_dPhiStarMin,    "jetMet_dPhiStarMin/F");
 	tree_->Branch("jetMet_dPhiMin4",    &jetMet_dPhiMin4,    "jetMet_dPhiMin4/F");
 
@@ -959,6 +1051,8 @@ void SusyLLPTree::CreateTree()
 
 	tree_->Branch("gLLP0_EB", &gLLP0_EB, "gLLP0_EB/O");
 	tree_->Branch("gLLP1_EB", &gLLP1_EB, "gLLP1_EB/O");
+
+	tree_->Branch("sig_label", &sig_label, "sig_label/I");
 
 	// met filters
 	tree_->Branch("Flag2_globalSuperTightHalo2016Filter", &Flag2_globalSuperTightHalo2016Filter, "Flag2_globalSuperTightHalo2016Filter/O");
@@ -1053,6 +1147,7 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("tau_passMuVetoLoose", tau_passMuVetoLoose, "tau_passMuVetoLoose[nTaus]/O");
 	tree_->Branch("tau_passMuVetoMedium", tau_passMuVetoMedium, "tau_passMuVetoMedium[nTaus]/O");
 	tree_->Branch("tau_passMuVetoTight", tau_passMuVetoTight, "tau_passMuVetoTight[nTaus]/O");
+	tree_->Branch("tau_ID", tau_ID, "tau_ID[nTaus]/i");
 
 	//photons
 	tree_->Branch("nPhotons", &nPhotons,"nPhotons/I");
@@ -1066,6 +1161,33 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("pho_passCutBasedIDTight", pho_passCutBasedIDTight, "pho_passCutBasedIDTight[nPhotons]/O");
 	tree_->Branch("pho_passMVAIDWP80", pho_passMVAIDWP80, "pho_passMVAIDWP80[nPhotons]/O");
 	tree_->Branch("pho_passMVAIDWP90", pho_passMVAIDWP90, "pho_passMVAIDWP90[nPhotons]/O");
+
+	//Muon System
+	//csc seg
+	tree_->Branch("nCscSeg",&nCscSeg,"nCscSeg/I");
+	tree_->Branch("cscSegPhi",cscSegPhi,"cscSegPhi[nCscSeg]/F");
+	tree_->Branch("cscSegEta",cscSegEta,"cscSegEta[nCscSeg]/F");
+	tree_->Branch("cscSegX",cscSegX,"cscSegX[nCscSeg]/F");
+	tree_->Branch("cscSegY",cscSegY,"cscSegY[nCscSeg]/F");
+	tree_->Branch("cscSegZ",cscSegZ,"cscSegZ[nCscSeg]/F");
+	tree_->Branch("cscSegT",cscSegT,"cscSegT[nCscSeg]/F");
+	tree_->Branch("cscSegChi2",cscSegChi2,"cscSegChi2[nCscSeg]/F");
+	tree_->Branch("cscSegChamber",cscSegChamber,"cscSegChamber[nCscSeg]/I");
+	tree_->Branch("cscSegStation",cscSegStation,"cscSegStation[nCscSeg]/I");
+
+	tree_->Branch("cscSegNRecHits",cscSegNRecHits,"cscSegNRecHits[nCscSeg]/I");
+
+	//dt seg
+	tree_->Branch("nDtSeg",&nDtSeg,"nDtSeg/I");
+	tree_->Branch("dtSegPhi",dtSegPhi,"dtSegPhi[nDtSeg]/F");
+	tree_->Branch("dtSegEta",dtSegEta,"dtSegEta[nDtSeg]/F");
+	tree_->Branch("dtSegX",dtSegX,"dtSegX[nDtSeg]/F");
+	tree_->Branch("dtSegY",dtSegY,"dtSegY[nDtSeg]/F");
+	tree_->Branch("dtSegZ",dtSegZ,"dtSegZ[nDtSeg]/F");
+	tree_->Branch("dtSegStation",dtSegStation,"dtSegStation[nDtSeg]/I");
+	tree_->Branch("dtSegWheel",dtSegWheel,"dtSegWheel[nDtSeg]/I");
+	tree_->Branch("dtSegTime",dtSegTime,"dtSegTime[nDtSeg]/F");
+	tree_->Branch("dtSegTimeError",dtSegTimeError,"dtSegTimeError[nDtSeg]/F");
 
 	//fatjets
 	tree_->Branch("nFatJets", &nFatJets,"nFatJets/I");
@@ -1089,6 +1211,18 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("fatjet_matched_gLLP1_daughter", fatjet_matched_gLLP1_daughter,"fatjet_matched_gLLP1_daughter[nFatJets]/O");
 	//jets
 	tree_->Branch("nJets", &nJets,"nJets/I");
+	tree_->Branch("nCHSJets_in_HEM", &nCHSJets_in_HEM,"nCHSJets_in_HEM/I");
+	tree_->Branch("nCHSJets_in_HEM_eta_2p4", &nCHSJets_in_HEM_eta_2p4,"nCHSJets_in_HEM_eta_2p4/I");
+	tree_->Branch("nCHSJets_in_HEM_eta_2p5", &nCHSJets_in_HEM_eta_2p5,"nCHSJets_in_HEM_eta_2p5/I");
+	tree_->Branch("nCHSJets_in_HEM_eta_3", &nCHSJets_in_HEM_eta_3,"nCHSJets_in_HEM_eta_3/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_20", &nCHSJets_in_HEM_pt_20,"nCHSJets_in_HEM_pt_20/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_20_eta_2p4", &nCHSJets_in_HEM_pt_20_eta_2p4,"nCHSJets_in_HEM_pt_20_eta_2p4/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_20_eta_2p5", &nCHSJets_in_HEM_pt_20_eta_2p5,"nCHSJets_in_HEM_pt_20_eta_2p5/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_20_eta_3", &nCHSJets_in_HEM_pt_20_eta_3,"nCHSJets_in_HEM_pt_20_eta_3/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_30", &nCHSJets_in_HEM_pt_30,"nCHSJets_in_HEM_pt_30/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_30_eta_2p4", &nCHSJets_in_HEM_pt_30_eta_2p4,"nCHSJets_in_HEM_pt_30_eta_2p4/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_30_eta_2p5", &nCHSJets_in_HEM_pt_30_eta_2p5,"nCHSJets_in_HEM_pt_30_eta_2p5/I");
+	tree_->Branch("nCHSJets_in_HEM_pt_30_eta_3", &nCHSJets_in_HEM_pt_30_eta_3,"nCHSJets_in_HEM_pt_30_eta_3/I");
 	tree_->Branch("jetE", jetE,"jetE[nJets]/F");
 	tree_->Branch("jetPt", jetPt,"jetPt[nJets]/F");
 	tree_->Branch("jetEta", jetEta,"jetEta[nJets]/F");
@@ -1225,14 +1359,17 @@ void SusyLLPTree::CreateTree()
 
 	tree_->Branch("jetIn250AK8",   jetIn250AK8,   "jetIn250AK8[nJets]/O");
 
-        //PFCandidates
-        tree_->Branch("nPFCandidates", &nPFCandidates, "nPFCandidates/I");
-        tree_->Branch("PFCandidatePdgId", PFCandidatePdgId, "PFCandidatePdgId[nPFCandidates]/I");
-        tree_->Branch("PFCandidatePt", PFCandidatePt, "PFCandidatePt[nPFCandidates]/F");
-        tree_->Branch("PFCandidateEta", PFCandidateEta, "PFCandidateEta[nPFCandidates]/F");
-        tree_->Branch("PFCandidatePhi", PFCandidatePhi, "PFCandidatePhi[nPFCandidates]/F");
-        tree_->Branch("PFCandidateTrackIndex", PFCandidateTrackIndex, "PFCandidateTrackIndex[nPFCandidates]/I");
-        tree_->Branch("PFCandidatePVIndex", PFCandidatePVIndex, "PFCandidatePVIndex[nPFCandidates]/I");
+	tree_->Branch("jetCscEF",   jetCscEF,   "jetCscEF[nJets]/F");
+	tree_->Branch("jetDtEF",   jetDtEF,   "jetDtEF[nJets]/F");
+
+	//PFCandidates
+	tree_->Branch("nPFCandidates", &nPFCandidates, "nPFCandidates/I");
+	tree_->Branch("PFCandidatePdgId", PFCandidatePdgId, "PFCandidatePdgId[nPFCandidates]/I");
+	tree_->Branch("PFCandidatePt", PFCandidatePt, "PFCandidatePt[nPFCandidates]/F");
+	tree_->Branch("PFCandidateEta", PFCandidateEta, "PFCandidateEta[nPFCandidates]/F");
+	tree_->Branch("PFCandidatePhi", PFCandidatePhi, "PFCandidatePhi[nPFCandidates]/F");
+	tree_->Branch("PFCandidateTrackIndex", PFCandidateTrackIndex, "PFCandidateTrackIndex[nPFCandidates]/I");
+	tree_->Branch("PFCandidatePVIndex", PFCandidatePVIndex, "PFCandidatePVIndex[nPFCandidates]/I");
 
 	//HLT
 	tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[1201]/O"); //hardcoded

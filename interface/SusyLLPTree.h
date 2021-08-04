@@ -18,6 +18,7 @@
 #define N_MAX_ELECTRONS 20
 #define N_MAX_TAUS 20
 #define N_MAX_PHOTONS 20
+#define N_MAX_SEGS 100000
 
 #define NTriggersMAX 1201 //Number of trigger in the .dat file
 #define OBJSIZE 20
@@ -74,6 +75,12 @@ class SusyLLPTree
 		Float_t jetMet_dPhi;
 		Float_t jetMet_dPhiStar;
 		Float_t jetMet_dPhiMin;
+		Float_t jetMet_dPhiMin_eta_2p4;
+		Float_t jetMet_dPhiMin_eta_3;
+		Float_t jetMet_dPhiMin_eta_all;
+		Float_t jetMet_dPhiMin_pt_20_eta_2p4;
+		Float_t jetMet_dPhiMin_pt_20_eta_3;
+		Float_t jetMet_dPhiMin_pt_20_eta_all;
 		Float_t jetMet_dPhiStarMin;
 		Float_t jetMet_dPhiMin4;
 
@@ -87,6 +94,8 @@ class SusyLLPTree
 
 		bool gLLP0_EB;
 		bool gLLP1_EB;
+
+		int sig_label ; 
 
 
 		//leptons
@@ -244,6 +253,7 @@ class SusyLLPTree
 		bool tau_passMuVetoLoose[OBJSIZE];
 		bool tau_passMuVetoMedium[OBJSIZE];
 		bool tau_passMuVetoTight[OBJSIZE];
+		UInt_t tau_ID[OBJSIZE];//tauID Bits
 		/*
 		   UInt_t tau_ID[OBJSIZE];//tauID Bits
 		   float tau_combinedIsoDeltaBetaCorr3Hits[OBJSIZE];
@@ -363,6 +373,18 @@ class SusyLLPTree
 
 		//jets
 		int nJets;
+		int nCHSJets_in_HEM;
+		int nCHSJets_in_HEM_eta_2p4;
+		int nCHSJets_in_HEM_eta_2p5;
+		int nCHSJets_in_HEM_eta_3;
+		int nCHSJets_in_HEM_pt_20;
+		int nCHSJets_in_HEM_pt_20_eta_2p4;
+		int nCHSJets_in_HEM_pt_20_eta_2p5;
+		int nCHSJets_in_HEM_pt_20_eta_3;
+		int nCHSJets_in_HEM_pt_30;
+		int nCHSJets_in_HEM_pt_30_eta_2p4;
+		int nCHSJets_in_HEM_pt_30_eta_2p5;
+		int nCHSJets_in_HEM_pt_30_eta_3;
 		float jetE[N_MAX_JETS];
 		float jetPt[N_MAX_JETS];
 		float jetEta[N_MAX_JETS];
@@ -503,6 +525,9 @@ class SusyLLPTree
 
 		bool jetIn250AK8[N_MAX_JETS];
 
+		float jetCscEF[N_MAX_JETS];
+		float jetDtEF[N_MAX_JETS];
+
 		//PFCandidates
 		int   nPFCandidates;
 		int   PFCandidatePdgId[MAX_NPFCAND];
@@ -524,6 +549,34 @@ class SusyLLPTree
 		bool Flag2_HBHEIsoNoiseFilter;
 		bool Flag2_ecalBadCalibFilter;
 		bool Flag2_eeBadScFilter;
+
+		//Muon System
+		int nCscSeg;
+		float cscSegPhi[CSCRECHITARRAYSIZE];
+		float cscSegEta[CSCRECHITARRAYSIZE];
+		float cscSegX[CSCRECHITARRAYSIZE];
+		float cscSegY[CSCRECHITARRAYSIZE];
+		float cscSegZ[CSCRECHITARRAYSIZE];
+		float cscSegDirectionX[CSCRECHITARRAYSIZE];
+		float cscSegDirectionY[CSCRECHITARRAYSIZE];
+		float cscSegDirectionZ[CSCRECHITARRAYSIZE];
+		float cscSegT[CSCRECHITARRAYSIZE];
+		float cscSegChi2[CSCRECHITARRAYSIZE];
+		int   cscSegNRecHits[CSCRECHITARRAYSIZE];
+		int   cscSegStation[CSCRECHITARRAYSIZE];
+		int   cscSegChamber[CSCRECHITARRAYSIZE];
+
+		int nDtSeg;
+		float dtSegPhi[CSCRECHITARRAYSIZE];
+		float dtSegEta[CSCRECHITARRAYSIZE];
+		float dtSegX[CSCRECHITARRAYSIZE];
+		float dtSegY[CSCRECHITARRAYSIZE];
+		float dtSegZ[CSCRECHITARRAYSIZE];
+		int dtSegStation[CSCRECHITARRAYSIZE];
+		int dtSegWheel[CSCRECHITARRAYSIZE];
+		float dtSegTime[CSCRECHITARRAYSIZE];
+		float dtSegTimeError[CSCRECHITARRAYSIZE];
+
 
 		//MC
 		int nGenJets;

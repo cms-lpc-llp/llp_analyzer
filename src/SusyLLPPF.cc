@@ -35,7 +35,7 @@
 #define _debug_match 0
 #define _debug_avgH 0
 #define _debug_trg 0
-#define _debug_pre 0
+#define _debug_pre 1
 
 #define N_MAX_LLP_DAUGHTERS 4
 #define N_MAX_LLP_GRAND_DAUGHTERS 4
@@ -153,7 +153,8 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 	//TEN'S DIGIT
 	// label of signal / bkg
 	if ((options/10)%10 == 1){
-		label = "wH";
+		label = "MR_ZMM";
+		//label = "wH";
 		cout << "process label: " << label << "\n";
 	}
 	else if ((options/10) % 10 == 2){
@@ -188,7 +189,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		cout << "process label: " << label << "\n";
 	}
 	else if ((options/10) % 10 == 9){
-		label = "MR_ZLL";
+		label = "MR_ZEE";
 		cout << "process label: " << label << "\n";
 	}
 	else{
@@ -247,11 +248,12 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 	if (label == "MR_PHO" ){
 		NTrigger = 16;
 	}
-	if (label == "MR_SingleMuon" ){
-		NTrigger = 8;
-	}
-	if (label == "MR_SingleElectron" ){
+	if (label == "MR_SingleMuon" || label == "MR_ZMM"){
 		NTrigger = 2;
+		//NTrigger = 8;
+	}
+	if (label == "MR_SingleElectron" || label == "MR_ZEE"){
+		NTrigger = 3;
 	}
 	if (label == "MR_ZLL" ){
 		NTrigger = 10;
@@ -324,21 +326,23 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		trigger_paths[1] = 583;  //HLT_Photon500
 		trigger_paths[0] = 584;  //HLT_Photon600
 	}
-	else if (label == "MR_SingleMuon"){
+	else if (label == "MR_SingleMuon" || label == "MR_ZMM"){
 		wzId = 25;
-		trigger_paths[7] = 115; //HLT_IsoMu17_eta2p1
-		trigger_paths[6] = 120; //HLT_IsoMu18
-		trigger_paths[5] = 129; //HLT_IsoMu20 
-		trigger_paths[4] = 133; //HLT_IsoMu22
-		trigger_paths[3] = 135; //HLT_IsoMu24
-		trigger_paths[2] = 136; //HLT_IsoMu27
-		trigger_paths[1] = 644; //HLT_IsoMu24_eta2p1
-		trigger_paths[0] = 645; //HLT_IsoMu30
+		//trigger_paths[7] = 115; //HLT_IsoMu17_eta2p1
+		//trigger_paths[6] = 120; //HLT_IsoMu18
+		//trigger_paths[5] = 129; //HLT_IsoMu20 
+		//trigger_paths[4] = 133; //HLT_IsoMu22
+		//trigger_paths[3] = 135; //HLT_IsoMu24
+		//trigger_paths[2] = 136; //HLT_IsoMu27
+		//trigger_paths[1] = 644; //HLT_IsoMu24_eta2p1
+		//trigger_paths[0] = 645; //HLT_IsoMu30
+		trigger_paths[1] = 135; //HLT_IsoMu24
+		trigger_paths[0] = 136; //HLT_IsoMu27
 	}
-	else if (label == "MR_SingleElectron"){
+	else if (label == "MR_SingleElectron" || label == "MR_ZEE"){
 		wzId = 25;
-		trigger_paths[1] = 87; //HLT_Ele32_WPTight_Gsf
-		//trigger_paths[0] = 88; //HLT_Ele32_eta2p1_WPLoose_Gsf
+		trigger_paths[2] = 87; //HLT_Ele32_WPTight_Gsf
+		trigger_paths[1] = 88; //HLT_Ele32_eta2p1_WPLoose_Gsf
 		//87  HLT_Ele32_WPTight_Gsf
 		trigger_paths[0] = 627; 
 		//627  HLT_Ele35_WPTight_Gsf
@@ -455,7 +459,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			//if( eventNum% 2 ==0 ) continue;
 		//}
 		//event info
-		//llp_tree->runNum = runNum;
+		llp_tree->runNum = runNum;
 		//llp_tree->lumiSec = lumiNum;
 		llp_tree->evtNum = eventNum;
 		if(_debug) std::cout << "deb3 " << jentry << std::endl;
@@ -543,7 +547,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		if( (label.find("MR") == std::string::npos) && metType1Pt < 200. ) continue;
 		if( (label=="MR_EMU") && metType1Pt < 30. ) continue;
 		if( (label.find("MR_Single") != std::string::npos) && metType1Pt < 40. ) continue;
-		if( (label.find("MR_ZLL") != std::string::npos) && isData && metType1Pt >= 30. ) continue;
+		if( (label=="MR_ZLL" || label=="MR_ZEE" || label=="MR_ZMM") && isData && metType1Pt >= 30. ) continue;
 		if( (label.find("MR_JetHT") != std::string::npos) && metType1Pt >= 30. ) continue;
 		if( (label=="MR_PHO") && metType1Pt >= 30. ) continue;
 		if(_debug_lab) std::cout << "label " << label.c_str() << "passed "<< std::endl;
@@ -612,7 +616,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 				}
 			}//end for loop
 		}//MR_PHO/JetHT re-weight based on Prescale
-		else if( (label.find("MR_EMU") != std::string::npos) || (label.find("MR_Single") != std::string::npos) || (label=="MR_ZLL")){
+		else if( (label.find("MR_EMU") != std::string::npos) || (label.find("MR_Single") != std::string::npos) || (label=="MR_ZLL") || (label=="MR_ZMM") || (label=="MR_ZEE")){
 			if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 			triggered = false;
 			int tempW = 999999999;
@@ -681,16 +685,14 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			}
 
 			if(muonPt[i] <= 10 ) continue;
-			//if( (label=="MR_EMU") && muonPt[i] < 25. ) continue;
-			if( (label.find("MR") != std::string::npos) && muonPt[i] < 25.) continue; 
-			if( label=="MR_EMU" && muonPt[i] < 30.) continue; 
 			if(fabs(muonEta[i]) > 2.4) continue;
 
 			if(!muonIsLoose[i]) continue;
 			if( (muon_chargedIso[i] + std::max(muon_neutralHadIso[i] + muon_photonIso[i] - 0.5*muon_pileupIso[i], 0.) )/muonPt[i] >= 0.25) continue;
-			if( (label.find("MR") != std::string::npos) && !muonIsTight[i]) continue; 
-			if( (label.find("MR") != std::string::npos) && (muon_chargedIso[i] + std::max(muon_neutralHadIso[i] + muon_photonIso[i] - 0.5*muon_pileupIso[i], 0.) )/muonPt[i] >= 0.15) continue;
 
+
+			if( (label=="MR_SingleMuon" || label=="MR_ZMM") && (muonPt[i] < 30. || !muonIsTight[i] || (muon_chargedIso[i] + std::max(muon_neutralHadIso[i]      + muon_photonIso[i] - 0.5*muon_pileupIso[i], 0.) )/muonPt[i] >= 0.15 )) continue; 
+			if( label=="MR_EMU" && muonPt[i] < 30.) continue; 
 
 			//remove overlaps
 			bool overlap = false;
@@ -709,6 +711,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			llp_tree->nMuons++;
 		}
 		if( (label=="MR_SingleMuon") && llp_tree->nMuons != 1 ) continue;
+		if( (label=="MR_ZMM") && llp_tree->nMuons != 2 ) continue;
 		//if( (label=="MR_SingleElectron")  && llp_tree->nMuons != 0 ) continue;
 		//if( (label=="MR_EMU")  && llp_tree->nMuons != 1 ) continue;
 		if(_debug) std::cout << "nMuons " << llp_tree->nMuons << std::endl;
@@ -732,15 +735,12 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			}
 
 			if(elePt[i] <= 10 ) continue;
-			//if( (label=="MR_EMU") && elePt[i] < 25. ) continue;
-			//if( (label.find("MR") != std::string::npos) && elePt[i] < 25.) continue; 
-			if( (label.find("MR") != std::string::npos) && label != "MR_EMU" && elePt[i] < 35.) continue; 
-			if( label=="MR_EMU" && elePt[i] < 30.) continue; 
 			if(fabs(eleEta[i]) > 2.5) continue;
-
 			if(!ele_passCutBasedIDVeto[i]) continue;
-			if( (label.find("MR") != std::string::npos) && !ele_passCutBasedIDTight[i]) continue; 
 
+
+			if( (label=="MR_SingleElectron" || label=="MR_ZLL" || label=="MR_ZEE") && (elePt[i] < 37. || !ele_passCutBasedIDTight[i]) ) continue; 
+			if( label=="MR_EMU" && elePt[i] < 30.) continue; 
 			//remove overlaps
 			bool overlap = false;
 			for(auto& lep : Leptons)
@@ -757,6 +757,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			llp_tree->nElectrons++;
 		}
 		if( (label=="MR_SingleElectron") && llp_tree->nElectrons != 1 ) continue;
+		if( (label=="MR_ZEE") && llp_tree->nElectrons != 2 ) continue;
 		if(_debug||_debug_ee) std::cout << "nElectrons " << llp_tree->nElectrons << std::endl;
 
 		//if( (label=="MR_PHO") && llp_tree->nElectrons != 0 ) continue;
@@ -768,6 +769,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		//if( (label.find("MR_JetHT") != std::string::npos) && llp_tree->nElectrons != 0 ) continue;
 
 
+		if( (label=="MR_EMU") && !(llp_tree->nMuons==1 && llp_tree->nElectrons==1) ) continue;
 
 
 		std::vector<taus> Taus;
@@ -788,6 +790,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			if(fabs(tauEta[i]) > 2.3) continue;
 
 			if(!tau_IsLoose[i]) continue;
+			if(tau_ID[i]%2==0) continue;
 
 			//remove overlaps
 			bool overlap = false;
@@ -833,7 +836,8 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			}
 
 			if(phoPt[i] <= 15 ) continue;
-			if( (label.find("MR") != std::string::npos) && phoPt[i] < 25.) continue; 
+			if( label=="MR_SinglePhoton" && phoPt[i] < 25.) continue; 
+			//if( (label.find("MR") != std::string::npos) && phoPt[i] < 25.) continue; 
 			if(fabs(phoEta[i]) > 2.5) continue;
 
 			if(!pho_passCutBasedIDLoose[i]) continue;
@@ -850,6 +854,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			bool overlap_tau = false;
 			for(auto& tau : Taus)
 			{
+				//if (RazorAnalyzerLLP::deltaR(phoEta[i],phoPhi[i],tau.tau.Eta(),tau.tau.Phi()) < dr_obj_emp) overlap_tau = true;
 				if (RazorAnalyzerLLP::deltaR(phoEta[i],phoPhi[i],tau.tau.Eta(),tau.tau.Phi()) < dr_obj_tau) overlap_tau = true;
 				//if (RazorAnalyzerLLP::deltaR(phoEta[i],phoPhi[i],tau.tau.Eta(),tau.tau.Phi()) < 0.3) overlap_tau = true;
 			}
@@ -893,6 +898,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		//float MT = sqrt(2*(llp_tree->met)*lepp4.Pt()*(1-cos(dPhi)));
 		llp_tree->MT = sqrt(2*(llp_tree->met)*lepp4.Pt()*(1-cos(dPhi)));
 		if(_debug_lep) std::cout<<"MT "<<llp_tree->MT<<std::endl;
+		if( (label=="MR_SingleMuon" || label=="MR_SingleElectron") && llp_tree->MT>=100 ) continue;
 		//if (triggered) trig_lepId->Fill(1);
 		if(_debug) std::cout << "nLeptons " << llp_tree->nLeptons << std::endl;
 		//if( (label.find("MR_Single") != std::string::npos) && MT>=100 ) continue;
@@ -936,7 +942,8 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			}
 		}
 		if(_debug_ee) std::cout << "ZMass " << ZMass << std::endl;
-		if( (label=="MR_ZLL") && isData && !(foundZ && fabs(ZMass-Z_MASS) < 30.0) ) continue;
+		if(foundZ) llp_tree->ZMass = ZMass;
+		if( (label=="MR_ZLL" || label=="MR_ZMM" || label=="MR_ZEE") && isData && !(foundZ && fabs(ZMass-Z_MASS) < 30.0) ) continue;
 		//if( (label=="MR_SingleMuon") && !(MT<100 && llp_tree->nMuons==1 && llp_tree->nElectrons==0 && llp_tree->nTaus==0 && llp_tree->nPhotons==0) ) continue;
 		//if( (label=="MR_SingleElectron") && !(MT<100 && llp_tree->nMuons==0 && llp_tree->nElectrons==1 && llp_tree->nTaus==0 && llp_tree->nPhotons==0) ) continue;
 		//if( (label=="MR_EMU") && !( llp_tree->nMuons==1 && llp_tree->nElectrons==1 && llp_tree->nTaus==0 && llp_tree->nPhotons==0) ) continue;
@@ -952,6 +959,15 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		if(_debug) std::cout << "nJets " << nJets << std::endl;
 		if(_debug_jet) std::cout << "jetGammaMax_ET 0 " << jetGammaMax_ET[0] << std::endl;
 
+		//pt 30
+		float jetMet_dPhiMin_eta_2p4_temp = 999;
+		float jetMet_dPhiMin_eta_3_temp = 999;
+		float jetMet_dPhiMin_eta_all_temp = 999;
+		//pt 20
+		float jetMet_dPhiMin_pt_20_eta_2p4_temp = 999;
+		float jetMet_dPhiMin_pt_20_eta_3_temp = 999;
+		float jetMet_dPhiMin_pt_20_eta_all_temp = 999;
+
 		float ht = 0.;
 		//std::vector<jets> Jets;
 		if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
@@ -960,11 +976,107 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		//Jets.empty();
 		if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
 
+		//all pt
+		int nAK4Jets_in_HEM = 0;
+		int nAK4Jets_in_HEM_eta_2p4 = 0;
+		int nAK4Jets_in_HEM_eta_2p5 = 0;
+		int nAK4Jets_in_HEM_eta_3 = 0;
+		//pt 20
+		int nAK4Jets_in_HEM_pt_20 = 0;
+		int nAK4Jets_in_HEM_pt_20_eta_2p4 = 0;
+		int nAK4Jets_in_HEM_pt_20_eta_2p5 = 0;
+		int nAK4Jets_in_HEM_pt_20_eta_3 = 0;
+		//pt 30
+		int nAK4Jets_in_HEM_pt_30 = 0;
+		int nAK4Jets_in_HEM_pt_30_eta_2p4 = 0;
+		int nAK4Jets_in_HEM_pt_30_eta_2p5 = 0;
+		int nAK4Jets_in_HEM_pt_30_eta_3 = 0;
+
 		for(int i = 0; i < nJets; i++)
 		{
-			if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
+			//HEM: reject events with jets in problematic region
+			//Affected runs: 2018, after  >=319077 
+			//if(Jets->at(j).eta>-3. and Jets->at(j).eta<-1.3 and Jets->at(j).phi>-1.57 and Jets->at(j).phi<-0.87)
+			//add versions of pt>20/30, |eta|<2.4/3/5.2(all)
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87)
+			{
+				nAK4Jets_in_HEM++;
+
+			}
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && fabs(jetEta[i])<2.4)
+			{
+				nAK4Jets_in_HEM_eta_2p4++;
+			}
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && fabs(jetEta[i])<2.5)
+			{
+				nAK4Jets_in_HEM_eta_2p5++;
+			}
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && fabs(jetEta[i])<3)
+			{
+				nAK4Jets_in_HEM_eta_3++;
+			}
+			//pt 20
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && jetPt[i]>20.)
+			{
+				nAK4Jets_in_HEM_pt_20++;
+
+			}
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && fabs(jetEta[i])<2.4 && jetPt[i]>20.)
+			{
+				nAK4Jets_in_HEM_pt_20_eta_2p4++;
+			}
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && fabs(jetEta[i])<2.5 && jetPt[i]>20.)
+			{
+				nAK4Jets_in_HEM_pt_20_eta_2p5++;
+			}
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && fabs(jetEta[i])<3 && jetPt[i]>20.)
+			{
+				nAK4Jets_in_HEM_pt_20_eta_3++;
+			}
+			//pt 30
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && jetPt[i]>30.)
+			{
+				nAK4Jets_in_HEM_pt_30++;
+
+			}
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && fabs(jetEta[i])<2.4 && jetPt[i]>30.)
+			{
+				nAK4Jets_in_HEM_pt_30_eta_2p4++;
+			}
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && fabs(jetEta[i])<2.5 && jetPt[i]>30.)
+			{
+				nAK4Jets_in_HEM_pt_30_eta_2p5++;
+			}
+			if(jetEta[i]>-3. && jetEta[i]<-1.3 && jetPhi[i]>-1.57 && jetPhi[i]<-0.87 && fabs(jetEta[i])<3 && jetPt[i]>30.)
+			{
+				nAK4Jets_in_HEM_pt_30_eta_3++;
+			}
+
 
 			ht += jetPt[i];
+
+			// pt>30, |eta|<2.4 , Min Delta Phi (jet, met)
+			if(jetMet_dPhiMin_eta_2p4_temp > abs(RazorAnalyzerLLP::deltaPhi(jetPhi[i],metType1Phi)) && fabs(jetEta[i])<2.4 && jetPt[i]>30.)
+			{
+				jetMet_dPhiMin_eta_2p4_temp = abs(RazorAnalyzerLLP::deltaPhi(jetPhi[i],metType1Phi));
+			}
+			if(jetMet_dPhiMin_eta_3_temp > abs(RazorAnalyzerLLP::deltaPhi(jetPhi[i],metType1Phi)) && fabs(jetEta[i])<3 && jetPt[i]>30.)
+			{
+				jetMet_dPhiMin_eta_3_temp = abs(RazorAnalyzerLLP::deltaPhi(jetPhi[i],metType1Phi));
+			}
+			if(jetMet_dPhiMin_eta_all_temp > abs(RazorAnalyzerLLP::deltaPhi(jetPhi[i],metType1Phi)) && jetPt[i]>30.)
+			{
+				jetMet_dPhiMin_eta_all_temp = abs(RazorAnalyzerLLP::deltaPhi(jetPhi[i],metType1Phi));
+			}
+
+			// pt>20, |eta|<3 , Min Delta Phi (jet, met)
+			// pt>20, all eta , Min Delta Phi (jet, met)
+			if(jetMet_dPhiMin_pt_20_eta_2p4_temp > abs(RazorAnalyzerLLP::deltaPhi(jetPhi[i],metType1Phi)) && fabs(jetEta[i])<2.4 && jetPt[i]>20.)
+			{
+				jetMet_dPhiMin_pt_20_eta_2p4_temp = abs(RazorAnalyzerLLP::deltaPhi(jetPhi[i],metType1Phi));
+			}
+			if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
+
 
 			//------------------------------------------------------------
 			//exclude selected muons and electrons from the jet collection
@@ -1006,7 +1118,17 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			if( thisJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
 			if( fabs( thisJet.Eta() ) >= 1.48 ) continue;
 			if(_debug_nj) std::cout << "len Jets " << AK4Jets.size() << std::endl;
-			if( jetRechitT[i]<=-1 ) continue;
+			//if( jetRechitT[i]<=-1 ) continue;
+			//if(_debug_dnn) std::cout << "Jet Time " << jetRechitT[i] << std::endl;
+			double jetTimeRecHitsECAL = -100;
+			if (isnan(jetRechitT[i]) || jetRechitE[i] == 0) {
+			  jetTimeRecHitsECAL = -100;
+			} else {
+			  jetTimeRecHitsECAL = jetRechitT[i];
+			}
+			if(_debug_dnn) std::cout << "Jet Time " << jetTimeRecHitsECAL << std::endl;
+			if( jetTimeRecHitsECAL<=-1 ) continue;
+			if(_debug_dnn) std::cout << "Jet Time " << jetTimeRecHitsECAL << std::endl;
 			if( jetMuonEnergyFraction[i]>=0.6 ) continue;
 			if( jetElectronEnergyFraction[i]>=0.6 ) continue;
 			if( jetPhotonEnergyFraction[i]>=0.8 ) continue;
@@ -1016,7 +1138,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			//************************************
 			double jetEnergyRecHitsECAL = 0;
 			double jetEnergyRecHitsHCAL = 0;
-			double jetTimeRecHitsECAL = -100;
+			//double jetTimeRecHitsECAL = -100;
 			double jetTimeRecHitsHCAL = -100;
 			double tmpJetTimeEnergyRecHitsHCAL = 0;
  			int jetNRecHitsECAL = 0;
@@ -1059,16 +1181,19 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			if ( accumulate(ebrechitet.begin(),ebrechitet.end(),0) > 0) {
 				jetptDEB = sqrt( accumulate(ebrechitetsq.begin(),ebrechitetsq.end(),0)) / accumulate(ebrechitet.begin(),ebrechitet.end(),0) ;
 			}	
+			if(_debug_dnn) std::cout << "this jet sig1EB " << jetsig1EB << std::endl;
+			if(_debug_dnn) std::cout << "this jet sig2EB " << jetsig2EB << std::endl;
+			if(_debug_dnn) std::cout << "this jet ptDEB " << jetptDEB << std::endl;
 			if(_debug_pf) std::cout << "this jet ptDEB " << jetptDEB << std::endl;
 			if (jetNRecHitsECAL == 0) {
 			  jetEnergyRecHitsECAL = -1;
 			  jetNRecHitsECAL = -1;
 			}
-			if (isnan(jetRechitT[i]) || jetRechitE[i] == 0) {
-			  jetTimeRecHitsECAL = -100;
-			} else {
-			  jetTimeRecHitsECAL = jetRechitT[i];
-			}
+			//if (isnan(jetRechitT[i]) || jetRechitE[i] == 0) {
+			//  jetTimeRecHitsECAL = -100;
+			//} else {
+			//  jetTimeRecHitsECAL = jetRechitT[i];
+			//}
 
 			//Loop over HCAL rechits
 			for (int q=0; q < nHBHERechits; q++) {
@@ -1123,15 +1248,13 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			//************************************
 			//Evaluate NN tagger
 			//************************************
-			
 			inputValuesV3[0] = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
 			inputValuesV3[1] = jetNSelectedTracks[i];
-			  //std::cout<< " input value 1: " << jetNSelectedTracks[i] <<std::endl;
 			inputValuesV3[2] = jetTimeRecHitsECAL;
 			inputValuesV3[3] = (jetEnergyRecHitsECAL == 0) ? -1 : (jetEnergyRecHitsECAL/jetE[i]);
 			inputValuesV3[4] = jetNRecHitsECAL;
-			inputValuesV3[5] = jetsig1EB;
-			inputValuesV3[6] = jetsig2EB;
+			inputValuesV3[5] = (jetsig1EB<=0) ? -1: jetsig1EB;
+			inputValuesV3[6] = (jetsig2EB<=0) ? -1: jetsig2EB;
 			inputValuesV3[7] = jetptDEB;
 			inputValuesV3[8] = jetChargedHadronEnergyFraction[i];
 			inputValuesV3[9] = jetNeutralHadronEnergyFraction[i];
@@ -1147,8 +1270,10 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			inputValuesV3[19] = (jetGammaMax_ET[i] == -99 || jetPtAllTracks[i] == 0 || thisJet.Et() == 0) ? -100 : jetGammaMax_ET[i];
 			inputValuesV3[20] = (jetMinDeltaRAllTracks[i] == -99 || jetMinDeltaRAllTracks[i] == 15) ? 999 : jetMinDeltaRAllTracks[i];
 			inputValuesV3[21] = (jetMinDeltaRPVTracks[i] == -99 || jetMinDeltaRPVTracks[i] == 15) ? 999 : jetMinDeltaRPVTracks[i];
+			//std::cout<< " input value 1: " << jetNSelectedTracks[i] <<std::endl;
 			
 			if(_debug_dnn) {
+			  std::cout<< " =========E V E N T : "<<eventNum <<std::endl;
 			 for(int rr=0;rr<22;rr++)
 			{
 			  std::cout<< " input value "<<rr<<" : " << inputValuesV3[rr] <<std::endl;
@@ -1192,6 +1317,25 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			if(_debug_nj) std::cout << "len AK4Jets " << AK4Jets.size() << std::endl;
 
 		}
+		llp_tree->jetMet_dPhiMin_eta_2p4 = jetMet_dPhiMin_eta_2p4_temp;
+		llp_tree->jetMet_dPhiMin_eta_3 = jetMet_dPhiMin_eta_3_temp;
+		llp_tree->jetMet_dPhiMin_eta_all = jetMet_dPhiMin_eta_all_temp;
+		llp_tree->jetMet_dPhiMin_pt_20_eta_2p4 = jetMet_dPhiMin_pt_20_eta_2p4_temp;
+		llp_tree->jetMet_dPhiMin_pt_20_eta_3 = jetMet_dPhiMin_pt_20_eta_3_temp;
+		llp_tree->jetMet_dPhiMin_pt_20_eta_all = jetMet_dPhiMin_pt_20_eta_all_temp;
+		llp_tree->HT = ht;
+		llp_tree->nCHSJets_in_HEM = nAK4Jets_in_HEM;
+		llp_tree->nCHSJets_in_HEM_eta_2p4 = nAK4Jets_in_HEM_eta_2p4;
+		llp_tree->nCHSJets_in_HEM_eta_2p5 = nAK4Jets_in_HEM_eta_2p5;
+		llp_tree->nCHSJets_in_HEM_eta_3 = nAK4Jets_in_HEM_eta_3;
+		llp_tree->nCHSJets_in_HEM_pt_20 = nAK4Jets_in_HEM_pt_20;
+		llp_tree->nCHSJets_in_HEM_pt_20_eta_2p4 = nAK4Jets_in_HEM_pt_20_eta_2p4;
+		llp_tree->nCHSJets_in_HEM_pt_20_eta_2p5 = nAK4Jets_in_HEM_pt_20_eta_2p5;
+		llp_tree->nCHSJets_in_HEM_pt_20_eta_3 = nAK4Jets_in_HEM_pt_20_eta_3;
+		llp_tree->nCHSJets_in_HEM_pt_30 = nAK4Jets_in_HEM_pt_30;
+		llp_tree->nCHSJets_in_HEM_pt_30_eta_2p4 = nAK4Jets_in_HEM_pt_30_eta_2p4;
+		llp_tree->nCHSJets_in_HEM_pt_30_eta_2p5 = nAK4Jets_in_HEM_pt_30_eta_2p5;
+		llp_tree->nCHSJets_in_HEM_pt_30_eta_3 = nAK4Jets_in_HEM_pt_30_eta_3;
 
 
 		if(_debug_nj) std::cout << "len AK4Jets " << AK4Jets.size() << std::endl;
@@ -1204,6 +1348,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 		{
 			llp_tree->jetPt[llp_tree->nJets] = tmp.jet.Pt();
 			llp_tree->jetPhi[llp_tree->nJets] = tmp.jet.Phi();
+			llp_tree->jetEta[llp_tree->nJets] = tmp.jet.Eta();
 			llp_tree->jetPass[llp_tree->nJets] = tmp.PassFail;
 			llp_tree->jetDNNScoreV3[llp_tree->nJets] = tmp.dnn_score_v3;
 
@@ -1214,7 +1359,7 @@ void SusyLLPPF::Analyze(bool isData, int options, string outputfilename, string 
 			llp_tree->nJets++;
 		}
 			if(_debug_nj) std::cout << "filled Jets " << std::endl;
-		if(llp_tree->nJets ==0 ) continue;
+		//if(llp_tree->nJets ==0 ) continue;
 		if( (label=="MR_JetHT") && llp_tree->nJets != 2 ) continue;
 		float jet2_dPhi_temp = 0;
 		if(label=="MR_JetHT") 

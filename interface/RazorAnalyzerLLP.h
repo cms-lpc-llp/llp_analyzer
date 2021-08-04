@@ -48,6 +48,7 @@ class RazorAnalyzerLLP: public llp_event {
         void EnableGenParticles();
         void EnableRazor();
         void EnableCSC();
+        void EnableDT();
         void EnableEcalRechits();
         void EnableAll();
         void EnableAllWithEcalRechits();

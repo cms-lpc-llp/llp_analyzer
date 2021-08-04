@@ -74,6 +74,12 @@ class SusyLLPPFTree
 		Float_t jetMet_dPhi;
 		Float_t jetMet_dPhiStar;
 		Float_t jetMet_dPhiMin;
+		Float_t jetMet_dPhiMin_eta_2p4;
+		Float_t jetMet_dPhiMin_eta_3;
+		Float_t jetMet_dPhiMin_eta_all;
+		Float_t jetMet_dPhiMin_pt_20_eta_2p4;
+		Float_t jetMet_dPhiMin_pt_20_eta_3;
+		Float_t jetMet_dPhiMin_pt_20_eta_all;
 		Float_t jetMet_dPhiStarMin;
 		Float_t jetMet_dPhiMin4;
 
@@ -363,6 +369,18 @@ class SusyLLPPFTree
 
 		//jets
 		int nJets;
+		int nCHSJets_in_HEM;
+		int nCHSJets_in_HEM_eta_2p4;
+		int nCHSJets_in_HEM_eta_2p5;
+		int nCHSJets_in_HEM_eta_3;
+		int nCHSJets_in_HEM_pt_20;
+		int nCHSJets_in_HEM_pt_20_eta_2p4;
+		int nCHSJets_in_HEM_pt_20_eta_2p5;
+		int nCHSJets_in_HEM_pt_20_eta_3;
+		int nCHSJets_in_HEM_pt_30;
+		int nCHSJets_in_HEM_pt_30_eta_2p4;
+		int nCHSJets_in_HEM_pt_30_eta_2p5;
+		int nCHSJets_in_HEM_pt_30_eta_3;
 		float jetE[N_MAX_JETS];
 		float jetPt[N_MAX_JETS];
 		float jetEta[N_MAX_JETS];

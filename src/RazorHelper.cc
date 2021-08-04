@@ -4092,7 +4092,7 @@ RazorHelper::AK8JetInfo RazorHelper::CalcAK8JetInfo(RazorAnalyzerLLP *ra, bool i
     AK8JetInfo jetInfo;
 
     // Loop over AK8 jets to count tags and update scale factors
-    for (unsigned int iJet = 0; iJet < ra->nFatJets; iJet++) {
+    for (int iJet = 0; iJet < ra->nFatJets; iJet++) {
         // Baseline cuts on pt and eta
         if ( ra->fatJetCorrectedPt[iJet] < AK8_PT_CUT ) continue;
         if ( fabs(ra->fatJetEta[iJet]) > AK8_ETA_CUT ) continue;
