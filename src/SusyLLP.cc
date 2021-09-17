@@ -13,7 +13,11 @@
 #include "TH1F.h"
 
 #define xclean 1
+#define presel 1
+#define presel_jet 1
+
 #define _debug 0
+#define _debug_pdf 0
 #define _debug_dnn 0
 #define _debug_pf 0
 #define _debug_lab 0
@@ -572,6 +576,22 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	map<pair<int,int>, TTree*> Trees2D;
 	map<pair<int,int>, TH1F*> NEvents2D;
 
+	//Scale and PDF variations
+	map<int, TH1D*> smsSumWeights;
+	map<int, TH1D*> smsSumScaleWeights;
+	map<int, TH1D*> smsSumPdfWeights;
+	map<int, TH1D*> smsSumAlphasWeights;
+	map<pair<int,int>, TH1D*> smsSumWeights2D;
+	map<pair<int,int>, TH1D*> smsSumScaleWeights2D;
+	map<pair<int,int>, TH1D*> smsSumPdfWeights2D;
+	map<pair<int,int>, TH1D*> smsSumAlphasWeights2D;
+
+	TH1D *SumWeights = new TH1D("SumWeights", "SumWeights", 1, -0.5, 0.5);
+	TH1D *SumScaleWeights = new TH1D("SumScaleWeights", "SumScaleWeights", 9, -0.5, 8.5);
+	TH1D *SumPdfWeights = new TH1D("SumPdfWeights", "SumPdfWeights", 100, -0.5, 99.5);
+	TH1D *SumAlphasWeights = new TH1D("SumAlphasWeights", "SumAlphasWeights", 2, -0.5, 1.5);
+
+
 	// ************************************************************************
 	//Look over Input File Events
 	// ************************************************************************
@@ -600,6 +620,17 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 		//std::cout << *lheComments<<endl;
 		//if(getline(parser, item, '_')) std::cout << item.c_str()<<endl;
+		float weight;
+		//float genWeight=1;
+		////PDF SF
+		//std::vector<float> sf_pdf;
+		//scaleWeights = new std::vector<float>; scaleWeights->clear();
+  		//pdfWeights = new std::vector<float>; pdfWeights->clear();
+  		//alphasWeights = new std::vector<float>; alphasWeights->clear();
+  		////For scale variation uncertainties
+  		//float sf_facScaleUp, sf_facScaleDown;
+  		//float sf_renScaleUp, sf_renScaleDown;	
+  		//float sf_facRenScaleUp, sf_facRenScaleDown;
 
 		if (!isData && signalScan)
 		{
@@ -627,12 +658,36 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				Trees2D[signalPair] =  llp_tree->tree_->CloneTree(0);
 				NEvents2D[signalPair] = new TH1F(Form("NEvents%d%d", mx, ctau), "NEvents", 1,0.5,1.5);
 
+				smsSumWeights2D[signalPair] = new TH1D(Form("SumWeights%d%d", mh, mx), "SumWeights", 1 ,-0.5,0.5);
+				smsSumScaleWeights2D[signalPair] = new TH1D(Form("SumScaleWeights%d%d", mh, mx), "SumScaleWeights", 9 ,-0.5,8.5);
+				smsSumPdfWeights2D[signalPair] = new TH1D(Form("SumPdfWeights%d%d", mh, mx), "SumPdfWeights", 100 ,-0.5,99.5);
+				smsSumAlphasWeights2D[signalPair] = new TH1D(Form("SumAlphasWeights%d%d", mh, mx), "SumAlphasWeights", 2 ,-0.5,1.5);
+
 
 				cout << "Created new output file " << thisFileName << endl;
 			}
 			//Fill NEvents hist
 			NEvents2D[signalPair]->Fill(1.0, genWeight);
+			smsSumWeights2D[signalPair]->Fill(1.0, weight);
 
+			smsSumScaleWeights2D[signalPair]->Fill(0.0, llp_tree->sf_facScaleUp);
+			smsSumScaleWeights2D[signalPair]->Fill(1.0, llp_tree->sf_facScaleDown);
+			smsSumScaleWeights2D[signalPair]->Fill(2.0, llp_tree->sf_renScaleUp);
+			smsSumScaleWeights2D[signalPair]->Fill(3.0, llp_tree->sf_renScaleDown);
+			smsSumScaleWeights2D[signalPair]->Fill(4.0, llp_tree->sf_facRenScaleUp);
+			smsSumScaleWeights2D[signalPair]->Fill(5.0, llp_tree->sf_facRenScaleDown);
+			//it should goes to 8? or we only care about first 6
+
+			for (unsigned int iwgt=0; iwgt<pdfWeights->size(); ++iwgt) {
+				smsSumPdfWeights2D[signalPair]->Fill(double(iwgt),(*pdfWeights)[iwgt]);
+				if(_debug_pdf) cout << "pdf weight component: " << (*pdfWeights)[iwgt] << endl;
+			}
+
+			if(_debug_pdf) cout <<"alphas size: "<< alphasWeights->size() <<endl;
+			for (unsigned int iwgt=0; iwgt<alphasWeights->size(); ++iwgt) {
+				smsSumAlphasWeights2D[signalPair]->Fill(double(iwgt),(*alphasWeights)[iwgt]);
+				if(_debug_pdf) cout<<"alphas: "<<(*alphasWeights)[iwgt] <<endl;
+			}
 
 
 		}
@@ -682,17 +737,41 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				Trees2D[signalPair] =  llp_tree->tree_->CloneTree(0);
 				NEvents2D[signalPair] = new TH1F(Form("NEvents%d%d", mchi, ctau), "NEvents", 1,0.5,1.5);
 
+				smsSumWeights2D[signalPair] = new TH1D(Form("SumWeights%d%d", mchi, ctau), "SumWeights", 1 ,-0.5,0.5);
+				smsSumScaleWeights2D[signalPair] = new TH1D(Form("SumScaleWeights%d%d", mchi, ctau), "SumScaleWeights", 9 ,-0.5,8.5);
+				smsSumPdfWeights2D[signalPair] = new TH1D(Form("SumPdfWeights%d%d", mchi, ctau), "SumPdfWeights", 100 ,-0.5,99.5);
+				smsSumAlphasWeights2D[signalPair] = new TH1D(Form("SumAlphasWeights%d%d", mchi, ctau), "SumAlphasWeights", 2 ,-0.5,1.5);
 
 				cout << "Created new output file " << thisFileName << endl;
 			}
 			//Fill NEvents hist
 			NEvents2D[signalPair]->Fill(1.0, genWeight);
+			smsSumWeights2D[signalPair]->Fill(1.0, weight);
+
+			smsSumScaleWeights2D[signalPair]->Fill(0.0, llp_tree->sf_facScaleUp);
+			smsSumScaleWeights2D[signalPair]->Fill(1.0, llp_tree->sf_facScaleDown);
+			smsSumScaleWeights2D[signalPair]->Fill(2.0, llp_tree->sf_renScaleUp);
+			smsSumScaleWeights2D[signalPair]->Fill(3.0, llp_tree->sf_renScaleDown);
+			smsSumScaleWeights2D[signalPair]->Fill(4.0, llp_tree->sf_facRenScaleUp);
+			smsSumScaleWeights2D[signalPair]->Fill(5.0, llp_tree->sf_facRenScaleDown);
+			//it should goes to 8? or we only care about first 6
+
+			for (unsigned int iwgt=0; iwgt<pdfWeights->size(); ++iwgt) {
+				smsSumPdfWeights2D[signalPair]->Fill(double(iwgt),(*pdfWeights)[iwgt]);
+			}
+
+			if(_debug_pdf) cout<<"alphas size: "<< alphasWeights->size() <<endl;
+			for (unsigned int iwgt=0; iwgt<alphasWeights->size(); ++iwgt) {
+				smsSumAlphasWeights2D[signalPair]->Fill(double(iwgt),(*alphasWeights)[iwgt]);
+			}
+
 
 
 
 		}
 
-		if (label =="bkg_wH"|| label == "bkg_zH" || label == "bkg_HH"){
+		if (label =="bkg_wH"|| label == "bkg_zH" || label == "bkg_HH" ){
+		//if (label =="bkg_wH"|| label == "bkg_zH" || label == "bkg_HH" || label == "HH"){
 			if (isData)
 			{
 				NEvents->Fill(1);
@@ -704,6 +783,45 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				//llp_tree->weight = genWeight;
 				NEvents->Fill(1);
 				llp_tree->weight = 1;
+
+				//signal not mass scan
+				//NEvents->SetBinContent( 1, NEvents->GetBinContent(1) + genWeight);
+      				weight = genWeight;
+      				SumWeights->Fill(1.0, weight);
+				if ( (*scaleWeights).size() >= 9 ) 
+				{
+					llp_tree->sf_facScaleUp      = (*scaleWeights)[1]/genWeight;
+					llp_tree->sf_facScaleDown    = (*scaleWeights)[2]/genWeight;
+					llp_tree->sf_renScaleUp      = (*scaleWeights)[3]/genWeight;
+					llp_tree->sf_renScaleDown    = (*scaleWeights)[6]/genWeight;
+					llp_tree->sf_facRenScaleUp   = (*scaleWeights)[4]/genWeight;
+					llp_tree->sf_facRenScaleDown = (*scaleWeights)[8]/genWeight;
+
+
+					SumScaleWeights->Fill(0.0, (*scaleWeights)[1]);
+					SumScaleWeights->Fill(1.0, (*scaleWeights)[2]);
+					SumScaleWeights->Fill(2.0, (*scaleWeights)[3]);
+					SumScaleWeights->Fill(3.0, (*scaleWeights)[6]);
+					SumScaleWeights->Fill(4.0, (*scaleWeights)[4]);
+					SumScaleWeights->Fill(5.0, (*scaleWeights)[8]);
+				}
+
+				llp_tree->sf_pdf.erase( llp_tree->sf_pdf.begin(), llp_tree->sf_pdf.end() );
+				if(_debug_pdf) cout << "pdf weight size: " << pdfWeights->size() << endl;
+				if(_debug_pdf) cout << "scale weight size: " << scaleWeights->size() << endl;
+				if(_debug_pdf) cout << "alphas weight size: " << alphasWeights->size() << endl;
+				for ( unsigned int iwgt = 0; iwgt < pdfWeights->size(); ++iwgt ) 
+				{
+					llp_tree->sf_pdf.push_back( pdfWeights->at(iwgt)/genWeight );
+					SumPdfWeights->Fill(double(iwgt),(*pdfWeights)[iwgt]);
+					if(_debug_pdf) cout << "pdf weight component: " << (*pdfWeights)[iwgt] << endl;
+				}
+
+				for ( unsigned int iwgt = 0; iwgt < alphasWeights->size(); ++iwgt ) 
+				{
+					SumAlphasWeights->Fill(double(iwgt),(*alphasWeights)[iwgt]);
+				}
+
 			}
 		}
 		//else if(label =="MR_EMU"|| label == "MR_PHO" || label == "MR_ZLL")
@@ -743,6 +861,46 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		}
 		else if (label == "HH"){
 			NEvents->Fill(1);
+				llp_tree->weight = 1;
+
+				//signal not mass scan
+				//NEvents->SetBinContent( 1, NEvents->GetBinContent(1) + genWeight);
+      				weight = genWeight;
+      				SumWeights->Fill(1.0, weight);
+				if ( (*scaleWeights).size() >= 9 ) 
+				{
+					llp_tree->sf_facScaleUp      = (*scaleWeights)[1]/genWeight;
+					llp_tree->sf_facScaleDown    = (*scaleWeights)[2]/genWeight;
+					llp_tree->sf_renScaleUp      = (*scaleWeights)[3]/genWeight;
+					llp_tree->sf_renScaleDown    = (*scaleWeights)[6]/genWeight;
+					llp_tree->sf_facRenScaleUp   = (*scaleWeights)[4]/genWeight;
+					llp_tree->sf_facRenScaleDown = (*scaleWeights)[8]/genWeight;
+
+
+					SumScaleWeights->Fill(0.0, (*scaleWeights)[1]);
+					SumScaleWeights->Fill(1.0, (*scaleWeights)[2]);
+					SumScaleWeights->Fill(2.0, (*scaleWeights)[3]);
+					SumScaleWeights->Fill(3.0, (*scaleWeights)[6]);
+					SumScaleWeights->Fill(4.0, (*scaleWeights)[4]);
+					SumScaleWeights->Fill(5.0, (*scaleWeights)[8]);
+				}
+
+				llp_tree->sf_pdf.erase( llp_tree->sf_pdf.begin(), llp_tree->sf_pdf.end() );
+				if(_debug_pdf) cout << "pdf weight size: " << pdfWeights->size() << endl;
+				if(_debug_pdf) cout << "scale weight size: " << scaleWeights->size() << endl;
+				if(_debug_pdf) cout << "alphas weight size: " << alphasWeights->size() << endl;
+				for ( unsigned int iwgt = 0; iwgt < pdfWeights->size(); ++iwgt ) 
+				{
+					llp_tree->sf_pdf.push_back( pdfWeights->at(iwgt)/genWeight );
+					SumPdfWeights->Fill(double(iwgt),(*pdfWeights)[iwgt]);
+					if(_debug_pdf) cout << "pdf weight component: " << (*pdfWeights)[iwgt] << endl;
+				}
+
+				for ( unsigned int iwgt = 0; iwgt < alphasWeights->size(); ++iwgt ) 
+				{
+					SumAlphasWeights->Fill(double(iwgt),(*alphasWeights)[iwgt]);
+				}
+
 			bool wzFlag = false;
 			for (int i=0; i < nGenParticle; ++i)
 			{
@@ -871,7 +1029,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//if( llp_tree->met < 150. ) continue;
 		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 		if(_debug_lab) std::cout << "met " << llp_tree->met << std::endl;
-		if( (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
+		if( presel && (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
 		if( (label=="MR_EMU") && llp_tree->met < 30. ) continue;
 		if( (label.find("MR_Single") != std::string::npos) && llp_tree->met < 40. ) continue;
 		if( (label.find("MR_ZLL") != std::string::npos) && isData && llp_tree->met >= 30. ) continue;
@@ -929,7 +1087,12 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		if(_debug_trg) std::cout << "begin: 310 " << HLTDecision[310] << std::endl;
 		if(_debug_trg) std::cout << "begin: 310 " << llp_tree->HLTDecision[310] << std::endl;
 		//if( (label.find("MR") == std::string::npos) && !HLTDecision[310]) continue; 
-		if( (label.find("MR") == std::string::npos) && !HLTDecision[467]) continue; 
+		//if( presel && (label.find("MR") == std::string::npos) && !HLTDecision[467]) continue; 
+		//analysisTag: l=CT2016_07Aug2017Rereco  l=CT2017_17Nov2017Rereco l=CT2018_17SeptEarlyReReco 
+		//trigger: 2016:  467; 2017: 467 || 717 || 710; 2018: 467 || 717 || 710
+		if( presel && (label.find("MR") == std::string::npos) && analysisTag=="CT2016_07Aug2017Rereco" && !HLTDecision[467]) continue; 
+		if( presel && (label.find("MR") == std::string::npos) && analysisTag=="CT2017_17Nov2017Rereco" && !(HLTDecision[467]||HLTDecision[717]||HLTDecision[710]) ) continue; 
+		if( presel && (label.find("MR") == std::string::npos) && analysisTag=="CT2018_17SeptEarlyReReco" && !(HLTDecision[467]||HLTDecision[717]||HLTDecision[710]) ) continue; 
 
 		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 		bool triggered = false;
@@ -1509,7 +1672,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			if( thisJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
 			//if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
-			if( fabs( thisJet.Eta() ) >= 1.48 ) continue;
+			if( fabs( thisJet.Eta() ) >= 1. ) continue;
+			//if( fabs( thisJet.Eta() ) >= 1.48 ) continue;
 			//if( fabs( thisJet.Eta() ) >= 2.4 ) continue;
 			//if( fabs( thisJet.Eta() ) >= 3.0 ) continue;
 			// if ( !jetPassIDLoose[i] ) continue;
@@ -1529,10 +1693,10 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				jetTimeRecHitsECAL = jetRechitT[i];
 			}
 			if(_debug_dnn) std::cout << "Jet Time " << jetTimeRecHitsECAL << std::endl;
-			if( jetTimeRecHitsECAL<=-1 ) continue;
-			if( jetMuonEnergyFraction[i]>=0.6 ) continue;
-			if( jetElectronEnergyFraction[i]>=0.6 ) continue;
-			if( jetPhotonEnergyFraction[i]>=0.8 ) continue;
+			if( presel_jet && jetTimeRecHitsECAL<=-1 ) continue;
+			if( presel_jet && jetMuonEnergyFraction[i]>=0.6 ) continue;
+			if( presel_jet && jetElectronEnergyFraction[i]>=0.6 ) continue;
+			if( presel_jet && jetPhotonEnergyFraction[i]>=0.8 ) continue;
 
 			// ***********************************
 			//Compute Rechit Quantities
@@ -2003,6 +2167,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->jetMet_dPhiMin_eta_2p4 = jetMet_dPhiMin_eta_2p4_temp;
 		llp_tree->jetMet_dPhiMin_eta_3 = jetMet_dPhiMin_eta_3_temp;
 		llp_tree->jetMet_dPhiMin_eta_all = jetMet_dPhiMin_eta_all_temp;
+		if( presel && (label.find("MR") == std::string::npos) && llp_tree->jetMet_dPhiMin_eta_all < 0.5 ) continue;
 		llp_tree->jetMet_dPhiMin_pt_20_eta_2p4 = jetMet_dPhiMin_pt_20_eta_2p4_temp;
 		llp_tree->jetMet_dPhiMin_pt_20_eta_3 = jetMet_dPhiMin_pt_20_eta_3_temp;
 		llp_tree->jetMet_dPhiMin_pt_20_eta_all = jetMet_dPhiMin_pt_20_eta_all_temp;
@@ -2729,6 +2894,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			filePtr.second->cd();
 			Trees2D[filePtr.first]->Write();
 			NEvents2D[filePtr.first]->Write("NEvents");
+			smsSumWeights2D[filePtr.first]->Write("SumWeights");
+			smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
+			smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
 			filePtr.second->Close();
 
 		}
@@ -2741,6 +2909,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			filePtr.second->cd();
 			Trees2D[filePtr.first]->Write();
 			NEvents2D[filePtr.first]->Write("NEvents");
+			smsSumWeights2D[filePtr.first]->Write("SumWeights");
+			smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
+			smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
 			filePtr.second->Close();
 
 		}
@@ -2751,11 +2922,24 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		cout << "Writing output trees..." << endl;		
 		outFile->cd();
 		llp_tree->tree_->Write();
+		cout << "Writing NEvents..." << endl;		
 		NEvents->Write();
-		// outFile->Write();
+		cout << "Writing SumWeights..." << endl;		
+		SumWeights->Write();
+		cout << "SumWeights " << SumWeights->GetBinContent(1) << "\n";
+		cout << "Writing SumScaleWeights..." << endl;		
+    		SumScaleWeights->Write();
+		cout << "SumScaleWeights " << SumScaleWeights->GetBinContent(1) << "\n";
+		cout << "Writing SumPdfWeights..." << endl;		
+    		SumPdfWeights->Write();
+		cout << "SumPdfWeights " << SumPdfWeights->GetBinContent(1) << "\n";
+		//cout << "Writing SumAlphasWeights..." << endl;		
+    		//SumAlphasWeights->Write();
+		//cout << "SumAlphasWeights " << SumAlphasWeights->GetBinContent(1) << "\n";
+		//outFile->Write();
 		outFile->Close();
 	}
 
 	//if (helper) delete helper; //for some reason this is causing crashes. something is 
 	//                             not done corrector in the RazorHelper destructor
-	}
+}
