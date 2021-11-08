@@ -128,12 +128,180 @@ n3n2_hbb_hbb_mchi_400 	1e-03*88.7372*0.5824*0.5824
 n3n2_hinc_hbb_mchi_200 	1e-03*1335.62*0.5824
 n3n2_zll_hbb_mchi_200 	1e-03*1335.62*0.067294*0.5824 #z->ee/mumu
 n3n2_zinc_hbb_mchi_200 	1e-03*1335.62*0.5824 #z->ee/mumu
+TChiHH_mass400_pl1000   1e-03*88.7372*0.5824*0.5824
+#n3n2_hbb_hbb_mchi_200 	1.00
+
+# ggH centrally produced
+ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8 		4.858E+01
+ggH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	4.858E+01
+ggH_HToSSTo4Tau_MH-125_TuneCP5_13TeV-powheg-pythia8		4.858E+01
+ggH_HToSSTo4Tau_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8    	4.858E+01
+ggH_HToSSTodddd_MH-125_TuneCP5_13TeV-powheg-pythia8		4.858E+01
+ggH_HToSSTodddd_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	4.858E+01
+
+
+VBFH_HToSSTo4b_MH-125_TuneCP5_13TeV-powheg-pythia8		3.78E+00
+VBFH_HToSSTo4b_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8		3.78E+00
+VBFH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8		3.78E+00
+VBFH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	3.78E+00
+VBFH_HToSSTo4Tau_MH-125_TuneCP5_13TeV-powheg-pythia8		3.78E+00
+VBFH_HToSSTo4Tau_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8	3.78E+00
+
+# GGH
+GluGluH2_H2ToSSTobbbb_MH-200_MS-50_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-200_MS-25_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-200_MS-50_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-200_MS-25_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-200_MS-50_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-200_MS-25_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-200_MS-50_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-200_MS-25_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-200_MS-50_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-200_MS-25_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+
+GluGluH2_H2ToSSTobbbb_MH-400_MS-100_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-400_MS-50_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-600_MS-150_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-600_MS-50_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-400_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-150_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-500_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-200_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-600_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-250_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+
+GluGluH2_H2ToSSTobbbb_MH-400_MS-100_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-400_MS-50_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-600_MS-150_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-600_MS-50_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-50_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-400_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-150_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-50_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-500_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-200_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-50_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-600_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-250_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+
+GluGluH2_H2ToSSTobbbb_MH-400_MS-100_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-400_MS-50_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-600_MS-150_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-600_MS-50_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-400_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-150_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-500_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-200_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-600_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-250_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+
+GluGluH2_H2ToSSTobbbb_MH-400_MS-100_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-400_MS-50_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-600_MS-150_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-600_MS-50_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-400_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-150_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-500_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-200_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-600_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-250_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+
+GluGluH2_H2ToSSTobbbb_MH-400_MS-100_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-400_MS-50_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-600_MS-150_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-600_MS-50_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-50_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-400_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1000_MS-150_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-50_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-500_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-1500_MS-200_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-50_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-600_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+GluGluH2_H2ToSSTobbbb_MH-2000_MS-250_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.00
+
+# https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBSMAt13TeV
+#200	1.694E+01 
+#400	3.160E+00 
+#600	1.001E+00 
+#1000	1.845E-01 
+#1500	3.690E-02 
+#2000	9.600E-03
+
+#GluGluH2_H2ToSSTobbbb_MH-200_MS-25_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.694E+01
+#GluGluH2_H2ToSSTobbbb_MH-200_MS-25_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.694E+01
+#GluGluH2_H2ToSSTobbbb_MH-200_MS-25_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.694E+01
+#GluGluH2_H2ToSSTobbbb_MH-200_MS-25_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.694E+01
+#GluGluH2_H2ToSSTobbbb_MH-200_MS-25_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.694E+01
+#GluGluH2_H2ToSSTobbbb_MH-200_MS-50_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.694E+01
+#GluGluH2_H2ToSSTobbbb_MH-200_MS-50_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.694E+01
+#GluGluH2_H2ToSSTobbbb_MH-200_MS-50_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.694E+01
+#GluGluH2_H2ToSSTobbbb_MH-200_MS-50_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.694E+01
+#GluGluH2_H2ToSSTobbbb_MH-200_MS-50_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.694E+01
+#
+#GluGluH2_H2ToSSTobbbb_MH-400_MS-100_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.160E+00
+#GluGluH2_H2ToSSTobbbb_MH-400_MS-100_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.160E+00
+#GluGluH2_H2ToSSTobbbb_MH-400_MS-100_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.160E+00
+#GluGluH2_H2ToSSTobbbb_MH-400_MS-100_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.160E+00
+#GluGluH2_H2ToSSTobbbb_MH-400_MS-100_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.160E+00
+#GluGluH2_H2ToSSTobbbb_MH-400_MS-50_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.160E+00
+#GluGluH2_H2ToSSTobbbb_MH-400_MS-50_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.160E+00
+#GluGluH2_H2ToSSTobbbb_MH-400_MS-50_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.160E+00
+#GluGluH2_H2ToSSTobbbb_MH-400_MS-50_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.160E+00
+#GluGluH2_H2ToSSTobbbb_MH-400_MS-50_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.160E+00
+#
+#GluGluH2_H2ToSSTobbbb_MH-600_MS-150_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.001E+00
+#GluGluH2_H2ToSSTobbbb_MH-600_MS-150_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.001E+00
+#GluGluH2_H2ToSSTobbbb_MH-600_MS-150_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.001E+00
+#GluGluH2_H2ToSSTobbbb_MH-600_MS-150_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.001E+00
+#GluGluH2_H2ToSSTobbbb_MH-600_MS-150_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.001E+00
+#GluGluH2_H2ToSSTobbbb_MH-600_MS-50_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.001E+00
+#GluGluH2_H2ToSSTobbbb_MH-600_MS-50_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.001E+00
+#GluGluH2_H2ToSSTobbbb_MH-600_MS-50_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.001E+00
+#GluGluH2_H2ToSSTobbbb_MH-600_MS-50_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.001E+00
+#GluGluH2_H2ToSSTobbbb_MH-600_MS-50_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.001E+00
+#
+#GluGluH2_H2ToSSTobbbb_MH-1000_MS-150_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.845E-01
+#GluGluH2_H2ToSSTobbbb_MH-1000_MS-150_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.845E-01
+#GluGluH2_H2ToSSTobbbb_MH-1000_MS-150_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.845E-01
+#GluGluH2_H2ToSSTobbbb_MH-1000_MS-150_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.845E-01
+#GluGluH2_H2ToSSTobbbb_MH-1000_MS-150_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.845E-01
+#GluGluH2_H2ToSSTobbbb_MH-1000_MS-400_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.845E-01
+#GluGluH2_H2ToSSTobbbb_MH-1000_MS-400_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.845E-01
+#GluGluH2_H2ToSSTobbbb_MH-1000_MS-400_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.845E-01
+#GluGluH2_H2ToSSTobbbb_MH-1000_MS-400_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.845E-01
+#GluGluH2_H2ToSSTobbbb_MH-1000_MS-400_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 1.845E-01
+#
+#GluGluH2_H2ToSSTobbbb_MH-1500_MS-200_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.690E-02
+#GluGluH2_H2ToSSTobbbb_MH-1500_MS-200_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.690E-02
+#GluGluH2_H2ToSSTobbbb_MH-1500_MS-200_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.690E-02
+#GluGluH2_H2ToSSTobbbb_MH-1500_MS-200_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.690E-02
+#GluGluH2_H2ToSSTobbbb_MH-1500_MS-200_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.690E-02
+#GluGluH2_H2ToSSTobbbb_MH-1500_MS-500_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.690E-02
+#GluGluH2_H2ToSSTobbbb_MH-1500_MS-500_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.690E-02
+#GluGluH2_H2ToSSTobbbb_MH-1500_MS-500_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.690E-02
+#GluGluH2_H2ToSSTobbbb_MH-1500_MS-500_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.690E-02
+#GluGluH2_H2ToSSTobbbb_MH-1500_MS-500_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 3.690E-02
+#
+#GluGluH2_H2ToSSTobbbb_MH-2000_MS-250_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 9.600E-03
+#GluGluH2_H2ToSSTobbbb_MH-2000_MS-250_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 9.600E-03
+#GluGluH2_H2ToSSTobbbb_MH-2000_MS-250_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 9.600E-03
+#GluGluH2_H2ToSSTobbbb_MH-2000_MS-250_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 9.600E-03
+#GluGluH2_H2ToSSTobbbb_MH-2000_MS-250_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 9.600E-03
+#GluGluH2_H2ToSSTobbbb_MH-2000_MS-600_ctauS-10000_TuneCP5_13TeV-pythia8_PRIVATE-MC 9.600E-03
+#GluGluH2_H2ToSSTobbbb_MH-2000_MS-600_ctauS-1000_TuneCP5_13TeV-pythia8_PRIVATE-MC 9.600E-03
+#GluGluH2_H2ToSSTobbbb_MH-2000_MS-600_ctauS-2000_TuneCP5_13TeV-pythia8_PRIVATE-MC 9.600E-03
+#GluGluH2_H2ToSSTobbbb_MH-2000_MS-600_ctauS-5000_TuneCP5_13TeV-pythia8_PRIVATE-MC 9.600E-03
+#GluGluH2_H2ToSSTobbbb_MH-2000_MS-600_ctauS-500_TuneCP5_13TeV-pythia8_PRIVATE-MC 9.600E-03
+ 
 
 zdark_h500_llp200 5.695e-04
 zdark_h200_llp50  6.433e-05 
 
 n3n2_mchi_100 	1e-03*16797.2
+n3n2_mchi_127 	1e-03*10314.76 # avg(100+150)
 n3n2_mchi_150 	1e-03*3832.31
+n3n2_mchi_175 	1e-03*25839.96 # avg(150+200)
 n3n2_mchi_200 	1e-03*1335.62
 n3n2_mchi_250 	1e-03*577.314
 n3n2_mchi_300 	1e-03*284.855
@@ -161,6 +329,11 @@ n3n2_mchi_1350 	1e-03*0.111174
 n3n2_mchi_1400 	1e-03*0.0780263
 n3n2_mchi_1450 	1e-03*0.0696962
 
+#Central HZ sample use 1pb for now
+SMS-TChiHZ_ZToQQ_HToBB_LongLivedN2N3_mC2-127to1800_TuneCP2_13TeV-madgraphMLM-pythia8 1.0
+# mChi mass, use n3n2_mchi_X above
+#127 150 175 200 250 300 400 600 800 1000 1250 1500 1800
+
 #qcd ht
 QCD_HT50to100_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                        2.486e+08
 QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_v6-v1_v2_v1                        27990000.0
@@ -183,6 +356,23 @@ QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                          
 QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                          1207
 QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                           119.9
 QCD_HT2000toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                             25.24
+QCD_HT50to100_TuneCP5_13TeV-madgraphMLM-pythia8                        2.486e+08
+QCD_HT100to200_TuneCP5_13TeV-madgraph-pythia8                        27990000.0
+QCD_HT200to300_TuneCP5_13TeV-madgraph-pythia8                         1712000
+QCD_HT300to500_TuneCP5_13TeV-madgraph-pythia8                          347700
+QCD_HT500to700_TuneCP5_13TeV-madgraph-pythia8                           32100
+QCD_HT700to1000_TuneCP5_13TeV-madgraph-pythia8                           6831
+QCD_HT1000to1500_TuneCP5_13TeV-madgraph-pythia8                          1207
+QCD_HT1500to2000_TuneCP5_13TeV-madgraph-pythia8                           119.9
+QCD_HT2000toInf_TuneCP5_13TeV-madgraph-pythia8                             25.24
+QCD_HT100to200_TuneCP5_13TeV-madgraphMLM-pythia8                        27990000.0
+QCD_HT200to300_TuneCP5_13TeV-madgraphMLM-pythia8                         1712000
+QCD_HT300to500_TuneCP5_13TeV-madgraphMLM-pythia8                          347700
+QCD_HT500to700_TuneCP5_13TeV-madgraphMLM-pythia8                           32100
+QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8                           6831
+QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8                          1207
+QCD_HT1500to2000_TuneCP5_13TeV-madgraphMLM-pythia8                           119.9
+QCD_HT2000toInf_TuneCP5_13TeV-madgraphMLM-pythia8                             25.24
 QCD_Pt-15to20_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8                     1273190000*0.003
 QCD_Pt-20to30_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8                      558528000*0.0053
 QCD_Pt-30to50_MuEnrichedPt5_TuneCUETP8M1_13TeV_pythia8                      139803000*0.01182
@@ -242,6 +432,15 @@ WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                  
 WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                     1.329*1.21
 WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                      0.03216*1.21
 WJetsToLNu_HT-600ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                      18.77*1.21
+WJetsToLNu_HT-70To100_TuneCP5_13TeV-madgraphMLM-pythia8                    1319*1.21
+WJetsToLNu_HT-100To200_TuneCP5_13TeV-madgraphMLM-pythia8                    1345*1.21
+WJetsToLNu_HT-200To400_TuneCP5_13TeV-madgraphMLM-pythia8                     359.7*1.21
+WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8                      48.91*1.21
+WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8                      12.05*1.21
+WJetsToLNu_HT-800To1200_TuneCP5_13TeV-madgraphMLM-pythia8                      5.501*1.21
+WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8                     1.329*1.21
+WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8                      0.03216*1.21
+WJetsToLNu_HT-600ToInf_TuneCP5_13TeV-madgraphMLM-pythia8                      18.77*1.21
 WJetsToLNu_Wpt-0To50_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8                    57280
 WJetsToLNu_Wpt-50To100_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8                   3258
 WJetsToLNu_Pt-100To250_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8                    676.3
@@ -296,10 +495,18 @@ TTJets_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                      
 TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-pythia8                                    670.3*1.24088
 TTJets_TuneCUETP8M1_13TeV-amcatnloFXFX-scaleup-pythia8                            670.3*1.24088
 TTJets_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                                     502.2*1.65623
-TTJets_SingleLeptFromTbar_genMET-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8       110.0*1.65623 
 TTJets_SingleLeptFromTbar_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                  110.0*1.65623
+TTJets_SingleLeptFromTbar_genMET-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8	  5.936*1.65623
+TTJets_SingleLeptFromTbar_genMET-150_TuneCP5_13TeV-madgraphMLM-pythia8	  5.936*1.65623
+TTJets_SingleLeptFromTbar_genMET-80_TuneCP5_13TeV-madgraphMLM-pythia8	  32.127*1.65623
 TTJets_SingleLeptFromT_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                     110.0*1.65623
+TTJets_SingleLeptFromT_genMET-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8	  5.979*1.65623
+TTJets_SingleLeptFromT_genMET-150_TuneCP5_13TeV-madgraphMLM-pythia8	  5.979*1.65623
+TTJets_SingleLeptFromT_genMET-80_TuneCP5_13TeV-madgraphMLM-pythia8	  31.418*1.65623
 TTJets_DiLept_TuneCUETP8M1_13TeV-madgraphMLM-pythia8                               52.72*1.65623
+TTJets_DiLept_genMET-150_TuneCUETP8M1_13TeV-madgraphMLM-pythia8	                   3.666*1.65623
+TTJets_DiLept_genMET-150_TuneCP5_13TeV-madgraphMLM-pythia8	                   3.666*1.65623
+TTJets_DiLept_genMET-80_TuneCP5_13TeV-madgraphMLM-pythia8	                   21.913*1.65623
 TTJets_SingleLeptFromT_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8                  146.34
 TTJets_SingleLeptFromTbar_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8               146.34
 TTJets_Dilept_TuneCUETP8M2T4_13TeV-amcatnloFXFX-pythia8                            70.14
