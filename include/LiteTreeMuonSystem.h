@@ -960,6 +960,27 @@ float         cscRechitCluster3JetVetoPt[N_MAX_CSC];
   int           cscRechitCluster3NRechitChamberMinus32[N_MAX_CSC];
   int           cscRechitCluster3NRechitChamberMinus41[N_MAX_CSC];
   int           cscRechitCluster3NRechitChamberMinus42[N_MAX_CSC];
+
+  int           cscRechitCluster3NSegChamberPlus11[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberPlus12[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberPlus13[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberPlus21[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberPlus22[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberPlus31[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberPlus32[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberPlus41[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberPlus42[N_MAX_CSC];
+
+  int           cscRechitCluster3NSegChamberMinus11[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberMinus12[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberMinus13[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberMinus21[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberMinus22[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberMinus31[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberMinus32[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberMinus41[N_MAX_CSC];
+  int           cscRechitCluster3NSegChamberMinus42[N_MAX_CSC];
+
   float         cscRechitCluster3Met_dPhi[N_MAX_CSC];
   float         cscRechitCluster3MetXYCorr_dPhi[N_MAX_CSC];
 

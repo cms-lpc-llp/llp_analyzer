@@ -406,6 +406,8 @@ void LiteTreeMuonSystem::InitVariables()
       cscSegClusterNRechitChamberMinus32[i] = -999;
       cscSegClusterNRechitChamberMinus41[i] = -999;
       cscSegClusterNRechitChamberMinus42[i] = -999;
+
+
       cscSegClusterMet_dPhi[i] = 999.;
       cscSegClusterMetXYCorr_dPhi[i] = 999.;
 
@@ -880,6 +882,26 @@ void LiteTreeMuonSystem::InitVariables()
         cscRechitCluster3NRechitChamberMinus32[i] = -999;
         cscRechitCluster3NRechitChamberMinus41[i] = -999;
         cscRechitCluster3NRechitChamberMinus42[i] = -999;
+
+        cscRechitCluster3NSegChamberPlus11[i] = 0;
+        cscRechitCluster3NSegChamberPlus12[i] = 0;
+        cscRechitCluster3NSegChamberPlus13[i] = 0;
+        cscRechitCluster3NSegChamberPlus21[i] = 0;
+        cscRechitCluster3NSegChamberPlus22[i] = 0;
+        cscRechitCluster3NSegChamberPlus31[i] = 0;
+        cscRechitCluster3NSegChamberPlus32[i] = 0;
+        cscRechitCluster3NSegChamberPlus41[i] = 0;
+        cscRechitCluster3NSegChamberPlus42[i] = 0;
+        cscRechitCluster3NSegChamberMinus11[i] = 0;
+        cscRechitCluster3NSegChamberMinus12[i] = 0;
+        cscRechitCluster3NSegChamberMinus13[i] = 0;
+        cscRechitCluster3NSegChamberMinus21[i] = 0;
+        cscRechitCluster3NSegChamberMinus22[i] = 0;
+        cscRechitCluster3NSegChamberMinus31[i] = 0;
+        cscRechitCluster3NSegChamberMinus32[i] = 0;
+        cscRechitCluster3NSegChamberMinus41[i] = 0;
+        cscRechitCluster3NSegChamberMinus42[i] = 0;
+
         cscRechitCluster3Met_dPhi[i] = 999.;
         cscRechitCluster3MetXYCorr_dPhi[i] = 999.;
 
@@ -1986,6 +2008,27 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("cscRechitCluster3NRechitChamberMinus32",             cscRechitCluster3NRechitChamberMinus32);
   tree_->SetBranchAddress("cscRechitCluster3NRechitChamberMinus41",             cscRechitCluster3NRechitChamberMinus41);
   tree_->SetBranchAddress("cscRechitCluster3NRechitChamberMinus42",             cscRechitCluster3NRechitChamberMinus42);
+
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberPlus11",             cscRechitCluster3NSegChamberPlus11);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberPlus12",             cscRechitCluster3NSegChamberPlus12);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberPlus13",             cscRechitCluster3NSegChamberPlus13);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberPlus21",             cscRechitCluster3NSegChamberPlus21);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberPlus22",             cscRechitCluster3NSegChamberPlus22);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberPlus31",             cscRechitCluster3NSegChamberPlus31);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberPlus32",             cscRechitCluster3NSegChamberPlus32);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberPlus41",             cscRechitCluster3NSegChamberPlus41);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberPlus42",             cscRechitCluster3NSegChamberPlus42);
+
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberMinus11",             cscRechitCluster3NSegChamberMinus11);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberMinus12",             cscRechitCluster3NSegChamberMinus12);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberMinus13",             cscRechitCluster3NSegChamberMinus13);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberMinus21",             cscRechitCluster3NSegChamberMinus21);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberMinus22",             cscRechitCluster3NSegChamberMinus22);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberMinus31",             cscRechitCluster3NSegChamberMinus31);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberMinus32",             cscRechitCluster3NSegChamberMinus32);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberMinus41",             cscRechitCluster3NSegChamberMinus41);
+  tree_->SetBranchAddress("cscRechitCluster3NSegChamberMinus42",             cscRechitCluster3NSegChamberMinus42);
+
 
   tree_->SetBranchAddress("cscRechitCluster3NLayersChamberPlus11",             cscRechitCluster3NLayersChamberPlus11);
   tree_->SetBranchAddress("cscRechitCluster3NLayersChamberPlus12",             cscRechitCluster3NLayersChamberPlus12);
@@ -3140,6 +3183,29 @@ void LiteTreeMuonSystem::CreateTree()
     tree_->Branch("cscRechitCluster3NRechitChamberMinus32",             cscRechitCluster3NRechitChamberMinus32,             "cscRechitCluster3NRechitChamberMinus32[nCscRechitClusters3]/I");
     tree_->Branch("cscRechitCluster3NRechitChamberMinus41",             cscRechitCluster3NRechitChamberMinus41,             "cscRechitCluster3NRechitChamberMinus41[nCscRechitClusters3]/I");
     tree_->Branch("cscRechitCluster3NRechitChamberMinus42",             cscRechitCluster3NRechitChamberMinus42,             "cscRechitCluster3NRechitChamberMinus42[nCscRechitClusters3]/I");
+
+    tree_->Branch("cscRechitCluster3NSegChamberPlus11",             cscRechitCluster3NSegChamberPlus11,             "cscRechitCluster3NSegChamberPlus11[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberPlus12",             cscRechitCluster3NSegChamberPlus12,             "cscRechitCluster3NSegChamberPlus12[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberPlus13",             cscRechitCluster3NSegChamberPlus13,             "cscRechitCluster3NSegChamberPlus13[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberPlus21",             cscRechitCluster3NSegChamberPlus21,             "cscRechitCluster3NSegChamberPlus21[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberPlus22",             cscRechitCluster3NSegChamberPlus22,             "cscRechitCluster3NSegChamberPlus22[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberPlus31",             cscRechitCluster3NSegChamberPlus31,             "cscRechitCluster3NSegChamberPlus31[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberPlus32",             cscRechitCluster3NSegChamberPlus32,             "cscRechitCluster3NSegChamberPlus32[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberPlus41",             cscRechitCluster3NSegChamberPlus41,             "cscRechitCluster3NSegChamberPlus41[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberPlus42",             cscRechitCluster3NSegChamberPlus42,             "cscRechitCluster3NSegChamberPlus42[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberMinus11",             cscRechitCluster3NSegChamberMinus11,             "cscRechitCluster3NSegChamberMinus11[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberMinus12",             cscRechitCluster3NSegChamberMinus12,             "cscRechitCluster3NSegChamberMinus12[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberMinus13",             cscRechitCluster3NSegChamberMinus13,             "cscRechitCluster3NSegChamberMinus13[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberMinus21",             cscRechitCluster3NSegChamberMinus21,             "cscRechitCluster3NSegChamberMinus21[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberMinus22",             cscRechitCluster3NSegChamberMinus22,             "cscRechitCluster3NSegChamberMinus22[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberMinus31",             cscRechitCluster3NSegChamberMinus31,             "cscRechitCluster3NSegChamberMinus31[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberMinus32",             cscRechitCluster3NSegChamberMinus32,             "cscRechitCluster3NSegChamberMinus32[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberMinus41",             cscRechitCluster3NSegChamberMinus41,             "cscRechitCluster3NSegChamberMinus41[nCscRechitClusters3]/I");
+    tree_->Branch("cscRechitCluster3NSegChamberMinus42",             cscRechitCluster3NSegChamberMinus42,             "cscRechitCluster3NSegChamberMinus42[nCscRechitClusters3]/I");
+
+
+
+
     tree_->Branch("cscRechitCluster3Met_dPhi",             cscRechitCluster3Met_dPhi,             "cscRechitCluster3Met_dPhi[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3MetXYCorr_dPhi",             cscRechitCluster3MetXYCorr_dPhi,             "cscRechitCluster3MetXYCorr_dPhi[nCscRechitClusters3]/F");
     tree_->Branch("cscRechitCluster3_match_cscRechits_0p4",             cscRechitCluster3_match_cscRechits_0p4,             "cscRechitCluster3_match_cscRechits_0p4[nCscRechitClusters3]/I");
