@@ -675,11 +675,11 @@ void llp_MuonSystem::Analyze(bool isData, int options, string outputfilename, st
     tmpJet.jet    = thisJet;
     tmpJet.passId = jetPassIDTight[i];
 
-    tmpJet.jetPassMuFrac = jetPassMuFrac[i];
-    tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
-    tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
-    tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
-    tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
+//    tmpJet.jetPassMuFrac = jetPassMuFrac[i];
+//    tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
+//    tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
+//    tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
+//    tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
 
     // calculate jet energy scale uncertainty
     double unc = helper->getJecUnc( jetCorrPt, jetEta[i], runNum ); //use run=999 as default
