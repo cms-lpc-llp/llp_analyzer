@@ -452,7 +452,14 @@ void RazorAnalyzer::EnableDT()
   fChain->SetBranchStatus("dtRechitZ", 1);
   fChain->SetBranchStatus("dtRechitEta", 1);
   fChain->SetBranchStatus("dtRechitPhi", 1);
+  fChain->SetBranchStatus("dtRechitCorrectX", 1);
+  fChain->SetBranchStatus("dtRechitCorrectY", 1);
+  fChain->SetBranchStatus("dtRechitCorrectZ", 1);
+  fChain->SetBranchStatus("dtRechitCorrectEta", 1);
+  fChain->SetBranchStatus("dtRechitCorrectPhi", 1);
   fChain->SetBranchStatus("dtRechitTime", 1);
+  fChain->SetBranchStatus("dtRechitSuperLayer", 1);
+  fChain->SetBranchStatus("dtRechitLayer", 1);
 
   fChain->SetBranchStatus("nDtSeg", 1);
   fChain->SetBranchStatus("dtSegPhi", 1);
@@ -473,6 +480,39 @@ void RazorAnalyzer::EnableDT()
   fChain->SetBranchStatus("rpcT", 1);
   fChain->SetBranchStatus("rpcBx", 1);
   fChain->SetBranchStatus("rpcTError", 1);
+  fChain->SetBranchStatus("rpcRegion", 1);
+  fChain->SetBranchStatus("rpcRing", 1);
+  fChain->SetBranchStatus("rpcStation", 1);
+  fChain->SetBranchStatus("rpcSector", 1);
+  fChain->SetBranchStatus("rpcLayer", 1);
+  fChain->SetBranchStatus("rpcTError", 1);
+
+
+  fChain->SetBranchStatus("nDtRechitClusters", 1);
+  fChain->SetBranchStatus("dtRechitStation", 1);
+  fChain->SetBranchStatus("dtRechitWheel", 1);
+  fChain->SetBranchStatus("dtRechitClusterX", 1);
+  fChain->SetBranchStatus("dtRechitClusterY", 1);
+  fChain->SetBranchStatus("dtRechitClusterZ", 1);
+  fChain->SetBranchStatus("dtRechitClusterEta", 1);
+  fChain->SetBranchStatus("dtRechitClusterPhi", 1);
+  fChain->SetBranchStatus("dtRechitClusterTime", 1);
+  fChain->SetBranchStatus("dtRechitClusterTimeSpread", 1);
+  fChain->SetBranchStatus("dtRechitClusterJetVetoPt", 1);
+  fChain->SetBranchStatus("dtRechitClusterJetVetoE", 1);
+  fChain->SetBranchStatus("dtRechitClusterMuonVetoPt", 1);
+  fChain->SetBranchStatus("dtRechitClusterMuonVetoE", 1);
+  fChain->SetBranchStatus("dtRechitClusterSize", 1);
+  fChain->SetBranchStatus("dtRechitClusterMaxChamber", 1);
+  fChain->SetBranchStatus("dtRechitClusterMaxChamberRatio", 1);
+  fChain->SetBranchStatus("dtRechitClusterNChamber", 1);
+  fChain->SetBranchStatus("dtRechitClusterMaxStation", 1);
+  fChain->SetBranchStatus("dtRechitClusterNStation", 1);
+  fChain->SetBranchStatus("dtRechitClusterNSegmentStation1", 1);
+  fChain->SetBranchStatus("dtRechitClusterNSegmentStation2", 1);
+  fChain->SetBranchStatus("dtRechitClusterNSegmentStation3", 1);
+  fChain->SetBranchStatus("dtRechitClusterNSegmentStation4", 1);
+
 
 };
 void RazorAnalyzer::EnableCSC()
