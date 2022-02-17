@@ -616,7 +616,6 @@ void llp_MuonSystem_TnP::Analyze(bool isData, int options, string outputfilename
     if (abs(MuonSystem->ZMass)<50)continue;
     if (abs(MuonSystem->lepPt[0])<50)continue;
     if (abs(MuonSystem->lepPt[1])<50)continue;
-    if(MuonSystem->nLeptons == 2)
     if(MuonSystem->ZMass<120)continue;
     {
       if(MuonSystem->lepTag[0] == MuonSystem->lepTag[1]) continue; //require one tag one probe

@@ -734,10 +734,10 @@ void llp_vH::Analyze(bool isData, int options, string outputfilename, string ana
       //if (isCSVL(i) && thisJet.Pt() > 30) NBJet30++;
       tmpJet.ecalNRechits = jetNRechits[i];
       tmpJet.ecalRechitE = jetRechitE[i];
-      tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
-      tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
-      tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
-      tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
+//      tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
+//      tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
+//      tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
+//      tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
       Jets.push_back(tmpJet);
 
     }

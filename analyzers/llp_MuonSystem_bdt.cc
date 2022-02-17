@@ -669,11 +669,11 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
     tmpJet.jet    = thisJet;
     tmpJet.passId = jetPassIDTight[i];
 
-    tmpJet.jetPassMuFrac = jetPassMuFrac[i];
-    tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
-    tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
-    tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
-    tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
+    //tmpJet.jetPassMuFrac = jetPassMuFrac[i];
+    //tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
+    //tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
+    //tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
+    //tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
 
     // calculate jet energy scale uncertainty
     double unc = helper->getJecUnc( jetCorrPt, jetEta[i], runNum ); //use run=999 as default
@@ -922,50 +922,50 @@ void llp_MuonSystem_bdt::Analyze(bool isData, int options, string outputfilename
         MuonSystem->cscRechitClusterPhiSpread[MuonSystem->nCscRechitClusters] = tmp.PhiSpread;
         MuonSystem->cscRechitClusterTimeSpread[MuonSystem->nCscRechitClusters] = tmp.TSpread;
         MuonSystem->cscRechitClusterSize[MuonSystem->nCscRechitClusters] = tmp.nCscSegments;
-        if(!isData)
-        {
-          int phi_corr_index = 0;
-          int r_corr_index = 0;
-          if (abs(tmp.eta) < 1)
-          {
-            phi_corr_index = 5;
-            r_corr_index = 3;
-          }
-          else if (abs(tmp.eta) < 1.2)
-          {
-            phi_corr_index = 4;
-            r_corr_index = 2;
-          }
-          else if (abs(tmp.eta) < 1.4)
-          {
-            phi_corr_index = 2;
-            r_corr_index = 1;
-          }
-          else if (abs(tmp.eta) < 1.6)
-          {
-            phi_corr_index = 1;
-            r_corr_index = 1;
-          }
-          else if (abs(tmp.eta) < 1.8)
-          {
-            phi_corr_index = 5;
-            r_corr_index = 1;
-          }
-          else if (abs(tmp.eta) < 2)
-          {
-            phi_corr_index = 5;
-            r_corr_index = 0;
-          }
-          MuonSystem->cscRechitClusterRSpread_corr[MuonSystem->nCscRechitClusters] = tmp.RSpread_corr[phi_corr_index][r_corr_index];
-          MuonSystem->cscRechitClusterXYSpread_corr[MuonSystem->nCscRechitClusters] = tmp.XYSpread_corr[phi_corr_index][r_corr_index];
-          MuonSystem->cscRechitClusterXSpread_corr[MuonSystem->nCscRechitClusters] = tmp.XSpread_corr[phi_corr_index][r_corr_index];
-          MuonSystem->cscRechitClusterYSpread_corr[MuonSystem->nCscRechitClusters] = tmp.YSpread_corr[phi_corr_index][r_corr_index];
-          MuonSystem->cscRechitClusterPhiSpread_corr[MuonSystem->nCscRechitClusters] = tmp.PhiSpread_corr[phi_corr_index][r_corr_index];
-          MuonSystem->cscRechitClusterEtaSpread_corr[MuonSystem->nCscRechitClusters] = tmp.EtaSpread_corr[phi_corr_index][r_corr_index];
-          MuonSystem->cscRechitClusterEtaPhiSpread_corr[MuonSystem->nCscRechitClusters] = tmp.EtaPhiSpread_corr[phi_corr_index][r_corr_index];
-          MuonSystem->cscRechitClusterRSpread_corr[MuonSystem->nCscRechitClusters] = tmp.RSpread_corr[phi_corr_index][r_corr_index];
+        //if(!isData)
+        //{
+        //  int phi_corr_index = 0;
+        //  int r_corr_index = 0;
+        //  if (abs(tmp.eta) < 1)
+        //  {
+        //    phi_corr_index = 5;
+        //    r_corr_index = 3;
+        //  }
+        //  else if (abs(tmp.eta) < 1.2)
+        //  {
+        //    phi_corr_index = 4;
+        //    r_corr_index = 2;
+        //  }
+        //  else if (abs(tmp.eta) < 1.4)
+        //  {
+        //    phi_corr_index = 2;
+        //    r_corr_index = 1;
+        //  }
+        //  else if (abs(tmp.eta) < 1.6)
+        //  {
+        //    phi_corr_index = 1;
+        //    r_corr_index = 1;
+        //  }
+        //  else if (abs(tmp.eta) < 1.8)
+        //  {
+        //    phi_corr_index = 5;
+        //    r_corr_index = 1;
+        //  }
+        //  else if (abs(tmp.eta) < 2)
+        //  {
+        //    phi_corr_index = 5;
+        //    r_corr_index = 0;
+        //  }
+        //  MuonSystem->cscRechitClusterRSpread_corr[MuonSystem->nCscRechitClusters] = tmp.RSpread_corr[phi_corr_index][r_corr_index];
+        //  MuonSystem->cscRechitClusterXYSpread_corr[MuonSystem->nCscRechitClusters] = tmp.XYSpread_corr[phi_corr_index][r_corr_index];
+        //  MuonSystem->cscRechitClusterXSpread_corr[MuonSystem->nCscRechitClusters] = tmp.XSpread_corr[phi_corr_index][r_corr_index];
+        //  MuonSystem->cscRechitClusterYSpread_corr[MuonSystem->nCscRechitClusters] = tmp.YSpread_corr[phi_corr_index][r_corr_index];
+        //  MuonSystem->cscRechitClusterPhiSpread_corr[MuonSystem->nCscRechitClusters] = tmp.PhiSpread_corr[phi_corr_index][r_corr_index];
+        //  MuonSystem->cscRechitClusterEtaSpread_corr[MuonSystem->nCscRechitClusters] = tmp.EtaSpread_corr[phi_corr_index][r_corr_index];
+        //  MuonSystem->cscRechitClusterEtaPhiSpread_corr[MuonSystem->nCscRechitClusters] = tmp.EtaPhiSpread_corr[phi_corr_index][r_corr_index];
+        //  MuonSystem->cscRechitClusterRSpread_corr[MuonSystem->nCscRechitClusters] = tmp.RSpread_corr[phi_corr_index][r_corr_index];
 
-        }
+        //}
 
 
         MuonSystem->cscRechitClusterNRechitChamberPlus11[MuonSystem->nCscRechitClusters] = tmp.nCscSegmentChamberPlus11;

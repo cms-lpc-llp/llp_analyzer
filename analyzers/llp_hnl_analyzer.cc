@@ -756,11 +756,11 @@ void llp_hnl_analyzer::Analyze(bool isData, int options, string outputfilename, 
       tmpJet.jet    = thisJet;
       tmpJet.passId = jetPassIDTight[i];
 
-      tmpJet.jetPassMuFrac = jetPassMuFrac[i];
-      tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
-      tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
-      tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
-      tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
+//      tmpJet.jetPassMuFrac = jetPassMuFrac[i];
+//      tmpJet.jetNeutralHadronEnergyFraction = jetNeutralHadronEnergyFraction[i];
+//      tmpJet.jetNeutralEMEnergyFraction = jetNeutralEMEnergyFraction[i];
+//      tmpJet.jetChargedEMEnergyFraction = jetChargedEMEnergyFraction[i];
+//      tmpJet.jetChargedHadronEnergyFraction = jetChargedHadronEnergyFraction[i];
 
 
       // calculate jet energy scale uncertainty

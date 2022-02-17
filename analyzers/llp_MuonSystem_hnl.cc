@@ -427,11 +427,6 @@ void llp_MuonSystem_hnl::Analyze(bool isData, int options, string outputfilename
           MuonSystem->gLLP_visPz[i] = gLLP_pt[i]*sinh(gLLP_eta[i]);
         }
 
-
-        // cout<<MuonSystem->gLLP_e[i]/gamma<<endl;
-        // if (abs(MuonSystem->gLLP_eta[i]) < 2.4 && abs(MuonSystem->gLLP_eta[i]) > 0.9
-        //   && abs(MuonSystem->gLLP_decay_vertex_z[i])<1100 && abs(MuonSystem->gLLP_decay_vertex_z[i])>568
-        //   && MuonSystem->gLLP_decay_vertex_r[i] < 695.5) MuonSystem->gLLP_csc[i] = true;
           if (abs(MuonSystem->gLLP_eta[i]) < 2.4
             && abs(MuonSystem->gLLP_decay_vertex_z[i])<1100 && abs(MuonSystem->gLLP_decay_vertex_z[i])>400
             && MuonSystem->gLLP_decay_vertex_r[i] < 695.5) MuonSystem->gLLP_csc[i] = true;
@@ -458,38 +453,7 @@ void llp_MuonSystem_hnl::Analyze(bool isData, int options, string outputfilename
         float temp_energy = 999.;
         int temp_status = 999;
         bool has_kaon = false;
-        // if (abs(MuonSystem->gLLP_daughter_id[0])==15) //4tau model
-        // {
-        //   for (int i=0; i < nGenParticle; i++)
-        //   {
-        //     if (abs(gParticleMotherId[i])!=15)continue;//only do this for tautau mode
-        //     if (abs(gParticleStatus[gParticleMotherIndex[i]])!=2)continue;
-        //     if (abs(gParticleMotherId[gParticleMotherIndex[i]])!=9000006)continue;//grandparent is LLP
-        //     if (abs(gParticleId[i])==310 || abs(gParticleId[i])==311 || abs(gParticleId[i])==130)has_kaon = true;
-        //     if (gParticleId[i] == temp_id && temp_status == gParticleStatus[i] && abs(gParticleE[i]-temp_energy)<0.01)continue;
-        //
-        //     int llp_index = 1;
-        //     if (gParticleMotherId[gParticleMotherIndex[i]]>0) llp_index -= 1;
-        //     if (abs(gParticleId[i])==12 || abs(gParticleId[i])==14 || abs(gParticleId[i])==16 || abs(gParticleId[i])==13)continue;
-        //     MuonSystem->gLLP_visE[llp_index] += gParticleE[i];
-        //     MuonSystem->gLLP_visEz[llp_index] += gParticleE[i]/cosh(gParticleEta[i])*sinh(gParticleEta[i]);
-        //     MuonSystem->gLLP_visP[llp_index] += gParticlePt[i]*cosh(gParticleEta[i]);
-        //     MuonSystem->gLLP_visPz[llp_index] += gParticlePt[i]*sinh(gParticleEta[i]);
-        //
-        //     if (abs(gParticleId[i])==11 || abs(gParticleId[i])==22 || abs(gParticleId[i])==111) //EM don't count muon energy abs(gParticleId[i])==13 ||
-        //     {
-        //       MuonSystem->gLLP_EMFracE[llp_index] += gParticleE[i];
-        //       MuonSystem->gLLP_EMFracEz[llp_index] += gParticleE[i]/cosh(gParticleEta[i])*sinh(gParticleEta[i]);
-        //       MuonSystem->gLLP_EMFracP[llp_index] += gParticlePt[i]*cosh(gParticleEta[i]);
-        //       MuonSystem->gLLP_EMFracPz[llp_index] += gParticlePt[i]*sinh(gParticleEta[i]);
-        //     }
-        //     temp_id = gParticleId[i];
-        //     temp_energy = gParticleE[i];
-        //     temp_status = gParticleStatus[i];
-        //   }
-        //
-        //   if(has_kaon)continue;
-        // }
+
         if (abs(MuonSystem->gLLP_daughter_id[0])==5 || abs(MuonSystem->gLLP_daughter_id[0])==1 || abs(MuonSystem->gLLP_daughter_id[0])==15) //4b and 4d
         {
           for (int i=0; i < nGenParticle; i++)
@@ -527,7 +491,7 @@ void llp_MuonSystem_hnl::Analyze(bool isData, int options, string outputfilename
             }
             else continue; //both not mached
 
-            if (abs(gParticleId[i])==310 || abs(gParticleId[i])==311 || abs(gParticleId[i])==130)has_kaon = true; //remove matched kaons
+            // if (abs(gParticleId[i])==310 || abs(gParticleId[i])==311 || abs(gParticleId[i])==130)has_kaon = true; //remove matched kaons
 
             MuonSystem->gLLP_multiplicity[llp_index] += 1;
 
@@ -566,9 +530,9 @@ void llp_MuonSystem_hnl::Analyze(bool isData, int options, string outputfilename
             temp_energy = gParticleE[i];
             temp_status = gParticleStatus[i];
           }
-          if(has_kaon)continue;
+          // if(has_kaon)continue;
         }
-        else //ee, pipi，kk
+        else //ee, pipi，kk, for private samples
 
         {
           for(int i = 0; i < 4;i++)
