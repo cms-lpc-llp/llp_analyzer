@@ -33,6 +33,7 @@ struct cscCluster
 
   int nLayersChamberPlus11, nLayersChamberPlus12, nLayersChamberPlus13, nLayersChamberPlus21, nLayersChamberPlus22, nLayersChamberPlus31, nLayersChamberPlus32, nLayersChamberPlus41, nLayersChamberPlus42;
   int nLayersChamberMinus11, nLayersChamberMinus12, nLayersChamberMinus13, nLayersChamberMinus21, nLayersChamberMinus22, nLayersChamberMinus31, nLayersChamberMinus32, nLayersChamberMinus41, nLayersChamberMinus42;
+  int nDtSegmentStation1,nDtSegmentStation2,nDtSegmentStation3,nDtSegmentStation4;
 
 
   float Me11Ratio, Me12Ratio;
@@ -54,14 +55,6 @@ struct cscCluster
   //
   // float XSpread_r1p2, YSpread_r1p2, XYSpread_r1p2, EtaSpread_r1p2, EtaPhiSpread_r1p2, RSpread_r1p2, PhiSpread_r1p2;
 
-  float XSpread_corr[N_phicorr][N_rcorr];
-  float YSpread_corr[N_phicorr][N_rcorr];
-  float XYSpread_corr[N_phicorr][N_rcorr];
-  float EtaSpread_corr[N_phicorr][N_rcorr];
-  float PhiSpread_corr[N_phicorr][N_rcorr];
-  float EtaPhiSpread_corr[N_phicorr][N_rcorr];
-  float RSpread_corr[N_phicorr][N_rcorr];
-
   float vertex_r, vertex_z, vertex_dis, vertex_chi2;
   int vertex_n, vertex_n1, vertex_n5, vertex_n10, vertex_n15, vertex_n20;
   vector<int>segment_id;
@@ -77,7 +70,7 @@ typedef struct Point_
     float x, y, z, t, twire;  // X, Y, Z position
     float eta,phi;
     float dirX, dirY, dirZ;
-    int station, chamber, layer;
+    int station, chamber, layer, superlayer;
     int clusterID;  // clustered ID
 }Point;
 
@@ -119,15 +112,6 @@ public:
     vector<float>clusterPhiSpread;
     vector<float>clusterDeltaRSpread;
 
-
-
-    vector<vector<vector<float>>>clusterXSpread_corr;
-    vector<vector<vector<float>>>clusterYSpread_corr;
-    vector<vector<vector<float>>>clusterXYSpread_corr;
-    vector<vector<vector<float>>>clusterEtaSpread_corr;
-    vector<vector<vector<float>>>clusterPhiSpread_corr;
-    vector<vector<vector<float>>>clusterEtaPhiSpread_corr;
-    vector<vector<vector<float>>>clusterRSpread_corr;
 
 
     vector<float>clusterVertexR;

@@ -57,13 +57,6 @@ void DBSCAN::clear_clusters(){
   clusterPhiSpread.clear();
   clusterDeltaRSpread.clear();
 
-  clusterXSpread_corr.clear();
-  clusterYSpread_corr.clear();
-  clusterXYSpread_corr.clear();
-  clusterEtaSpread_corr.clear();
-  clusterPhiSpread_corr.clear();
-  clusterEtaPhiSpread_corr.clear();
-  clusterRSpread_corr.clear();
   clusterVertexR.clear();
   clusterVertexZ.clear();
   clusterVertexDis.clear();
@@ -86,8 +79,9 @@ int DBSCAN::result(){
   for(int i = 0; i < nClusters; i++)
   {
     float avg_x(0.0), avg_y(0.0), avg_z(0.0), avg_tWire(0.0), avg_tWirePruned(0.0), avg_t(0.0), avg_tTotal(0.0),tTotalSpreadPruned(0.0);
+    float avg_x_sl2(0.0), avg_y_sl2(0.0), avg_z_sl2(0.0);
     float avg_eta(0.0), avg_phi(0.0);
-    int size(0);
+    int size(0), size_z(0), size_xy(0);
     vector<float> wireTimes;
     vector<float> stripTimes;
 
@@ -97,20 +91,69 @@ int DBSCAN::result(){
 
       if ( iter->clusterID == i+1 )
       {
+          if (iter->superlayer == 2)
+          {
+            avg_x_sl2 += iter->x;
+            avg_y_sl2 += iter->y;
+            avg_z_sl2 += iter->z;
+            size_z++;
+          }
+          else if (iter->superlayer == 1 || iter->superlayer == 3)
+          {
+            avg_x += iter->x;
+            avg_y += iter->y;
+            avg_z += iter->z;
 
-          avg_x += iter->x;
-          avg_y += iter->y;
-          avg_z += iter->z;
-          avg_t += iter->t;
-          avg_tWire += iter->twire;
-          wireTimes.push_back(iter->twire);
-          stripTimes.push_back(iter->t);
+            avg_t += iter->t;
+            avg_tWire += iter->twire;
+            wireTimes.push_back(iter->twire);
+            stripTimes.push_back(iter->t);
+            size_xy ++;
+          }
+          else //csc
+          {
+            avg_x += iter->x;
+            avg_y += iter->y;
+            avg_z += iter->z;
+            avg_t += iter->t;
+            avg_tWire += iter->twire;
+            wireTimes.push_back(iter->twire);
+            stripTimes.push_back(iter->t);
+
+          }
           size ++;
+
       }
     }
-    avg_x = avg_x/size;
-    avg_y = avg_y/size;
-    avg_z = avg_z/size;
+    // cout<<i<<","<<size_xy<<","<<size_z<<","<<size<<endl;
+
+    if (size_xy > 0 && size_z > 0)
+    {
+      avg_x = avg_x/size_xy;
+      avg_y = avg_y/size_xy;
+      avg_z = avg_z_sl2/size_z;
+    }
+    else if (size_xy == 0 && size_z == 0) //csc
+    {
+      avg_x = avg_x/size;
+      avg_y = avg_y/size;
+      avg_z = avg_z/size;
+      // cout<<avg_x<<","<<avg_y<<","<<avg_z<<endl;
+    }
+    else if (size_xy > 0 && size_z == 0)
+    {
+      avg_x = avg_x/size_xy;
+      avg_y = avg_y/size_xy;
+      avg_z = avg_z/size_xy;
+
+    }
+    else
+    {
+      avg_x = avg_x_sl2/size_z;
+      avg_y = avg_y_sl2/size_z;
+      avg_z = avg_z_sl2/size_z;
+
+    }
     avg_tTotal = (avg_t + avg_tWire)/(2 * size);
     avg_t = avg_t/size;
     avg_tWire = avg_tWire/size;
@@ -200,14 +243,6 @@ int DBSCAN::clusterMoments()
     // PhiSpread_r1p2(0.0), EtaSpread_r1p2(0.0), EtaPhiSpread_r1p2(0.0);
 
 
-    vector<vector<float>> XSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
-    vector<vector<float>> YSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
-    vector<vector<float>> XYSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
-    vector<vector<float>> EtaSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
-    vector<vector<float>> PhiSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
-    vector<vector<float>> EtaPhiSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
-    vector<vector<float>> RSpread_corr( N_phicorr , vector<float> (N_rcorr, 0));
-
 
     vector<Point>::iterator iter;
     for(iter = m_points.begin(); iter != m_points.end(); ++iter)
@@ -242,28 +277,6 @@ int DBSCAN::clusterMoments()
           RSpread += pow(radius-sqrt(clusterX[i]*clusterX[i]+clusterY[i]*clusterY[i]),2);
 
 
-          // phi+R correction
-          for (int j = 0; j < N_phicorr; j++)
-          {
-            for (int k = 0; k < N_rcorr; k++)
-            {
-              float phi = deltaPhi(iter->phi,clusterPhi[i])*phi_corr[j] + clusterPhi[i];
-              float r = (radius-sqrt(clusterX[i]*clusterX[i]+clusterY[i]*clusterY[i]))*r_corr[k] + sqrt(clusterX[i]*clusterX[i]+clusterY[i]*clusterY[i]);
-              if (r < 0) cout<<"r is negative!!!"<<r<<","<<r_corr[k]<<","<<j<<","<<k<<endl;
-              float x = r*cos(phi);
-              float y = r*sin(phi);
-              double theta = atan(r/abs(iter->z));
-              double eta = -1.0*TMath::Sign(1.0, iter->z)*log(tan(theta/2));
-              PhiSpread_corr[j][k] += deltaPhi(phi,clusterPhi[i])*deltaPhi(phi,clusterPhi[i]);
-              EtaPhiSpread_corr[j][k] += (eta-clusterEta[i])* deltaPhi(phi,clusterPhi[i]);
-              EtaSpread_corr[j][k] += (eta-clusterEta[i])* (eta-clusterEta[i]);
-              XYSpread_corr[j][k] += (x - clusterX[i])*(y - clusterY[i]);
-              XSpread_corr[j][k] += (x - clusterX[i]) * (x - clusterX[i]);
-              YSpread_corr[j][k] += (y - clusterY[i]) * (y - clusterY[i]);
-              RSpread_corr[j][k] += pow(r - sqrt(clusterX[i]*clusterX[i]+clusterY[i]*clusterY[i]), 2);
-            }
-          }
-
 
 
 
@@ -285,27 +298,7 @@ int DBSCAN::clusterMoments()
     clusterPhiSpread.push_back(sqrt(abs(m22)/clusterSize[i]));
     clusterMajorAxis.push_back(sqrt((a+b)/clusterSize[i]));
     clusterMinorAxis.push_back(sqrt((a-b)/clusterSize[i]));
-    for (int j = 0; j < N_phicorr; j++)
-    {
 
-      for (int k = 0; k < N_rcorr; k++)
-      {
-        PhiSpread_corr[j][k] = sqrt(abs(PhiSpread_corr[j][k])/(float)clusterSize[i]);
-        EtaPhiSpread_corr[j][k] = sqrt(abs(EtaPhiSpread_corr[j][k])/(float)clusterSize[i]);
-        EtaSpread_corr[j][k] = sqrt(abs(EtaSpread_corr[j][k])/(float)clusterSize[i]);
-        XYSpread_corr[j][k] = sqrt(abs(XYSpread_corr[j][k])/(float)clusterSize[i]);
-        XSpread_corr[j][k] = sqrt(abs(XSpread_corr[j][k])/(float)clusterSize[i]);
-        YSpread_corr[j][k] = sqrt(abs(YSpread_corr[j][k])/(float)clusterSize[i]);
-        RSpread_corr[j][k] = sqrt(abs(RSpread_corr[j][k])/(float)clusterSize[i]);
-      }
-    }
-    clusterPhiSpread_corr.push_back(PhiSpread_corr);
-    clusterEtaPhiSpread_corr.push_back(EtaPhiSpread_corr);
-    clusterEtaSpread_corr.push_back(EtaSpread_corr);
-    clusterXYSpread_corr.push_back(XYSpread_corr);
-    clusterXSpread_corr.push_back(XSpread_corr);
-    clusterYSpread_corr.push_back(YSpread_corr);
-    clusterRSpread_corr.push_back(RSpread_corr);
 
 
   }
@@ -363,10 +356,10 @@ void DBSCAN::sort_clusters()
     tmpCluster.nCscSegmentChamberMinus41 = 0;
     tmpCluster.nCscSegmentChamberMinus42 = 0;
 
-    // tmpCluster.nDtSegmentStation1 = 0;
-    // tmpCluster.nDtSegmentStation2 = 0;
-    // tmpCluster.nDtSegmentStation3 = 0;
-    // tmpCluster.nDtSegmentStation4 = 0;
+    tmpCluster.nDtSegmentStation1 = 0;
+    tmpCluster.nDtSegmentStation2 = 0;
+    tmpCluster.nDtSegmentStation3 = 0;
+    tmpCluster.nDtSegmentStation4 = 0;
     for(unsigned int l=0; l < m_pointSize; l++){
       if (m_points[l].clusterID == i+1){
         cscStations.push_back(m_points[l].station);
@@ -417,10 +410,10 @@ void DBSCAN::sort_clusters()
       	if (m_points[l].chamber == -42) tmpCluster.nCscSegmentChamberMinus42++;
 
 
-        // if (m_points[l].station == 1) tmpCluster.nDtSegmentStation1++;
-        // if (m_points[l].station == 2) tmpCluster.nDtSegmentStation2++;
-        // if (m_points[l].station == 3) tmpCluster.nDtSegmentStation3++;
-        // if (m_points[l].station == 4) tmpCluster.nDtSegmentStation4++;
+        if (m_points[l].station == 1) tmpCluster.nDtSegmentStation1++;
+        if (m_points[l].station == 2) tmpCluster.nDtSegmentStation2++;
+        if (m_points[l].station == 3) tmpCluster.nDtSegmentStation3++;
+        if (m_points[l].station == 4) tmpCluster.nDtSegmentStation4++;
 
       }
     }
@@ -456,20 +449,7 @@ void DBSCAN::sort_clusters()
     tmpCluster.Me11Ratio = 1.0*nSegments_Me11/clusterSize[i];
     tmpCluster.Me12Ratio = 1.0*nSegments_Me12/clusterSize[i];
 
-    // tmpCluster.cscChambers = cscChambers;
-    for (int j = 0; j < N_phicorr; j++)
-    {
-      for (int k = 0; k < N_rcorr; k++)
-      {
-        tmpCluster.XSpread_corr[j][k] = clusterXSpread_corr[i][j][k];
-        tmpCluster.YSpread_corr[j][k] = clusterYSpread_corr[i][j][k];
-        tmpCluster.XYSpread_corr[j][k] = clusterXYSpread_corr[i][j][k];
-        tmpCluster.EtaSpread_corr[j][k] = clusterEtaSpread_corr[i][j][k];
-        tmpCluster.PhiSpread_corr[j][k] = clusterPhiSpread_corr[i][j][k];
-        tmpCluster.EtaPhiSpread_corr[j][k] = clusterEtaPhiSpread_corr[i][j][k];
-        tmpCluster.RSpread_corr[j][k] = clusterRSpread_corr[i][j][k];
-      }
-    }
+
 
 
 
