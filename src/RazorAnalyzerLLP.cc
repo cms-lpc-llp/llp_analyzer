@@ -45,6 +45,7 @@ void RazorAnalyzerLLP::EnableAllWithEcalRechits(){
     EnableLLP();
     EnableEcalRechits();
     EnablePFCandidates();
+    EnableVecWeights();
 }
 
 void RazorAnalyzerLLP::EnableEventInfo(){
@@ -798,6 +799,12 @@ void RazorAnalyzerLLP::EnableEcalRechits(){
     fChain->SetBranchStatus("ecalRechit_GainSwitch1", 1);
     fChain->SetBranchStatus("ecalRechit_GainSwitch6", 1);
     fChain->SetBranchStatus("ecalRechit_transpCorr", 1);
+}
+
+void RazorAnalyzerLLP::EnableVecWeights(){
+    fChain->SetBranchStatus("scaleWeights", 1);
+    fChain->SetBranchStatus("pdfWeights", 1);
+    fChain->SetBranchStatus("alphasWeights", 1);
 }
 
 

@@ -21,6 +21,7 @@ void SusyLLPTree::InitVariables()
 	lheComments=0;
 	mH=0; mX=0; ctau=0;
 	runNum=0; lumiSec=0; evtNum=0; category=0;
+	pvX=-999.; pvY=-999.; pvZ=-999.;
 	npv=0; npu=0; rho=-1; weight=-1;
 	pileupWeight = 1; pileupWeightUp = 1; pileupWeightDown = 1;
 	met=-1; metPhi=-1;
@@ -42,6 +43,27 @@ void SusyLLPTree::InitVariables()
 	sig_label = -1;
 	gLLP0_EB =false;
 	gLLP1_EB =false;
+	IsPrefiringAffected = false;
+
+	//PVAll
+	pv_index=-1; // main pv index, mostly 0
+	npvall=-1;
+	for( int i = 0; i < N_MAX_NPVALLS; i++ )
+	{
+		pvAllX[i]=-999.;
+		pvAllY[i]=-999.;
+		pvAllZ[i]=-999.;
+	}
+	
+	//sf
+	alpha1=1.;
+	alpha2=1.;
+	sf_facScaleUp = 1.0;
+	sf_facScaleDown = 1.0;
+	sf_renScaleUp = 1.0;
+	sf_renScaleDown = 1.0;
+	sf_facRenScaleUp = 1.0;
+	sf_facRenScaleDown = 1.0;	
 
 	// met filters
 	Flag2_globalSuperTightHalo2016Filter = 0;
@@ -346,6 +368,8 @@ void SusyLLPTree::InitVariables()
 		jetNRecHitsEcal[i] = 0;
 		jetEnergyRecHitsEcal[i] = 0;
 		jetTimeRecHitsEcal[i] = -100;
+		jetTimeRmsEcal[i] = 0;
+		jetTimeRmsEcal_fix[i] = 0;
 
 		//hcal hbhe rechits
 		jetNRecHitsHcal[i] = 0;
@@ -361,6 +385,15 @@ void SusyLLPTree::InitVariables()
 
 		jetCscEF[i] = -1;
 		jetDtEF[i] = -1;
+
+		//sum track pt inside jet wrt. pv
+		maxSumJetTrkPt_pvid[i] = -1;
+		maxSumJetTrkPt_svid[i] = -1;
+		maxSumJetTrkPt_pv[i] = 0;
+		maxSumJetTrkPt_sv[i] = 0;
+		//for(int ipv=0; ipv<N_MAX_NPVALLS; ipv++)
+			//sumJetTrkPt[i][ipv] = 0;
+
 	}
 
 	//PFCandidates
@@ -550,6 +583,9 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("runNum",      &runNum);
 	tree_->SetBranchAddress("lumiSec",     &lumiSec);
 	tree_->SetBranchAddress("evtNum",      &evtNum);
+	tree_->SetBranchAddress("pvX",      &pvX);
+	tree_->SetBranchAddress("pvY",      &pvY);
+	tree_->SetBranchAddress("pvZ",      &pvZ);
 	tree_->SetBranchAddress("category",    &category);
 	tree_->SetBranchAddress("npv",         &npv);
 	tree_->SetBranchAddress("npu",         &npu);
@@ -560,6 +596,18 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("rho",         &rho);
 	tree_->SetBranchAddress("met",         &met);
 	tree_->SetBranchAddress("metPhi",      &metPhi);
+
+	//pvall
+	tree_->SetBranchAddress("pv_index",      &pv_index);
+	tree_->SetBranchAddress("npvall",      &npvall);
+	tree_->SetBranchAddress("pvAllX",      &pvAllX);
+	tree_->SetBranchAddress("pvAllY",      &pvAllY);
+	tree_->SetBranchAddress("pvAllZ",      &pvAllZ);
+	
+	//sq
+	tree_->SetBranchAddress("scaleWeights", &scaleWeights);
+	tree_->SetBranchAddress("pdfWeights", &pdfWeights);
+	tree_->SetBranchAddress("alphasWeights", &alphasWeights);
 
 	// met filters
 	tree_->SetBranchAddress("Flag2_globalSuperTightHalo2016Filter", &Flag2_globalSuperTightHalo2016Filter);
@@ -853,6 +901,16 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("track_dzErr", track_dzErr);
 	tree_->SetBranchAddress("track_chi2", track_chi2);
 	tree_->SetBranchAddress("track_ndof", track_ndof);
+
+  
+	//sum track pt inside jet wrt. pv
+	tree_->SetBranchAddress("maxSumJetTrkPt_pvid", maxSumJetTrkPt_pvid);
+	tree_->SetBranchAddress("maxSumJetTrkPt_svid", maxSumJetTrkPt_svid);
+	tree_->SetBranchAddress("maxSumJetTrkPt_pv", maxSumJetTrkPt_pv);
+	tree_->SetBranchAddress("maxSumJetTrkPt_sv", maxSumJetTrkPt_sv);
+	//tree_->SetBranchAddress("sumJetTrkPt", sumJetTrkPt);
+
+
 	tree_->SetBranchAddress("nGenParticle",      &nGenParticle);
 	tree_->SetBranchAddress("gParticleId",      &gParticleId);
 	tree_->SetBranchAddress("gParticleStatus",      &gParticleStatus);
@@ -1018,6 +1076,9 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("runNum",      &runNum,     "runNum/i");      // event run number
 	tree_->Branch("lumiSec",     &lumiSec,    "lumiSec/i");     // event lumi section
 	tree_->Branch("evtNum",      &evtNum,     "evtNum/i");      // event number
+	tree_->Branch("pvX",      &pvX,     "pvX/F");      
+	tree_->Branch("pvY",      &pvY,     "pvY/F");      
+	tree_->Branch("pvZ",      &pvZ,     "pvZ/F");      
 	tree_->Branch("category",    &category,   "category/i");    // dilepton category
 	tree_->Branch("npv",         &npv,        "npv/i");         // number of primary vertices
 	tree_->Branch("npu",         &npu,        "npu/i");         // number of in-time PU events (MC)
@@ -1051,8 +1112,30 @@ void SusyLLPTree::CreateTree()
 
 	tree_->Branch("gLLP0_EB", &gLLP0_EB, "gLLP0_EB/O");
 	tree_->Branch("gLLP1_EB", &gLLP1_EB, "gLLP1_EB/O");
+	tree_->Branch("IsPrefiringAffected", &IsPrefiringAffected, "IsPrefiringAffected/O");
 
 	tree_->Branch("sig_label", &sig_label, "sig_label/I");
+
+	//PVAll
+	tree_->Branch("pv_index", &pv_index, "pv_index/I");
+	tree_->Branch("npvall", &npvall, "npvall/I");
+	tree_->Branch("pvAllX",      pvAllX,      "pvAllX[npvall]/F");
+	tree_->Branch("pvAllY",      pvAllY,      "pvAllY[npvall]/F");
+	tree_->Branch("pvAllZ",      pvAllZ,      "pvAllZ[npvall]/F");
+
+	//sf
+	tree_->Branch("alpha1", &alpha1, "alpha1/F");
+	tree_->Branch("alpha2", &alpha2, "alpha2/F");
+	tree_->Branch("sf_facScaleUp", &sf_facScaleUp, "sf_facScaleUp/F");
+	tree_->Branch("sf_facScaleDown", &sf_facScaleDown, "sf_facScaleDown/F");
+	tree_->Branch("sf_renScaleUp", &sf_renScaleUp, "sf_renScaleUp/F");
+	tree_->Branch("sf_renScaleDown", &sf_renScaleDown, "sf_renScaleDown/F");
+	tree_->Branch("sf_facRenScaleUp", &sf_facRenScaleUp, "sf_facRenScaleUp/F");
+	tree_->Branch("sf_facRenScaleDown", &sf_facRenScaleDown, "sf_facRenScaleDown/F");
+	tree_->Branch("pdfWeights", "std::vector<float>",&pdfWeights); //get PDF weights directly from RazorEvents
+	tree_->Branch("sf_pdf", "std::vector<float>",&sf_pdf); //sf PDF	
+	tree_->Branch("scaleWeights", "std::vector<float>",&scaleWeights); 
+	tree_->Branch("alphasWeights", "std::vector<float>",&alphasWeights); 
 
 	// met filters
 	tree_->Branch("Flag2_globalSuperTightHalo2016Filter", &Flag2_globalSuperTightHalo2016Filter, "Flag2_globalSuperTightHalo2016Filter/O");
@@ -1201,6 +1284,7 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("fatjetNRecHitsEcal",   fatjetNRecHitsEcal,   "fatjetNRecHitsEcal[nFatJets]/I");
 	tree_->Branch("fatjetEnergyRecHitsEcal",   fatjetEnergyRecHitsEcal,   "fatjetEnergyRecHitsEcal[nFatJets]/F");
 	tree_->Branch("fatjetTimeRecHitsEcal",   fatjetTimeRecHitsEcal,   "fatjetTimeRecHitsEcal[nFatJets]/F");
+	//tree_->Branch("fatjetTimeRmsEcal",   fatjetTimeRmsEcal,   "fatjetTimeRmsEcal[nFatJets]/F");
 
 	//hcal hbhe rechits
 	tree_->Branch("fatjetNRecHitsHcal",   fatjetNRecHitsHcal,   "fatjetNRecHitsHcal[nFatJets]/I");
@@ -1346,6 +1430,8 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("jetNRecHitsEcal",   jetNRecHitsEcal,   "jetNRecHitsEcal[nJets]/I");
 	tree_->Branch("jetEnergyRecHitsEcal",   jetEnergyRecHitsEcal,   "jetEnergyRecHitsEcal[nJets]/F");
 	tree_->Branch("jetTimeRecHitsEcal",   jetTimeRecHitsEcal,   "jetTimeRecHitsEcal[nJets]/F");
+	tree_->Branch("jetTimeRmsEcal",   jetTimeRmsEcal,   "jetTimeRmsEcal[nJets]/F");
+	tree_->Branch("jetTimeRmsEcal_fix",   jetTimeRmsEcal_fix,   "jetTimeRmsEcal_fix[nJets]/F");
 
 	//hcal hbhe rechits
 	tree_->Branch("jetNRecHitsHcal",   jetNRecHitsHcal,   "jetNRecHitsHcal[nJets]/I");
@@ -1377,12 +1463,12 @@ void SusyLLPTree::CreateTree()
 
 	//Tracks
 	tree_->Branch("nTracks", &nTracks,"nTracks/I");
-	/*tree_->Branch("track_Pt", track_Pt,"track_Pt[nTracks]/F");
+	tree_->Branch("track_Pt", track_Pt,"track_Pt[nTracks]/F");
 	  tree_->Branch("track_Eta", track_Eta,"track_Eta[nTracks]/F");
 	  tree_->Branch("track_Phi", track_Phi,"track_Phi[nTracks]/F");
-	  tree_->Branch("track_charge", track_charge,"track_charge[nTracks]/I");
+	  //tree_->Branch("track_charge", track_charge,"track_charge[nTracks]/I");
 	  tree_->Branch("track_bestVertexIndex", track_bestVertexIndex,"track_bestVertexIndex[nTracks]/I");
-	  tree_->Branch("track_nMissingInnerHits", track_nMissingInnerHits,"track_nMissingInnerHits[nTracks]/I");
+	 /* tree_->Branch("track_nMissingInnerHits", track_nMissingInnerHits,"track_nMissingInnerHits[nTracks]/I");
 	  tree_->Branch("track_nMissingOuterHits", track_nMissingOuterHits,"track_nMissingOuterHits[nTracks]/I");
 	  tree_->Branch("track_nPixelHits", track_nPixelHits,"track_nPixelHits[nTracks]/I");
 	  tree_->Branch("track_nHits", track_nHits,"track_nHits[nTracks]/I");
@@ -1393,6 +1479,13 @@ void SusyLLPTree::CreateTree()
 	  tree_->Branch("track_chi2", track_chi2,"track_chi2[nTracks]/F");
 	  tree_->Branch("track_ndof", track_ndof,"track_ndof[nTracks]/I");
 	  */
+
+	//sum track pt inside jet wrt. pv
+	tree_->Branch("maxSumJetTrkPt_pvid", maxSumJetTrkPt_pvid,"maxSumJetTrkPt_pvid[nJets]/I");
+	tree_->Branch("maxSumJetTrkPt_svid", maxSumJetTrkPt_svid,"maxSumJetTrkPt_svid[nJets]/I");
+	tree_->Branch("maxSumJetTrkPt_pv", maxSumJetTrkPt_pv,"maxSumJetTrkPt_pv[nJets]/F");
+	tree_->Branch("maxSumJetTrkPt_sv", maxSumJetTrkPt_sv,"maxSumJetTrkPt_sv[nJets]/F");
+	//tree_->Branch("sumJetTrkPt", sumJetTrkPt,"sumJetTrkPt[nJets][npvall]/F");
 
 	//MC
 	/*

@@ -27,6 +27,7 @@
 #define HORECHITARRAYSIZE 2000
 #define GENPARTICLEARRAYSIZE 2000
 #define MAX_NPV 20
+#define N_MAX_NPVALLS 200
 #define MAX_NPU 20
 #define MAX_NBX 20
 #define LLP_ARRAY_SIZE 2
@@ -66,6 +67,7 @@ class SusyLLPTree
 		std::string *lheComments;
 		UInt_t  mH, mX, ctau;
 		UInt_t  runNum, lumiSec, evtNum;
+		Float_t pvX, pvY, pvZ;
 		UInt_t  category;
 		UInt_t  npv, npu;
 		Float_t pileupWeight, pileupWeightUp, pileupWeightDown;
@@ -94,9 +96,39 @@ class SusyLLPTree
 
 		bool gLLP0_EB;
 		bool gLLP1_EB;
+		bool IsPrefiringAffected;
 
 		int sig_label ; 
 
+		//PVAll
+		Int_t pv_index;
+		Int_t npvall;
+		Float_t pvAllX[N_MAX_NPVALLS];
+		Float_t pvAllY[N_MAX_NPVALLS];
+		Float_t pvAllZ[N_MAX_NPVALLS];
+
+		//sum track pt inside jet wrt. pv
+		Int_t maxSumJetTrkPt_pvid[N_MAX_JETS];
+		Int_t maxSumJetTrkPt_svid[N_MAX_JETS];
+		Float_t maxSumJetTrkPt_pv[N_MAX_JETS];
+		Float_t maxSumJetTrkPt_sv[N_MAX_JETS];
+		//Float_t sumJetTrkPt[N_MAX_JETS][N_MAX_NPVALLS];
+
+		//float weight;
+		float genWeight=1;
+		//PDF SF
+		std::vector<float> sf_pdf;
+		std::vector<float> *scaleWeights; //scaleWeights->clear();
+		std::vector<float> *pdfWeights; //pdfWeights->clear();
+		std::vector<float> *alphasWeights; //alphasWeights->clear();
+		//scaleWeights = new std::vector<float>; scaleWeights->clear();
+  		//pdfWeights = new std::vector<float>; pdfWeights->clear();
+  		//alphasWeights = new std::vector<float>; alphasWeights->clear();
+  		//For scale variation uncertainties
+  		float alpha1, alpha2;
+  		float sf_facScaleUp, sf_facScaleDown;
+  		float sf_renScaleUp, sf_renScaleDown;	
+  		float sf_facRenScaleUp, sf_facRenScaleDown;
 
 		//leptons
 		int nLeptons;
@@ -512,6 +544,8 @@ class SusyLLPTree
 		int jetNRecHitsEcal[N_MAX_JETS];
 		float jetEnergyRecHitsEcal[N_MAX_JETS];
 		float jetTimeRecHitsEcal[N_MAX_JETS];
+		float jetTimeRmsEcal[N_MAX_JETS];
+		float jetTimeRmsEcal_fix[N_MAX_JETS];
 
 		//hcal hbhe rechits
 		int jetNRecHitsHcal[N_MAX_JETS];
@@ -593,7 +627,7 @@ class SusyLLPTree
 		float genVertexY;
 		float genVertexZ;
 		float genVertexT;
-		float genWeight;
+		//float genWeight;
 		/*
 		   unsigned int genSignalProcessID;
 		   float genQScale;

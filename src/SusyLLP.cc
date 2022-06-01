@@ -13,7 +13,7 @@
 #include "TH1F.h"
 
 #define xclean 1
-#define presel 1
+#define presel 0
 #define presel_jet 1
 
 #define _debug 0
@@ -138,6 +138,8 @@ struct jets
 	int jetNRecHitsEcal;
 	float jetEnergyRecHitsEcal;
 	float jetTimeRecHitsEcal;
+	float jetTimeRmsEcal;
+	float jetTimeRmsEcal_fix;
 
 	//hcal hbhe rechits
 	int jetNRecHitsHcal;
@@ -159,6 +161,12 @@ struct jets
 	//muon sys var
 	float jetCscEF;
 	float jetDtEF;
+
+	//max trk pt
+	int maxpvid;
+	int maxsvid;
+	float maxpvpt;
+	float maxsvpt;
 };
 
 //pt comparison
@@ -309,6 +317,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	std::string label;
 	bool signalScan;
 	bool signalHZScan;
+	bool signalHDecayScan;
 
 	//HUNDRED'S DIGIT
 	//option of run condor or locally
@@ -368,27 +377,35 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 	//UNIT'S DIGIT
 	// signalScan option
-	if(options%10==2){
+	if(options%10==3){
+		signalScan = false;
+		signalHZScan = false;
+		signalHDecayScan = true;
+	}
+	else if(options%10==2){
 		signalScan = false;
 		signalHZScan = true;
+		signalHDecayScan = false;
 	}
 	else if(options%10==1){
 		signalScan = true;
 		signalHZScan = false;
+		signalHDecayScan = false;
 	}
 	else{
 		signalScan = false;
 		signalHZScan = false;
+		signalHDecayScan = false;
 	}
 
 	// DATA or MC
 	if( isData )
 	{
-		std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << " and signalScan is " << signalScan << " and signalHZScan is " << signalHZScan << std::endl;
+		std::cout << "[INFO]: running on data with label: " << label << " and option: " << option << " and signalScan is " << signalScan << " and signalHZScan is " << signalHZScan << " and signalHDecayScan is " << signalHDecayScan<< std::endl;
 	}
 	else
 	{
-		std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << " and signalScan is " << signalScan << " and signalHZScan is " << signalHZScan  << std::endl;
+		std::cout << "[INFO]: running on MC with label: " << label << " and option: " << option << " and signalScan is " << signalScan << " and signalHZScan is " << signalHZScan << " and signalHDecayScan is " << signalHDecayScan<< std::endl;
 	}
 
 	const float ELE_MASS = 0.000511;
@@ -561,7 +578,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	string outfilename = outputfilename;
 	if (outfilename == "") outfilename = "SusyLLPTree.root";
 	TFile *outFile;
-	if(!signalScan && !signalHZScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
+	if(!signalScan && !signalHZScan && !signalHDecayScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
 
 	SusyLLPTree *llp_tree = new SusyLLPTree;
 	llp_tree->CreateTree();
@@ -570,11 +587,50 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 	//histogram containing total number of processed events (for normalization)
 	TH1F *NEvents = new TH1F("NEvents", "NEvents", 1, 1, 2);
+	//cut flow 
+	TH1F *NEventsMet200 = new TH1F("NEventsMet200", "NEventsMet200", 1, 1, 2);
+	//TH1F *NEventsTrg = new TH1F("NEventsTrg", "NEventsTrg", 1, 1, 2);
+	//TH1F *NEventsFlag = new TH1F("NEventsFlag", "NEventsFlag", 1, 1, 2);
+	//TH1F *NEventsLepVeto = new TH1F("NEventsLepVeto", "NEventsLepVeto", 1, 1, 2);
+	//TH1F *NEventsPhoVeto = new TH1F("NEventsPhoVeto", "NEventsPhoVeto", 1, 1, 2);
+	//TH1F *NEventsTauVeto = new TH1F("NEventsTauVeto", "NEventsTauVeto", 1, 1, 2);
+	//TH1F *NEventsMDPhi = new TH1F("NEventsMDPhi", "NEventsMDPhi", 1, 1, 2);
 
 	//for signals, need one output file for each signal point
 	map<pair<int,int>, TFile*> Files2D;
 	map<pair<int,int>, TTree*> Trees2D;
 	map<pair<int,int>, TH1F*> NEvents2D;
+	map<pair<int,int>, TH1F*> NEventsMet2002D;
+	//H Decay NEvents
+	map<pair<int,int>, TH1F*> NEventsH2D;
+	map<pair<int,int>, TH1F*> NEventsHbb2D;
+	map<pair<int,int>, TH1F*> NEventsHgg2D;
+	map<pair<int,int>, TH1F*> NEventsHcc2D;
+	map<pair<int,int>, TH1F*> NEventsHZZ2D;
+	map<pair<int,int>, TH1F*> NEventsHWW2D;
+	map<pair<int,int>, TH1F*> NEventsHmm2D;
+	map<pair<int,int>, TH1F*> NEventsHtt2D;
+	
+	//HH decay NEvents
+	map<pair<int,int>, TH1F*> NEventsHH2D;
+	map<pair<int,int>, TH1F*> NEventsHHbb2D;
+	map<pair<int,int>, TH1F*> NEventsHHgg2D;
+	map<pair<int,int>, TH1F*> NEventsHHcc2D;
+	map<pair<int,int>, TH1F*> NEventsHHZZ2D;
+	map<pair<int,int>, TH1F*> NEventsHHWW2D;
+	map<pair<int,int>, TH1F*> NEventsHHmm2D;
+	map<pair<int,int>, TH1F*> NEventsHHtt2D;
+	
+	//HZ decay Events
+	map<pair<int,int>, TH1F*> NEventsZH2D;
+	map<pair<int,int>, TH1F*> NEventsZHbb2D;
+	map<pair<int,int>, TH1F*> NEventsZHgg2D;
+	map<pair<int,int>, TH1F*> NEventsZHcc2D;
+	map<pair<int,int>, TH1F*> NEventsZHZZ2D;
+	map<pair<int,int>, TH1F*> NEventsZHWW2D;
+	map<pair<int,int>, TH1F*> NEventsZHmm2D;
+	map<pair<int,int>, TH1F*> NEventsZHtt2D;
+	
 
 	//Scale and PDF variations
 	map<int, TH1D*> smsSumWeights;
@@ -657,6 +713,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				Files2D[signalPair] = new TFile(thisFileName.c_str(), "recreate");
 				Trees2D[signalPair] =  llp_tree->tree_->CloneTree(0);
 				NEvents2D[signalPair] = new TH1F(Form("NEvents%d%d", mx, ctau), "NEvents", 1,0.5,1.5);
+				NEventsMet2002D[signalPair] = new TH1F(Form("NEventsMet200%d%d", mx, ctau), "NEventsMet200", 1,0.5,1.5);
 
 				smsSumWeights2D[signalPair] = new TH1D(Form("SumWeights%d%d", mh, mx), "SumWeights", 1 ,-0.5,0.5);
 				smsSumScaleWeights2D[signalPair] = new TH1D(Form("SumScaleWeights%d%d", mh, mx), "SumScaleWeights", 9 ,-0.5,8.5);
@@ -668,6 +725,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			}
 			//Fill NEvents hist
 			NEvents2D[signalPair]->Fill(1.0, genWeight);
+			if(metType1Pt>200.) NEventsMet2002D[signalPair]->Fill(1.0, genWeight);
 			smsSumWeights2D[signalPair]->Fill(1.0, weight);
 
 			smsSumScaleWeights2D[signalPair]->Fill(0.0, llp_tree->sf_facScaleUp);
@@ -691,7 +749,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 
 		}
-		else if (!isData && signalHZScan)
+		else if (!isData && (signalHZScan || signalHDecayScan) )
 		{
 
 			//TChiHZ_HToBB_LLN2N3_150_3000
@@ -736,6 +794,37 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				Files2D[signalPair] = new TFile(thisFileName.c_str(), "recreate");
 				Trees2D[signalPair] =  llp_tree->tree_->CloneTree(0);
 				NEvents2D[signalPair] = new TH1F(Form("NEvents%d%d", mchi, ctau), "NEvents", 1,0.5,1.5);
+				NEventsMet2002D[signalPair] = new TH1F(Form("NEventsMet200%d%d", mchi, ctau), "NEventsMet200", 1,0.5,1.5);
+
+				// H decay
+				NEventsH2D[signalPair] = new TH1F(Form("NEventsH%d%d", mchi, ctau), "NEventsH", 1,0.5,1.5);
+				NEventsHbb2D[signalPair] = new TH1F(Form("NEventsHbb%d%d", mchi, ctau), "NEventsHbb", 1,0.5,1.5);
+				NEventsHcc2D[signalPair] = new TH1F(Form("NEventsHcc%d%d", mchi, ctau), "NEventsHcc", 1,0.5,1.5);
+				NEventsHgg2D[signalPair] = new TH1F(Form("NEventsHgg%d%d", mchi, ctau), "NEventsHgg", 1,0.5,1.5);
+				NEventsHWW2D[signalPair] = new TH1F(Form("NEventsHWW%d%d", mchi, ctau), "NEventsHWW", 1,0.5,1.5);
+				NEventsHZZ2D[signalPair] = new TH1F(Form("NEventsHZZ%d%d", mchi, ctau), "NEventsHZZ", 1,0.5,1.5);
+				NEventsHmm2D[signalPair] = new TH1F(Form("NEventsHmm%d%d", mchi, ctau), "NEventsHmm", 1,0.5,1.5);
+				NEventsHtt2D[signalPair] = new TH1F(Form("NEventsHtt%d%d", mchi, ctau), "NEventsHtt", 1,0.5,1.5);
+
+				// HH
+				NEventsHH2D[signalPair] = new TH1F(Form("NEventsHH%d%d", mchi, ctau), "NEventsHH", 1,0.5,1.5);
+				NEventsHHbb2D[signalPair] = new TH1F(Form("NEventsHHbb%d%d", mchi, ctau), "NEventsHHbb", 1,0.5,1.5);
+				NEventsHHcc2D[signalPair] = new TH1F(Form("NEventsHHcc%d%d", mchi, ctau), "NEventsHHcc", 1,0.5,1.5);
+				NEventsHHgg2D[signalPair] = new TH1F(Form("NEventsHHgg%d%d", mchi, ctau), "NEventsHHgg", 1,0.5,1.5);
+				NEventsHHWW2D[signalPair] = new TH1F(Form("NEventsHHWW%d%d", mchi, ctau), "NEventsHHWW", 1,0.5,1.5);
+				NEventsHHZZ2D[signalPair] = new TH1F(Form("NEventsHHZZ%d%d", mchi, ctau), "NEventsHHZZ", 1,0.5,1.5);
+				NEventsHHmm2D[signalPair] = new TH1F(Form("NEventsHHmm%d%d", mchi, ctau), "NEventsHHmm", 1,0.5,1.5);
+				NEventsHHtt2D[signalPair] = new TH1F(Form("NEventsHHtt%d%d", mchi, ctau), "NEventsHHtt", 1,0.5,1.5);
+
+				//HZ
+				NEventsZH2D[signalPair] = new TH1F(Form("NEventsZH%d%d", mchi, ctau), "NEventsZH", 1,0.5,1.5);
+				NEventsZHbb2D[signalPair] = new TH1F(Form("NEventsZHbb%d%d", mchi, ctau), "NEventsZHbb", 1,0.5,1.5);
+				NEventsZHcc2D[signalPair] = new TH1F(Form("NEventsZHcc%d%d", mchi, ctau), "NEventsZHcc", 1,0.5,1.5);
+				NEventsZHgg2D[signalPair] = new TH1F(Form("NEventsZHgg%d%d", mchi, ctau), "NEventsZHgg", 1,0.5,1.5);
+				NEventsZHWW2D[signalPair] = new TH1F(Form("NEventsZHWW%d%d", mchi, ctau), "NEventsZHWW", 1,0.5,1.5);
+				NEventsZHZZ2D[signalPair] = new TH1F(Form("NEventsZHZZ%d%d", mchi, ctau), "NEventsZHZZ", 1,0.5,1.5);
+				NEventsZHmm2D[signalPair] = new TH1F(Form("NEventsZHmm%d%d", mchi, ctau), "NEventsZHmm", 1,0.5,1.5);
+				NEventsZHtt2D[signalPair] = new TH1F(Form("NEventsZHtt%d%d", mchi, ctau), "NEventsZHtt", 1,0.5,1.5);
 
 				smsSumWeights2D[signalPair] = new TH1D(Form("SumWeights%d%d", mchi, ctau), "SumWeights", 1 ,-0.5,0.5);
 				smsSumScaleWeights2D[signalPair] = new TH1D(Form("SumScaleWeights%d%d", mchi, ctau), "SumScaleWeights", 9 ,-0.5,8.5);
@@ -746,6 +835,38 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			}
 			//Fill NEvents hist
 			NEvents2D[signalPair]->Fill(1.0, genWeight);
+			if(metType1Pt>200.) NEventsMet2002D[signalPair]->Fill(1.0, genWeight);
+
+			// H decay
+			if((gLLP_daughter_id[1]==25)||(gLLP_daughter_id[3]==25)) NEventsH2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==5 && abs(gLLP_grandaughter_id[1])==5)||(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==5 && abs(gLLP_grandaughter_id[3])==5)) NEventsHbb2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==4 && abs(gLLP_grandaughter_id[1])==4)||(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==4 && abs(gLLP_grandaughter_id[3])==4)) NEventsHcc2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==21 && abs(gLLP_grandaughter_id[1])==21)||(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==21 && abs(gLLP_grandaughter_id[3])==21)) NEventsHgg2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==23 && abs(gLLP_grandaughter_id[1])==23)||(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==23 && abs(gLLP_grandaughter_id[3])==23)) NEventsHZZ2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==24 && abs(gLLP_grandaughter_id[1])==24)||(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==24 && abs(gLLP_grandaughter_id[3])==24)) NEventsHWW2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==13 && abs(gLLP_grandaughter_id[1])==13)||(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==13 && abs(gLLP_grandaughter_id[3])==13)) NEventsHmm2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==15 && abs(gLLP_grandaughter_id[1])==15)||(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==15 && abs(gLLP_grandaughter_id[3])==15)) NEventsHtt2D[signalPair]->Fill(1.0, genWeight);
+
+			//HH
+			if((gLLP_daughter_id[1]==25)&&(gLLP_daughter_id[3]==25)) NEventsHH2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==5 && abs(gLLP_grandaughter_id[1])==5)&&(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==5 && abs(gLLP_grandaughter_id[3])==5)) NEventsHHbb2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==4 && abs(gLLP_grandaughter_id[1])==4)&&(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==4 && abs(gLLP_grandaughter_id[3])==4)) NEventsHHcc2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==21 && abs(gLLP_grandaughter_id[1])==21)&&(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==21 && abs(gLLP_grandaughter_id[3])==21)) NEventsHHgg2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==23 && abs(gLLP_grandaughter_id[1])==23)&&(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==23 && abs(gLLP_grandaughter_id[3])==23)) NEventsHHZZ2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==24 && abs(gLLP_grandaughter_id[1])==24)&&(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==24 && abs(gLLP_grandaughter_id[3])==24)) NEventsHHWW2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==13 && abs(gLLP_grandaughter_id[1])==13)&&(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==13 && abs(gLLP_grandaughter_id[3])==13)) NEventsHHmm2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==15 && abs(gLLP_grandaughter_id[1])==15)&&(gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==15 && abs(gLLP_grandaughter_id[3])==15)) NEventsHHtt2D[signalPair]->Fill(1.0, genWeight);
+
+			//HZ
+			if((gLLP_daughter_id[1]==25 && gLLP_daughter_id[3]==23)||(gLLP_daughter_id[1]==23&&gLLP_daughter_id[3]==25)) NEventsZH2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==5 && abs(gLLP_grandaughter_id[1])==5 && gLLP_daughter_id[3]==23)||(gLLP_daughter_id[1]==23&&gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==5 && abs(gLLP_grandaughter_id[3])==5)) NEventsZHbb2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==4 && abs(gLLP_grandaughter_id[1])==4 && gLLP_daughter_id[3]==23)||(gLLP_daughter_id[1]==23&&gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==4 && abs(gLLP_grandaughter_id[3])==4)) NEventsZHcc2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==21 && abs(gLLP_grandaughter_id[1])==21 && gLLP_daughter_id[3]==23)||(gLLP_daughter_id[1]==23&&gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==21 && abs(gLLP_grandaughter_id[3])==21)) NEventsZHgg2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==24 && abs(gLLP_grandaughter_id[1])==24 && gLLP_daughter_id[3]==23)||(gLLP_daughter_id[1]==23&&gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==24 && abs(gLLP_grandaughter_id[3])==24)) NEventsZHWW2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==23 && abs(gLLP_grandaughter_id[1])==23 && gLLP_daughter_id[3]==23)||(gLLP_daughter_id[1]==23&&gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==23 && abs(gLLP_grandaughter_id[3])==23)) NEventsZHZZ2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==13 && abs(gLLP_grandaughter_id[1])==13 && gLLP_daughter_id[3]==23)||(gLLP_daughter_id[1]==23&&gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==13 && abs(gLLP_grandaughter_id[3])==13)) NEventsZHmm2D[signalPair]->Fill(1.0, genWeight);
+			if((gLLP_daughter_id[1]==25 && abs(gLLP_grandaughter_id[0])==15 && abs(gLLP_grandaughter_id[1])==15 && gLLP_daughter_id[3]==23)||(gLLP_daughter_id[1]==23&&gLLP_daughter_id[3]==25 && abs(gLLP_grandaughter_id[2])==15 && abs(gLLP_grandaughter_id[3])==15)) NEventsZHtt2D[signalPair]->Fill(1.0, genWeight);
+
 			smsSumWeights2D[signalPair]->Fill(1.0, weight);
 
 			smsSumScaleWeights2D[signalPair]->Fill(0.0, llp_tree->sf_facScaleUp);
@@ -775,6 +896,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			if (isData)
 			{
 				NEvents->Fill(1);
+				if(metType1Pt>200.) NEventsMet200->Fill(1);
 				llp_tree->weight = 1;
 			}
 			else
@@ -782,6 +904,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				//NEvents->Fill(genWeight);
 				//llp_tree->weight = genWeight;
 				NEvents->Fill(1);
+				if(metType1Pt>200.) NEventsMet200->Fill(1);
 				llp_tree->weight = 1;
 
 				//signal not mass scan
@@ -828,6 +951,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//
 		else if( (label.find("MR") != std::string::npos) ){
 			NEvents->Fill(1);
+			if(metType1Pt>200.) NEventsMet200->Fill(1);
 		}
 		else{
 			//generatedEvents->Fill(1);
@@ -841,10 +965,39 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->runNum = runNum;
 		llp_tree->lumiSec = lumiNum;
 		llp_tree->evtNum = eventNum;
+		llp_tree->pvX = pvX;
+		llp_tree->pvY = pvY;
+		llp_tree->pvZ = pvZ;
+		//PVAll
+		llp_tree->npvall = nPVAll;
+		//std::cout << nPVAll <<endl;
+		//std::cout << llp_tree->npvall <<endl;
+		int pvid0 = -1;
+		float pvD2 = pvX*pvX+pvY*pvY+pvZ*pvZ;
+		float pvAllD2 = 0;
+		float delta_pvD2 = 999.;
+		float min_delta_pvD2 = 999.;
+		for(int i=0;i<nPVAll;i++)
+		{
+			llp_tree->pvAllX[i] = pvAllX[i];
+			llp_tree->pvAllY[i] = pvAllY[i];
+			llp_tree->pvAllZ[i] = pvAllZ[i];
+			pvAllD2 = pvAllX[i]*pvAllX[i]+pvAllY[i]*pvAllY[i]+pvAllZ[i]*pvAllZ[i];
+			delta_pvD2 = abs(pvD2-pvAllD2);
+			if(delta_pvD2<min_delta_pvD2)
+			{
+				min_delta_pvD2 = delta_pvD2;
+				pvid0 = i;
+			}
+		}
+		//std::cout << "pvid0" <<pvid0 <<endl;
+		//std::cout << "min delta pv d2" <<min_delta_pvD2 <<endl;
+		llp_tree->pv_index = pvid0;
 		if(_debug) std::cout << "deb3 " << jentry << std::endl;
 		if(_debug) std::cout << "nBunchXing " << nBunchXing << std::endl;
 		if (label == "zH" || label == "wH" ){
 			NEvents->Fill(1);
+			if(metType1Pt>200.) NEventsMet200->Fill(1);
 			bool wzFlag = false;
 			for (int i=0; i < nGenParticle; ++i)
 			{
@@ -861,6 +1014,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		}
 		else if (label == "HH"){
 			NEvents->Fill(1);
+			if(metType1Pt>200.) NEventsMet200->Fill(1);
 				llp_tree->weight = 1;
 
 				//signal not mass scan
@@ -1029,7 +1183,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//if( llp_tree->met < 150. ) continue;
 		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 		if(_debug_lab) std::cout << "met " << llp_tree->met << std::endl;
-		if( presel && (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
+		if( (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
+		//if( presel && (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
 		if( (label=="MR_EMU") && llp_tree->met < 30. ) continue;
 		if( (label.find("MR_Single") != std::string::npos) && llp_tree->met < 40. ) continue;
 		if( (label.find("MR_ZLL") != std::string::npos) && isData && llp_tree->met >= 30. ) continue;
@@ -1079,6 +1234,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->Flag2_ecalBadCalibFilter                      = Flag2_ecalBadCalibFilter;
 		llp_tree->Flag2_eeBadScFilter                           = Flag2_eeBadScFilter;
 
+		if(presel && !(Flag2_globalSuperTightHalo2016Filter && Flag2_BadPFMuonFilter && Flag2_EcalDeadCellTriggerPrimitiveFilter && Flag2_HBHENoiseFilter && Flag2_HBHEIsoNoiseFilter )) continue;
+		if(presel &&  (analysisTag.find("2016") == std::string::npos) && !Flag2_ecalBadCalibFilter) continue;
+		if(presel && isData && !Flag2_eeBadScFilter) continue;
 		//Triggers
 		for(int i = 0; i < NTriggersMAX; i++){
 			llp_tree->HLTDecision[i] = HLTDecision[i];
@@ -1151,7 +1309,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		}//MR_EMU/SingleMuon/SingleElectron/ZLL re-weight based on Prescale	
 
 		if( (label.find("MR_ZLL") != std::string::npos) && !isData) triggered=true; 
-		if( (label.find("MR") != std::string::npos) && !triggered) continue; 
+		//if( (label.find("MR") != std::string::npos) && !triggered) continue; 
 
 		if(_debug) std::cout << "passed trigger " << std::endl;
 
@@ -1309,6 +1467,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				std::cout << "iTau " << i << ", tau_IsLoose[i] " << tau_IsLoose[i]<< std::endl;
 			}
 
+			//if(tauPt[i] <= 20 ) continue;
 			if(tauPt[i] <= 18 ) continue;
 			if(fabs(tauEta[i]) > 2.3) continue;
 
@@ -1404,6 +1563,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->phoE[llp_tree->nPhotons] = phoE[i];
 			llp_tree->phoPhi[llp_tree->nPhotons] = phoPhi[i];
 
+			if(phoPt[i]>50. && fabs(phoEta[i])>2.25 && fabs(phoEta[i])<3.0) llp_tree->IsPrefiringAffected = true;
+
 			llp_tree->nPhotons++;
 		}
 		if(_debug) std::cout << "nPhotons " << llp_tree->nPhotons << std::endl;
@@ -1482,6 +1643,10 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		} // endif foundZ
 		if( (label=="MR_ZLL") && isData && !(foundZ && fabs(ZMass-Z_MASS) < 30.0) ) continue;
 
+		//if( presel && (label.find("MR") == std::string::npos) && !(llp_tree->nLeptons==0 && llp_tree->nMuons==0 && llp_tree->nElectrons==0 && llp_tree->nTaus==0 && llp_tree->nPhotons==0) ) continue; 
+		//if( presel && (label.find("MR") == std::string::npos) && !(llp_tree->nLeptons==0 && llp_tree->nMuons==0 && llp_tree->nElectrons==0 && llp_tree->nTaus==0 && llp_tree->nPhotons==0) ) continue; 
+
+
 		//-----------------------------------------------
 		//Select Jets
 		//-----------------------------------------------
@@ -1526,6 +1691,15 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		int nAK4Jets_in_HEM_pt_30_eta_2p5 = 0;
 		int nAK4Jets_in_HEM_pt_30_eta_3 = 0;
 
+		//pick max sum track pt inside jet wrt. pv
+		float tmp_sumJetTrkPt[nJets][nPVAll];
+		for(int iJet=0; iJet<nJets;iJet++)
+		{
+			for(int iPV=0; iPV<nPVAll;iPV++)
+			{
+				tmp_sumJetTrkPt[iJet][iPV] = 0;
+			}
+		}
 		for(int i = 0; i < nJets; i++)
 		{
 			//HEM: reject events with jets in problematic region
@@ -1686,11 +1860,16 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			// std::cout <<jetRechitT[i] << "," << jetRechitE[i] <<  "," << jetNRechits[i] << std::endl;
 			//if( jetRechitT[i]<=-1 ) continue;
 			//if(_debug_dnn) std::cout << "Jet Time " << jetRechitT[i] << std::endl;
+			//std::cout << "Jet Time " << jetRechitT[i] << std::endl;
+			//std::cout << "Jet Time rms" << jetRechitT_rms[i] << std::endl;
 			double jetTimeRecHitsECAL = -100;
+			double jetTimeRmsECAL = 0;
+			double jetTimeRmsECAL_fix = 0;
 			if (isnan(jetRechitT[i]) || jetRechitE[i] == 0) {
 				jetTimeRecHitsECAL = -100;
 			} else {
 				jetTimeRecHitsECAL = jetRechitT[i];
+				jetTimeRmsECAL = jetRechitT_rms[i];
 			}
 			if(_debug_dnn) std::cout << "Jet Time " << jetTimeRecHitsECAL << std::endl;
 			if( presel_jet && jetTimeRecHitsECAL<=-1 ) continue;
@@ -1794,6 +1973,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				jetCscEnergyRecHitsEF = jetCscEnergyRecHitsECAL/jetEnergyRecHitsECAL;
 				jetDtEnergyRecHitsEF = jetDtEnergyRecHitsECAL/jetEnergyRecHitsECAL;
 			}
+			jetTimeRmsECAL_fix = (jetNRecHitsECAL>0) ? jetRechitT_rms[i]/sqrt(jetNRecHitsECAL) : -1.;
 			//if (isnan(jetRechitT[i]) || jetRechitE[i] == 0) {
 			//  jetTimeRecHitsECAL = -100;
 			//} else {
@@ -2107,6 +2287,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			tmpJet.jetNRecHitsEcal = jetNRecHitsECAL;
 			tmpJet.jetEnergyRecHitsEcal = jetEnergyRecHitsECAL;
 			tmpJet.jetTimeRecHitsEcal = jetTimeRecHitsECAL;
+			tmpJet.jetTimeRmsEcal = jetTimeRmsECAL;
+			tmpJet.jetTimeRmsEcal_fix = jetTimeRmsECAL_fix;
 
 			//hcal hbhe rechits
 			tmpJet.jetNRecHitsHcal = jetNRecHitsHCAL;
@@ -2132,6 +2314,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			std::vector<float> nPixelHits;
 			std::vector<float> nHits;
 			//int nChargedMultiplicity=0;
+			int pvid=-1;
 			for(int iTrack=0; iTrack<nTracks; iTrack++)
 			{
 				double thisDR_trk = RazorAnalyzerLLP::deltaR(jetEta[i],jetPhi[i],track_Eta[iTrack], track_Phi[iTrack]);
@@ -2140,9 +2323,42 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 					//nChargedMultiplicity++;
 					nPixelHits.push_back(track_nPixelHits[iTrack]);
 					nHits.push_back(track_nHits[iTrack]);
+					//track check other PV
+					pvid = track_bestVertexIndex[iTrack];
+					tmp_sumJetTrkPt[i][pvid] += track_Pt[iTrack];
+					
+
 				}
 
 			}
+			//pick max sum track pt inside jet wrt. pv
+			int maxpvid = -1;
+			int maxsvid = -1;
+			float maxpvpt = 0;
+			float maxsvpt = 0;
+			for(int ipv=0; ipv<nPVAll; ipv++)
+			{
+				if(tmp_sumJetTrkPt[i][ipv] > maxpvpt)
+				{
+					maxpvid = ipv;
+					maxpvpt = tmp_sumJetTrkPt[i][ipv];
+				}
+
+				if(ipv!=pvid0)
+				{
+					if(tmp_sumJetTrkPt[i][ipv] > maxsvpt)
+					{
+						maxsvid = ipv;
+						maxsvpt = tmp_sumJetTrkPt[i][ipv];		
+					}
+				}
+			}
+			//std::cout << "maxpvid" <<maxpvid <<endl;
+			//std::cout << "maxpvpt" <<maxpvpt <<endl;
+			tmpJet.maxpvid = maxpvid;
+			tmpJet.maxsvid = maxsvid;
+			tmpJet.maxpvpt = maxpvpt;
+			tmpJet.maxsvpt = maxsvpt;
 
 			std::sort(nPixelHits.begin(), nPixelHits.end());
 			float nPixelHitsMedian = 0;
@@ -2160,6 +2376,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			//tmpJet.jetChargedMultiplicity = nChargedMultiplicity;
 			tmpJet.jetNPixelHitsMedian = nPixelHitsMedian;
 			tmpJet.jetNHitsMedian = nHitsMedian;
+
 
 			Jets.push_back(tmpJet);
 
@@ -2358,6 +2575,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->jetNRecHitsEcal[llp_tree->nJets] = tmp.jetNRecHitsEcal;
 			llp_tree->jetEnergyRecHitsEcal[llp_tree->nJets] = tmp.jetEnergyRecHitsEcal;
 			llp_tree->jetTimeRecHitsEcal[llp_tree->nJets] = tmp.jetTimeRecHitsEcal;
+			llp_tree->jetTimeRmsEcal[llp_tree->nJets] = tmp.jetTimeRmsEcal;
+			llp_tree->jetTimeRmsEcal_fix[llp_tree->nJets] = tmp.jetTimeRmsEcal_fix;
 
 			//hcal hbhe rechits
 			llp_tree->jetNRecHitsHcal[llp_tree->nJets] = tmp.jetNRecHitsHcal;
@@ -2395,6 +2614,16 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			{
 				jetMet_dPhiStarMin_temp = abs(RazorAnalyzerLLP::deltaPhi(tmp.jet.Phi(), (t1PFMET+jet_temp).Phi() ));
 			}     
+
+			//if(tmp.jet.Pt()>100. && fabs(tmp.jet.Eta())>2.25 && fabs(tmp.jet.Eta())<3.0) llp_tree->IsPrefiringAffected = true;
+
+			//Int_t maxSumJetTrkPt_pvid[N_MAX_JETS];
+			//Float_t maxSumJetTrkPt_pv[N_MAX_JETS];
+			llp_tree->maxSumJetTrkPt_pvid[llp_tree->nJets] = tmp.maxpvid;
+			llp_tree->maxSumJetTrkPt_svid[llp_tree->nJets] = tmp.maxsvid;
+			llp_tree->maxSumJetTrkPt_pv[llp_tree->nJets] = tmp.maxsvpt;
+			llp_tree->maxSumJetTrkPt_sv[llp_tree->nJets] = tmp.maxsvpt;
+
 
 			llp_tree->nJets++;
 		}
@@ -2688,6 +2917,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			if(countH==1 && countZ==1) llp_tree->sig_label = 1; //HZ
 			if(countZ==2) llp_tree->sig_label = 2; //ZZ
 
+
+
 			//gLLP grandaughters
 			for(int i = 0; i <4; i++){
 				llp_tree->gLLP_grandaughter_id[i] = gLLP_grandaughter_id[i];
@@ -2873,7 +3104,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			pair<int,int> smsPair = make_pair(llp_tree->mX, llp_tree->ctau);
 			Trees2D[smsPair]->Fill();
 		}
-		else if(!isData && signalHZScan)
+		else if(!isData && (signalHZScan || signalHDecayScan) )
 		{
 			pair<int,int> smsPair = make_pair(llp_tree->mH, llp_tree->ctau);
 			Trees2D[smsPair]->Fill();
@@ -2894,6 +3125,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			filePtr.second->cd();
 			Trees2D[filePtr.first]->Write();
 			NEvents2D[filePtr.first]->Write("NEvents");
+			NEventsMet2002D[filePtr.first]->Write("NEventsMet200");
 			smsSumWeights2D[filePtr.first]->Write("SumWeights");
 			smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
 			smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
@@ -2901,7 +3133,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 		}
 	}
-	else if(!isData && signalHZScan)
+	else if(!isData && signalHZScan )
 	{
 		for(auto &filePtr : Files2D)
 		{
@@ -2909,6 +3141,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			filePtr.second->cd();
 			Trees2D[filePtr.first]->Write();
 			NEvents2D[filePtr.first]->Write("NEvents");
+			NEventsMet2002D[filePtr.first]->Write("NEventsMet200");
 			smsSumWeights2D[filePtr.first]->Write("SumWeights");
 			smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
 			smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
@@ -2916,6 +3149,50 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 		}
 	}
+	else if(!isData && signalHDecayScan)
+	{
+		for(auto &filePtr : Files2D)
+		{
+			cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
+			filePtr.second->cd();
+			Trees2D[filePtr.first]->Write();
+			NEvents2D[filePtr.first]->Write("NEvents");
+			NEventsMet2002D[filePtr.first]->Write("NEventsMet200");
+
+			//H decay
+			NEventsH2D[filePtr.first]->Write("NEventsH");	
+			NEventsHbb2D[filePtr.first]->Write("NEventsHbb");	
+			NEventsHcc2D[filePtr.first]->Write("NEventsHcc");	
+			NEventsHgg2D[filePtr.first]->Write("NEventsHgg");	
+			NEventsHWW2D[filePtr.first]->Write("NEventsHWW");	
+			NEventsHZZ2D[filePtr.first]->Write("NEventsHZZ");	
+			NEventsHmm2D[filePtr.first]->Write("NEventsHmm");	
+			NEventsHtt2D[filePtr.first]->Write("NEventsHtt");	
+			//HH
+			NEventsHH2D[filePtr.first]->Write("NEventsHH");	
+			NEventsHHbb2D[filePtr.first]->Write("NEventsHHbb");	
+			NEventsHHcc2D[filePtr.first]->Write("NEventsHHcc");	
+			NEventsHHgg2D[filePtr.first]->Write("NEventsHHgg");	
+			NEventsHHWW2D[filePtr.first]->Write("NEventsHHWW");	
+			NEventsHHZZ2D[filePtr.first]->Write("NEventsHHZZ");	
+			NEventsHHmm2D[filePtr.first]->Write("NEventsHHmm");	
+			NEventsHHtt2D[filePtr.first]->Write("NEventsHHtt");	
+			//HZ
+			NEventsZH2D[filePtr.first]->Write("NEventsZH");	
+			NEventsZHbb2D[filePtr.first]->Write("NEventsZHbb");	
+			NEventsZHcc2D[filePtr.first]->Write("NEventsZHcc");	
+			NEventsZHgg2D[filePtr.first]->Write("NEventsZHgg");	
+			NEventsZHWW2D[filePtr.first]->Write("NEventsZHWW");	
+			NEventsZHZZ2D[filePtr.first]->Write("NEventsZHZZ");	
+			NEventsZHmm2D[filePtr.first]->Write("NEventsZHmm");	
+			NEventsZHtt2D[filePtr.first]->Write("NEventsZHtt");	
+
+			smsSumWeights2D[filePtr.first]->Write("SumWeights");
+			smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
+			smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
+			filePtr.second->Close();
+		}
+	} 
 	else
 	{
 		cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
@@ -2924,6 +3201,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->tree_->Write();
 		cout << "Writing NEvents..." << endl;		
 		NEvents->Write();
+		NEventsMet200->Write();
 		cout << "Writing SumWeights..." << endl;		
 		SumWeights->Write();
 		cout << "SumWeights " << SumWeights->GetBinContent(1) << "\n";
