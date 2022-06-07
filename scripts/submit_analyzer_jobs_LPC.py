@@ -118,7 +118,7 @@ Error = err/job.$(Cluster).$(Process).err
 x509userproxy = $ENV(X509_USER_PROXY)
 """
     tmpCondorJDLFile.write(tmpCondorJDLFileTemplate)
-    tmpCondorJDLFile.write("transfer_input_files = " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/run_job_LPC.sh, " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/input_list.tgz, " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/Run" + analysis + "\n")
+    tmpCondorJDLFile.write("transfer_input_files = " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/run_job_LPC.sh, " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/input_list.tgz, " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/" + analysis + "\n")
 
     tmpCondorJDLFileTemplate = """
 should_transfer_files = YES
