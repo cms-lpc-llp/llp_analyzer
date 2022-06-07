@@ -28,7 +28,7 @@ datasetList['ParkingBPH1_2018A-20Jun2021-v1.txt'] = [1, 1, "2016", ""]
 
 
 #CMSSW_BASE_DIR = os.getenv('CMSSW_BASE')
-CMSSW_BASE_DIR = "/afs/cern.ch/work/s/sixie/public/releases/run2/analysis/llp/CMSSW_10_6_20/"
+CMSSW_BASE_DIR = "/uscms/home/sxie/work/releases/HH/CMSSW_10_6_5/"
 Analyzer_DIR = CMSSW_BASE_DIR+"/src/llp_analyzer/"
 
 #create directory for condor jobs
