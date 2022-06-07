@@ -1,0 +1,9 @@
+Step 1) Run RunDataRunEventIndexing to produce a set of text files with <run:lumi:event> -> file:entryIndex map
+
+Step 2) Sort and split the text file map into a library of text files, each file covering the map for a specific <run:lumi> combination
+
+   2a) Run script: CreateRunLumiList.sh 
+   2b) Run script: SplitRunEventMapByLumi.py
+
+Step 3) Run EventMerger to produce output ntuples that include the ntuple and the CSC/DT rechit arrays
+
