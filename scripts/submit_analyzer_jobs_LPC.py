@@ -18,13 +18,17 @@ outputfile = "RunDataRunEventIndexing" + "_" + label
 
 cmsswReleaseVersion = "CMSSW_10_6_20"
 outputDirectoryBase = "/store/user/lpclonglived/sixie/analyzer/"+analysis+"/"+label+"/"
-datasetListDir = "displacedJetMuonNtuple/V1p171/Data2018_UL/MuonHitsOnly/"
+#datasetListDir = "displacedJetMuonNtuple/V1p171/Data2018_UL/MuonHitsOnly/"
+datasetListDir = "displacedJetMuonNtuple/V1p17/Data2018ABC_AOD/v5/sixie/SingleMuon/"
 
 datasetList = OrderedDict()
 
 #2016 hqu ntuples
 
 datasetList['ParkingBPH1_2018A-20Jun2021-v1.txt'] = [1, 1, "2016", ""]
+datasetList['Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018A-17Sep2018.txt '] = [1, 1, "2018", ""]
+datasetList['Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018B-17Sep2018.txt'] = [1, 1, "2018", ""] 
+datasetList['Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018C-17Sep2018.txt '] = [1, 1, "2018", ""]
 
 
 #CMSSW_BASE_DIR = os.getenv('CMSSW_BASE')
