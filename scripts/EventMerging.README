@@ -1,0 +1,14 @@
+Step 1) Produce Run-Event Maps
+   1a) Run RunDataRunEventIndexing to produce a set of text files with <run:lumi:event> -> file:entryIndex map for the "RAW" muon hits ntuples
+   1b) Run RunDataRunEventIndexing to produce a set of text files with <run:lumi:event> for the "AOD" ntuples
+
+
+Step 2) Sort and split the text file map into a library of text files, each file covering the map for a specific <run:lumi> combination
+
+   2a) Run script: CreateRunList.sh 
+   2b) Run script: CreateLumiList.sh 
+   2c) Run script: SplitRunEventMapByLumi.sh
+   2d) Run script: MakeNtupleToMuonHitsFileMap.sh -> Make a map from each "AOD" ntuple file to a list of "RAW" ntuple files needed to be loaded to execute the EventMerger
+
+Step 3) Run EventMerger to produce output ntuples that include the ntuple and the CSC/DT rechit arrays
+
