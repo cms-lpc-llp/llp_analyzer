@@ -21,7 +21,7 @@ const double phi_corr[N_phicorr] = { 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.80, 0.85
 
 struct cscCluster
 {
-  float x, y, z, t, tTotal, tWire, tWirePruned, eta, phi;//t is t_strip, tWire, tTotal is sum
+  float x, y, z, t, tTotal, tWeighted, eta, phi;//t is t_strip, tWire, tTotal is sum
   int nCscSegments;
   float jetVeto, calojetVeto, muonVeto;
   int maxChamber, maxChamberSegment, nChamber;
@@ -38,25 +38,9 @@ struct cscCluster
 
   float Me11Ratio, Me12Ratio;
   float MajorAxis, MinorAxis, EtaSpread, PhiSpread, EtaPhiSpread, XYSpread, DeltaRSpread;
-  float XSpread, YSpread, ZSpread, TSpread, TWireSpread, TTotalSpread, TTotalSpreadPruned,RSpread;
+  float XSpread, YSpread, ZSpread, TSpread, RSpread, TSpreadWeighted, TSpreadWeightedAll;
 
-  // float XSpread_phi0p5, YSpread_phi0p5, XYSpread_phi0p5, PhiSpread_phi0p5, EtaPhiSpread_phi0p5;
-  // float XSpread_phi0p55, YSpread_phi0p55, XYSpread_phi0p55, PhiSpread_phi0p55, EtaPhiSpread_phi0p55;
-  // float XSpread_phi0p6, YSpread_phi0p6, XYSpread_phi0p6, PhiSpread_phi0p6, EtaPhiSpread_phi0p6;
-  // float XSpread_phi0p65, YSpread_phi0p65, XYSpread_phi0p65, PhiSpread_phi0p65, EtaPhiSpread_phi0p65;
-  // float XSpread_phi0p7, YSpread_phi0p7, XYSpread_phi0p7, PhiSpread_phi0p7, EtaPhiSpread_phi0p7;
-  // float XSpread_phi0p75, YSpread_phi0p75, XYSpread_phi0p75, PhiSpread_phi0p75, EtaPhiSpread_phi0p75;
-  //
-  // float XSpread_phi0p7_r1p3, YSpread_phi0p7_r1p3, XYSpread_phi0p7_r1p3, EtaSpread_phi0p7_r1p3, PhiSpread_phi0p7_r1p3, EtaPhiSpread_phi0p7_r1p3, RSpread_phi0p7_r1p3;
-  // float XSpread_phi0p7_r1p2, YSpread_phi0p7_r1p2, XYSpread_phi0p7_r1p2, EtaSpread_phi0p7_r1p2, PhiSpread_phi0p7_r1p2, EtaPhiSpread_phi0p7_r1p2, RSpread_phi0p7_r1p2;
-  // float XSpread_phi0p7_r1p25, YSpread_phi0p7_r1p25, XYSpread_phi0p7_r1p25, EtaSpread_phi0p7_r1p25, PhiSpread_phi0p7_r1p25, EtaPhiSpread_phi0p7_r1p25, RSpread_phi0p7_r1p25;
-  // float XSpread_phi0p7_r1p15, YSpread_phi0p7_r1p15, XYSpread_phi0p7_r1p15, EtaSpread_phi0p7_r1p15, PhiSpread_phi0p7_r1p15, EtaPhiSpread_phi0p7_r1p15, RSpread_phi0p7_r1p15;
-  // float XSpread_phi0p7_r1p1, YSpread_phi0p7_r1p1, XYSpread_phi0p7_r1p1, EtaSpread_phi0p7_r1p1, PhiSpread_phi0p7_r1p1, EtaPhiSpread_phi0p7_r1p1, RSpread_phi0p7_r1p1;
-  //
-  // float XSpread_r1p2, YSpread_r1p2, XYSpread_r1p2, EtaSpread_r1p2, EtaPhiSpread_r1p2, RSpread_r1p2, PhiSpread_r1p2;
 
-  float vertex_r, vertex_z, vertex_dis, vertex_chi2;
-  int vertex_n, vertex_n1, vertex_n5, vertex_n10, vertex_n15, vertex_n20;
   vector<int>segment_id;
 };
 
@@ -70,7 +54,7 @@ typedef struct Point_
     float x, y, z, t, twire;  // X, Y, Z position
     float eta,phi;
     float dirX, dirY, dirZ;
-    int station, chamber, layer, superlayer;
+    int station, chamber, layer, superlayer; //superlayer exists only for DT
     int clusterID;  // clustered ID
 }Point;
 
@@ -92,8 +76,7 @@ public:
     vector<float>clusterY;
     vector<float>clusterZ;
     vector<float>clusterTime;
-    vector<float>clusterTimeWire;
-    vector<float>clusterTimeWirePruned;
+    vector<float>clusterTimeWeighted;
     vector<float>clusterTimeTotal;
     vector<float>clusterMajorAxis;
     vector<float>clusterMinorAxis;
@@ -104,27 +87,14 @@ public:
 
     vector<float>clusterZSpread;
     vector<float>clusterTimeSpread;
-    vector<float>clusterTimeTotalSpread;
-    vector<float>clusterTimeWireSpread;
-    vector<float>clusterTimeTotalSpreadPruned;
+    vector<float>clusterTimeSpreadWeighted;
+    vector<float>clusterTimeSpreadWeightedAll;
     vector<float>clusterEtaPhiSpread;
     vector<float>clusterEtaSpread;
     vector<float>clusterPhiSpread;
     vector<float>clusterDeltaRSpread;
 
 
-
-    vector<float>clusterVertexR;
-    vector<float>clusterVertexZ;
-    vector<float>clusterVertexDis;
-    vector<float>clusterVertexChi2;
-    vector<int>clusterVertexN;
-
-    vector<int>clusterVertexN1cm;
-    vector<int>clusterVertexN5cm;
-    vector<int>clusterVertexN10cm;
-    vector<int>clusterVertexN15cm;
-    vector<int>clusterVertexN20cm;
 
 
     vector<cscCluster> CscCluster;

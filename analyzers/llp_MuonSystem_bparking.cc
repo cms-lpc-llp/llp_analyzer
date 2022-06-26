@@ -693,7 +693,6 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
 
       ds.clusterMoments();
       ds.sort_clusters();
-
       ds.merge_clusters();
       ds.result();
       ds.clusterMoments();
@@ -865,9 +864,21 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
         p.twire = dtRechitTime[i];
         p.station = dtRechitStation[i];
         p.chamber = dtRechitWheel[i];
-        // p.superlayer = 999;
-        // p.superlayer = dtRechitSuperLayer[i];
         p.superlayer = 0;
+
+        p.phi = dtRechitCorrectPhi[i];
+        p.eta = dtRechitCorrectEta[i];
+        p.x = dtRechitCorrectX[i];
+        p.y = dtRechitCorrectY[i];
+        p.z = dtRechitCorrectZ[i];
+        p.superlayer = dtRechitSuperLayer[i];
+        // Int_t           dtRechitLayer[20000];   //[nDtRechits]
+        // Float_t         dtRechitCorrectX[20000];   //[nDtRechits]
+        // Float_t         dtRechitCorrectY[20000];   //[nDtRechits]
+        // Float_t         dtRechitCorrectZ[20000];   //[nDtRechits]
+        // Float_t         dtRechitCorrectEta[20000];   //[nDtRechits]
+        // Float_t         dtRechitCorrectPhi[20000];   //[nDtRechits]
+
         p.clusterID = UNCLASSIFIED;
         points.push_back(p);
 
