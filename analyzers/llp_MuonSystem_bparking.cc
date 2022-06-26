@@ -693,7 +693,6 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
 
       ds.clusterMoments();
       ds.sort_clusters();
-
       ds.merge_clusters();
       ds.result();
       ds.clusterMoments();
@@ -856,18 +855,25 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
       points.clear();
       for (int i = 0; i < nDtRechits; i++) {
         Point p;
-        p.phi = dtRechitPhi[i];
-        p.eta = dtRechitEta[i];
-        p.x = dtRechitX[i];
-        p.y = dtRechitY[i];
-        p.z = dtRechitZ[i];
+        // p.phi = dtRechitPhi[i];
+        // p.eta = dtRechitEta[i];
+        // p.x = dtRechitX[i];
+        // p.y = dtRechitY[i];
+        // p.z = dtRechitZ[i];
         p.t = dtRechitTime[i];
         p.twire = dtRechitTime[i];
         p.station = dtRechitStation[i];
         p.chamber = dtRechitWheel[i];
-        // p.superlayer = 999;
-        // p.superlayer = dtRechitSuperLayer[i];
-        p.superlayer = 0;
+        // p.superlayer = 0;
+
+        p.phi = dtRechitCorrectPhi[i];
+        p.eta = dtRechitCorrectEta[i];
+        p.x = dtRechitCorrectX[i];
+        p.y = dtRechitCorrectY[i];
+        p.z = dtRechitCorrectZ[i];
+        p.superlayer = dtRechitSuperLayer[i];
+
+
         p.clusterID = UNCLASSIFIED;
         points.push_back(p);
 
