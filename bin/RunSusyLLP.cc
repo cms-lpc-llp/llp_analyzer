@@ -22,6 +22,7 @@
 #include <TString.h>
 #include <TChain.h>
 #include "TH1F.h" 
+#include "TH1D.h" 
 #include "PhysicsTools/TensorFlow/interface/TensorFlow.h"
 #include "LLPAnalysis/llpAnalyzer/interface/SusyLLP.h"
 
@@ -50,6 +51,7 @@ void usage()
 	    << "-n=  --optionNumber=<option number> (optional)\n"
 	    << "-l=  --optionLabel=<option Label> (optional)\n" 
 	    << "-p=  --optionProcess=<option Process> (optional)\n" 
+	    << "-s=  --optionSmearTag=<option smear Tag> (optional)\n" 
 	    << "-h  --help"
 	    << std::endl;
 };
@@ -149,12 +151,30 @@ int main(int argc, char* argv[]){
       std::cerr << "[WARNING]: optional process not provided, using default optional process" << std::endl;
     }
   
+  string smearTag = "";
+  std::string _optionSmearTag = ParseCommandLine( argc, argv, "--optionSmearTag=" );
+  std::string _s = ParseCommandLine( argc, argv, "-s=" );
+  if ( _optionSmearTag != "" ) 
+    {
+      smearTag = _optionSmearTag;
+    }
+  else if ( _s != "" )
+    {
+      smearTag = _s;
+    }
+  else
+    {
+      std::cerr << "[WARNING]: optional smearTag not provided, using default optional smearTag" << std::endl;
+    }
+  
+  
   std::cout << "[INFO]: <input list> --> " << inputFileName << std::endl;
   std::cout << "[INFO]: isData --> " << isData << std::endl;
   std::cout << "[INFO]: outputFileName --> " << outputFileName << std::endl;
   std::cout << "[INFO]: option --> " << option << std::endl;
   std::cout << "[INFO]: optionalLabel --> " << label << std::endl;
   std::cout << "[INFO]: optionalProcess --> " << process << std::endl;
+  std::cout << "[INFO]: optionalSmearTag --> " << smearTag << std::endl;
     
     //build the TChain
     //tree name is set give the structure in the first root file, see while loop below
@@ -204,7 +224,8 @@ int main(int argc, char* argv[]){
     //------ EXECUTE ------//
     cout << "Executing SusyLLP..." << endl;
     analyzer.EnableAll();
-    analyzer.Analyze(isData, option, outputFileName, label, process);
+    //analyzer.Analyze(isData, option, outputFileName, label, process);
+    analyzer.Analyze(isData, option, outputFileName, label, process, smearTag);
     cout << "Process completed!" << endl;
     cerr << "------------------------------" << endl; //present so that an empty .err file corresponds to a failed job
    

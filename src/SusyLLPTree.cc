@@ -78,6 +78,23 @@ void SusyLLPTree::InitVariables()
 	Flag2_eeBadScFilter = 0;
 
 
+	//beamhalo veto
+	min_dPhi_jets_eta_1p0_0p996=9999.;
+
+	//cosmic veto
+	n_clusters=-1;
+	n_noise=-1;
+	//int n_clusters_valid_time;
+	//int n_noise_valid_time;
+
+	//Cosmic veto
+	dt_fit_chi2=9999.;
+	dt_fit_chi2_reduced=9999.;
+	dt_ecal_dist=9999.;
+	isCosmic=false;
+	isDT_fit=false;
+
+
 	//leptons
 	nLeptons = 0;
 	//MT = 0;
@@ -621,6 +638,22 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("Flag2_ecalBadCalibFilter", &Flag2_ecalBadCalibFilter);
 	tree_->SetBranchAddress("Flag2_eeBadScFilter", &Flag2_eeBadScFilter);
 
+	//beamhalo veto
+	tree_->SetBranchAddress("min_dPhi_jets_eta_1p0_0p996", &min_dPhi_jets_eta_1p0_0p996);
+
+	//cosmic veto
+	tree_->SetBranchAddress("n_clusters", &n_clusters);
+	tree_->SetBranchAddress("n_noise", &n_noise);
+	//tree_->SetBranchAddress("n_clusters_valid_time", &n_clusters_valid_time);
+	//tree_->SetBranchAddress("n_noise_valid_time", &n_noise_valid_time);
+
+	//Cosmic veto
+	tree_->SetBranchAddress("dt_fit_chi2", &dt_fit_chi2);
+	tree_->SetBranchAddress("dt_fit_chi2_reduced", &dt_fit_chi2_reduced);
+	tree_->SetBranchAddress("dt_ecal_dist", &dt_ecal_dist);
+	tree_->SetBranchAddress("isCosmic", &isCosmic);
+	tree_->SetBranchAddress("isDT_fit", &isDT_fit);
+
 	//Leptons
 	tree_->SetBranchAddress("nLeptons",    &nLeptons);
 	tree_->SetBranchAddress("lepE",        lepE);
@@ -1148,6 +1181,22 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("Flag2_HBHEIsoNoiseFilter", &Flag2_HBHEIsoNoiseFilter, "Flag2_HBHEIsoNoiseFilter/O");
 	tree_->Branch("Flag2_ecalBadCalibFilter", &Flag2_ecalBadCalibFilter, "Flag2_ecalBadCalibFilter/O");
 	tree_->Branch("Flag2_eeBadScFilter", &Flag2_eeBadScFilter, "Flag2_eeBadScFilter/O");
+
+	//beamhalo veto
+	tree_->Branch("min_dPhi_jets_eta_1p0_0p996", &min_dPhi_jets_eta_1p0_0p996, "min_dPhi_jets_eta_1p0_0p996/O");
+
+	//cosmic veto
+	tree_->Branch("n_clusters", &n_clusters, "n_clusters/O");
+	tree_->Branch("n_noise", &n_noise, "n_noise/O");
+	//tree_->Branch("n_clusters_valid_time", &n_clusters_valid_time, "n_clusters_valid_time/O");
+	//tree_->Branch("n_noise_valid_time", &n_noise_valid_time, "n_noise_valid_time/O");
+
+	//Cosmic veto
+	tree_->Branch("dt_fit_chi2", &dt_fit_chi2, "dt_fit_chi2/O");
+	tree_->Branch("dt_fit_chi2_reduced", &dt_fit_chi2_reduced, "dt_fit_chi2_reduced/O");
+	tree_->Branch("dt_ecal_dist", &dt_ecal_dist, "dt_ecal_dist/O");
+	tree_->Branch("isCosmic", &isCosmic, "isCosmic/O");
+	tree_->Branch("isDT_fit", &isDT_fit, "isDT_fit/O");
 
 	//leptons
 	tree_->Branch("nLeptons",  &nLeptons, "nLeptons/I");

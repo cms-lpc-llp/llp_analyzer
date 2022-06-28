@@ -130,6 +130,23 @@ class SusyLLPTree
   		float sf_renScaleUp, sf_renScaleDown;	
   		float sf_facRenScaleUp, sf_facRenScaleDown;
 
+
+		//beamhalo veto
+		float min_dPhi_jets_eta_1p0_0p996;
+
+		//cosmic veto
+		int n_clusters;
+		int n_noise;
+  		//int n_clusters_valid_time;
+  		//int n_noise_valid_time;
+
+		//Cosmic veto
+		float dt_fit_chi2;
+		float dt_fit_chi2_reduced;
+		float dt_ecal_dist;
+		bool isCosmic;
+  		bool isDT_fit;
+
 		//leptons
 		int nLeptons;
 		float lepE[N_MAX_LEPTONS];

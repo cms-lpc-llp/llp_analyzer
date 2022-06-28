@@ -5,6 +5,24 @@
 #include "LLPAnalysis/llpAnalyzer/interface/JetCorrectionUncertainty.h"
 #include "LLPAnalysis/llpAnalyzer/interface/BTagCalibrationStandalone.h"
 #include "PhysicsTools/TensorFlow/interface/TensorFlow.h"
+//beamhalo cosmic veto part
+#include <Eigen/Dense>
+#include "LLPAnalysis/llpAnalyzer/nn_inference/plugins/dbscan.h"
+#include <vector>
+#include <cmath>
+//#include "TMath.h"
+#include "Math/Vector3D.h"
+using namespace ROOT::Math;
+
+//DBSCAN
+#define MINIMUM_POINTS 3     // minimum number of cluster
+#define EPSILON (1.4*1.4)//  // distance for clustering, metre^2  
+
+//....here namespaces
+using namespace Eigen;
+using namespace TMath;
+//using namespace TVector3;
+
 
 //C++ includes
 #include "assert.h"
@@ -17,6 +35,12 @@
 #define presel_jet 1
 
 #define _debug 0
+#define _debug_cosmic 1
+#define _debug_ecalxavg 0
+#define _debug_ecalyavg 0
+#define _debug_ecalzavg 0
+#define _debug_ecalxyz 0
+#define _debug_smear 0
 #define _debug_pdf 0
 #define _debug_dnn 0
 #define _debug_pf 0
@@ -40,6 +64,60 @@
 #define N_MAX_JETS 20
 #define NTriggersMAX 1201 //Number of trigger in the .dat file
 using namespace std;
+
+//... here all the functions before main
+
+//Calculate the average within a vector
+float avg ( std::vector<float> & v )
+{
+	float return_value = 0.0;
+	int n = v.size();
+	for ( int i=0; i < n; i++)
+	{
+		return_value += v.at(i);
+	}
+	return ( return_value / n);
+}
+
+
+//3D line
+float get_coord_line(float z, VectorXf Sol) {
+	float coord(-999999.);
+	if(Sol.size()==2 and Sol[0]!=0)
+	{
+		coord = (z - Sol[1])/Sol[0];
+	}
+	return coord;
+}
+
+//Assigns x, y, z based on t and p (size 4)
+void line(float t, float &x, float &y, float &z, VectorXf SolXZ, VectorXf SolYZ) {
+	// a parametric line is define from 6 parameters but 4 are independent
+	// x0,y0,z0,z1,y1,z1 which are the coordinates of two points on the line
+	// x0,y0,z0,z1,y1,z1 which are the coordinates of two points on the line
+	x = get_coord_line(t,SolXZ);
+	y = get_coord_line(t,SolYZ);
+	z = t;
+}
+
+//calculate distance between a point and a parametric line
+//it looks at two points with coordinates z=0 and z=1           
+float distance2(float x,float y,float z, VectorXf SolXZ, VectorXf SolYZ) {
+	// distance line point is D= | (xp-x0) cross  ux |
+	// where ux is direction of line and x0 is a point in the line (like t = 0)
+	XYZVector p(x,y,z);
+	float x0, y0, z0 = -9999.;
+	float x1, y1, z1 = -9999.;
+	line(-1.,x0,y0,z0,SolXZ,SolYZ);
+	line(1.,x1,y1,z1,SolXZ,SolYZ);
+	//std::cout<< "x0, y0, z0 " << x0 << " " << y0 << " " << z0 << endl;
+	//std::cout<< "x1, y1, z1 " << x1 << " " << y1 << " " << z1 << endl;
+	XYZVector p0(x0,y0,z0);
+	XYZVector p1(x1,y1,z1);
+	XYZVector u = (p1-p0).Unit();
+	double d2 = ((p-p0).Cross(u)).Mag2();
+	return d2;
+}
 
 struct leptons
 {
@@ -195,7 +273,8 @@ struct largest_pt_fatjet
 } my_largest_pt_fatjet;
 
 //Analyze
-void SusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag, string process)
+void SusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag, string process, string smearTag)
+//void SusyLLP::Analyze(bool isData, int options, string outputfilename, string analysisTag, string process)
 {
 	//initialization: create one TTree for each analysis box
 	cout << "Initializing..." << endl;
@@ -610,7 +689,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	map<pair<int,int>, TH1F*> NEventsHWW2D;
 	map<pair<int,int>, TH1F*> NEventsHmm2D;
 	map<pair<int,int>, TH1F*> NEventsHtt2D;
-	
+
 	//HH decay NEvents
 	map<pair<int,int>, TH1F*> NEventsHH2D;
 	map<pair<int,int>, TH1F*> NEventsHHbb2D;
@@ -620,7 +699,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	map<pair<int,int>, TH1F*> NEventsHHWW2D;
 	map<pair<int,int>, TH1F*> NEventsHHmm2D;
 	map<pair<int,int>, TH1F*> NEventsHHtt2D;
-	
+
 	//HZ decay Events
 	map<pair<int,int>, TH1F*> NEventsZH2D;
 	map<pair<int,int>, TH1F*> NEventsZHbb2D;
@@ -630,7 +709,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	map<pair<int,int>, TH1F*> NEventsZHWW2D;
 	map<pair<int,int>, TH1F*> NEventsZHmm2D;
 	map<pair<int,int>, TH1F*> NEventsZHtt2D;
-	
+
 
 	//Scale and PDF variations
 	map<int, TH1D*> smsSumWeights;
@@ -649,6 +728,23 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 
 	// ************************************************************************
+	//Smearing Files
+	// ************************************************************************
+	if(_debug_smear) cout << "smearTag: " << smearTag.c_str() << "\n";
+	string timeCBFilename = smearTag ; 
+	TFile *timeCBFile = TFile::Open(timeCBFilename.data(),"READ"); //if (!timeCBFile) return 0;
+	TF1  *dataCB = (TF1*)timeCBFile->Get("data_CB");
+	TF1  *mcCB = (TF1*)timeCBFile->Get("back_CB");
+
+	TF1 *smearCB = (TF1*)dataCB->Clone("smear_cb");
+	smearCB->SetParameter(0,dataCB->GetParameter(0));
+	smearCB->SetParameter(1,dataCB->GetParameter(1) - mcCB->GetParameter(1));
+	smearCB->SetParameter(2, sqrt( abs( pow(dataCB->GetParameter(2),2) - pow(mcCB->GetParameter(2),2) )) );
+	smearCB->SetParameter(3,dataCB->GetParameter(3));
+	smearCB->SetParameter(4,dataCB->GetParameter(4));
+	if(_debug_smear) cout << "smearCB " << smearCB << "\n";
+
+	// ************************************************************************
 	//Look over Input File Events
 	// ************************************************************************
 	if (fChain == 0) return;
@@ -657,6 +753,31 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 	for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++) {
 
+		//beamhalo cosmic veto part
+		// Reset values
+		/*
+		   n_clusters = -1;
+		   n_noise = -1;
+		   n_clusters_valid_time = -1;
+		   n_noise_valid_time = -1;
+
+		   dt_fit_chi2 = 9999.;
+		   dt_fit_chi2_reduced = 9999.;
+		   dt_ecal_dist = 9999.;
+		   isCosmic = false;
+		   isDT_fit = false;
+		   DT_fit_xx.clear();
+		   DT_fit_yy.clear();
+		   DT_fit_zz.clear();
+		   DT_fit_res.clear();
+		   m_xz = -9999.;
+		   c_xz = -9999.;
+		   m_yz = -9999.;
+		   c_yz = -9999.;
+
+
+		   min_dPhi_jets_eta_1p0_0p996 = 9999.;
+		   */
 		//begin event
 		if(jentry % 10000 == 0) cout << "Processing entry " << jentry << endl;
 
@@ -681,12 +802,12 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		////PDF SF
 		//std::vector<float> sf_pdf;
 		//scaleWeights = new std::vector<float>; scaleWeights->clear();
-  		//pdfWeights = new std::vector<float>; pdfWeights->clear();
-  		//alphasWeights = new std::vector<float>; alphasWeights->clear();
-  		////For scale variation uncertainties
-  		//float sf_facScaleUp, sf_facScaleDown;
-  		//float sf_renScaleUp, sf_renScaleDown;	
-  		//float sf_facRenScaleUp, sf_facRenScaleDown;
+		//pdfWeights = new std::vector<float>; pdfWeights->clear();
+		//alphasWeights = new std::vector<float>; alphasWeights->clear();
+		////For scale variation uncertainties
+		//float sf_facScaleUp, sf_facScaleDown;
+		//float sf_renScaleUp, sf_renScaleDown;	
+		//float sf_facRenScaleUp, sf_facRenScaleDown;
 
 		if (!isData && signalScan)
 		{
@@ -892,7 +1013,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		}
 
 		if (label =="bkg_wH"|| label == "bkg_zH" || label == "bkg_HH" ){
-		//if (label =="bkg_wH"|| label == "bkg_zH" || label == "bkg_HH" || label == "HH"){
+			//if (label =="bkg_wH"|| label == "bkg_zH" || label == "bkg_HH" || label == "HH"){
 			if (isData)
 			{
 				NEvents->Fill(1);
@@ -909,8 +1030,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 				//signal not mass scan
 				//NEvents->SetBinContent( 1, NEvents->GetBinContent(1) + genWeight);
-      				weight = genWeight;
-      				SumWeights->Fill(1.0, weight);
+				weight = genWeight;
+				SumWeights->Fill(1.0, weight);
 				if ( (*scaleWeights).size() >= 9 ) 
 				{
 					llp_tree->sf_facScaleUp      = (*scaleWeights)[1]/genWeight;
@@ -1015,45 +1136,45 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		else if (label == "HH"){
 			NEvents->Fill(1);
 			if(metType1Pt>200.) NEventsMet200->Fill(1);
-				llp_tree->weight = 1;
+			llp_tree->weight = 1;
 
-				//signal not mass scan
-				//NEvents->SetBinContent( 1, NEvents->GetBinContent(1) + genWeight);
-      				weight = genWeight;
-      				SumWeights->Fill(1.0, weight);
-				if ( (*scaleWeights).size() >= 9 ) 
-				{
-					llp_tree->sf_facScaleUp      = (*scaleWeights)[1]/genWeight;
-					llp_tree->sf_facScaleDown    = (*scaleWeights)[2]/genWeight;
-					llp_tree->sf_renScaleUp      = (*scaleWeights)[3]/genWeight;
-					llp_tree->sf_renScaleDown    = (*scaleWeights)[6]/genWeight;
-					llp_tree->sf_facRenScaleUp   = (*scaleWeights)[4]/genWeight;
-					llp_tree->sf_facRenScaleDown = (*scaleWeights)[8]/genWeight;
+			//signal not mass scan
+			//NEvents->SetBinContent( 1, NEvents->GetBinContent(1) + genWeight);
+			weight = genWeight;
+			SumWeights->Fill(1.0, weight);
+			if ( (*scaleWeights).size() >= 9 ) 
+			{
+				llp_tree->sf_facScaleUp      = (*scaleWeights)[1]/genWeight;
+				llp_tree->sf_facScaleDown    = (*scaleWeights)[2]/genWeight;
+				llp_tree->sf_renScaleUp      = (*scaleWeights)[3]/genWeight;
+				llp_tree->sf_renScaleDown    = (*scaleWeights)[6]/genWeight;
+				llp_tree->sf_facRenScaleUp   = (*scaleWeights)[4]/genWeight;
+				llp_tree->sf_facRenScaleDown = (*scaleWeights)[8]/genWeight;
 
 
-					SumScaleWeights->Fill(0.0, (*scaleWeights)[1]);
-					SumScaleWeights->Fill(1.0, (*scaleWeights)[2]);
-					SumScaleWeights->Fill(2.0, (*scaleWeights)[3]);
-					SumScaleWeights->Fill(3.0, (*scaleWeights)[6]);
-					SumScaleWeights->Fill(4.0, (*scaleWeights)[4]);
-					SumScaleWeights->Fill(5.0, (*scaleWeights)[8]);
-				}
+				SumScaleWeights->Fill(0.0, (*scaleWeights)[1]);
+				SumScaleWeights->Fill(1.0, (*scaleWeights)[2]);
+				SumScaleWeights->Fill(2.0, (*scaleWeights)[3]);
+				SumScaleWeights->Fill(3.0, (*scaleWeights)[6]);
+				SumScaleWeights->Fill(4.0, (*scaleWeights)[4]);
+				SumScaleWeights->Fill(5.0, (*scaleWeights)[8]);
+			}
 
-				llp_tree->sf_pdf.erase( llp_tree->sf_pdf.begin(), llp_tree->sf_pdf.end() );
-				if(_debug_pdf) cout << "pdf weight size: " << pdfWeights->size() << endl;
-				if(_debug_pdf) cout << "scale weight size: " << scaleWeights->size() << endl;
-				if(_debug_pdf) cout << "alphas weight size: " << alphasWeights->size() << endl;
-				for ( unsigned int iwgt = 0; iwgt < pdfWeights->size(); ++iwgt ) 
-				{
-					llp_tree->sf_pdf.push_back( pdfWeights->at(iwgt)/genWeight );
-					SumPdfWeights->Fill(double(iwgt),(*pdfWeights)[iwgt]);
-					if(_debug_pdf) cout << "pdf weight component: " << (*pdfWeights)[iwgt] << endl;
-				}
+			llp_tree->sf_pdf.erase( llp_tree->sf_pdf.begin(), llp_tree->sf_pdf.end() );
+			if(_debug_pdf) cout << "pdf weight size: " << pdfWeights->size() << endl;
+			if(_debug_pdf) cout << "scale weight size: " << scaleWeights->size() << endl;
+			if(_debug_pdf) cout << "alphas weight size: " << alphasWeights->size() << endl;
+			for ( unsigned int iwgt = 0; iwgt < pdfWeights->size(); ++iwgt ) 
+			{
+				llp_tree->sf_pdf.push_back( pdfWeights->at(iwgt)/genWeight );
+				SumPdfWeights->Fill(double(iwgt),(*pdfWeights)[iwgt]);
+				if(_debug_pdf) cout << "pdf weight component: " << (*pdfWeights)[iwgt] << endl;
+			}
 
-				for ( unsigned int iwgt = 0; iwgt < alphasWeights->size(); ++iwgt ) 
-				{
-					SumAlphasWeights->Fill(double(iwgt),(*alphasWeights)[iwgt]);
-				}
+			for ( unsigned int iwgt = 0; iwgt < alphasWeights->size(); ++iwgt ) 
+			{
+				SumAlphasWeights->Fill(double(iwgt),(*alphasWeights)[iwgt]);
+			}
 
 			bool wzFlag = false;
 			for (int i=0; i < nGenParticle; ++i)
@@ -1700,6 +1821,12 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				tmp_sumJetTrkPt[iJet][iPV] = 0;
 			}
 		}
+		//ecal rechit xyz for cosmic veto, save for all tagged jets
+		//std::vector<double> ebrechittheta; //theta, transform from eta
+		std::vector<float> tagebrechitx;
+		std::vector<float> tagebrechity;
+		std::vector<float> tagebrechitz;
+		int nTaggedJets=0; //count number of tagged jets
 		for(int i = 0; i < nJets; i++)
 		{
 			//HEM: reject events with jets in problematic region
@@ -1846,8 +1973,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			if( thisJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
 			//if( thisJet.Pt() < 20 ) continue;//According to the April 1st 2015 AN
-			if( fabs( thisJet.Eta() ) >= 1. ) continue;
-			//if( fabs( thisJet.Eta() ) >= 1.48 ) continue;
+			//if( fabs( thisJet.Eta() ) >= 1. ) continue; //usual case
+			if( fabs( thisJet.Eta() ) >= 1.48 ) continue; //for beam halo cosmic veto consideration only
 			//if( fabs( thisJet.Eta() ) >= 2.4 ) continue;
 			//if( fabs( thisJet.Eta() ) >= 3.0 ) continue;
 			// if ( !jetPassIDLoose[i] ) continue;
@@ -1869,6 +1996,13 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				jetTimeRecHitsECAL = -100;
 			} else {
 				jetTimeRecHitsECAL = jetRechitT[i];
+				//smear jet time
+				//Get a random value from the smearCB crystal ball
+				float smearer = smearCB->GetRandom();
+				jetTimeRecHitsECAL += smearer;
+				if(_debug_smear) std::cout << "Jet Time w/o smear " << jetRechitT[i] << std::endl;
+				if(_debug_smear) std::cout << "Jet Time smear " << smearer << std::endl;
+				if(_debug_smear) std::cout << "Jet Time " << jetTimeRecHitsECAL << std::endl;
 				jetTimeRmsECAL = jetRechitT_rms[i];
 			}
 			if(_debug_dnn) std::cout << "Jet Time " << jetTimeRecHitsECAL << std::endl;
@@ -1895,6 +2029,11 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			std::vector<double> ebrechiteta;
 			std::vector<double> ebrechitet;
 			std::vector<double> ebrechitetsq;
+			//ecal rechit xyz for cosmic veto, for the jets and then check if it's tagged
+			//std::vector<double> ebrechittheta; //theta, transform from eta
+			std::vector<float> ebrechitx;
+			std::vector<float> ebrechity;
+			std::vector<float> ebrechitz;
 			bool jetEcalRechit2Csc[nRechits];
 			bool jetEcalRechit2Dt[nRechits];
 
@@ -1926,6 +2065,25 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				ebrechiteta.push_back(ecalRechit_Eta[q]);
 				ebrechitet.push_back(ecalRechit_E[q]/cosh(ecalRechit_Eta[q]));
 				ebrechitetsq.push_back( pow(ecalRechit_E[q]/cosh(ecalRechit_Eta[q]),2) );
+				//get xyz
+				//ebrechittheta.push_back(2*ATan(Exp(-ecalRechit_Eta[q]))); //theta = 2*arctan(exp(-eta))
+				//double ecal_radius = 129.0;
+				TVector3 rechitPos;
+				rechitPos.SetMagThetaPhi(129.0/100., 2*ATan(Exp(-ecalRechit_Eta[q])), ecalRechit_Phi[q]); //change unit from cm to m	
+				ebrechitx.push_back(rechitPos.X());
+				ebrechity.push_back(rechitPos.Y());
+				ebrechitz.push_back(rechitPos.Z());
+				if(_debug_ecalxyz) cout << " Eta " << ecalRechit_Eta[q] << "\n";
+				if(_debug_ecalxyz) cout << " Theta " << 2*ATan(Exp(-ecalRechit_Eta[q])) << "\n";
+				if(_debug_ecalxyz) cout << " Phi " << ecalRechit_Phi[q] << "\n";
+				if(_debug_ecalxyz) cout << " TVector3  \n";
+				if(_debug_ecalxyz) cout << " Rho " << rechitPos.Mag() << "\n";
+				if(_debug_ecalxyz) cout << " Eta " << rechitPos.Eta() << "\n";
+				if(_debug_ecalxyz) cout << " Theta " << rechitPos.Theta() << "\n";
+				if(_debug_ecalxyz) cout << " Phi " << rechitPos.Phi() << "\n";
+				if(_debug_ecalxyz) cout << " X " << rechitPos.X() << "\n";
+				if(_debug_ecalxyz) cout << " Y " << rechitPos.Y() << "\n";
+				if(_debug_ecalxyz) cout << " Z " << rechitPos.Z() << "\n";
 
 				jetEnergyRecHitsECAL += ecalRechit_E[q];
 				jetNRecHitsECAL++;
@@ -1939,7 +2097,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				}//CSC EF
 
 				//DT EF
-				for (int kd=0; kd<nDtSeg; kd++) {
+				for (int kd=0; kd<int(nDtSeg); kd++) {
 					double tmpdtDPhi = abs(RazorAnalyzerLLP::deltaPhi(ecalRechit_Phi[q], cscSegPhi[kd]));
 					if(tmpdtDPhi>0.04) continue;
 					jetEcalRechit2Dt[q] = true;
@@ -2213,6 +2371,32 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			//std::cout << "output value: " << outputValue << std::endl;
 			//std::cout << "\n" << std::endl;
 
+
+			//cosmic veto relevant
+			//get all tagged rechit xyz
+
+			if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "*************** ebrechit  *************\n";
+			if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "DNN Score " << outputValueV3 << "\n";
+			if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "eb rechit size " << ebrechitx.size() << "\n";
+			if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "tagged eb rechit size " << tagebrechitx.size() << "\n";
+			if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "nTaggedJets " << nTaggedJets << "\n";
+			if(outputValueV3>0.996)
+			{
+				if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "*************** jet tagged *************\n";
+
+				// only save the tagged ones
+				tagebrechitx.insert(tagebrechitx.end(), ebrechitx.begin(), ebrechitx.end());
+				tagebrechity.insert(tagebrechity.end(), ebrechity.begin(), ebrechity.end());
+				tagebrechitz.insert(tagebrechitz.end(), ebrechitz.begin(), ebrechitz.end());
+				nTaggedJets++;
+
+				if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "DNN Score " << outputValueV3 << "\n";
+				if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "eb rechit size " << ebrechitx.size() << "\n";
+				if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "tagged eb rechit size " << tagebrechitx.size() << "\n";
+				if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "nTaggedJets " << nTaggedJets << "\n";
+
+			}
+
 			//---------v3 miniAOD--------
 			inputValuesV3miniAOD[0] = jetChargedHadronMultiplicity[i]+jetElectronMultiplicity[i]+jetMuonMultiplicity[i];
 			inputValuesV3miniAOD[1] = jetNSelectedTracks[i];
@@ -2326,7 +2510,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 					//track check other PV
 					pvid = track_bestVertexIndex[iTrack];
 					tmp_sumJetTrkPt[i][pvid] += track_Pt[iTrack];
-					
+
 
 				}
 
@@ -2627,6 +2811,360 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 
 			llp_tree->nJets++;
 		}
+
+		// ************************************************************************
+		//beamhalo cosmic veto part
+		// ************************************************************************
+		// DBSCAN
+		// Point structure defined in dbscan.h
+
+		std::vector<Point> points;
+		//std::vector<Point> points_valid_time;
+		/*
+		   int n_clusters(-1);
+		   int n_noise(-1);
+		   int n_clusters_valid_time(-1);
+		   int n_noise_valid_time(-1);
+
+		//Cosmic veto
+		float dt_fit_chi2(9999.);
+		float dt_fit_chi2_reduced(9999.);
+		float dt_ecal_dist(9999.);
+		*/
+		float tmp_dt_fit_chi2(9999.);
+		float m_xz(-9999.);
+		float c_xz(-9999.);
+		float m_yz(-9999.);
+		float c_yz(-9999.);
+		/*
+		   bool isCosmic(false);
+		   bool isDT_fit(false);
+		   */
+		std::vector<float> DT_fit_xx;
+		std::vector<float> DT_fit_yy;
+		std::vector<float> DT_fit_zz;
+		std::vector<float> DT_fit_res;
+
+		DT_fit_xx.clear();
+		DT_fit_yy.clear();
+		DT_fit_zz.clear();
+		DT_fit_res.clear();
+
+		//Beam halo veto
+		float tmp_min_dPhi_jets_eta_1p0_0p996(9999.);
+
+
+		// *** Beamhalo Veto ***
+		//beamhalo veto part
+
+		//calculate min_dPhi_jets_eta_1p0_0p996
+		for(int j = 0; j < llp_tree->nJets; j++)
+		{
+			for(int k = j+1; k < llp_tree->nJets && k!=j; k++)
+			{
+				//beamhalo veto acts only on tagged jets with |eta|<1
+				if(llp_tree->jetDNNScoreV3[j]>0.996 && llp_tree->jetDNNScoreV3[k]>0.996 && fabs(llp_tree->jetEta[j])<1.0 && fabs(llp_tree->jetEta[k])<1.0)
+				{
+					//min_dPhi_jets_eta_1p0_0p996 = min(fabs(min_dPhi_jets_eta_1p0_0p996),fabs(deltaPhi(llp_tree->jetPhi[j],llp_tree->jetPhi[k])));
+					if(fabs(deltaPhi(llp_tree->jetPhi[j],llp_tree->jetPhi[k]))<fabs(tmp_min_dPhi_jets_eta_1p0_0p996))
+						tmp_min_dPhi_jets_eta_1p0_0p996 = fabs(tmp_min_dPhi_jets_eta_1p0_0p996);
+				}
+			}
+		}
+		llp_tree->min_dPhi_jets_eta_1p0_0p996 = tmp_min_dPhi_jets_eta_1p0_0p996;
+
+		// *** cosmic veto part ***
+
+		//Calculate center of gravity ECAL rec hits of tagged jets;
+		float mean_ECAL_tag_x(-9999999.);
+		float mean_ECAL_tag_y(-9999999.);
+		float mean_ECAL_tag_z(-9999999.);
+
+		//Here I apply the avg function (defined at the beginning) to calculate the average x, y and z position of the ECAL clusters.
+		//These numbers define the center of gravity of the tagged jets and we'll use them when calculating the distance of the cosmic.
+		if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg) cout << "*************** avg *************\n";
+		if(_debug_ecalxavg) cout << "size  x " << tagebrechitx.size() << "\n";
+		if(_debug_ecalyavg) cout << "size  y " << tagebrechity.size() << "\n";
+		if(_debug_ecalzavg) cout << "size  z " << tagebrechitz.size() << "\n";
+		if(tagebrechitx.size()>0)
+		{
+			mean_ECAL_tag_x = avg(tagebrechitx);
+			mean_ECAL_tag_y = avg(tagebrechity);
+			mean_ECAL_tag_z = avg(tagebrechitz);
+			if(_debug_ecalxavg||_debug_ecalyavg||_debug_ecalzavg)
+			{
+				if(_debug_ecalxavg) cout << "avg  x " << mean_ECAL_tag_x << "\n";
+				if(_debug_ecalyavg) cout << "avg  y " << mean_ECAL_tag_y << "\n";
+				if(_debug_ecalzavg) cout << "avg  z " << mean_ECAL_tag_z << "\n";
+				for(int ih=0; ih<int(tagebrechitx.size()); ih++)
+				{
+					cout << "i hit " << ih  << "\n";
+					if(_debug_ecalxavg) cout << "x " << tagebrechitx[ih]  << "\n";
+					if(_debug_ecalyavg) cout << "y " << tagebrechity[ih]  << "\n";
+					if(_debug_ecalzavg) cout << "z " << tagebrechitz[ih]  << "\n";
+				}
+			}
+		}
+		if(_debug_ecalxavg) cout << "avg  x" << mean_ECAL_tag_x << "\n";
+		if(_debug_ecalyavg) cout << "avg  y" << mean_ECAL_tag_y << "\n";
+		if(_debug_ecalzavg) cout << "avg  z" << mean_ECAL_tag_z << "\n";
+
+		//Start cosmic veto: first of all perform DBSCAN on DTSegments
+
+		//Step 0: fill a vector of Points, that are a properly manipulated version of the DTSegments
+		//This will be the input to DBSCAN
+		if(_debug_cosmic) cout << "*************** COSMIC VETO *************\n";
+		if(_debug_cosmic) cout << "*************** run cosmic veto step 0 *************\n";
+		if(_debug_cosmic) cout << "avg x " << mean_ECAL_tag_x << " y " << mean_ECAL_tag_y << " z " << mean_ECAL_tag_z << "\n";
+		if(_debug_cosmic) cout << "nDtSeg " << nDtSeg << "\n";
+		for(int d=0; d<nDtSeg; d++)
+		{
+			//Point structure is defined in the bscan.h file
+			Point p;
+			p.x = dtSegX[d]/100.;
+			p.y = dtSegY[d]/100.;
+			p.z = dtSegZ[d]/100.;
+			p.eta = dtSegEta[d];
+			p.phi = dtSegPhi[d];
+			p.time = dtSegTime[d];
+			p.wheel = dtSegWheel[d];
+			//p.sector = DTSegments->at(d).sector;
+			p.station = dtSegStation[d];
+			//p.nRecHits = DTSegments->at(d).nRecHits;
+			p.clusterID = UNCLASSIFIED;
+			points.push_back(p);
+		}
+		if(_debug_cosmic) cout << "points size " << points.size() << "\n";
+
+		//Step 1: run DBSCAN in two lines
+		if(_debug_cosmic) cout << "*************** run cosmic veto step 1 *************\n";
+		DBSCAN ds(MINIMUM_POINTS, EPSILON, points);
+		ds.run();
+
+		//I define these vectors to simplify some calculations on the position of the legs of the cosmics
+		std::vector<int> labels;
+		std::vector<float> xx;
+		std::vector<float> yy;
+		std::vector<float> zz;
+		std::vector<float> tt;
+		std::vector<float> ss;
+		std::transform(ds.m_points.begin(), ds.m_points.end(), std::back_inserter(labels),[](Point const& p) { return p.clusterID; });
+		std::transform(ds.m_points.begin(), ds.m_points.end(), std::back_inserter(xx),[](Point const& p) { return p.x; });
+		std::transform(ds.m_points.begin(), ds.m_points.end(), std::back_inserter(yy),[](Point const& p) { return p.y; });
+		std::transform(ds.m_points.begin(), ds.m_points.end(), std::back_inserter(zz),[](Point const& p) { return p.z; });
+		std::transform(ds.m_points.begin(), ds.m_points.end(), std::back_inserter(tt),[](Point const& p) { return p.time; });
+		std::transform(ds.m_points.begin(), ds.m_points.end(), std::back_inserter(ss),[](Point const& p) { return p.station; });
+
+		//This is a sanity check, to count how the segments have been labelled
+		//-1 is for noise (sparse points)
+		// and then each cluster has a label (0, 1, 2 and so on)
+		// n_clusters counts how many cluster we have
+		if(labels.size()>0)
+		{
+			llp_tree->n_noise = std::count (labels.begin(), labels.end(), -1); // count on unclassified
+			int max = *max_element(labels.begin(), labels.end());
+			if(max == -1) llp_tree->n_clusters = 0;
+			else llp_tree->n_clusters = max+1;
+		}
+		if(_debug_cosmic) cout << " cosmic output n_noise " << llp_tree->n_noise << "\n";
+		if(_debug_cosmic) cout << " cosmic output n_clusters " << llp_tree->n_clusters << "\n";
+
+		//Step 2: fit of the cosmic trajectory if present
+		//It can be done only if you have at least 2 clusters
+		//Each cluster is one leg of the cosmic
+		if(_debug_cosmic) cout << "*************** run cosmic veto step 2 *************\n";
+		if(llp_tree->n_clusters>=2 )
+		{
+			if(_debug_cosmic) cout << "*************** passed n_clusters >= 2  *************\n";
+			//Again many vectors, can be done better/differently but this works
+			//I want to store x, y, z, station and cluster label for each DT segment
+			std::vector<std::vector<float>> vec_xx(llp_tree->n_clusters,std::vector<float>());
+			std::vector<std::vector<float>> vec_yy(llp_tree->n_clusters,std::vector<float>());
+			std::vector<std::vector<float>> vec_zz(llp_tree->n_clusters,std::vector<float>());
+			std::vector<std::vector<int>>   vec_label(llp_tree->n_clusters,std::vector<int>());
+			std::vector<std::vector<int>>   vec_ss(llp_tree->n_clusters,std::vector<int>());
+
+			if(_debug_cosmic) cout << " label size " << labels.size() << "\n";
+			for(unsigned int l=0;l<labels.size();l++)
+			{
+				if(labels.at(l)>-1)
+				{
+					vec_label.at( labels.at(l) ).push_back(labels.at(l));
+					vec_xx.at( labels.at(l) ).push_back(xx.at(l));
+					vec_yy.at( labels.at(l) ).push_back(yy.at(l));
+					vec_zz.at( labels.at(l) ).push_back(zz.at(l));
+					vec_ss.at( labels.at(l) ).push_back(ss.at(l));
+				}
+			}
+
+
+			int ch_k1 = -1;
+			int ch_k2 = -1;
+			float dz_DT = 1000.;
+			float dz_ECAL = 1000.;
+
+			//Loop over the clusters
+			//k1 is the first cluster
+			for(int k1 = 0; k1<llp_tree->n_clusters; k1++)
+			{
+
+				//k2 is the second cluster, making sure it does not overlap k1
+				for(int k2 = k1+1; k2<llp_tree->n_clusters && k2!=k1; k2++)
+				{
+					//Calculate the mean position of k1 and k2
+					//It will be used to determine if they are in opposite emispheres
+					float mean_k1_x=avg(vec_xx.at(k1));
+					float mean_k1_y=avg(vec_yy.at(k1));
+					float mean_k1_z=avg(vec_zz.at(k1));
+					std::vector<int> stations_k1 = vec_ss.at(k1);
+					stations_k1.resize(std::distance(stations_k1.begin(), std::unique(stations_k1.begin(), stations_k1.end())  ));
+					int n_k1_s = stations_k1.size();
+
+					float mean_k2_x=avg(vec_xx.at(k2));
+					float mean_k2_y=avg(vec_yy.at(k2));
+					float mean_k2_z=avg(vec_zz.at(k2));
+					std::vector<int> stations_k2 = vec_ss.at(k2);
+					stations_k2.resize(std::distance(stations_k2.begin(), std::unique(stations_k2.begin(), stations_k2.end())  ));
+					int n_k2_s = stations_k2.size();
+
+					//Opposite emispheres condition
+					if(  (mean_k1_x*mean_k2_x<0 or mean_k1_y*mean_k2_y<0 or mean_k1_z*mean_k2_z<0)  )
+					{
+						//This is to get an idea of how far in z these two clusters are
+						//If there are more than 2 clusters, we choose those closer in z direction
+						float tmp_z = abs(mean_k1_z - mean_k2_z);
+						dz_DT = std::min(dz_DT,tmp_z);
+
+						float tmp_ECAL = 99999999.;
+
+						//If there are tagged ecal rec hits (further check)
+						if(nTaggedJets>0)
+						{
+							//This variable is the z distance between the ECAL rec hits center of mass and the average of the z position of the cosmic legs
+							//It's again to choose the cosmic legs that are closer to ECAL rec hits in z (to avoid bad assignment)
+							tmp_ECAL = abs((mean_k1_z+mean_k2_z)/2. - mean_ECAL_tag_z);
+						}
+
+						dz_ECAL = std::min(dz_ECAL,tmp_ECAL);
+
+						//If clusters k1 and k2 are the closest in z and the closest to ECAL in z, choose them
+						if(dz_DT==tmp_z and dz_ECAL==tmp_ECAL)
+						{
+							ch_k1 = k1;
+							ch_k2 = k2;
+							//n_s_ch_k1 = n_k1_s;
+							//n_s_ch_k2 = n_k2_s;
+						}
+
+
+
+					}//opposite emishpere condition
+
+				}//loop over k2
+
+			}//loop over k1
+			if(_debug_cosmic) cout << " ch_k1 " << ch_k1 << "\n";
+			if(_debug_cosmic) cout << " ch_k2 " << ch_k2 << "\n";
+			if(_debug_cosmic) cout << " dz_DT " << dz_DT << "\n";
+			if(_debug_cosmic) cout << " dz_ECAL " << dz_ECAL << "\n";
+
+			//If we found 2 valid clusters, ch_k1 and ch_k2 will be larger than -1
+			//So, continue with the linear fit
+			if(ch_k1>-1 and ch_k2>-1)
+			{
+
+
+				if(_debug_cosmic) cout << "*************** passed ch_k1>-1 and ch_k2>-1  *************\n";
+				if(_debug_cosmic) cout << "*************** found 2 valid clusters  *************\n";
+				DT_fit_xx.reserve(vec_xx.at(ch_k1).size() + vec_xx.at(ch_k2).size() );
+				DT_fit_xx.insert( DT_fit_xx.end(), vec_xx.at(ch_k1).begin(), vec_xx.at(ch_k1).end());
+				DT_fit_xx.insert( DT_fit_xx.end(), vec_xx.at(ch_k2).begin(), vec_xx.at(ch_k2).end());
+				DT_fit_yy.reserve(vec_yy.at(ch_k1).size() + vec_yy.at(ch_k2).size() );
+				DT_fit_yy.insert( DT_fit_yy.end(), vec_yy.at(ch_k1).begin(), vec_yy.at(ch_k1).end());
+				DT_fit_yy.insert( DT_fit_yy.end(), vec_yy.at(ch_k2).begin(), vec_yy.at(ch_k2).end());
+				DT_fit_zz.reserve(vec_zz.at(ch_k1).size() + vec_zz.at(ch_k2).size() );
+				DT_fit_zz.insert( DT_fit_zz.end(), vec_zz.at(ch_k1).begin(), vec_zz.at(ch_k1).end());
+				DT_fit_zz.insert( DT_fit_zz.end(), vec_zz.at(ch_k2).begin(), vec_zz.at(ch_k2).end());
+
+				if(_debug_cosmic) cout << "*************** do linear fit  *************\n";
+				//Linear fit with Eigen package: it wants vectors as input
+				Map<VectorXf> VX(DT_fit_xx.data(),DT_fit_xx.size());
+				Map<VectorXf> VY(DT_fit_yy.data(),DT_fit_yy.size());
+				Map<VectorXf> VZ(DT_fit_zz.data(),DT_fit_zz.size());
+				VectorXf One(DT_fit_xx.size());
+				VectorXf SolXZ(2);
+				VectorXf SolYZ(2);
+				One.setOnes();
+				MatrixXf Axz(DT_fit_xx.size(),2);
+				Axz << VX, One;
+				MatrixXf Ayz(DT_fit_xx.size(),2);
+				Ayz << VY , One;
+				SolXZ = (Axz.transpose() * Axz).ldlt().solve(Axz.transpose() * VZ);
+				SolYZ = (Ayz.transpose() * Ayz).ldlt().solve(Ayz.transpose() * VZ);
+				//These are the solutions of the line fit in 3D
+				m_xz = SolXZ[0];
+				c_xz = SolXZ[1];
+				m_yz = SolYZ[0];
+				c_yz = SolYZ[1];
+				if(_debug_cosmic) cout << "m xz" << m_xz << "\n";
+				if(_debug_cosmic) cout << "c xz" << c_xz << "\n";
+				if(_debug_cosmic) cout << "m yz" << m_yz << "\n";
+				if(_debug_cosmic) cout << "c yz" << c_yz << "\n";
+
+				//If we have a valid fit, compute distance w.r.t. ECAL rec hits center of mass
+				if(DT_fit_xx.size()>0)
+				{
+
+					if(_debug_cosmic) cout << "*************** got valid linear fit  *************\n";
+					//Store also the chi2 of the fit, in case it's needed
+					tmp_dt_fit_chi2 = 0.;
+					for(unsigned int c=0; c<DT_fit_xx.size(); c++)
+					{
+						float tmp_dist2 = distance2(DT_fit_xx.at(c),DT_fit_yy.at(c),DT_fit_zz.at(c),SolXZ,SolYZ);
+						tmp_dt_fit_chi2    += tmp_dist2;
+					}
+
+					llp_tree->isDT_fit = true;
+					llp_tree->dt_fit_chi2 = tmp_dt_fit_chi2;
+					llp_tree->dt_fit_chi2_reduced = tmp_dt_fit_chi2/DT_fit_xx.size();
+
+					if(_debug_cosmic) cout << " isDT_fit " << llp_tree->isDT_fit << "\n";
+					if(_debug_cosmic) cout << " dt_fit_chi2 " << llp_tree->dt_fit_chi2 << "\n";
+					if(_debug_cosmic) cout << " DT_fit_xx.size() " << DT_fit_xx.size() << "\n";
+					if(_debug_cosmic) cout << " dt_fit_chi2_reduced " << llp_tree->dt_fit_chi2_reduced << "\n";
+
+					//Calculate DT-ECAL distance with distance2 function
+					if(_debug_cosmic) cout << " nTaggedJets " << nTaggedJets << "\n";
+					if(nTaggedJets>0)
+					{
+						if(_debug_cosmic) cout << "*************** passed nTagged Jets > 0  *************\n";
+						llp_tree->dt_ecal_dist = sqrt(distance2(mean_ECAL_tag_x,mean_ECAL_tag_y,mean_ECAL_tag_z,SolXZ,SolYZ));
+						if(_debug_cosmic) cout << " dt_ecal_dist " << llp_tree->dt_ecal_dist << "\n";
+					}
+
+					if(llp_tree->dt_ecal_dist<0.5)
+					{
+						llp_tree->isCosmic = true;
+						if(_debug_cosmic) cout << "*************** passed dt ecal dist < 0.5 m  *************\n";
+						if(_debug_cosmic) cout << " isCosmic " << llp_tree->isCosmic << "\n";
+					}
+
+
+				}//valid line fit
+
+			}//If we have 2 valid legs in opposite emispheres
+
+		}//if there are at least 2 clusters
+		if(_debug_cosmic) cout << "*************** cosmic output  *************\n";
+		if(_debug_cosmic) cout << " cosmic output isCosmic " << llp_tree->isCosmic << "\n";
+		if(_debug_cosmic) cout << " cosmic output dt_ecal_dist " << llp_tree->dt_ecal_dist << "\n";
+		if(_debug_cosmic) cout << " cosmic output isDT_fit " << llp_tree->isDT_fit << "\n";
+		if(_debug_cosmic) cout << " cosmic output dt_fit_chi2 " << llp_tree->dt_fit_chi2 << "\n";
+		if(_debug_cosmic) cout << " cosmic output DT_fit_xx.size() " << DT_fit_xx.size() << "\n";
+		if(_debug_cosmic) cout << " cosmic output dt_fit_chi2_reduced " << llp_tree->dt_fit_chi2_reduced << "\n";
+
+
+
 
 		//fatjets
 		std::vector<fatjets> FatJets;
@@ -3114,110 +3652,201 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->tree_->Fill();
 		}
 
-	}//end fill
+		}//end fill
 
 
-	if(!isData && signalScan)
-	{
-		for(auto &filePtr : Files2D)
+		if(!isData && signalScan)
 		{
-			cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
-			filePtr.second->cd();
-			Trees2D[filePtr.first]->Write();
-			NEvents2D[filePtr.first]->Write("NEvents");
-			NEventsMet2002D[filePtr.first]->Write("NEventsMet200");
-			smsSumWeights2D[filePtr.first]->Write("SumWeights");
-			smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
-			smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
-			filePtr.second->Close();
+			for(auto &filePtr : Files2D)
+			{
+				cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
+				filePtr.second->cd();
+				Trees2D[filePtr.first]->Write();
+				NEvents2D[filePtr.first]->Write("NEvents");
+				NEventsMet2002D[filePtr.first]->Write("NEventsMet200");
+				smsSumWeights2D[filePtr.first]->Write("SumWeights");
+				smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
+				smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
+				filePtr.second->Close();
 
+			}
+		}
+		else if(!isData && signalHZScan )
+		{
+			for(auto &filePtr : Files2D)
+			{
+				cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
+				filePtr.second->cd();
+				Trees2D[filePtr.first]->Write();
+				NEvents2D[filePtr.first]->Write("NEvents");
+				NEventsMet2002D[filePtr.first]->Write("NEventsMet200");
+				smsSumWeights2D[filePtr.first]->Write("SumWeights");
+				smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
+				smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
+				filePtr.second->Close();
+
+			}
+		}
+		else if(!isData && signalHDecayScan)
+		{
+			for(auto &filePtr : Files2D)
+			{
+				cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
+				filePtr.second->cd();
+				Trees2D[filePtr.first]->Write();
+				NEvents2D[filePtr.first]->Write("NEvents");
+				NEventsMet2002D[filePtr.first]->Write("NEventsMet200");
+
+				//H decay
+				NEventsH2D[filePtr.first]->Write("NEventsH");	
+				NEventsHbb2D[filePtr.first]->Write("NEventsHbb");	
+				NEventsHcc2D[filePtr.first]->Write("NEventsHcc");	
+				NEventsHgg2D[filePtr.first]->Write("NEventsHgg");	
+				NEventsHWW2D[filePtr.first]->Write("NEventsHWW");	
+				NEventsHZZ2D[filePtr.first]->Write("NEventsHZZ");	
+				NEventsHmm2D[filePtr.first]->Write("NEventsHmm");	
+				NEventsHtt2D[filePtr.first]->Write("NEventsHtt");	
+				//HH
+				NEventsHH2D[filePtr.first]->Write("NEventsHH");	
+				NEventsHHbb2D[filePtr.first]->Write("NEventsHHbb");	
+				NEventsHHcc2D[filePtr.first]->Write("NEventsHHcc");	
+				NEventsHHgg2D[filePtr.first]->Write("NEventsHHgg");	
+				NEventsHHWW2D[filePtr.first]->Write("NEventsHHWW");	
+				NEventsHHZZ2D[filePtr.first]->Write("NEventsHHZZ");	
+				NEventsHHmm2D[filePtr.first]->Write("NEventsHHmm");	
+				NEventsHHtt2D[filePtr.first]->Write("NEventsHHtt");	
+				//HZ
+				NEventsZH2D[filePtr.first]->Write("NEventsZH");	
+				NEventsZHbb2D[filePtr.first]->Write("NEventsZHbb");	
+				NEventsZHcc2D[filePtr.first]->Write("NEventsZHcc");	
+				NEventsZHgg2D[filePtr.first]->Write("NEventsZHgg");	
+				NEventsZHWW2D[filePtr.first]->Write("NEventsZHWW");	
+				NEventsZHZZ2D[filePtr.first]->Write("NEventsZHZZ");	
+				NEventsZHmm2D[filePtr.first]->Write("NEventsZHmm");	
+				NEventsZHtt2D[filePtr.first]->Write("NEventsZHtt");	
+
+				smsSumWeights2D[filePtr.first]->Write("SumWeights");
+				smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
+				smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
+				filePtr.second->Close();
+			}
+		} 
+		else
+		{
+			cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
+			cout << "Writing output trees..." << endl;		
+			outFile->cd();
+			llp_tree->tree_->Write();
+			cout << "Writing NEvents..." << endl;		
+			NEvents->Write();
+			NEventsMet200->Write();
+			cout << "Writing SumWeights..." << endl;		
+			SumWeights->Write();
+			cout << "SumWeights " << SumWeights->GetBinContent(1) << "\n";
+			cout << "Writing SumScaleWeights..." << endl;		
+			SumScaleWeights->Write();
+			cout << "SumScaleWeights " << SumScaleWeights->GetBinContent(1) << "\n";
+			cout << "Writing SumPdfWeights..." << endl;		
+			SumPdfWeights->Write();
+			cout << "SumPdfWeights " << SumPdfWeights->GetBinContent(1) << "\n";
+			//cout << "Writing SumAlphasWeights..." << endl;		
+			//SumAlphasWeights->Write();
+			//cout << "SumAlphasWeights " << SumAlphasWeights->GetBinContent(1) << "\n";
+			//outFile->Write();
+			outFile->Close();
+		}
+
+		//if (helper) delete helper; //for some reason this is causing crashes. something is 
+		//                             not done corrector in the RazorHelper destructor
+	}
+
+	//DBSCAN
+	int DBSCAN::run()
+	{
+		int clusterID = 0;//Original was 1!
+		vector<Point>::iterator iter;
+		for(iter = m_points.begin(); iter != m_points.end(); ++iter)
+		{
+			if ( iter->clusterID == UNCLASSIFIED )
+			{
+				if ( expandCluster(*iter, clusterID) != FAILURE )
+				{
+					clusterID += 1;
+				}
+			}
+		}
+
+		return 0;
+	}
+
+	int DBSCAN::expandCluster(Point point, int clusterID)
+	{    
+		vector<int> clusterSeeds = calculateCluster(point);
+
+		if ( clusterSeeds.size() < m_minPoints )
+		{
+			point.clusterID = NOISE;
+			return FAILURE;
+		}
+		else
+		{
+			int index = 0, indexCorePoint = 0;
+			vector<int>::iterator iterSeeds;
+			for( iterSeeds = clusterSeeds.begin(); iterSeeds != clusterSeeds.end(); ++iterSeeds)
+			{
+				m_points.at(*iterSeeds).clusterID = clusterID;
+				if (m_points.at(*iterSeeds).x == point.x && m_points.at(*iterSeeds).y == point.y && m_points.at(*iterSeeds).z == point.z )
+				{
+					indexCorePoint = index;
+				}
+				++index;
+			}
+			clusterSeeds.erase(clusterSeeds.begin()+indexCorePoint);
+
+			for( vector<int>::size_type i = 0, n = clusterSeeds.size(); i < n; ++i )
+			{
+				vector<int> clusterNeighors = calculateCluster(m_points.at(clusterSeeds[i]));
+
+				if ( clusterNeighors.size() >= m_minPoints )
+				{
+					vector<int>::iterator iterNeighors;
+					for ( iterNeighors = clusterNeighors.begin(); iterNeighors != clusterNeighors.end(); ++iterNeighors )
+					{
+						if ( m_points.at(*iterNeighors).clusterID == UNCLASSIFIED || m_points.at(*iterNeighors).clusterID == NOISE )
+						{
+							if ( m_points.at(*iterNeighors).clusterID == UNCLASSIFIED )
+							{
+								clusterSeeds.push_back(*iterNeighors);
+								n = clusterSeeds.size();
+							}
+							m_points.at(*iterNeighors).clusterID = clusterID;
+						}
+					}
+				}
+			}
+
+			return SUCCESS;
 		}
 	}
-	else if(!isData && signalHZScan )
+
+	vector<int> DBSCAN::calculateCluster(Point point)
 	{
-		for(auto &filePtr : Files2D)
+		int index = 0;
+		vector<Point>::iterator iter;
+		vector<int> clusterIndex;
+		for( iter = m_points.begin(); iter != m_points.end(); ++iter)
 		{
-			cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
-			filePtr.second->cd();
-			Trees2D[filePtr.first]->Write();
-			NEvents2D[filePtr.first]->Write("NEvents");
-			NEventsMet2002D[filePtr.first]->Write("NEventsMet200");
-			smsSumWeights2D[filePtr.first]->Write("SumWeights");
-			smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
-			smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
-			filePtr.second->Close();
-
+			if ( calculateDistance(point, *iter) <= m_epsilon )
+			{
+				clusterIndex.push_back(index);
+			}
+			index++;
 		}
-	}
-	else if(!isData && signalHDecayScan)
-	{
-		for(auto &filePtr : Files2D)
-		{
-			cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
-			filePtr.second->cd();
-			Trees2D[filePtr.first]->Write();
-			NEvents2D[filePtr.first]->Write("NEvents");
-			NEventsMet2002D[filePtr.first]->Write("NEventsMet200");
-
-			//H decay
-			NEventsH2D[filePtr.first]->Write("NEventsH");	
-			NEventsHbb2D[filePtr.first]->Write("NEventsHbb");	
-			NEventsHcc2D[filePtr.first]->Write("NEventsHcc");	
-			NEventsHgg2D[filePtr.first]->Write("NEventsHgg");	
-			NEventsHWW2D[filePtr.first]->Write("NEventsHWW");	
-			NEventsHZZ2D[filePtr.first]->Write("NEventsHZZ");	
-			NEventsHmm2D[filePtr.first]->Write("NEventsHmm");	
-			NEventsHtt2D[filePtr.first]->Write("NEventsHtt");	
-			//HH
-			NEventsHH2D[filePtr.first]->Write("NEventsHH");	
-			NEventsHHbb2D[filePtr.first]->Write("NEventsHHbb");	
-			NEventsHHcc2D[filePtr.first]->Write("NEventsHHcc");	
-			NEventsHHgg2D[filePtr.first]->Write("NEventsHHgg");	
-			NEventsHHWW2D[filePtr.first]->Write("NEventsHHWW");	
-			NEventsHHZZ2D[filePtr.first]->Write("NEventsHHZZ");	
-			NEventsHHmm2D[filePtr.first]->Write("NEventsHHmm");	
-			NEventsHHtt2D[filePtr.first]->Write("NEventsHHtt");	
-			//HZ
-			NEventsZH2D[filePtr.first]->Write("NEventsZH");	
-			NEventsZHbb2D[filePtr.first]->Write("NEventsZHbb");	
-			NEventsZHcc2D[filePtr.first]->Write("NEventsZHcc");	
-			NEventsZHgg2D[filePtr.first]->Write("NEventsZHgg");	
-			NEventsZHWW2D[filePtr.first]->Write("NEventsZHWW");	
-			NEventsZHZZ2D[filePtr.first]->Write("NEventsZHZZ");	
-			NEventsZHmm2D[filePtr.first]->Write("NEventsZHmm");	
-			NEventsZHtt2D[filePtr.first]->Write("NEventsZHtt");	
-
-			smsSumWeights2D[filePtr.first]->Write("SumWeights");
-			smsSumScaleWeights2D[filePtr.first]->Write("SumScaleWeights");
-			smsSumPdfWeights2D[filePtr.first]->Write("SumPdfWeights");
-			filePtr.second->Close();
-		}
-	} 
-	else
-	{
-		cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
-		cout << "Writing output trees..." << endl;		
-		outFile->cd();
-		llp_tree->tree_->Write();
-		cout << "Writing NEvents..." << endl;		
-		NEvents->Write();
-		NEventsMet200->Write();
-		cout << "Writing SumWeights..." << endl;		
-		SumWeights->Write();
-		cout << "SumWeights " << SumWeights->GetBinContent(1) << "\n";
-		cout << "Writing SumScaleWeights..." << endl;		
-    		SumScaleWeights->Write();
-		cout << "SumScaleWeights " << SumScaleWeights->GetBinContent(1) << "\n";
-		cout << "Writing SumPdfWeights..." << endl;		
-    		SumPdfWeights->Write();
-		cout << "SumPdfWeights " << SumPdfWeights->GetBinContent(1) << "\n";
-		//cout << "Writing SumAlphasWeights..." << endl;		
-    		//SumAlphasWeights->Write();
-		//cout << "SumAlphasWeights " << SumAlphasWeights->GetBinContent(1) << "\n";
-		//outFile->Write();
-		outFile->Close();
+		return clusterIndex;
 	}
 
-	//if (helper) delete helper; //for some reason this is causing crashes. something is 
-	//                             not done corrector in the RazorHelper destructor
-}
+	inline double DBSCAN::calculateDistance(const Point& pointCore, const Point& pointTarget )
+	{
+		return pow(pointCore.x - pointTarget.x,2)+pow(pointCore.y - pointTarget.y,2)+pow(pointCore.z - pointTarget.z,2);
+	}
+
