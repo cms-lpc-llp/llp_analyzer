@@ -24,6 +24,7 @@ void SusyLLPTree::InitVariables()
 	pvX=-999.; pvY=-999.; pvZ=-999.;
 	npv=0; npu=0; rho=-1; weight=-1;
 	pileupWeight = 1; pileupWeightUp = 1; pileupWeightDown = 1;
+	triggerWeight = 1;
 	met=-1; metPhi=-1;
 	HT=-1;
 	jetMet_dPhiMin_pt_20_eta_2p4=999.;
@@ -609,6 +610,7 @@ void SusyLLPTree::InitTree()
 	tree_->SetBranchAddress("pileupWeight",      &pileupWeight);
 	tree_->SetBranchAddress("pileupWeightUp",      &pileupWeightUp);
 	tree_->SetBranchAddress("pileupWeightDown",      &pileupWeightDown);
+	tree_->SetBranchAddress("triggerWeight",      &triggerWeight);
 	tree_->SetBranchAddress("weight",      &weight);
 	tree_->SetBranchAddress("rho",         &rho);
 	tree_->SetBranchAddress("met",         &met);
@@ -1118,6 +1120,7 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("pileupWeight",      &pileupWeight,     "pileupWeight/F");
 	tree_->Branch("pileupWeightUp",      &pileupWeightUp,     "pileupWeightUp/F");
 	tree_->Branch("pileupWeightDown",      &pileupWeightDown,     "pileupWeightDown/F");
+	tree_->Branch("triggerWeight",      &triggerWeight,     "triggerWeight/F");
 	tree_->Branch("weight",      &weight,     "weight/F");
 	tree_->Branch("rho",         &rho,        "rho/F");
 	tree_->Branch("met",         &met,        "met/F");         // MET
@@ -1183,18 +1186,18 @@ void SusyLLPTree::CreateTree()
 	tree_->Branch("Flag2_eeBadScFilter", &Flag2_eeBadScFilter, "Flag2_eeBadScFilter/O");
 
 	//beamhalo veto
-	tree_->Branch("min_dPhi_jets_eta_1p0_0p996", &min_dPhi_jets_eta_1p0_0p996, "min_dPhi_jets_eta_1p0_0p996/O");
+	tree_->Branch("min_dPhi_jets_eta_1p0_0p996", &min_dPhi_jets_eta_1p0_0p996, "min_dPhi_jets_eta_1p0_0p996/F");
 
 	//cosmic veto
-	tree_->Branch("n_clusters", &n_clusters, "n_clusters/O");
-	tree_->Branch("n_noise", &n_noise, "n_noise/O");
+	tree_->Branch("n_clusters", &n_clusters, "n_clusters/I");
+	tree_->Branch("n_noise", &n_noise, "n_noise/I");
 	//tree_->Branch("n_clusters_valid_time", &n_clusters_valid_time, "n_clusters_valid_time/O");
 	//tree_->Branch("n_noise_valid_time", &n_noise_valid_time, "n_noise_valid_time/O");
 
 	//Cosmic veto
-	tree_->Branch("dt_fit_chi2", &dt_fit_chi2, "dt_fit_chi2/O");
-	tree_->Branch("dt_fit_chi2_reduced", &dt_fit_chi2_reduced, "dt_fit_chi2_reduced/O");
-	tree_->Branch("dt_ecal_dist", &dt_ecal_dist, "dt_ecal_dist/O");
+	tree_->Branch("dt_fit_chi2", &dt_fit_chi2, "dt_fit_chi2/F");
+	tree_->Branch("dt_fit_chi2_reduced", &dt_fit_chi2_reduced, "dt_fit_chi2_reduced/F");
+	tree_->Branch("dt_ecal_dist", &dt_ecal_dist, "dt_ecal_dist/F");
 	tree_->Branch("isCosmic", &isCosmic, "isCosmic/O");
 	tree_->Branch("isDT_fit", &isDT_fit, "isDT_fit/O");
 

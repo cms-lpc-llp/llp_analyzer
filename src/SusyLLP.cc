@@ -1305,6 +1305,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->npv = nPV;
 		llp_tree->rho = fixedGridRhoFastjetAll;
 		llp_tree->met = metType1Pt;
+		llp_tree->triggerWeight = helper->getTriggerWeight(llp_tree->met);
 		if(_debug_met) std::cout << "met " << llp_tree->met << std::endl;
 		//if( llp_tree->met < 120. ) continue;
 		//if( llp_tree->met < 150. ) continue;

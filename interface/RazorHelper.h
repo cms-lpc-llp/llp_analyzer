@@ -34,6 +34,9 @@ class RazorHelper {
         double getPileupWeightUp(int NPU);
         double getPileupWeightDown(int NPU);
 
+	// retrieve trigger weights
+	double getTriggerWeight(double met);
+
         // get lepton scale factor (without up/down uncertainties)
         double getTightMuonScaleFactor(float pt, float eta, bool isTight);
         double getVetoMuonScaleFactor(float pt, float eta, bool isVeto);
@@ -259,6 +262,7 @@ class RazorHelper {
 	// for CT2016_07Aug2017Rereco
         void loadPileup_CT2016_07Aug2017Rereco();
         void loadPileup_CT2016_07Aug2017Rereco(std::string process);
+        void loadTrigger_CT2016_07Aug2017Rereco();
         void loadJECs_CT2016_07Aug2017Rereco();
 
         // for Razor2017 92X tag
@@ -275,6 +279,7 @@ class RazorHelper {
 	// for CT2017 17Nov2017 Rereco
         void loadPileup_CT2017_17Nov2017Rereco();
         void loadPileup_CT2017_17Nov2017Rereco(std::string process);
+        void loadTrigger_CT2017_17Nov2017Rereco();
         void loadJECs_CT2017_17Nov2017Rereco();
 
 	// for Razor2017 31Mar2018 Rereco
@@ -291,6 +296,7 @@ class RazorHelper {
         //for CT2018 17Sep2018
         void loadPileup_CT2018_17Sep2018Rereco();
         void loadPileup_CT2018_17Sep2018Rereco(std::string process);
+        void loadTrigger_CT2018_17Sep2018Rereco();
         void loadJECs_CT2018_17Sep2018Rereco();
 
         // member data
@@ -305,6 +311,10 @@ class RazorHelper {
         TH1F *pileupWeightHist;
         TH1F *pileupWeightSysUpHist;
         TH1F *pileupWeightSysDownHist;
+
+	// for trigger weight
+	TFile *triggerWeightFile;
+	TH1F *triggerWeightHist;
 
         // for electrons
         TFile *eleTightEfficiencyFile;

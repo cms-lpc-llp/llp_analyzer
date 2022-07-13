@@ -157,6 +157,10 @@ RazorHelper::~RazorHelper() {
         pileupWeightFile->Close();
         delete pileupWeightFile;
     }
+    if (triggerWeightFile) {
+        triggerWeightFile->Close();
+        delete triggerWeightFile;
+    }
     if (eleTightEfficiencyFile) {
         eleTightEfficiencyFile->Close();
         delete eleTightEfficiencyFile;
@@ -272,6 +276,10 @@ void RazorHelper::loadTag_Null() {
     pileupWeightHist = 0;
     pileupWeightSysUpHist = 0;
     pileupWeightSysDownHist = 0;
+
+    // trigger weights
+    triggerWeightFile = 0;
+    triggerWeightHist = 0;
 
     // electron efficiencies and scale factors
     eleTightEfficiencyFile = 0;
@@ -658,6 +666,7 @@ void RazorHelper::loadJECs_Razor2015_76X() {
 /////Calo Timing //////
 void RazorHelper::loadTag_CT2016_07Aug2017Rereco() {
     loadPileup_CT2016_07Aug2017Rereco(process);
+    loadTrigger_CT2016_07Aug2017Rereco();
     //loadPileup_CT2016_07Aug2017Rereco();
     //loadLepton_Razor2016_MoriondRereco();
     //loadPhoton_Razor2016_07Aug2017Rereco_DelayedPhoton();
@@ -699,6 +708,15 @@ void RazorHelper::loadPileup_CT2016_07Aug2017Rereco() {
       std::cout << "PileupReweight_Summer16_2016_calo.root\n";
     }
 
+}
+
+void RazorHelper::loadTrigger_CT2016_07Aug2017Rereco() {
+	// trigger weights
+	// LAST UPDATED: 13 July 2022
+    	std::cout << "RazorHelper: loading trigger weight histograms" << std::endl;
+	triggerWeightFile = TFile::Open("METTriggers_SF.root", "READ");
+	triggerWeightHist = (TH1F*)triggerWeightFile->Get("trigger_efficiency_Summer16");
+	std::cout << "trigger weight Summer16 2016\n";
 }
 
 void RazorHelper::loadJECs_CT2016_07Aug2017Rereco() {
@@ -2218,6 +2236,7 @@ void RazorHelper::loadPhoton_Razor2017_92X(){
 /////Calo Timing //////
 void RazorHelper::loadTag_CT2017_17Nov2017Rereco() {
   loadPileup_CT2017_17Nov2017Rereco(process);
+  loadTrigger_CT2017_17Nov2017Rereco();
   //loadLepton_Razor2017_17Nov2017Rereco();
   //loadPhoton_Razor2017_92X();
   //loadBTag_Razor2017_17Nov2017Rereco();
@@ -2257,6 +2276,14 @@ void RazorHelper::loadPileup_CT2017_17Nov2017Rereco() {
       std::cout << "PileupReweight_Fall17_2017_calo.root\n";
     }
 
+}
+
+void RazorHelper::loadTrigger_CT2017_17Nov2017Rereco() {
+	// trigger weights
+	// LAST UPDATED: 13 July 2022
+	triggerWeightFile = TFile::Open("METTriggers_SF.root", "READ");
+	triggerWeightHist = (TH1F*)triggerWeightFile->Get("trigger_efficiency_Fall17");
+	std::cout << "trigger weight Fall17 2017\n";
 }
 
 void RazorHelper::loadJECs_CT2017_17Nov2017Rereco() {
@@ -2976,6 +3003,7 @@ void RazorHelper::loadJECs_Razor2017_31Mar2018Rereco() {
 /////Calo Timing //////
 void RazorHelper::loadTag_CT2018_17Sep2018Rereco() {
   loadPileup_CT2018_17Sep2018Rereco(process);
+  loadTrigger_CT2018_17Sep2018Rereco();
   //loadJECs_CT2018_17Sep2018Rereco();
   //loadJECs_Razor2018_17SeptEarlyReReco();
 }
@@ -3012,6 +3040,14 @@ void RazorHelper::loadPileup_CT2018_17Sep2018Rereco() {
       std::cout << "PileupReweight_Fall18_2018_calo.root\n";
     }
 
+}
+
+void RazorHelper::loadTrigger_CT2018_17Sep2018Rereco() {
+	// trigger weights
+	// LAST UPDATED: 13 July 2022
+	triggerWeightFile = TFile::Open("METTriggers_SF.root", "READ");
+	triggerWeightHist = (TH1F*)triggerWeightFile->Get("trigger_efficiency_Fall18");
+	std::cout << "trigger weight Fall18 2018\n";
 }
 
 
@@ -3347,6 +3383,16 @@ double RazorHelper::getPileupWeightDown(int NPU) {
     }
     else {
         std::cout << "RazorHelper error: 'down' pileup weight requested, but no histogram available!" << std::endl;
+        return 0;
+    }
+}
+
+double RazorHelper::getTriggerWeight(double met) {
+    if (triggerWeightHist) {
+        return triggerWeightHist->GetBinContent(triggerWeightHist->GetXaxis()->FindFixBin(met));
+    }
+    else {
+        std::cout << "RazorHelper error: trigger weight requested, but no histogram available!" << std::endl;
         return 0;
     }
 }
