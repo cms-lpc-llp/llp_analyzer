@@ -32,10 +32,15 @@ using namespace TMath;
 
 #define xclean 1
 #define presel 0
+#define preselmet 0
+#define preseltrg 0
+#define preselflag 1
+#define preselndphi 0
 #define presel_jet 1
+#define _check_muiso 0
 
 #define _debug 0
-#define _debug_cosmic 1
+#define _debug_cosmic 0
 #define _debug_ecalxavg 0
 #define _debug_ecalyavg 0
 #define _debug_ecalzavg 0
@@ -731,6 +736,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 	//Smearing Files
 	// ************************************************************************
 	if(_debug_smear) cout << "smearTag: " << smearTag.c_str() << "\n";
+	if(_debug_smear) cout << "smear on MC (with the difference between data and mc) " << "\n";
 	string timeCBFilename = smearTag ; 
 	TFile *timeCBFile = TFile::Open(timeCBFilename.data(),"READ"); //if (!timeCBFile) return 0;
 	TF1  *dataCB = (TF1*)timeCBFile->Get("data_CB");
@@ -1304,8 +1310,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//if( llp_tree->met < 150. ) continue;
 		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 		if(_debug_lab) std::cout << "met " << llp_tree->met << std::endl;
-		if( (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
-		//if( presel && (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
+		//if( (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
+		if( preselmet && (label.find("MR") == std::string::npos) && llp_tree->met < 200. ) continue;
 		if( (label=="MR_EMU") && llp_tree->met < 30. ) continue;
 		if( (label.find("MR_Single") != std::string::npos) && llp_tree->met < 40. ) continue;
 		if( (label.find("MR_ZLL") != std::string::npos) && isData && llp_tree->met >= 30. ) continue;
@@ -1355,9 +1361,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->Flag2_ecalBadCalibFilter                      = Flag2_ecalBadCalibFilter;
 		llp_tree->Flag2_eeBadScFilter                           = Flag2_eeBadScFilter;
 
-		if(presel && !(Flag2_globalSuperTightHalo2016Filter && Flag2_BadPFMuonFilter && Flag2_EcalDeadCellTriggerPrimitiveFilter && Flag2_HBHENoiseFilter && Flag2_HBHEIsoNoiseFilter )) continue;
-		if(presel &&  (analysisTag.find("2016") == std::string::npos) && !Flag2_ecalBadCalibFilter) continue;
-		if(presel && isData && !Flag2_eeBadScFilter) continue;
+		if(preselflag && !(Flag2_globalSuperTightHalo2016Filter && Flag2_BadPFMuonFilter && Flag2_EcalDeadCellTriggerPrimitiveFilter && Flag2_HBHENoiseFilter && Flag2_HBHEIsoNoiseFilter )) continue;
+		if(preselflag &&  (analysisTag.find("2016") == std::string::npos) && !Flag2_ecalBadCalibFilter) continue;
+		if(preselflag && isData && !Flag2_eeBadScFilter) continue;
 		//Triggers
 		for(int i = 0; i < NTriggersMAX; i++){
 			llp_tree->HLTDecision[i] = HLTDecision[i];
@@ -1369,9 +1375,9 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		//if( presel && (label.find("MR") == std::string::npos) && !HLTDecision[467]) continue; 
 		//analysisTag: l=CT2016_07Aug2017Rereco  l=CT2017_17Nov2017Rereco l=CT2018_17SeptEarlyReReco 
 		//trigger: 2016:  467; 2017: 467 || 717 || 710; 2018: 467 || 717 || 710
-		if( presel && (label.find("MR") == std::string::npos) && analysisTag=="CT2016_07Aug2017Rereco" && !HLTDecision[467]) continue; 
-		if( presel && (label.find("MR") == std::string::npos) && analysisTag=="CT2017_17Nov2017Rereco" && !(HLTDecision[467]||HLTDecision[717]||HLTDecision[710]) ) continue; 
-		if( presel && (label.find("MR") == std::string::npos) && analysisTag=="CT2018_17SeptEarlyReReco" && !(HLTDecision[467]||HLTDecision[717]||HLTDecision[710]) ) continue; 
+		if( preseltrg && (label.find("MR") == std::string::npos) && analysisTag=="CT2016_07Aug2017Rereco" && !HLTDecision[467]) continue; 
+		if( preseltrg && (label.find("MR") == std::string::npos) && analysisTag=="CT2017_17Nov2017Rereco" && !(HLTDecision[467]||HLTDecision[717]||HLTDecision[710]) ) continue; 
+		if( preseltrg && (label.find("MR") == std::string::npos) && analysisTag=="CT2018_17SeptEarlyReReco" && !(HLTDecision[467]||HLTDecision[717]||HLTDecision[710]) ) continue; 
 
 		if(_debug_lab) std::cout << "label " << label.c_str() << std::endl;
 		bool triggered = false;
@@ -1996,10 +2002,22 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 				jetTimeRecHitsECAL = -100;
 			} else {
 				jetTimeRecHitsECAL = jetRechitT[i];
+				if(_debug_smear) std::cout << "BEFORE smear " << std::endl;
+				if(_debug_smear) std::cout << "Jet Time w/o smear " << jetRechitT[i] << std::endl;
+				if(_debug_smear) std::cout << "Jet Time " << jetTimeRecHitsECAL << std::endl;
 				//smear jet time
 				//Get a random value from the smearCB crystal ball
+				//apply to mc only
+				if(_debug_smear) std::cout << "DURING smear " << std::endl;
 				float smearer = smearCB->GetRandom();
-				jetTimeRecHitsECAL += smearer;
+				if(_debug_smear) std::cout << "Jet Time smear " << smearer << std::endl;
+				if(!isData)
+				{
+					if(_debug_smear) std::cout << "passed not data " << std::endl;
+					jetTimeRecHitsECAL += smearer;
+					if(_debug_smear) std::cout << "Jet Time " << jetTimeRecHitsECAL << std::endl;
+				}
+				if(_debug_smear) std::cout << "AFTER smear " << std::endl;
 				if(_debug_smear) std::cout << "Jet Time w/o smear " << jetRechitT[i] << std::endl;
 				if(_debug_smear) std::cout << "Jet Time smear " << smearer << std::endl;
 				if(_debug_smear) std::cout << "Jet Time " << jetTimeRecHitsECAL << std::endl;
@@ -2007,7 +2025,8 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			}
 			if(_debug_dnn) std::cout << "Jet Time " << jetTimeRecHitsECAL << std::endl;
 			if( presel_jet && jetTimeRecHitsECAL<=-1 ) continue;
-			if( presel_jet && jetMuonEnergyFraction[i]>=0.6 ) continue;
+			//if( presel_jet && jetMuonEnergyFraction[i]>=0.6 ) continue;
+			if(!_check_muiso && presel_jet && jetMuonEnergyFraction[i]>=0.6 ) continue;
 			if( presel_jet && jetElectronEnergyFraction[i]>=0.6 ) continue;
 			if( presel_jet && jetPhotonEnergyFraction[i]>=0.8 ) continue;
 
@@ -2370,6 +2389,10 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			double outputValueV3 = outputsV3[0].matrix<float>()(0, 1);
 			//std::cout << "output value: " << outputValue << std::endl;
 			//std::cout << "\n" << std::endl;
+			if(_check_muiso)
+			{
+				if(outputValueV3<0.996) continue;
+			}
 
 
 			//cosmic veto relevant
@@ -2568,7 +2591,7 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 		llp_tree->jetMet_dPhiMin_eta_2p4 = jetMet_dPhiMin_eta_2p4_temp;
 		llp_tree->jetMet_dPhiMin_eta_3 = jetMet_dPhiMin_eta_3_temp;
 		llp_tree->jetMet_dPhiMin_eta_all = jetMet_dPhiMin_eta_all_temp;
-		if( presel && (label.find("MR") == std::string::npos) && llp_tree->jetMet_dPhiMin_eta_all < 0.5 ) continue;
+		if( preselndphi && (label.find("MR") == std::string::npos) && llp_tree->jetMet_dPhiMin_eta_all < 0.5 ) continue;
 		llp_tree->jetMet_dPhiMin_pt_20_eta_2p4 = jetMet_dPhiMin_pt_20_eta_2p4_temp;
 		llp_tree->jetMet_dPhiMin_pt_20_eta_3 = jetMet_dPhiMin_pt_20_eta_3_temp;
 		llp_tree->jetMet_dPhiMin_pt_20_eta_all = jetMet_dPhiMin_pt_20_eta_all_temp;
@@ -2812,6 +2835,10 @@ void SusyLLP::Analyze(bool isData, int options, string outputfilename, string an
 			llp_tree->nJets++;
 		}
 
+		if(_check_muiso) 
+		{
+			if(llp_tree->nJets < 1) continue;
+		}
 		// ************************************************************************
 		//beamhalo cosmic veto part
 		// ************************************************************************
