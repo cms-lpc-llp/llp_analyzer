@@ -353,12 +353,12 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
             if(fabs(muonEta[i]) > 2.4) continue;
 
             //remove overlaps
-            bool overlap = false;
-            for(auto& lep : Leptons)
-            {
-              if (RazorAnalyzer::deltaR(muonEta[i],muonPhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
-            }
-            if(overlap) continue;
+            //bool overlap = false;
+            //for(auto& lep : Leptons)
+            //{
+            //  if (RazorAnalyzer::deltaR(muonEta[i],muonPhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
+            //}
+            //if(overlap) continue;
 
             leptons tmpMuon;
             tmpMuon.lepton.SetPtEtaPhiM(muonPt[i],muonEta[i], muonPhi[i], MU_MASS);
