@@ -49,6 +49,7 @@ class RazorAnalyzer: public llp_event {
         void EnableDT();
 
         void EnableEcalRechits();
+        void EnableTracks();
         void EnableAll();
         void EnableAllWithEcalRechits();
 

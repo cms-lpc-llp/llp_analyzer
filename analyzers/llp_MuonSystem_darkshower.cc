@@ -1,6 +1,6 @@
-#include "llp_MuonSystem_bparking.h"
+#include "llp_MuonSystem_darkshower.h"
 #include "RazorHelper.h"
-#include "TreeMuonSystemBParking.h"
+#include "TreeMuonSystemDarkShower.h"
 #include "JetCorrectorParameters.h"
 #include "JetCorrectionUncertainty.h"
 #include "BTagCalibrationStandalone.h"
@@ -89,7 +89,7 @@ struct largest_pt_jet
 } my_largest_pt_jet;
 
 
-void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfilename, string analysisTag)
+void llp_MuonSystem_darkshower::Analyze(bool isData, int options, string outputfilename, string analysisTag)
 {
   //initialization: create one TTree for each analysis box
   cout << "Initializing..." << endl;
@@ -147,7 +147,7 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
   if (isData || !signalScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
 
 
-  TreeMuonSystemBParking *MuonSystem = new TreeMuonSystemBParking;
+  TreeMuonSystemDarkShower *MuonSystem = new TreeMuonSystemDarkShower;
   MuonSystem->CreateTree();
   MuonSystem->tree_->SetAutoFlush(0);
   MuonSystem->InitTree();
@@ -217,6 +217,8 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
   clock_t start, end;
   start = clock();
   for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++) {
+
+    cout << "\nProcessing entry " << jentry << endl;
 
     //begin event
     // if (jentry>10000) continue;
@@ -297,37 +299,111 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
     MuonSystem->Flag2_EcalDeadCellTriggerPrimitiveFilter = Flag2_EcalDeadCellTriggerPrimitiveFilter;
     MuonSystem->Flag2_ecalBadCalibFilter = Flag2_ecalBadCalibFilter;
     MuonSystem->Flag2_eeBadScFilter = Flag2_eeBadScFilter;
-    MuonSystem->Flag2_all = Flag2_HBHENoiseFilter && Flag2_HBHEIsoNoiseFilter && Flag2_BadPFMuonFilter && Flag2_globalSuperTightHalo2016Filter && Flag2_EcalDeadCellTriggerPrimitiveFilter;
+    MuonSystem->Flag2_all = Flag2_HBHENoiseFilter && Flag2_HBHEIsoNoiseFilter && Flag2_BadPFMuonFilter && Flag2_globalSuperTightHalo2016Filter && Flag2_EcalDeadCellTriggerPrimitiveFilter; 
     if (isData) MuonSystem->Flag2_all = MuonSystem->Flag2_all && Flag2_eeBadScFilter;
 
     if (analysisTag!="Razor2016_07Aug2017Rereco")MuonSystem->Flag2_all = MuonSystem->Flag2_all && Flag2_ecalBadCalibFilter;
 
+
+    vector<int> LLP_index; LLP_index.clear();
+    vector<float> LLP_pt; LLP_pt.clear();
+    vector<float> LLP_eta; LLP_eta.clear();
+    vector<float> LLP_phi; LLP_phi.clear();
+    vector<float> LLP_decayR; LLP_decayR.clear();
+    vector<float> LLP_decayZ; LLP_decayZ.clear();
+
     // cout<<nGenParticle<<endl;
     for(int i = 0; i < nGenParticle;i++)
     {
-      if(gParticleId[i] == 9900015)
+      if(gParticleId[i] == 999999)
       {
-        TLorentzVector genParticle = makeTLorentzVector( gParticlePt[i], gParticleEta[i], gParticlePhi[i], gParticleE[i] );
 
-        MuonSystem->gLLP_eta = gParticleEta[i];
-        MuonSystem->gLLP_phi = gParticlePhi[i];
-        MuonSystem->gLLP_e = gParticleE[i];
-        MuonSystem->gLLP_pt = gParticlePt[i];
-        MuonSystem->gLLP_beta = genParticle.Beta();
+	double dX = 0;
+	double dY = 0;
+	double dZ = 0;
 
-      }
-      else if (gParticleMotherId[i] == 9900015)
-      {
-        MuonSystem->gLLP_decay_vertex_x = gParticleProdVertexX[i];
-        MuonSystem->gLLP_decay_vertex_y = gParticleProdVertexY[i];
-        MuonSystem->gLLP_decay_vertex_z = gParticleProdVertexZ[i];
-        MuonSystem->gLLP_decay_vertex_r = sqrt(gParticleProdVertexX[i]*gParticleProdVertexX[i]+gParticleProdVertexY[i]*gParticleProdVertexY[i]);
-        float gLLP_decay_vertex = sqrt(pow(MuonSystem->gLLP_decay_vertex_r, 2) + pow(MuonSystem->gLLP_decay_vertex_z,2));
-        float gamma = 1.0/sqrt(1-MuonSystem->gLLP_beta*MuonSystem->gLLP_beta);
-        MuonSystem->gLLP_ctau = gLLP_decay_vertex/(MuonSystem->gLLP_beta * gamma);
+	//find the daughter
+	for(int d = 0; d < nGenParticle;d++) {
+	  if (gParticleMotherIndex[d] == i) {
+	    dX = gParticleProdVertexX[d];
+	    dY = gParticleProdVertexY[d];
+	    dZ = gParticleProdVertexZ[d];
+	    break;
+	  }
+	}
+ 
+	double dR = sqrt(dX*dX+dY*dY);
 
-      }
+	//if (dR < 2 && dZ < 6) {
+	  LLP_pt.push_back(gParticlePt[i]);
+	  LLP_eta.push_back(gParticleEta[i]);
+	  LLP_phi.push_back(gParticlePhi[i]);
+	  LLP_index.push_back(i);
+	  LLP_decayR.push_back( dR );
+	  LLP_decayZ.push_back( dZ );	
+	  //}
+      }  
+    } //loop over gen particles
+
+    
+    //print out LLPs
+    for (int i = 0; i<LLP_index.size(); i++) {
+      cout << "LLP " << i << " : " << LLP_pt[i] << " " << LLP_eta[i] << " " << LLP_phi[i] << " | " << LLP_decayR[i] << " " << LLP_decayZ[i] << "\n";
     }
+
+
+    vector<int> jet_index; jet_index.clear();
+    vector<float> jet_pt; jet_pt.clear();
+    vector<float> jet_eta; jet_eta.clear();
+    vector<float> jet_phi; jet_phi.clear();
+  
+    //Loop Over Jets
+    for(int i = 0; i < nJets; i++) {
+
+      //------------------------------------------------------------
+      //Match jets to LLPs
+      //------------------------------------------------------------
+      bool llp_matched = false;
+      double deltaR = -1;
+      for (int j = 0; j<LLP_index.size(); j++) {
+	double thisDR = RazorAnalyzer::deltaR(jetEta[i],jetPhi[i],LLP_eta[j],LLP_phi[j]);
+	if(thisDR < 0.4) {
+	  llp_matched = true;
+	 
+	}
+      }
+
+      if (llp_matched) {
+	jet_index.push_back(i);
+	jet_pt.push_back(jetPt[i]);
+	jet_eta.push_back(jetEta[i]);
+	jet_phi.push_back(jetPhi[i]);
+      }
+
+    } //Loop Over Jets
+
+    //print out LLPs
+    for (int i = 0; i<jet_index.size(); i++) {
+      cout << "jet " << i << " : " << jet_pt[i] << " " << jet_eta[i] << " " << jet_phi[i] << " | "  << "\n";
+
+      //loop over tracks matching to the jets
+      for (int t = 0; t<nTracks; t++) {
+   	double thisDR = RazorAnalyzer::deltaR(jet_eta[i],jet_phi[i], track_Eta[t],track_Phi[t]);	
+	if(thisDR < 0.4) {
+	  cout << "Track " << t << " : " << thisDR << " | " << track_Pt[t] << " " << track_Eta[t] << " " << track_Phi[t] << " : " 
+	       << track_dxyToBS[t] << " " << track_dxyToBS[t] / track_dxyErr[t]  << " | " 
+	       << track_dzToPV[t] << " " << track_dzToPV[t] / track_dzErr[t] << " | "
+	       << track_nPixelHits[t] << " " << track_nMissingInnerHits[t] << " "
+	       << "\n";
+	}
+      }
+
+    }
+
+
+    //END Event Loop Processing
+    continue; 
+
 
     if (abs(MuonSystem->gLLP_eta) < 2.4
       && abs(MuonSystem->gLLP_decay_vertex_z)<1100 && abs(MuonSystem->gLLP_decay_vertex_z)>400
@@ -353,12 +429,12 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
             if(fabs(muonEta[i]) > 2.4) continue;
 
             //remove overlaps
-            //bool overlap = false;
-            //for(auto& lep : Leptons)
-            //{
-            //  if (RazorAnalyzer::deltaR(muonEta[i],muonPhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
-            //}
-            //if(overlap) continue;
+            bool overlap = false;
+            for(auto& lep : Leptons)
+            {
+              if (RazorAnalyzer::deltaR(muonEta[i],muonPhi[i],lep.lepton.Eta(),lep.lepton.Phi()) < 0.3) overlap = true;
+            }
+            if(overlap) continue;
 
             leptons tmpMuon;
             tmpMuon.lepton.SetPtEtaPhiM(muonPt[i],muonEta[i], muonPhi[i], MU_MASS);

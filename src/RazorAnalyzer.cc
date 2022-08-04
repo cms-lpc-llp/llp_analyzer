@@ -40,6 +40,7 @@ void RazorAnalyzer::EnableAll(){
     EnableMC();
     EnableGenParticles();
     EnableLLP();
+    EnableTracks();
     // EnableEcalRechits();
 }
 
@@ -827,6 +828,26 @@ void RazorAnalyzer::EnableEcalRechits(){
     fChain->SetBranchStatus("ecalRechit_GainSwitch6", 1);
     fChain->SetBranchStatus("ecalRechit_transpCorr", 1);
 }
+
+void RazorAnalyzer::EnableTracks(){
+    fChain->SetBranchStatus("track_Pt", 1);
+    fChain->SetBranchStatus("track_Eta", 1);
+    fChain->SetBranchStatus("track_Phi", 1);
+    fChain->SetBranchStatus("track_charge", 1);
+    fChain->SetBranchStatus("track_bestVertexIndex", 1);
+    fChain->SetBranchStatus("track_nMissingInnerHits", 1);
+    fChain->SetBranchStatus("track_nMissingOuterHits", 1);
+    fChain->SetBranchStatus("track_nPixelHits", 1);
+    fChain->SetBranchStatus("track_nHits", 1);
+    fChain->SetBranchStatus("track_dxyToBS", 1);
+    fChain->SetBranchStatus("track_dxyErr", 1);
+    fChain->SetBranchStatus("track_dzToPV", 1);
+    fChain->SetBranchStatus("track_dzErr", 1);
+    fChain->SetBranchStatus("track_chi2", 1);
+    fChain->SetBranchStatus("track_ndof", 1);    
+}
+
+
 //////////////////////////////
 //JETS
 //////////////////////////////

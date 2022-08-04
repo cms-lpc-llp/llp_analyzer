@@ -895,8 +895,8 @@ void llp_MuonSystem_TnP::Analyze(bool isData, int options, string outputfilename
         MuonSystem->cscRechitCluster3Z[MuonSystem->nCscRechitClusters3] =tmp.z;
         MuonSystem->cscRechitCluster3Time[MuonSystem->nCscRechitClusters3] = tmp.t;
         MuonSystem->cscRechitCluster3TimeTotal[MuonSystem->nCscRechitClusters3] = tmp.tTotal;
-        MuonSystem->cscRechitCluster3TimeWire[MuonSystem->nCscRechitClusters3] = tmp.tWire;
-        MuonSystem->cscRechitCluster3TimeWirePruned[MuonSystem->nCscRechitClusters3] = tmp.tWirePruned;
+        // MuonSystem->cscRechitCluster3TimeWire[MuonSystem->nCscRechitClusters3] = tmp.tWire;
+        // MuonSystem->cscRechitCluster3TimeWirePruned[MuonSystem->nCscRechitClusters3] = tmp.tWirePruned;
 
         MuonSystem->cscRechitCluster3Eta[MuonSystem->nCscRechitClusters3] =tmp.eta;
         MuonSystem->cscRechitCluster3Phi[MuonSystem->nCscRechitClusters3] = tmp.phi;
@@ -913,10 +913,10 @@ void llp_MuonSystem_TnP::Analyze(bool isData, int options, string outputfilename
         MuonSystem->cscRechitCluster3EtaSpread[MuonSystem->nCscRechitClusters3] =tmp.EtaSpread;
         MuonSystem->cscRechitCluster3PhiSpread[MuonSystem->nCscRechitClusters3] = tmp.PhiSpread;
         MuonSystem->cscRechitCluster3TimeSpread[MuonSystem->nCscRechitClusters3] = tmp.TSpread;
-        MuonSystem->cscRechitCluster3TimeWireSpread[MuonSystem->nCscRechitClusters3] = tmp.TWireSpread;
+        // MuonSystem->cscRechitCluster3TimeWireSpread[MuonSystem->nCscRechitClusters3] = tmp.TWireSpread;
 
-        MuonSystem->cscRechitCluster3TimeTotalSpread[MuonSystem->nCscRechitClusters3] = tmp.TTotalSpread;
-        MuonSystem->cscRechitCluster3TimeTotalSpreadPruned[MuonSystem->nCscRechitClusters3] = tmp.TTotalSpreadPruned;
+        // MuonSystem->cscRechitCluster3TimeTotalSpread[MuonSystem->nCscRechitClusters3] = tmp.TTotalSpread;
+        // MuonSystem->cscRechitCluster3TimeTotalSpreadPruned[MuonSystem->nCscRechitClusters3] = tmp.TTotalSpreadPruned;
 
         MuonSystem->cscRechitCluster3Size[MuonSystem->nCscRechitClusters3] = tmp.nCscSegments;
 
