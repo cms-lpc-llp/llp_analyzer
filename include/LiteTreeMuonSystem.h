@@ -153,6 +153,7 @@ public:
   // int           nCscRechitsChamberMinus41[36];
   // int           nCscRechitsChamberMinus42[36];
 
+  int           nDtRechitClusters;
   int           nDTRechits;
   int           nDtRings;
   int           nDTPositiveYRechits;
