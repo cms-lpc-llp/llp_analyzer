@@ -16,11 +16,12 @@ analysis = "RunDataRunEventIndexing"
 outputfile = "RunDataRunEventIndexing" + "_" + label
 
 
-cmsswReleaseVersion = "CMSSW_10_6_20"
+cmsswReleaseVersion = "CMSSW_10_6_8"
 outputDirectoryBase = "/store/user/lpclonglived/sixie/analyzer/"+analysis+"/"+label+"/"
 #datasetListDir = "displacedJetMuonNtuple/V1p171/Data2018_UL/MuonHitsOnly/"
 #datasetListDir = "displacedJetMuonNtuple/V1p17/Data2018ABC_AOD/v5/sixie/SingleMuon/"
-datasetListDir = "displacedJetMuonNtuple/V1p17/Data2018/MuonHitsOnly/"
+#datasetListDir = "displacedJetMuonNtuple/V1p17/Data2018/MuonHitsOnly/"
+datasetListDir = "displacedJetMuonNtuple/V1p17/MC_Fall18/v2/sixie/"
 
 datasetList = OrderedDict()
 
@@ -30,7 +31,14 @@ datasetList = OrderedDict()
 #datasetList['Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018A-17Sep2018.txt'] = [1, 1, "2018", ""]
 #datasetList['Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018B-17Sep2018.txt'] = [1, 1, "2018", ""] 
 #datasetList['Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018C-17Sep2018.txt'] = [1, 1, "2018", ""]
-datasetList['SingleMuon_2018B.txt'] = [1, 1, "2018", ""]
+#datasetList['SingleMuon_2018B.txt'] = [1, 1, "2018", ""]
+datasetList['ParticleGun_K0Lpt10.txt'] = [1, 1, "2018", ""]
+datasetList['ParticleGun_K0Lpt5.txt'] = [1, 1, "2018", ""]    
+datasetList['ParticleGun_K0Lpt2.txt'] = [1, 1, "2018", ""]    
+datasetList['ParticleGun_Photonpt10.txt'] = [1, 1, "2018", ""]
+datasetList['ParticleGun_Photonpt5.txt'] = [1, 1, "2018", ""] 
+datasetList['ParticleGun_Photonpt2.txt'] = [1, 1, "2018", ""] 
+datasetList['ParticleGun_KPluspt10.txt'] = [1, 1, "2018", ""] 
 
 
 #CMSSW_BASE_DIR = os.getenv('CMSSW_BASE')
