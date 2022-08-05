@@ -12,8 +12,8 @@ queueType = "longlunch"
 option = 0
 label = "option0"
 
-analysis = "RunDataRunEventIndexing"
-outputfile = "RunDataRunEventIndexing" + "_" + label
+analysis = "Runllp_MuonSystem_particlegun"
+outputfile = "Runllp_MuonSystem_particlegun" + "_" + label
 
 
 cmsswReleaseVersion = "CMSSW_10_6_8"
@@ -102,7 +102,7 @@ for listfile in datasetList.keys():
     #Copy run script and executable
     #####################################
     os.system("cp " + Analyzer_DIR + "/scripts/run_job_LPC.sh " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
-    os.system("cp " + Analyzer_DIR + "/" + analysis + " " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
+    os.system("cp " + Analyzer_DIR + "/bin/" + analysis + " " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
     os.system("mkdir -p " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/")
     #os.system("mkdir -p " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/PileupWeights/")
     #os.system("cp " + Analyzer_DIR + "/data/PileupWeights/PileupWeights.root " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/PileupWeights/")
