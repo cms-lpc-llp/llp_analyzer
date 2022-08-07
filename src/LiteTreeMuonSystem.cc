@@ -138,6 +138,8 @@ void LiteTreeMuonSystem::InitVariables()
   nDTRechitsChamber40 = 0;
   nDTRechitsChamberPlus41 = 0;
   nDTRechitsChamberPlus42 = 0;
+  nDtRechitClusters = 0;
+
   // nCscITClusters = 0;
   // nCsc_JetVetoITCluster0p4 = 0;
   // nCsc_JetMuonVetoITCluster0p4 = 0;
@@ -1262,6 +1264,7 @@ tree_->SetBranchAddress("metPhiEENoiseXYCorr",      &metPhiEENoiseXYCorr);
   tree_->SetBranchAddress("nDTNegativeYRechits",            &nDTNegativeYRechits);
   tree_->SetBranchAddress("nDtRings",             &nDtRings);
 
+  tree_->SetBranchAddress("nDtRechitClusters",                           &nDtRechitClusters);
   tree_->SetBranchAddress("nDTRechitsChamberMinus12",            &nDTRechitsChamberMinus12);
   tree_->SetBranchAddress("nDTRechitsChamberMinus11",            &nDTRechitsChamberMinus11);
   tree_->SetBranchAddress("nDTRechitsChamber10",            &nDTRechitsChamber10);
@@ -2434,6 +2437,7 @@ void LiteTreeMuonSystem::CreateTree()
   tree_->Branch("nDTPositiveYRechits",             &nDTPositiveYRechits, "nDTPositiveYRechits/I");
   tree_->Branch("nDTNegativeYRechits",             &nDTNegativeYRechits, "nDTNegativeYRechits/I");
 
+  tree_->Branch("nDtRechitClusters",            &nDtRechitClusters,             "nDtRechitClusters/I");
   tree_->Branch("nDTRechitsChamberMinus12",            &nDTRechitsChamberMinus12,             "nDTRechitsChamberMinus12/I");
   tree_->Branch("nDTRechitsChamberMinus11",            &nDTRechitsChamberMinus11,             "nDTRechitsChamberMinus11/I");
   tree_->Branch("nDTRechitsChamber10",            &nDTRechitsChamber10,             "nDTRechitsChamber10/I");
