@@ -98,7 +98,6 @@ void llp_MuonSystem_particlegun::Analyze(bool isData, int options, string output
 
 
 
-  bool signalScan = int(options/10) == 1;
   int option = options%10;
 
   if( isData )
@@ -108,14 +107,6 @@ void llp_MuonSystem_particlegun::Analyze(bool isData, int options, string output
   else
   {
     std::cout << "[INFO]: running on MC with option: " << option << std::endl;
-  }
-  if( signalScan )
-  {
-    std::cout << "[INFO]: running with Signal scan" << std::endl;
-  }
-  else
-  {
-    std::cout << "[INFO]: running without Signal scan " << option << std::endl;
   }
 
 
@@ -144,7 +135,7 @@ void llp_MuonSystem_particlegun::Analyze(bool isData, int options, string output
   string outfilename = outputfilename;
   if (outfilename == "") outfilename = "MuonSystem_Tree.root";
   TFile *outFile;
-  if (isData || !signalScan) outFile = new TFile(outfilename.c_str(), "RECREATE");
+  outFile = new TFile(outfilename.c_str(), "RECREATE");
 
 
   TreeMuonSystemParticleGun *MuonSystem = new TreeMuonSystemParticleGun;
@@ -257,7 +248,6 @@ void llp_MuonSystem_particlegun::Analyze(bool isData, int options, string output
     MuonSystem->lumiSec = lumiNum;
     MuonSystem->evtNum = eventNum;
 
-    // if (eventNum!=476483009 && eventNum!=346074531 && eventNum!=228964571 && eventNum!=501389779)continue;
     if (!isData)
     {
         if (analysisTag=="Razor2016_07Aug2017Rereco") MuonSystem->MC_condition = 2016;
@@ -487,7 +477,7 @@ void llp_MuonSystem_particlegun::Analyze(bool isData, int options, string output
       }
 
       //Do DBSCAN Clustering
-      int min_point_dt = isData?50:30;  //minimum number of segments to call it a cluster
+      int min_point_dt = 50;  //minimum number of segments to call it a cluster
       float epsilon_dt = 0.2; //cluster radius parameter
       DBSCAN ds_dtRechit(min_point_dt, epsilon_dt, points);
       ds_dtRechit.run();
@@ -710,52 +700,15 @@ void llp_MuonSystem_particlegun::Analyze(bool isData, int options, string output
         MuonSystem->dtRechitClusterMaxDPhi_index[i] = index;
 
       }
-      //if ( MuonSystem->nDtRechitClusters + MuonSystem->nCscRechitClusters < 1)continue;
 
       MuonSystem->tree_->Fill();
   }
   
-  if(!isData && signalScan)
-    {
-      for(auto &filePtr : Files2D)
-	{
-	  cout << "Writing output tree (" << filePtr.second->GetName() << ")" << endl;
-	  filePtr.second->cd();
-	  Trees2D[filePtr.first]->Write();
-	  NEvents2D[filePtr.first]->Write("NEvents");
-	  Total2D[filePtr.first]->Write("Total");
-	  accep2D[filePtr.first]->Write("acceptance");
-	  accep_met2D[filePtr.first]->Write("acceptance_met");
-	  filePtr.second->Close();
-	  
-	}
-    }
-  else if (!isData)
-    {
-      cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
-      cout << "Writing output trees..." << endl;
-      outFile->cd();
-      MuonSystem->tree_->Write();
-      NEvents->Write();
-      accep->Write("acceptance");
-      accep_met->Write("acceptance_met");
-      outFile->Close();
-    }
+  cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
+  cout << "Writing output trees..." << endl;
+  outFile->cd();
+  MuonSystem->tree_->Write();
+  NEvents->Write();  
+  outFile->Close();
   
-  
-  else
-    {
-      cout << "Filled Total of " << NEvents->GetBinContent(1) << " Events\n";
-      cout << "Writing output trees..." << endl;
-      outFile->cd();
-      MuonSystem->tree_->Write();
-      Nmet200->Write();
-      NmetFilter->Write();
-      Nlep0->Write();
-      Njet1->Write();
-      NcosmicVeto->Write();
-      NEvents->Write();
-      // outFile->Write();
-      outFile->Close();
-    }
 }
