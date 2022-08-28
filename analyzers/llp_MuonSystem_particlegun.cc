@@ -209,11 +209,11 @@ void llp_MuonSystem_particlegun::Analyze(bool isData, int options, string output
   start = clock();
   for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++) {
 
-    cout << "\nProcessing entry " << jentry << endl;
+    //cout << "\nProcessing entry " << jentry << endl;
 
     //begin event
     // if (jentry>10000) continue;
-    if(jentry % 10000 == 0)
+    if(jentry % 1000 == 0)
     {
       end = clock();
       double time_taken = double(end - start) / double(CLOCKS_PER_SEC);
@@ -278,12 +278,14 @@ void llp_MuonSystem_particlegun::Analyze(bool isData, int options, string output
       if (i==0) {
 	MuonSystem->particle1_id = gParticleId[i];
 	MuonSystem->particle1_pt = gParticlePt[i];
+	MuonSystem->particle1_e = gParticleE[i];
 	MuonSystem->particle1_eta = gParticleEta[i];
 	MuonSystem->particle1_phi = gParticlePhi[i];
       } 
      if (i==1) {
 	MuonSystem->particle2_id = gParticleId[i];
 	MuonSystem->particle2_pt = gParticlePt[i];
+	MuonSystem->particle2_e = gParticleE[i];
 	MuonSystem->particle2_eta = gParticleEta[i];
 	MuonSystem->particle2_phi = gParticlePhi[i];
       } 
@@ -698,7 +700,6 @@ void llp_MuonSystem_particlegun::Analyze(bool isData, int options, string output
         MuonSystem->dtRechitClusterMaxDPhi_index[i] = index;
 
       }
-
 
       MuonSystem->tree_->Fill();
   }
