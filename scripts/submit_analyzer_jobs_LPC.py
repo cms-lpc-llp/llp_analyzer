@@ -12,8 +12,8 @@ queueType = "longlunch"
 option = 0
 label = "option0"
 
-analysis = "Runllp_MuonSystem_particlegun"
-outputfile = "Runllp_MuonSystem_particlegun" + "_" + label
+analysis = "Runllp_MuonSystem_combine"
+outputfile = "Runllp_MuonSystem_combine" + "_" + label
 
 
 cmsswReleaseVersion = "CMSSW_10_6_8"
@@ -21,7 +21,8 @@ outputDirectoryBase = "/store/user/lpclonglived/sixie/analyzer/"+analysis+"/"+la
 #datasetListDir = "displacedJetMuonNtuple/V1p171/Data2018_UL/MuonHitsOnly/"
 #datasetListDir = "displacedJetMuonNtuple/V1p17/Data2018ABC_AOD/v5/sixie/SingleMuon/"
 #datasetListDir = "displacedJetMuonNtuple/V1p17/Data2018/MuonHitsOnly/"
-datasetListDir = "displacedJetMuonNtuple/V1p17/MC_Fall18/v2/sixie/"
+#datasetListDir = "displacedJetMuonNtuple/V1p17/MC_Fall18/v2/sixie/"
+datasetListDir = "displacedJetMuonNtuple/V1p19/Data2022/"
 
 datasetList = OrderedDict()
 
@@ -32,19 +33,19 @@ datasetList = OrderedDict()
 #datasetList['Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018B-17Sep2018.txt'] = [1, 1, "2018", ""] 
 #datasetList['Run2_displacedJetMuonNtupler_V1p17_Data2018_17Sept2018_AOD_Run2018C-17Sep2018.txt'] = [1, 1, "2018", ""]
 #datasetList['SingleMuon_2018B.txt'] = [1, 1, "2018", ""]
-datasetList['ParticleGun_K0Lpt2.txt'] = [1, 10, "2018", ""]    
-datasetList['ParticleGun_K0Lpt5.txt'] = [1, 10, "2018", ""]    
-datasetList['ParticleGun_K0Lpt10.txt'] = [1, 10, "2018", ""]
-datasetList['ParticleGun_Photonpt2.txt'] = [1, 10, "2018", ""] 
-datasetList['ParticleGun_Photonpt5.txt'] = [1, 10, "2018", ""] 
-datasetList['ParticleGun_Photonpt10.txt'] = [1, 10, "2018", ""]
-datasetList['ParticleGun_KPluspt2.txt'] = [1, 10, "2018", ""] 
-datasetList['ParticleGun_KPluspt5.txt'] = [1, 10, "2018", ""] 
-datasetList['ParticleGun_KPluspt10.txt'] = [1, 10, "2018", ""] 
-datasetList['ParticleGun_PiPluspt2.txt'] = [1, 10, "2018", ""] 
-datasetList['ParticleGun_PiPluspt5.txt'] = [1, 10, "2018", ""] 
-datasetList['ParticleGun_PiPluspt10.txt'] = [1, 10, "2018", ""] 
-
+# datasetList['ParticleGun_K0Lpt2.txt'] = [1, 10, "2018", ""]    
+# datasetList['ParticleGun_K0Lpt5.txt'] = [1, 10, "2018", ""]    
+# datasetList['ParticleGun_K0Lpt10.txt'] = [1, 10, "2018", ""]
+# datasetList['ParticleGun_Photonpt2.txt'] = [1, 10, "2018", ""] 
+# datasetList['ParticleGun_Photonpt5.txt'] = [1, 10, "2018", ""] 
+# datasetList['ParticleGun_Photonpt10.txt'] = [1, 10, "2018", ""]
+# datasetList['ParticleGun_KPluspt2.txt'] = [1, 10, "2018", ""] 
+# datasetList['ParticleGun_KPluspt5.txt'] = [1, 10, "2018", ""] 
+# datasetList['ParticleGun_KPluspt10.txt'] = [1, 10, "2018", ""] 
+# datasetList['ParticleGun_PiPluspt2.txt'] = [1, 10, "2018", ""] 
+# datasetList['ParticleGun_PiPluspt5.txt'] = [1, 10, "2018", ""] 
+# datasetList['ParticleGun_PiPluspt10.txt'] = [1, 10, "2018", ""] 
+datasetList['DisplacedJet-EXOCSCCluster_Run2022E-PromptReco-v1.txt'] = [1, 1, "2018", ""]
 
 #CMSSW_BASE_DIR = os.getenv('CMSSW_BASE')
 CMSSW_BASE_DIR = "/uscms/home/sxie/work/releases/HH/CMSSW_10_6_5/"
