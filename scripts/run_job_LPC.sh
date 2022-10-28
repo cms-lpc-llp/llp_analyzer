@@ -34,7 +34,7 @@ scramv1 project CMSSW $cmsswReleaseVersion
 ########################################
 cp input_list.tgz $cmsswReleaseVersion/src/
 cp ${executable} $cmsswReleaseVersion/src/.
-
+cp JEC.tar.gz *.root $cmsswReleaseVersion/src/
 ###########################
 #get cmssw environment
 ###########################
