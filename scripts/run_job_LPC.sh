@@ -16,7 +16,7 @@ jobnumber=$4
 outputfile=$5
 outputDirectory=$6
 cmsswReleaseVersion=$7
-year=$8
+optionLabel=$8
 sampleName=$9
 
 ############################
@@ -41,6 +41,7 @@ cp ${executable} $cmsswReleaseVersion/src/.
 cd $cmsswReleaseVersion/src/
 eval `scram runtime -sh`
 tar vxzf input_list.tgz
+tar vxzf JEC.tar.gz
 inputfilelist=input_list_${jobnumber}.txt
 
 ###################################
@@ -58,8 +59,8 @@ ls inputs/* > tmp_input_list.txt
 #run executable
 ###########################
 echo "Executing Analysis executable:"
-echo "./${executable} tmp_input_list.txt --outputFile=${outputfile}_${jobnumber}.root --optionNumber=${option} --isData=${isData} "
-./${executable} tmp_input_list.txt --outputFile=${outputfile}_${jobnumber}.root --optionNumber=${option} --isData=${isData} --year=${year} --pileupWeightName=${sampleName}
+echo "./${executable} tmp_input_list.txt --outputFile=${outputfile}_${jobnumber}.root --optionNumber=${option} --isData=${isData} --optionLabel=${optionLabel}  --pileupWeightName=${sampleName} "
+./${executable} tmp_input_list.txt --outputFile=${outputfile}_${jobnumber}.root --optionNumber=${option} --isData=${isData} --optionLabel=${optionLabel} --pileupWeightName=${sampleName} 
 
 ls -l
 ##########################################################

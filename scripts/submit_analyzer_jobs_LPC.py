@@ -67,6 +67,15 @@ for listfile in datasetList.keys():
     year = datasetList[listfile][2]
     sampleName = datasetList[listfile][3]
 
+    optionLabel = ""
+    if (year == "2018"):
+        optionLabel = "Razor2018_17SeptEarlyReReco"
+    if (year == "2017"):
+        optionLabel = "Razor2017_31Mar2018Rereco"
+    if (year == "2016"):
+        optionLabel = "Razor2016_07Aug2017Rereco"
+
+
     #####################################
     #Job Splitting
     #####################################
@@ -109,15 +118,12 @@ for listfile in datasetList.keys():
     #####################################
     os.system("cp " + Analyzer_DIR + "/scripts/run_job_LPC.sh " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
     os.system("cp " + Analyzer_DIR + "/bin/" + analysis + " " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
-    os.system("mkdir -p " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/")
-    #os.system("mkdir -p " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/PileupWeights/")
-    #os.system("cp " + Analyzer_DIR + "/data/PileupWeights/PileupWeights.root " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/PileupWeights/")
-    #os.system("mkdir -p " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/JEC/Summer16_07Aug2017_V11_MC/")
-    #os.system("cp " + Analyzer_DIR + "/data/JEC/Summer16_07Aug2017_V11_MC/Summer16_07Aug2017_V11_MC_Uncertainty_AK8PFPuppi.txt " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/JEC/Summer16_07Aug2017_V11_MC/")
-    #os.system("mkdir -p " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/JEC/Fall17_17Nov2017_V32_MC/")
-    #os.system("cp " + Analyzer_DIR + "/data/JEC/Fall17_17Nov2017_V32_MC/Fall17_17Nov2017_V32_MC_Uncertainty_AK8PFPuppi.txt " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/JEC/Fall17_17Nov2017_V32_MC/")
-    #os.system("mkdir -p " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/JEC/Autumn18_V19_MC/")
-    #os.system("cp " + Analyzer_DIR + "/data/JEC/Autumn18_V19_MC/Autumn18_V19_MC_Uncertainty_AK8PFPuppi.txt " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/HHBoostedAnalyzer/data/JEC/Autumn18_V19_MC/")
+    os.system("cp " + Analyzer_DIR + "/data/PileupWeights/PileupReweight_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
+    os.system("cp " + Analyzer_DIR + "/data/PileupWeights/PileupReweight_MC_Fall17_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
+    os.system("cp " + Analyzer_DIR + "/data/PileupWeights/PileupReweight_MC_Summer16_ggH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8.root " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
+    os.system("cp " + Analyzer_DIR + "data/ScaleFactors/METTriggers_SF.root " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
+    os.system("cp " + Analyzer_DIR + "data/JEC.tar.gz " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
+    os.system("cp " + Analyzer_DIR + "data/HiggsPtWeights/ggH_HiggsPtReweight_NNLOPS.root " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/")
 
 
     #####################################
@@ -129,7 +135,7 @@ Universe  = vanilla
 Executable = ./run_job_LPC.sh
 """
     tmpCondorJDLFile.write(tmpCondorJDLFileTemplate)
-    tmpCondorJDLFile.write("Arguments = " + analysis + " " + str(isData) + " " + str(option) + " " + "$(I) " + outputfile + " " + outputDirectory + " " + cmsswReleaseVersion + " " + year + " " + sampleName + "\n")
+    tmpCondorJDLFile.write("Arguments = " + analysis + " " + str(isData) + " " + str(option) + " " + "$(I) " + outputfile + " " + outputDirectory + " " + cmsswReleaseVersion + " " + optionLabel + " " + sampleName + "\n")
 
     tmpCondorJDLFileTemplate = """
 Log = log/job.$(Cluster).$(Process).log
@@ -138,7 +144,16 @@ Error = err/job.$(Cluster).$(Process).err
 x509userproxy = $ENV(X509_USER_PROXY)
 """
     tmpCondorJDLFile.write(tmpCondorJDLFileTemplate)
-    tmpCondorJDLFile.write("transfer_input_files = " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/run_job_LPC.sh, " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/input_list.tgz, " + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/" + analysis + "\n")
+    tmpCondorJDLFile.write("transfer_input_files = " 
+                           + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/run_job_LPC.sh, " 
+                           + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/input_list.tgz, " 
+                           + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/PileupReweight_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root, " 
+                           + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/PileupReweight_MC_Fall17_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root, " 
+                           + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/PileupReweight_MC_Summer16_ggH_HToSSTobbbb_MH-125_TuneCUETP8M1_13TeV-powheg-pythia8.root, " 
+                           + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/METTriggers_SF.root, " 
+                           + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/JEC.tar.gz, " 
+                           + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/ggH_HiggsPtReweight_NNLOPS.root, " 
+                           + Analyzer_DIR + "/condor/" + analysis + "_" + label + "/" + datasetName + "/" + analysis + "\n")
 
     tmpCondorJDLFileTemplate = """
 should_transfer_files = YES
