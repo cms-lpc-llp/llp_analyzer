@@ -59,10 +59,12 @@ public:
   float particle1_pt;
   float particle1_eta;
   float particle1_phi;
+  float particle1_e;
   int particle2_id;
   float particle2_pt;
   float particle2_eta;
   float particle2_phi;
+  float particle2_e;
 
   int nJets;
   float jetE[N_MAX_JETS];
