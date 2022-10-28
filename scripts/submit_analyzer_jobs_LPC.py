@@ -46,6 +46,7 @@ datasetList = OrderedDict()
 # datasetList['ParticleGun_PiPluspt5.txt'] = [1, 10, "2018", ""] 
 # datasetList['ParticleGun_PiPluspt10.txt'] = [1, 10, "2018", ""] 
 datasetList['DisplacedJet-EXOCSCCluster_Run2022E-PromptReco-v1.txt'] = [1, 1, "2018", ""]
+datasetList['DisplacedJet-EXOCSCCluster_Run2022F-PromptReco-v1.txt'] = [1, 1, "2018", ""]
 
 #CMSSW_BASE_DIR = os.getenv('CMSSW_BASE')
 CMSSW_BASE_DIR = "/uscms/home/sxie/work/releases/HH/CMSSW_10_6_5/"
