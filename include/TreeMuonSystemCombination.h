@@ -8,11 +8,12 @@
 #define N_MAX_CSC 200
 #define N_MAX_CSCRECHITS 5000
 #define N_MAX_DTRECHITS 20000
-#define NTriggersMAX 982 // Number of trigger in the .dat file
+#define NTriggersMAX 1201 // Number of trigger in the .dat file
 #define N_CSC_CUT 20
 #define JET_PT_CUT 10
 #define MUON_PT_CUT 20
 #define N_MAX_GPARTICLES 5000
+#define N_MAX_LLP 200
 
 #include <iostream>
 #include <string>
@@ -882,49 +883,50 @@ public:
   int           cscRechitClusterNLayersChamberMinus42[N_MAX_CSC];
 
   //gLLP
-  float gLLP_eta[2];
-  float gLLP_phi[2];
-  float gLLP_csc[2];
-  float gLLP_dt[2];
-  float gLLP_beta[2];
-  float gLLP_maxMatchedDis[2];
-  int gLLP_match_dtRechits[2];
-  int gLLP_match_cscRechits[2];
+  int nGLLP;
+  float gLLP_eta[N_MAX_LLP];
+  float gLLP_phi[N_MAX_LLP];
+  float gLLP_csc[N_MAX_LLP];
+  float gLLP_dt[N_MAX_LLP];
+  float gLLP_beta[N_MAX_LLP];
+  float gLLP_maxMatchedDis[N_MAX_LLP];
+  int gLLP_match_dtRechits[N_MAX_LLP];
+  int gLLP_match_cscRechits[N_MAX_LLP];
 
 
-  float gLLP_e[2];
-  bool gLLP_daughterKaon[2];
-  float gLLP_pt[2];
-  float gLLP_lepdPhi[2];
-  int gLLP_multiplicity[2];
-  int gLLP_multiplicity20[2];
+  float gLLP_e[N_MAX_LLP];
+  bool gLLP_daughterKaon[N_MAX_LLP];
+  float gLLP_pt[N_MAX_LLP];
+  float gLLP_lepdPhi[N_MAX_LLP];
+  int gLLP_multiplicity[N_MAX_LLP];
+  int gLLP_multiplicity20[N_MAX_LLP];
 
-  int gLLP_EM_multiplicity[2];
+  int gLLP_EM_multiplicity[N_MAX_LLP];
 
 
 
-  float gLLP_ctau[2];
-  float gLLP_decay_vertex_r[2];
-  float gLLP_decay_vertex_x[2];
-  float gLLP_decay_vertex_y[2];
-  float gLLP_decay_vertex_z[2];
-  float gLLP_EMFracE[2];
-  float gLLP_EMFracEz[2];
-  float gLLP_EMFracP[2];
-  float gLLP_EMFracPz[2];
-  float gLLP_visE[2];
-  float gLLP_visE20[2];
-  float gLLP_visEz[2];
-  float gLLP_visP[2];
-  float gLLP_visPz[2];
+  float gLLP_ctau[N_MAX_LLP];
+  float gLLP_decay_vertex_r[N_MAX_LLP];
+  float gLLP_decay_vertex_x[N_MAX_LLP];
+  float gLLP_decay_vertex_y[N_MAX_LLP];
+  float gLLP_decay_vertex_z[N_MAX_LLP];
+  float gLLP_EMFracE[N_MAX_LLP];
+  float gLLP_EMFracEz[N_MAX_LLP];
+  float gLLP_EMFracP[N_MAX_LLP];
+  float gLLP_EMFracPz[N_MAX_LLP];
+  float gLLP_visE[N_MAX_LLP];
+  float gLLP_visE20[N_MAX_LLP];
+  float gLLP_visEz[N_MAX_LLP];
+  float gLLP_visP[N_MAX_LLP];
+  float gLLP_visPz[N_MAX_LLP];
   float gLLP_deltaR;
-  float gLLP_daughter_deltaR[2];
-  float gLLP_daughter_pt[4];
-  int   gLLP_daughter_id[4];
-  float gLLP_daughter_eta[4];
-  float gLLP_daughter_phi[4];
-  float gLLP_daughter_e[4];
-  float gLLP_daughter_mass[4];
+  float gLLP_daughter_deltaR[N_MAX_LLP];
+  // float gLLP_daughter_pt[4];
+  // int   gLLP_daughter_id[4];
+  // float gLLP_daughter_eta[4];
+  // float gLLP_daughter_phi[4];
+  // float gLLP_daughter_e[4];
+  // float gLLP_daughter_mass[4];
   float gHiggsPt;
   float gHiggsEta;
   float gHiggsPhi;

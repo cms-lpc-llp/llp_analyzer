@@ -941,8 +941,8 @@ void TreeMuonSystemCombination::InitVariables()
 //   dtRechitCluster_match_RPCRing_sameStation_dR0p4.clear();
 //   dtRechitCluster_match_RPCLayer_sameStation_dR0p4.clear();
 //   dtRechitCluster_match_RPCSector_sameStation_dR0p4.clear();
-
-  for(int i = 0;i<2;i++)
+   nGLLP = 0;
+  for(int i = 0;i<N_MAX_LLP;i++)
   {
     gLLP_multiplicity[i]= 0;
     gLLP_multiplicity20[i]= 0;
@@ -981,16 +981,16 @@ void TreeMuonSystemCombination::InitVariables()
 
   }
   gLLP_deltaR  = -999.0;
-  for(int i = 0;i<4;i++)
-  {
-    gLLP_daughter_pt[i] = -999.0;
-    gLLP_daughter_eta[i] = -999.0;
-    gLLP_daughter_phi[i] = -999.0;
-    gLLP_daughter_e[i] = -999.0;
-    gLLP_daughter_mass[i] = -999.0;
-    gLLP_daughter_id[i] = 999;
-
-  }
+  // for(int i = 0;i<4;i++)
+  // {
+  //   gLLP_daughter_pt[i] = -999.0;
+  //   gLLP_daughter_eta[i] = -999.0;
+  //   gLLP_daughter_phi[i] = -999.0;
+  //   gLLP_daughter_e[i] = -999.0;
+  //   gLLP_daughter_mass[i] = -999.0;
+  //   gLLP_daughter_id[i] = 999;
+  //
+  // }
 
 
   genMetPtTrue = -999.;
@@ -2055,6 +2055,7 @@ tree_->SetBranchAddress("dtRechitClusterMaxDPhi_index",             &dtRechitClu
 
 
 
+  tree_->SetBranchAddress("nGLLP",    &nGLLP);
   tree_->SetBranchAddress("gLLP_multiplicity",    gLLP_multiplicity);
   tree_->SetBranchAddress("gLLP_multiplicity20",    gLLP_multiplicity20);
   tree_->SetBranchAddress("gLLP_EM_multiplicity",    gLLP_EM_multiplicity);
@@ -2089,12 +2090,12 @@ tree_->SetBranchAddress("dtRechitClusterMaxDPhi_index",             &dtRechitClu
 
 
 
-tree_->SetBranchAddress("gLLP_daughter_id",          gLLP_daughter_id);
-tree_->SetBranchAddress("gLLP_daughter_pt",          gLLP_daughter_pt);
-    tree_->SetBranchAddress("gLLP_daughter_eta",          gLLP_daughter_eta);
-    tree_->SetBranchAddress("gLLP_daughter_phi",          gLLP_daughter_phi);
-    tree_->SetBranchAddress("gLLP_daughter_e",          gLLP_daughter_e);
-    tree_->SetBranchAddress("gLLP_daughter_mass",          gLLP_daughter_mass);
+// tree_->SetBranchAddress("gLLP_daughter_id",          gLLP_daughter_id);
+// tree_->SetBranchAddress("gLLP_daughter_pt",          gLLP_daughter_pt);
+//     tree_->SetBranchAddress("gLLP_daughter_eta",          gLLP_daughter_eta);
+//     tree_->SetBranchAddress("gLLP_daughter_phi",          gLLP_daughter_phi);
+//     tree_->SetBranchAddress("gLLP_daughter_e",          gLLP_daughter_e);
+//     tree_->SetBranchAddress("gLLP_daughter_mass",          gLLP_daughter_mass);
 
   //Leptons
   tree_->SetBranchAddress("nGlobalMuons",    &nGlobalMuons);
@@ -3123,52 +3124,53 @@ void TreeMuonSystemCombination::CreateTree()
 
 
   //gLLP branches
-  tree_->Branch("gLLP_multiplicity",          gLLP_multiplicity,          "gLLP_multiplicity[2]/I");
-  tree_->Branch("gLLP_multiplicity20",          gLLP_multiplicity20,          "gLLP_multiplicity20[2]/I");
-  tree_->Branch("gLLP_EM_multiplicity",          gLLP_EM_multiplicity,          "gLLP_EM_multiplicity[2]/I");
-  tree_->Branch("gLLP_match_dtRechits",          gLLP_match_dtRechits,          "gLLP_match_dtRechits[2]/I");
-  tree_->Branch("gLLP_match_cscRechits",          gLLP_match_cscRechits,          "gLLP_match_cscRechits[2]/I");
+  tree_->Branch("nGLLP",          &nGLLP,          "nGLLP/I");
+  tree_->Branch("gLLP_multiplicity",          gLLP_multiplicity,          "gLLP_multiplicity[nGLLP]/I");
+  tree_->Branch("gLLP_multiplicity20",          gLLP_multiplicity20,          "gLLP_multiplicity20[nGLLP]/I");
+  tree_->Branch("gLLP_EM_multiplicity",          gLLP_EM_multiplicity,          "gLLP_EM_multiplicity[nGLLP]/I");
+  tree_->Branch("gLLP_match_dtRechits",          gLLP_match_dtRechits,          "gLLP_match_dtRechits[nGLLP]/I");
+  tree_->Branch("gLLP_match_cscRechits",          gLLP_match_cscRechits,          "gLLP_match_cscRechits[nGLLP]/I");
 
-  tree_->Branch("gLLP_eta",          gLLP_eta,          "gLLP_eta[2]/F");
-  tree_->Branch("gLLP_phi",          gLLP_phi,          "gLLP_phi[2]/F");
-  tree_->Branch("gLLP_csc",          gLLP_csc,          "gLLP_csc[2]/F");
-  tree_->Branch("gLLP_dt",          gLLP_dt,          "gLLP_dt[2]/F");
-  tree_->Branch("gLLP_beta",          gLLP_beta,          "gLLP_beta[2]/F");
-  tree_->Branch("gLLP_maxMatchedDis",          gLLP_maxMatchedDis,          "gLLP_maxMatchedDis[2]/F");
+  tree_->Branch("gLLP_eta",          gLLP_eta,          "gLLP_eta[nGLLP]/F");
+  tree_->Branch("gLLP_phi",          gLLP_phi,          "gLLP_phi[nGLLP]/F");
+  tree_->Branch("gLLP_csc",          gLLP_csc,          "gLLP_csc[nGLLP]/F");
+  tree_->Branch("gLLP_dt",          gLLP_dt,          "gLLP_dt[nGLLP]/F");
+  tree_->Branch("gLLP_beta",          gLLP_beta,          "gLLP_beta[nGLLP]/F");
+  tree_->Branch("gLLP_maxMatchedDis",          gLLP_maxMatchedDis,          "gLLP_maxMatchedDis[nGLLP]/F");
 
 
 
-  tree_->Branch("gLLP_e",          gLLP_e,          "gLLP_e[2]/F");
-  tree_->Branch("gLLP_pt",          gLLP_pt,          "gLLP_pt[2]/F");
-  tree_->Branch("gLLP_lepdPhi",          gLLP_lepdPhi,          "gLLP_lepdPhi[2]/F");
-  tree_->Branch("gLLP_daughterKaon",          gLLP_daughterKaon,          "gLLP_daughterKaon[2]/O");
+  tree_->Branch("gLLP_e",          gLLP_e,          "gLLP_e[nGLLP]/F");
+  tree_->Branch("gLLP_pt",          gLLP_pt,          "gLLP_pt[nGLLP]/F");
+  tree_->Branch("gLLP_lepdPhi",          gLLP_lepdPhi,          "gLLP_lepdPhi[nGLLP]/F");
+  tree_->Branch("gLLP_daughterKaon",          gLLP_daughterKaon,          "gLLP_daughterKaon[nGLLP]/O");
 
-  tree_->Branch("gLLP_ctau",          gLLP_ctau,          "gLLP_ctau[2]/F");
-  tree_->Branch("gLLP_EMFracE",          gLLP_EMFracE,          "gLLP_EMFracE[2]/F");
-  tree_->Branch("gLLP_EMFracEz",          gLLP_EMFracEz,          "gLLP_EMFracEz[2]/F");
-  tree_->Branch("gLLP_EMFracP",          gLLP_EMFracP,          "gLLP_EMFracP[2]/F");
-  tree_->Branch("gLLP_EMFracPz",          gLLP_EMFracPz,          "gLLP_EMFracPz[2]/F");
-  tree_->Branch("gLLP_visE",          gLLP_visE,          "gLLP_visE[2]/F");
-  tree_->Branch("gLLP_visE20",          gLLP_visE20,          "gLLP_visE20[2]/F");
-  tree_->Branch("gLLP_visEz",          gLLP_visEz,          "gLLP_visEz[2]/F");
-  tree_->Branch("gLLP_visP",          gLLP_visP,          "gLLP_visP[2]/F");
-  tree_->Branch("gLLP_visPz",          gLLP_visPz,          "gLLP_visPz[2]/F");
-  tree_->Branch("gLLP_match_jet_pt", gLLP_match_jet_pt, "gLLP_match_jet_pt[2]/F");
-  tree_->Branch("gLLP_match_jet_index", gLLP_match_jet_index, "gLLP_match_jet_index[2]/I");
-  tree_->Branch("gLLP_match_jet_minDeltaR", gLLP_match_jet_minDeltaR, "gLLP_match_jet_minDeltaR[2]/F");
-  tree_->Branch("gLLP_decay_vertex_r",          gLLP_decay_vertex_r,          "gLLP_decay_vertex_r[2]/F");
-  tree_->Branch("gLLP_decay_vertex_x",          gLLP_decay_vertex_x,          "gLLP_decay_vertex_x[2]/F");
-  tree_->Branch("gLLP_decay_vertex_y",          gLLP_decay_vertex_y,          "gLLP_decay_vertex_y[2]/F");
-  tree_->Branch("gLLP_decay_vertex_z",          gLLP_decay_vertex_z,          "gLLP_decay_vertex_z[2]/F");
+  tree_->Branch("gLLP_ctau",          gLLP_ctau,          "gLLP_ctau[nGLLP]/F");
+  tree_->Branch("gLLP_EMFracE",          gLLP_EMFracE,          "gLLP_EMFracE[nGLLP]/F");
+  tree_->Branch("gLLP_EMFracEz",          gLLP_EMFracEz,          "gLLP_EMFracEz[nGLLP]/F");
+  tree_->Branch("gLLP_EMFracP",          gLLP_EMFracP,          "gLLP_EMFracP[nGLLP]/F");
+  tree_->Branch("gLLP_EMFracPz",          gLLP_EMFracPz,          "gLLP_EMFracPz[nGLLP]/F");
+  tree_->Branch("gLLP_visE",          gLLP_visE,          "gLLP_visE[nGLLP]/F");
+  tree_->Branch("gLLP_visE20",          gLLP_visE20,          "gLLP_visE20[nGLLP]/F");
+  tree_->Branch("gLLP_visEz",          gLLP_visEz,          "gLLP_visEz[nGLLP]/F");
+  tree_->Branch("gLLP_visP",          gLLP_visP,          "gLLP_visP[nGLLP]/F");
+  tree_->Branch("gLLP_visPz",          gLLP_visPz,          "gLLP_visPz[nGLLP]/F");
+  tree_->Branch("gLLP_match_jet_pt", gLLP_match_jet_pt, "gLLP_match_jet_pt[nGLLP]/F");
+  tree_->Branch("gLLP_match_jet_index", gLLP_match_jet_index, "gLLP_match_jet_index[nGLLP]/I");
+  tree_->Branch("gLLP_match_jet_minDeltaR", gLLP_match_jet_minDeltaR, "gLLP_match_jet_minDeltaR[nGLLP]/F");
+  tree_->Branch("gLLP_decay_vertex_r",          gLLP_decay_vertex_r,          "gLLP_decay_vertex_r[nGLLP]/F");
+  tree_->Branch("gLLP_decay_vertex_x",          gLLP_decay_vertex_x,          "gLLP_decay_vertex_x[nGLLP]/F");
+  tree_->Branch("gLLP_decay_vertex_y",          gLLP_decay_vertex_y,          "gLLP_decay_vertex_y[nGLLP]/F");
+  tree_->Branch("gLLP_decay_vertex_z",          gLLP_decay_vertex_z,          "gLLP_decay_vertex_z[nGLLP]/F");
   tree_->Branch("gLLP_deltaR",          &gLLP_deltaR,          "gLLP_deltaR/F");
-  tree_->Branch("gLLP_daughter_deltaR",          gLLP_daughter_deltaR,          "gLLP_daughter_deltaR[2]/F");
+  tree_->Branch("gLLP_daughter_deltaR",          gLLP_daughter_deltaR,          "gLLP_daughter_deltaR[nGLLP]/F");
 
-  tree_->Branch("gLLP_daughter_pt",          gLLP_daughter_pt,          "gLLP_daughter_pt[4]/F");
-  tree_->Branch("gLLP_daughter_id",          gLLP_daughter_id,          "gLLP_daughter_id[4]/I");
-  tree_->Branch("gLLP_daughter_eta",          gLLP_daughter_eta,          "gLLP_daughter_eta[4]/F");
-  tree_->Branch("gLLP_daughter_phi",          gLLP_daughter_phi,          "gLLP_daughter_phi[4]/F");
-  tree_->Branch("gLLP_daughter_e",          gLLP_daughter_e,          "gLLP_daughter_e[4]/F");
-  tree_->Branch("gLLP_daughter_mass",          gLLP_daughter_mass,          "gLLP_daughter_mass[4]/F");
+  // tree_->Branch("gLLP_daughter_pt",          gLLP_daughter_pt,          "gLLP_daughter_pt[4]/F");
+  // tree_->Branch("gLLP_daughter_id",          gLLP_daughter_id,          "gLLP_daughter_id[4]/I");
+  // tree_->Branch("gLLP_daughter_eta",          gLLP_daughter_eta,          "gLLP_daughter_eta[4]/F");
+  // tree_->Branch("gLLP_daughter_phi",          gLLP_daughter_phi,          "gLLP_daughter_phi[4]/F");
+  // tree_->Branch("gLLP_daughter_e",          gLLP_daughter_e,          "gLLP_daughter_e[4]/F");
+  // tree_->Branch("gLLP_daughter_mass",          gLLP_daughter_mass,          "gLLP_daughter_mass[4]/F");
 
 
   tree_->Branch("nGlobalMuons",  &nGlobalMuons, "nGlobalMuons/I");
@@ -3251,7 +3253,7 @@ void TreeMuonSystemCombination::CreateTree()
   tree_->Branch("jet_match_genJet_minDeltaR", jet_match_genJet_minDeltaR, "jet_match_genJet_minDeltaR[nJets]/F");
   // tree_->Branch("jetLoosePassId", jetLoosePassId, "jetLoosePassId[nJets]/O");
   tree_->Branch("jetTightPassId", jetTightPassId, "jetTightPassId[nJets]/O");
-  tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[982]/O"); //hardcoded
+  tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[1201]/O"); //hardcoded
   tree_->Branch("METTrigger", METTrigger, "METTrigger/O"); //hardcoded
   tree_->Branch("METNoMuTrigger", METNoMuTrigger, "METNoMuTrigger/O"); //hardcoded
 
