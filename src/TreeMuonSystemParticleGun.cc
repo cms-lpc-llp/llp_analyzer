@@ -18,10 +18,12 @@ void TreeMuonSystemParticleGun::InitVariables()
   runNum=0; lumiSec=0; evtNum=0;  MC_condition = 0;npv=0;
 
   particle1_id = 0;
+  particle1_e = 0.0;
   particle1_pt = 0.0;
   particle1_eta = 0.0;
   particle1_phi = 0.0;
   particle2_id = 0;
+  particle2_e = 0;
   particle2_pt = 0.0;
   particle2_eta = 0.0;
   particle2_phi = 0.0;
@@ -308,10 +310,12 @@ void TreeMuonSystemParticleGun::InitTree()
   tree_->SetBranchAddress("particle1_id",    &particle1_id);
   tree_->SetBranchAddress("particle1_pt",    &particle1_pt);
   tree_->SetBranchAddress("particle1_eta",    &particle1_eta);
+  tree_->SetBranchAddress("particle1_e",    &particle1_e);
   tree_->SetBranchAddress("particle1_phi",    &particle1_phi);
   tree_->SetBranchAddress("particle2_id",    &particle2_id);
   tree_->SetBranchAddress("particle2_pt",    &particle2_pt);
   tree_->SetBranchAddress("particle2_eta",    &particle2_eta);
+  tree_->SetBranchAddress("particle2_e",    &particle2_e);
   tree_->SetBranchAddress("particle2_phi",    &particle2_phi);
    
    
@@ -596,10 +600,12 @@ void TreeMuonSystemParticleGun::CreateTree()
   tree_->Branch("particle1_id",          &particle1_id,          "particle1_id/I");
   tree_->Branch("particle1_pt",          &particle1_pt,          "particle1_pt/F");
   tree_->Branch("particle1_eta",         &particle1_eta,         "particle1_eta/F");
+  tree_->Branch("particle1_e",         &particle1_e,         "particle1_e/F");
   tree_->Branch("particle1_phi",         &particle1_phi,         "particle1_phi/F");  
   tree_->Branch("particle2_id",          &particle2_id,          "particle2_id/I");
   tree_->Branch("particle2_pt",          &particle2_pt,          "particle2_pt/F");
   tree_->Branch("particle2_eta",         &particle2_eta,         "particle2_eta/F");
+  tree_->Branch("particle2_e",         &particle2_e,         "particle2_e/F");
   tree_->Branch("particle2_phi",         &particle2_phi,         "particle2_phi/F");  
  
   tree_->Branch("nCscRechitClusters",             &nCscRechitClusters, "nCscRechitClusters/I");
