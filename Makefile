@@ -14,7 +14,7 @@ RUNNERS = $(addprefix $(BINDIR)/Run,$(notdir $(basename $(ANALYZERS))))
 RUNNERSCC = $(addsuffix .cc,$(addprefix $(ANADIR)/,$(notdir $(RUNNERS))))
 UTILS = $(SRCDIR)/JetCorrectorParameters.cc $(SRCDIR)/SimpleJetCorrectionUncertainty.cc  $(SRCDIR)/JetCorrectionUncertainty.cc $(SRCDIR)/SimpleJetCorrector.cc $(SRCDIR)/FactorizedJetCorrector.cc $(SRCDIR)/SimpleJetResolution.cc $(SRCDIR)/BTagCalibrationStandalone.cc $(SRCDIR)/EnergyScaleCorrection_class.cc $(SRCDIR)/EnergyScaleCorrection_class_2017.cc $(SRCDIR)/Hemisphere.cc $(SRCDIR)/Davismt2.cc $(SRCDIR)/RazorHelper.cc $(SRCDIR)/DBSCAN.cc $(SRCDIR)/LiteTreeMuonSystem.cc $(SRCDIR)/LiteLiteTreeMuonSystem.cc $(SRCDIR)/HNLMuonSystemTree.cc ${SRCDIR}/TreeMuonSystemCombination.cc ${SRCDIR}/TreeMuonSystemBParking.cc ${SRCDIR}/TreeMuonSystemDarkShower.cc ${SRCDIR}/TreeMuonSystemParticleGun.cc
 UTILSOBJ = $(UTILS:cc=o)
-EXECUTABLES = $(RUNNERS) 
+EXECUTABLES = MergeNtuples NormalizeNtuple SkimNtuple $(RUNNERS) 
 HELPERSCRIPT = python/MakeAnalyzerCode.py
 
 
@@ -64,5 +64,8 @@ MakePlots: $(SRCDIR)/SimpleTable.o ./macros/BackgroundStudies/OverlayKinematicPl
 	$(CXX) $^ $(CXXFLAGS) -I$(INCLUDEDIR) $(LDFLAGS) $(LIBS) -o $@ $(CXX14FLAGS)
 
 RunDataRunEventIndexing: $(SRCDIR)/RunDataRunEventIndexing.cc $(INCLUDEDIR)/rootdict.o
+	$(CXX) $^ $(CXXFLAGS) -I$(INCLUDEDIR) $(LDFLAGS) $(LIBS) -o $@ $(CXX14FLAGS)
+
+MergeNtuples: $(SRCDIR)/SimpleTable.o $(SRCDIR)/MergeNtuples.cc $(INCLUDEDIR)/rootdict.o
 	$(CXX) $^ $(CXXFLAGS) -I$(INCLUDEDIR) $(LDFLAGS) $(LIBS) -o $@ $(CXX14FLAGS)
 
