@@ -58,6 +58,8 @@ void TreeMuonSystemBParking::InitVariables()
      lepPhi[i]    = -999.;
      lepPdgId[i]  = -999;
      lepDZ[i]     = -999.;
+     lepDXY[i]     = -999.;
+     lepDXYErr[i]     = -999.;
 
      lepLooseId[i] = false;
      lepTightId[i] = false;
@@ -439,6 +441,8 @@ void TreeMuonSystemBParking::InitTree()
       tree_->SetBranchAddress("lepPhi",      lepPhi);
       tree_->SetBranchAddress("lepPdgId",  lepPdgId);
       tree_->SetBranchAddress("lepDZ",     lepDZ);
+      tree_->SetBranchAddress("lepDXY",     lepDXY);
+      tree_->SetBranchAddress("lepDXYErr",     lepDXYErr);
       tree_->SetBranchAddress("lepMuonType",     lepMuonType);
       tree_->SetBranchAddress("lepMuonQuality",     lepMuonQuality);
       tree_->SetBranchAddress("lepMuon_passHLTFilter",     lepMuon_passHLTFilter);
@@ -909,6 +913,8 @@ void TreeMuonSystemBParking::CreateTree()
       tree_->Branch("lepPhi",    lepPhi,    "lepPhi[nLeptons]/F");
       tree_->Branch("lepPdgId",  lepPdgId,  "lepPdgId[nLeptons]/I");
       tree_->Branch("lepDZ",     lepDZ,     "lepDZ[nLeptons]/F");
+      tree_->Branch("lepDXY",     lepDXY,     "lepDXY[nLeptons]/F");
+      tree_->Branch("lepDXYErr",     lepDXYErr,     "lepDXYErr[nLeptons]/F");
       tree_->Branch("lepLooseId", lepLooseId, "lepLooseId[nLeptons]/O");
       tree_->Branch("lepTightId", lepTightId, "lepTightId[nLeptons]/O");
 

@@ -89,6 +89,8 @@ public:
     float lepPhi[N_MAX_LEPTONS];
     int  lepPdgId[N_MAX_LEPTONS];
     float lepDZ[N_MAX_LEPTONS];
+    float lepDXY[N_MAX_LEPTONS];
+    float lepDXYErr[N_MAX_LEPTONS];
     bool lepLooseId[N_MAX_LEPTONS];
     bool lepTightId[N_MAX_LEPTONS];
     bool lepPassLooseIso[N_MAX_LEPTONS];

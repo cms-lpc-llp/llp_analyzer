@@ -33,6 +33,8 @@ struct leptons
   TLorentzVector lepton;
   int pdgId;
   float dZ;
+  float dXY;
+  float dXYErr;
   // bool passLooseId;
   // bool passMediumId;
   bool tightId;
@@ -353,6 +355,8 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
             tmpMuon.lepton.SetPtEtaPhiM(muonPt[i],muonEta[i], muonPhi[i], MU_MASS);
             tmpMuon.pdgId = 13 * -1 * muonCharge[i];
             tmpMuon.dZ = muon_dZ[i];
+            tmpMuon.dXY = muon_d0[i];
+            tmpMuon.dXYErr = muon_d0Err[i];
             tmpMuon.tightId = isMuonPOGTightMuon(i);
             tmpMuon.looseId = isMuonPOGLooseMuon(i);
             float muonIso = (muon_chargedIso[i] + fmax(0.0,  muon_photonIso[i] + muon_neutralHadIso[i] - 0.5*muon_pileupIso[i])) / muonPt[i];
@@ -413,6 +417,9 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
             MuonSystem->lepPhi[MuonSystem->nLeptons]    = tmp.lepton.Phi();
             MuonSystem->lepPdgId[MuonSystem->nLeptons]  = tmp.pdgId;
             MuonSystem->lepDZ[MuonSystem->nLeptons]     = tmp.dZ;
+            MuonSystem->lepDXY[MuonSystem->nLeptons]     = tmp.dXY;
+            MuonSystem->lepDXYErr[MuonSystem->nLeptons]     = tmp.dXYErr;
+
             MuonSystem->lepLooseId[MuonSystem->nLeptons] = tmp.looseId;
             MuonSystem->lepTightId[MuonSystem->nLeptons] = tmp.tightId;
             MuonSystem->lepPassLooseIso[MuonSystem->nLeptons] = tmp.passLooseIso;
