@@ -700,7 +700,7 @@ void llp_MuonSystem_particlegun::Analyze(bool isData, int options, string output
         MuonSystem->dtRechitClusterMaxDPhi_index[i] = index;
 
       }
-
+      if (MuonSystem->nDtRechitClusters + MuonSystem->nCscRechitClusters<1)continue;
       MuonSystem->tree_->Fill();
   }
   

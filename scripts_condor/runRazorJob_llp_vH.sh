@@ -84,11 +84,14 @@ then
 		##job finished, copy file to T2
 		echo "copying output file to ${outputDirectory}"
 		eval `scram unsetenv -sh`
-		gfal-mkdir -p gsiftp://transfer-lb.ultralight.org//${outputDirectory}	
+		#gfal-mkdir -p davs://xrootd-redir-stageout.ultralight.org:1095/${outputDirectory}
+		#gfal-mkdir -p gsiftp://transfer-lb.ultralight.org//${outputDirectory}	
+		mkdir -p ${outputDirectory}	
 		while IFS= read -r line
 		do
         		echo $line	
-			gfal-copy -f --checksum-mode=both ${line} gsiftp://transfer-lb.ultralight.org//${outputDirectory}/${line}
+			#gfal-copy -f --checksum-mode=both ${line} davs://xrootd-redir-stageout.ultralight.org:1095/${outputDirectory}/${line}
+			cp  ${line} ${outputDirectory}/${line}
 			if [ -f ${outputDirectory}/${line} ]
 			then
 				echo ${line} "copied"
@@ -97,23 +100,6 @@ then
 			fi
 		done <"output.txt"
 
-		#if [ -f ${outputfile} ]
-		#then
-		#	eval `scram unsetenv -sh`
-		#	gfal-mkdir -p gsiftp://transfer.ultralight.org//${outputDirectory}
-		#	gfal-copy --checksum-mode=both ${outputfile} gsiftp://transfer.ultralight.org//${outputDirectory}/${outputfile}
-		#	#mkdir -p ${outputDirectory}
-		#	#cp ${outputfile} ${outputDirectory}/${outputfile}
-		#else
-		#	echo "output doesn't exist"
-		#fi
-		#if [ -f /mnt/hadoop/${outputDirectory}/${outputfile} ]
-		##if [ -f /${outputDirectory}/${outputfile} ]
-		#then
-		#	echo "ZZZZAAAA ============ good news, job finished successfully "
-		#else
-		#	echo "YYYYZZZZ ============ somehow job failed, please consider resubmitting"
-		#fi
 	else
 		echo echo "WWWWYYYY ============= failed to access file RazorRun_T2, job anandoned"
 	fi

@@ -114,6 +114,7 @@ void RazorAnalyzer::EnableMuons(){
     fChain->SetBranchStatus("muonIsMedium", 1);
     fChain->SetBranchStatus("muonIsTight", 1);
     fChain->SetBranchStatus("muon_d0", 1);
+    fChain->SetBranchStatus("muon_d0Err", 1);
     fChain->SetBranchStatus("muon_dZ", 1);
     fChain->SetBranchStatus("muon_ip3d", 1);
     fChain->SetBranchStatus("muon_ip3dSignificance", 1);
@@ -844,7 +845,7 @@ void RazorAnalyzer::EnableTracks(){
     fChain->SetBranchStatus("track_dzToPV", 1);
     fChain->SetBranchStatus("track_dzErr", 1);
     fChain->SetBranchStatus("track_chi2", 1);
-    fChain->SetBranchStatus("track_ndof", 1);    
+    fChain->SetBranchStatus("track_ndof", 1);
 }
 
 

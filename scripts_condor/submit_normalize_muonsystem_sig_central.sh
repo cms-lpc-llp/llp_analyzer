@@ -16,11 +16,10 @@ ctau_VBF=(
 0 1 5 10 25 50 100 500 1000 2000 5000 10000 100000
 )
 # 1 10 100 1000 10000 100000
-#Summer16 \
-#Fall17 \
-#Fall18
 ctau_ggH=(1 10 100 1000 10000 100000)
 for year in \
+Summer16 \
+Fall17 \
 Fall18
 do
         if [ ${year} == "Summer16" ]
@@ -32,28 +31,26 @@ do
         if [ ${year} == "Fall18" ]
         then
                 echo ${year}
-                xsec=59740
+                lumi=59740
         elif [ ${year} == "Fall17" ]
         then
                 echo ${year}
-                xsec=41530
+                lumi=41530
         elif [ ${year} == 'Summer16' ]
         then
                 echo ${year}
-                xsec=35920
+                lumi=35920
         else
                 echo "ERROR: NEED TO SET CORRECT YEAR"
         fi
-	xsec=137000
 	#tune=TuneCP5
 	#VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-	#VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8 \
-	#ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
-  #        ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
 
-        #ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
+	#VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
         for sample in \
-        ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
+	ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8 \
+        ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
+        ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
 	do
 
 		mass=()
@@ -71,7 +68,7 @@ do
 				echo "Sample " ${sample} "mx " ${mx} "ctau " ${ctau}
 				sample_long=${sample%_MH125*}_MH-125_MS-${mx}_ctau-${ctau}_${tune}_13TeV-powheg-pythia8
 				analyzer=llp_MuonSystem_bdt
-				inputDir=/storage/cms/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p17/MC_${year}/v1/v117/
+				inputDir=/storage/af/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/V1p17/MC_${year}/v1/v169/
 				outputDir=${inputDir}normalized
 				echo ${inputDir}
 				rm -f submit/${analyzer}_normalize_${year}_${sample_long}.jdl
@@ -80,23 +77,20 @@ do
 
 				echo "Universe = vanilla" > ${jdl_file}
 				echo "Executable = ${job_script}" >> ${jdl_file}
-				echo "Arguments = central no ${sample}_mx${mx}_ctau${ctau} ${inputDir} ${outputDir} ${CMSSW_BASE} ${HOME}/ ${xsec}"  >> ${jdl_file}
-				#echo "Arguments = central no ${sample}_mx${mx}_ctau${ctau} ${inputDir} ${outputDir} ${CMSSW_BASE} ${HOME}/ 1"  >> ${jdl_file}
+				echo "Arguments = central no ${sample}_mx${mx}_ctau${ctau} ${inputDir} ${outputDir} ${CMSSW_BASE} ${HOME}/ ${lumi}"  >> ${jdl_file}
 
 				echo "Log = log/${analyzer}_normalize_${year}_${sample_long}_PC.log" >> ${jdl_file}
 				echo "Output = log/${analyzer}_normalize_${year}_${sample_long}_\$(Cluster).\$(Process).out" >> ${jdl_file}
 				echo "Error = log/${analyzer}_normalize_${year}_${sample_long}_\$(Cluster).\$(Process).err" >> ${jdl_file}
 
-				#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
-				echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
-				echo "RequestMemory = 4000" >> ${jdl_file}
-				echo "RequestCpus = 1" >> ${jdl_file}
+				echo "RequestMemory = 16000" >> ${jdl_file}
+				echo "RequestCpus = 4" >> ${jdl_file}
 				echo "RequestDisk = 4" >> ${jdl_file}
+		                echo "+JobQueue=\"Short\"" >>  ${jdl_file}
 
 				echo "+RunAsOwner = True" >> ${jdl_file}
 				echo "+InteractiveUser = true" >> ${jdl_file}
-				#echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
-				echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7-m202006\"" >> ${jdl_file}
+				echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7\"" >> ${jdl_file}
 				echo '+SingularityBindCVMFS = True' >> ${jdl_file}
 				echo "run_as_owner = True" >> ${jdl_file}
 				echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}

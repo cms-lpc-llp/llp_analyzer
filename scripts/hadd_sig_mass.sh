@@ -1,9 +1,7 @@
 ver=V1p17
-ver2=/v1/v108
+ver2=/v1/v162
 for year in \
-MC_Summer16 \
-MC_Fall17 \
-MC_Fall18
+MC_all
 do
 	for m in \
 	7 \
@@ -12,8 +10,8 @@ do
 	55
 	do
 		sample=ggH_HToSSTo4Tau_MH-125_MS-${m}
-		dir1=/storage/cms/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/${year}/${ver2}/normalized/
-		outDir=/storage/cms/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/${year}/${ver2}/normalized/
+		dir1=/storage/af/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/${year}/${ver2}/normalized/
+		outDir=/storage/af/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/${year}/${ver2}/normalized/
 		outputRoot=${sample}.root
 
 		rm -f $outputRoot
@@ -30,7 +28,8 @@ do
 		eval `scram unsetenv -sh`
 		LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
 
-		gfal-copy -f --checksum-mode=both $outputRoot gsiftp://transfer-lb.ultralight.org/${outDir}/$outputRoot
+		#gfal-copy -f --checksum-mode=both $outputRoot gsiftp://transfer-lb.ultralight.org/${outDir}/$outputRoot
+		cp $outputRoot ${outDir}/$outputRoot
 
 		if [ -f ${outDir}/$outputRoot ]
 		then
