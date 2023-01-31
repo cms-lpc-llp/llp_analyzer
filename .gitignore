@@ -1,3 +1,7 @@
+#Products of make
+MergeNtuples
+NormalizeNtuple
+SkimNtuple
 # Prerequisites
 *.d
 
