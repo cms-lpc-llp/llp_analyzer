@@ -3,6 +3,7 @@ if [ "$1" == "" ] || [ "$2" == "" ]; then
     echo "RazorRun <list of input files> <analyzer name> <options>"
 else
    tar cvf input.tar ${CMSSW_BASE}/src/llp_analyzer/bin/Run$2
+   cp ${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/BParking_SF.root .
    cp ${CMSSW_BASE}/src/llp_analyzer/data/JEC.tar.gz .
    cp ${CMSSW_BASE}/src/llp_analyzer/bin/Run$2 .
    #cp ${CMSSW_BASE}/src/llp_analyzer/data/JEC/Autumn18_RunsABCD_V19_DATA.tar.gz .   
