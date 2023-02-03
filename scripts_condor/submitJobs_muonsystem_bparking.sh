@@ -1,11 +1,11 @@
 #!/bin/bash
 
-doSubmit=false
+doSubmit=true
 version="V1p19_0"
 isData=false
 options=-1
 outputfilename=""
-analysistag="Razor2018_17SeptEarlyReReco"
+label="Razor2018_17SeptEarlyReReco"
 filesPerJob=5
 maxJobs=1
 
@@ -16,6 +16,10 @@ subdir=${CMSSW_BASE}/src/llp_analyzer/scripts_condor/gitignore/$version
 padding=5
 printf "Version: ${version}\n"
 
+cd ${CMSSW_BASE}/..
+tar --exclude-caches-all --exclude-vcs -zcf CMSSW_9_4_4.tar.gz -C CMSSW_9_4_4/.. CMSSW_9_4_4 --exclude=src --exclude=tmp --exclude="*.root"
+cd -
+cp ${CMSSW_BASE}/CMSSW_9_4_4.tar.gz .
 
 samples=(  \
  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300"      \
@@ -36,12 +40,18 @@ makeasubmitdir () {
  
  mkdir -p logs
  
+ # breaking up input file list
+ split -l $filesPerJob -d -a $padding --additional-suffix=.txt $3/${sample}.txt ${sample}"_"
+ mkdir -p lists
+ mv *.txt lists/
+ tar -zcf lists.tgz lists
+ 
  # write base for submit file
  printf "universe = vanilla\n" > submitfile
  printf "Executable = ${CMSSW_BASE}/src/llp_analyzer/scripts_condor/runJobs_muonsystem_bparking.sh\n" >> submitfile
  printf "Should_Transfer_Files = YES \n" >> submitfile
  printf "WhenToTransferOutput = ON_EXIT\n" >> submitfile
- printf "Transfer_Input_Files = ${listdir}/${sample}.txt,${CMSSW_BASE}/src/llp_analyzer/Runllp_MuonSystem_bparking,${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/BParking_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/METTriggers_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/HiggsPtWeights/ggH_HiggsPtReweight_NNLOPS.root\n" >> submitfile
+ printf "Transfer_Input_Files = ${submitdir}/lists.tgz,${CMSSW_BASE}/src/llp_analyzer/scripts_condor/CMSSW_9_4_4.tar.gz,${CMSSW_BASE}/src/llp_analyzer/Runllp_MuonSystem_bparking,${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/BParking_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/METTriggers_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/HiggsPtWeights/ggH_HiggsPtReweight_NNLOPS.root\n" >> submitfile
  printf "\n" >> submitfile
  printf "notify_user = $(whoami)@cern.ch\n" >> submitfile
  printf "x509userproxy = $X509_USER_PROXY\n" >> submitfile
@@ -64,8 +74,6 @@ makeasubmitdir () {
  # hadd command, name of final merged file
  printf "hadd ${hadddir}/$1.root"     >>       ${haddfile}    
 
- # breaking up input file list
- split -l $filesPerJob -d -a $padding --additional-suffix=.txt $3/${sample}.txt ${sample}"_"
  jobnrlow=0
  jobnr=0
 
@@ -75,7 +83,7 @@ makeasubmitdir () {
   index=$(printf "%0*d" ${padding} ${jobnr});
   listFile=$submitdir/${sample}"_"${index}.txt
   echo $listFile
-  printf "Arguments = $1 $index $isData $label $option \n" >> submitfile
+  printf "Arguments = $1 $index $isData $label $option\n" >> submitfile
   printf "Queue\n" >> submitfile
   printf "\n" >> submitfile
 
@@ -85,7 +93,7 @@ makeasubmitdir () {
   printf "\n $(pwd)/$1_${index}.root"     >> ${haddfile}    
 
   # add file to checker, all histos are made at the same time, so only check one
-  printf "\n if [ ! -f $(pwd)/$1_${jobnr}.root ]; then printf \" $(pwd)/$1_${jobnr}.root \\n\"; fi " >> ${checkfile}
+  printf "\n if [ ! -f $(pwd)/$1_${index}.root ]; then printf \" $(pwd)/$1_${index}.root \\n\"; fi " >> ${checkfile}
 
   # increment filenumber counters
   #printf "NFILES: %s %s %s\n" $nfilesinlist $filenrlow $jobfilenr
