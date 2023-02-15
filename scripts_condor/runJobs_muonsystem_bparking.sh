@@ -13,18 +13,35 @@ eval `scramv1 runtime -sh`
 cp ../../Runllp_MuonSystem_bparking .
 cp ../../*.root .
 cp ../../lists.tgz .
+cp ../../JEC.tar.gz .
 tar -xzf lists.tgz
+tar -xzf JEC.tar.gz
 
+echo " "
 echo pwd and ls
+echo " "
 pwd
 ls
 
-
-
 start_time=`date +%s`
 
-
-./Runllp_MuonSystem_bparking lists/$1"_"$2.txt -d=$3 -l=$4 -n=$5 -f=$1"_"$2.root
-
+file=$1"_"$2.root
+eospath=$6
+./Runllp_MuonSystem_bparking lists/$1"_"$2.txt -d=$3 -l=$4 -n=$5 -f=$file
+if $7
+then
+  echo the eospath
+  echo $6, $eospath
+  xrdcp -f $file root://cmseos.fnal.gov//$eospath/ 2>&1
+else
+mv $file ../../
+fi
 echo done
+echo "1", $1 
+echo "2", $2 
+echo "3", $3 
+echo "4", $4 
+echo "5", $5 
+echo "6", $6 
+echo "7", $7 
 ls

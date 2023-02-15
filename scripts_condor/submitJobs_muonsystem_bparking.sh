@@ -1,29 +1,36 @@
 #!/bin/bash
 
+#(NOT ADDED YET)If you want to send to an eos directory put the LFN here
+sendToEOS=true
+eosdir="/store/user/ddiaz/B-Parking"
+eosprefix="/eos/uscms"
+
 doSubmit=true
 version="V1p19_0"
 isData=false
 options=-1
-outputfilename=""
+#outputfilename=""
 label="Razor2018_17SeptEarlyReReco"
-filesPerJob=5
-maxJobs=1
+filesPerJob=1
+#-1 to do all
+maxJobs=-1 #-1
 
 mclistdir=${CMSSW_BASE}/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p19/MC_Fall18/v1/sixie
 datalistdir=${CMSSW_BASE}/src/llp_analyzer/lists//displacedJetMuonNtuple/V1p19/Data2018_UL
 subdir=${CMSSW_BASE}/src/llp_analyzer/scripts_condor/gitignore/$version
 
-padding=5
+#for assigning indices to files after splitting
+padding=7
 printf "Version: ${version}\n"
 
 cd ${CMSSW_BASE}/..
 tar --exclude-caches-all --exclude-vcs -zcf CMSSW_9_4_4.tar.gz -C CMSSW_9_4_4/.. CMSSW_9_4_4 --exclude=src --exclude=tmp --exclude="*.root"
 cd -
-cp ${CMSSW_BASE}/CMSSW_9_4_4.tar.gz .
+cp ${CMSSW_BASE}/../CMSSW_9_4_4.tar.gz .
 
 samples=(  \
- "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300"      \
-# "ParkingBPH4_2018A"      \
+ "ParkingBPH4_2018A"      \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300"      \
 # "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300"      \
 )
 
@@ -51,7 +58,7 @@ makeasubmitdir () {
  printf "Executable = ${CMSSW_BASE}/src/llp_analyzer/scripts_condor/runJobs_muonsystem_bparking.sh\n" >> submitfile
  printf "Should_Transfer_Files = YES \n" >> submitfile
  printf "WhenToTransferOutput = ON_EXIT\n" >> submitfile
- printf "Transfer_Input_Files = ${submitdir}/lists.tgz,${CMSSW_BASE}/src/llp_analyzer/scripts_condor/CMSSW_9_4_4.tar.gz,${CMSSW_BASE}/src/llp_analyzer/Runllp_MuonSystem_bparking,${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/BParking_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/METTriggers_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/HiggsPtWeights/ggH_HiggsPtReweight_NNLOPS.root\n" >> submitfile
+ printf "Transfer_Input_Files = ${submitdir}/lists.tgz,${CMSSW_BASE}/src/llp_analyzer/JEC.tar.gz,${CMSSW_BASE}/src/llp_analyzer/scripts_condor/CMSSW_9_4_4.tar.gz,${CMSSW_BASE}/src/llp_analyzer/Runllp_MuonSystem_bparking,${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_MC_Fall18_ggH_HToSSTobbbb_MH-125_TuneCP5_13TeV-powheg-pythia8.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/BParking_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/METTriggers_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/HiggsPtWeights/ggH_HiggsPtReweight_NNLOPS.root\n" >> submitfile
  printf "\n" >> submitfile
  printf "notify_user = $(whoami)@cern.ch\n" >> submitfile
  printf "x509userproxy = $X509_USER_PROXY\n" >> submitfile
@@ -60,19 +67,26 @@ makeasubmitdir () {
  printf "Error  = logs/runanalyzer_muonsystem_bparking_\$(Cluster)_\$(Process).stderr\n" >> submitfile
  printf "Log    = logs/runanalyzer_muonsystem_bparking_\$(Cluster)_\$(Process).log\n" >> submitfile
 
+ TheEosDir=${eosdir}/${version}/$1
+ if [ ${sendToEOS} == true ] 
+ then 
+   if [ -d ${eosprefix}${TheEosDir} ] 
+   then
+     eos root://cmseos.fnal.gov rm -r ${TheEosDir} 
+   fi
+   eos root://cmseos.fnal.gov mkdir -p $TheEosDir
+   echo making eos dir
+   echo ${eosprefix}$TheEosDir
+ fi
+
  # make haddfile (make now for merging expected results)
  haddfile="./haddit.sh"
- 
- hadddir="${rootdir}/${aversion}"
- mkdir -p ${hadddir}
  printf "#!/bin/bash\n\n" > ${haddfile}    
-
  # make checker
  checkfile="./checker.sh"
  printf "#!/bin/bash\n\n" > ${checkfile}
-
  # hadd command, name of final merged file
- printf "hadd ${hadddir}/$1.root"     >>       ${haddfile}    
+ printf "hadd ${submitdir}/$1.root"     >>       ${haddfile}    
 
  jobnrlow=0
  jobnr=0
@@ -82,18 +96,24 @@ makeasubmitdir () {
  do
   index=$(printf "%0*d" ${padding} ${jobnr});
   listFile=$submitdir/${sample}"_"${index}.txt
-  echo $listFile
-  printf "Arguments = $1 $index $isData $label $option\n" >> submitfile
+  printf "Arguments = $1 $index $isData $label $options $TheEosDir $sendToEOS\n" >> submitfile
   printf "Queue\n" >> submitfile
   printf "\n" >> submitfile
 
   # add files to be produced to haddfiles
   printf "\\"  >> ${haddfile}    
 
-  printf "\n $(pwd)/$1_${index}.root"     >> ${haddfile}    
+  if [ ${sendToEOS} == true ]
+  then
+    printf "\n ${eosprefix}${TheEosDir}/$1_${index}.root"     >> ${haddfile}    
+    # add file to checker, all histos are made at the same time, so only check one
+    printf "\n if [ ! -f ${eosprefix}${TheEosDir}/$1_${index}.root ]; then printf \" ${eosprefix}${TheEosDir}/$1_${index}.root \\n\"; fi " >> ${checkfile}
+  else 
+    printf "\n $(pwd)/$1_${index}.root"     >> ${haddfile}    
+    # add file to checker, all histos are made at the same time, so only check one
+    printf "\n if [ ! -f $(pwd)/$1_${index}.root ]; then printf \" $(pwd)/$1_${index}.root \\n\"; fi " >> ${checkfile}
+  fi
 
-  # add file to checker, all histos are made at the same time, so only check one
-  printf "\n if [ ! -f $(pwd)/$1_${index}.root ]; then printf \" $(pwd)/$1_${index}.root \\n\"; fi " >> ${checkfile}
 
   # increment filenumber counters
   #printf "NFILES: %s %s %s\n" $nfilesinlist $filenrlow $jobfilenr
@@ -131,16 +151,15 @@ do
     listdir=$mclistdir
   fi
   echo is data? $isData
-  echo listdir $listdir
   nlines=`cat ${listdir}/${sample}.txt | wc -l`
   njobs1=$((nlines/filesPerJob))
   njobs2=$((nlines%filesPerJob))
   if [ $njobs2 -gt 0 ]
   then
-    echo adding one
+    #echo adding one
     njobs=$((njobs1+1))
   else  
-    echo not adding one
+    #echo not adding one
     njobs=$((njobs1))
   fi
   nTotalJobs=0
@@ -150,7 +169,11 @@ do
   else
     nTotalJobs=$((nTotalJobs+njobs))
   fi
-  echo Total numer of jobs for $sample : $nTotalJobs
+  if [ $maxJobs -eq -1 ]
+  then
+    nTotalJobs=$((nTotalJobs+njobs))
+  fi
+  echo Total number of jobs for $sample : $nTotalJobs
   makeasubmitdir ${sample} ${nTotalJobs} ${listdir}
   echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 done

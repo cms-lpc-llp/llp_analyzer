@@ -134,14 +134,14 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
     analysisTag = "Razor2016_80X";
 
   }
-  int wzId;
-
-
-  const int zh_lepton0_cut = 15;
-  const int zh_lepton1_cut = 15;
-
-  const int wh_muonPt_cut = 25;
-  const int wh_elePt_cut = 35;
+//----  int wzId;
+//----
+//----
+//----  const int zh_lepton0_cut = 15;
+//----  const int zh_lepton1_cut = 15;
+//----
+//----  const int wh_muonPt_cut = 25;
+//----  const int wh_elePt_cut = 35;
 
 
   //-----------------------------------------------
@@ -158,13 +158,13 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
   MuonSystem->tree_->SetAutoFlush(0);
   MuonSystem->InitTree();
 
-  // for signals, need one output file for each signal point
-  map<pair<int,int>, TFile*> Files2D;
-  map<pair<int,int>, TTree*>Trees2D;
-  map<pair<int,int>, TH1F*> NEvents2D;
-  map<pair<int,int>, TH1F*> accep2D;
-  map<pair<int,int>, TH1F*> accep_met2D;
-  map<pair<int,int>, TH1F*> Total2D;
+//----  // for signals, need one output file for each signal point
+//----  map<pair<int,int>, TFile*> Files2D;
+//----  map<pair<int,int>, TTree*>Trees2D;
+//----  map<pair<int,int>, TH1F*> NEvents2D;
+//----  map<pair<int,int>, TH1F*> accep2D;
+//----  map<pair<int,int>, TH1F*> accep_met2D;
+//----  map<pair<int,int>, TH1F*> Total2D;
 
 
 
@@ -176,11 +176,11 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
 
   // TH1F *NEvents_genweight = new TH1F("NEvents_genweight", "NEvents_genweight", 1, 1, 2);
 
-  char* cmsswPath;
-  cmsswPath = getenv("CMSSW_BASE");
-  string pathname;
-  if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/llp_analyzer/data/JEC/";
-  if(cmsswPath != NULL and option == 1) pathname = "JEC/"; //run on condor if option == 1
+//----  char* cmsswPath;
+//----  cmsswPath = getenv("CMSSW_BASE");
+//----  string pathname;
+//----  if(cmsswPath != NULL) pathname = string(cmsswPath) + "/src/llp_analyzer/data/JEC/";
+//----  if(cmsswPath != NULL and option == 1) pathname = "JEC/"; //run on condor if option == 1
 
 
   //--------------------------------
@@ -190,8 +190,8 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
   helper = new RazorHelper(analysisTag, isData, false);
   helper->load_BParking_SF();
 
-  std::vector<FactorizedJetCorrector*> JetCorrector = helper->getJetCorrector();
-  std::vector<std::pair<int,int> > JetCorrectorIOV = helper->getJetCorrectionsIOV();
+//----  std::vector<FactorizedJetCorrector*> JetCorrector = helper->getJetCorrector();
+//----  std::vector<std::pair<int,int> > JetCorrectorIOV = helper->getJetCorrectionsIOV();
 
 
   //*************************************************************************
@@ -261,10 +261,9 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
     else if (analysisTag=="Razor2017_17Nov2017Rereco") corrected_met = helper->METXYCorr_Met_MetPhi(metType1Pt, metType1Phi, runNum, 2017, !isData, nPV);
     else if (analysisTag=="Razor2018_17SeptEarlyReReco") corrected_met = helper->METXYCorr_Met_MetPhi(metType1Pt, metType1Phi, runNum, 2018, !isData, nPV);
 
-
-
-    MuonSystem->metEENoise = corrected_met.first;
-    MuonSystem->metPhiEENoise = corrected_met.second;
+    //Can keep as corrected MEt
+    //----MuonSystem->metEENoise = corrected_met.first;
+    //----MuonSystem->metPhiEENoise = corrected_met.second;
 
 
     //Triggers
@@ -289,8 +288,6 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
 
     MuonSystem->Flag2_all = Flag2_HBHENoiseFilter && Flag2_HBHEIsoNoiseFilter && Flag2_BadPFMuonFilter && Flag2_globalSuperTightHalo2016Filter && Flag2_EcalDeadCellTriggerPrimitiveFilter;
     if (isData) MuonSystem->Flag2_all = MuonSystem->Flag2_all && Flag2_eeBadScFilter;
-
-    if (analysisTag!="Razor2016_07Aug2017Rereco")MuonSystem->Flag2_all = MuonSystem->Flag2_all && Flag2_ecalBadCalibFilter;
 
     int llp_mother = 0;
     for (int i = 0; i < nGenParticle; i++)
@@ -485,13 +482,7 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
           double jetCorrE = jetE[i];
           TLorentzVector thisJet = makeTLorentzVector( jetCorrPt, jetEta[i], jetPhi[i], jetCorrE );
 
-          if (fabs(thisJet.Eta())> 2.65 && fabs(thisJet.Eta())<3.139 && thisJet.Pt() < 50  && analysisTag == "Razor2017_17Nov2017Rereco")
-          {
-            MetXCorr_EENoise += thisJet.Px();
-            MetYCorr_EENoise += thisJet.Py();
-          }
           if (fabs(thisJet.Eta()) >= 3.0)continue;
-          // if( thisJet.Pt() < 30 ) continue;//According to the April 1st 2015 AN
 
           jets tmpJet;
           tmpJet.jet    = thisJet;
@@ -518,14 +509,14 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
 
 
 
-      TLorentzVector PFMET = makeTLorentzVectorPtEtaPhiM(MuonSystem->metEENoise, 0, MuonSystem->metPhiEENoise, 0);
-
-      //EENoise
-      float PFMetXEENoise   = PFMET.Px() + MetXCorr_EENoise;
-      float PFMetYEENoise   = PFMET.Py() + MetYCorr_EENoise;
-      MuonSystem->metEENoise    = sqrt( pow(PFMetXEENoise,2) + pow(PFMetYEENoise,2) );
-      MuonSystem->metPhiEENoise    = atan(PFMetYEENoise/PFMetXEENoise);
-      if  (PFMetXEENoise < 0.0) MuonSystem->metPhiEENoise = RazorAnalyzer::deltaPhi(TMath::Pi() + MuonSystem->metPhiEENoise,0.0);
+//----      TLorentzVector PFMET = makeTLorentzVectorPtEtaPhiM(MuonSystem->metEENoise, 0, MuonSystem->metPhiEENoise, 0);
+//----
+//----      //EENoise
+//----      float PFMetXEENoise   = PFMET.Px() + MetXCorr_EENoise;
+//----      float PFMetYEENoise   = PFMET.Py() + MetYCorr_EENoise;
+//----      MuonSystem->metEENoise    = sqrt( pow(PFMetXEENoise,2) + pow(PFMetYEENoise,2) );
+//----      MuonSystem->metPhiEENoise    = atan(PFMetYEENoise/PFMetXEENoise);
+//----      if  (PFMetXEENoise < 0.0) MuonSystem->metPhiEENoise = RazorAnalyzer::deltaPhi(TMath::Pi() + MuonSystem->metPhiEENoise,0.0);
 
 
 
@@ -889,7 +880,8 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
 
 
           MuonSystem->cscRechitCluster_match_gLLP_deltaR[MuonSystem->nCscRechitClusters] = RazorAnalyzer::deltaR(MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters], MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters], MuonSystem->gLLP_eta, MuonSystem->gLLP_phi);
-          MuonSystem->cscRechitClusterMetEENoise_dPhi[MuonSystem->nCscRechitClusters] =  RazorAnalyzer::deltaPhi(MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters],MuonSystem->metPhiEENoise);
+// can make alternate with MET and corr MET
+//          MuonSystem->cscRechitClusterMetEENoise_dPhi[MuonSystem->nCscRechitClusters] =  RazorAnalyzer::deltaPhi(MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters],MuonSystem->metPhiEENoise);
 
           //// =========================== CUTS ===========================
           //
@@ -1175,87 +1167,6 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
 
           }
 
-         //  MuonSystem->nRpc = nRpc;
-         //  //match to RPC hits with dPhi<0.5 and same wheel in DT
-         //  for (int i = 0; i < nRpc; i++) {
-         //    float rpcR = sqrt(rpcX[i]*rpcX[i] + rpcY[i]*rpcY[i]);
-         //    if (rpcRegion[i]!=0) continue;
-         //    if (abs(RazorAnalyzer::deltaPhi(rpcPhi[i], MuonSystem->dtRechitClusterPhi[MuonSystem->nDtRechitClusters])) < 0.5 )
-         //    {
-         //      if (rpcRing[i] == MuonSystem->dtRechitClusterWheel[MuonSystem->nDtRechitClusters])
-         //      {
-         //        MuonSystem->dtRechitCluster_match_RPChits_dPhi0p5[MuonSystem->nDtRechitClusters] ++;
-         //        MuonSystem->dtRechitCluster_match_RPCTime_dPhi0p5[MuonSystem->nDtRechitClusters] += rpcBx[i];
-         //
-         //        MuonSystem->dtRechitCluster_match_RPCBx_dPhi0p5[MuonSystem->nDtRechitClusters].push_back(rpcBx[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCX_dPhi0p5[MuonSystem->nDtRechitClusters].push_back(rpcX[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCY_dPhi0p5[MuonSystem->nDtRechitClusters].push_back(rpcY[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCZ_dPhi0p5[MuonSystem->nDtRechitClusters].push_back(rpcZ[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCPhi_dPhi0p5[MuonSystem->nDtRechitClusters].push_back(rpcPhi[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCEta_dPhi0p5[MuonSystem->nDtRechitClusters].push_back(rpcEta[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCRing_dPhi0p5[MuonSystem->nDtRechitClusters].push_back(rpcRing[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCLayer_dPhi0p5[MuonSystem->nDtRechitClusters].push_back(rpcLayer[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCSector_dPhi0p5[MuonSystem->nDtRechitClusters].push_back(rpcSector[i]);
-         //
-         //      }
-         //
-         //    }
-         //    if (RazorAnalyzer::deltaR(rpcEta[i], rpcPhi[i], MuonSystem->dtRechitClusterEta[MuonSystem->nDtRechitClusters],MuonSystem->dtRechitClusterPhi[MuonSystem->nDtRechitClusters]) < 0.4 )
-         //    {
-         //        MuonSystem->dtRechitCluster_match_RPChits_dR0p4[MuonSystem->nDtRechitClusters] ++;
-         //        MuonSystem->dtRechitCluster_match_RPCTime_dR0p4[MuonSystem->nDtRechitClusters]  += rpcBx[i];
-         //        MuonSystem->dtRechitCluster_match_RPCBx_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcBx[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCX_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcX[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCY_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcY[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCZ_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcZ[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCPhi_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcPhi[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCEta_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcEta[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCRing_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcRing[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCLayer_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcLayer[i]);
-         //        MuonSystem->dtRechitCluster_match_RPCSector_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcSector[i]);
-         //        if (rpcStation[i] == MuonSystem->dtRechitClusterMaxStation[MuonSystem->nDtRechitClusters])
-         //        {
-         //          MuonSystem->dtRechitCluster_match_RPChits_sameStation_dR0p4[MuonSystem->nDtRechitClusters] ++;
-         //          MuonSystem->dtRechitCluster_match_RPCTime_sameStation_dR0p4[MuonSystem->nDtRechitClusters]  += rpcBx[i];
-         //          MuonSystem->dtRechitCluster_match_RPCBx_sameStation_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcBx[i]);
-         //          MuonSystem->dtRechitCluster_match_RPCX_sameStation_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcX[i]);
-         //          MuonSystem->dtRechitCluster_match_RPCY_sameStation_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcY[i]);
-         //          MuonSystem->dtRechitCluster_match_RPCZ_sameStation_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcZ[i]);
-         //          MuonSystem->dtRechitCluster_match_RPCPhi_sameStation_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcPhi[i]);
-         //          MuonSystem->dtRechitCluster_match_RPCEta_sameStation_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcEta[i]);
-         //          MuonSystem->dtRechitCluster_match_RPCRing_sameStation_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcRing[i]);
-         //          MuonSystem->dtRechitCluster_match_RPCLayer_sameStation_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcLayer[i]);
-         //          MuonSystem->dtRechitCluster_match_RPCSector_sameStation_dR0p4[MuonSystem->nDtRechitClusters].push_back(rpcSector[i]);
-         //        }
-         //    }
-         //
-         //  }
-         // MuonSystem->dtRechitCluster_match_RPCTime_dPhi0p5[MuonSystem->nDtRechitClusters] /= 1.0* MuonSystem->dtRechitCluster_match_RPChits_dPhi0p5[MuonSystem->nDtRechitClusters];
-         // MuonSystem->dtRechitCluster_match_RPCTime_dR0p4[MuonSystem->nDtRechitClusters] /= 1.0* MuonSystem->dtRechitCluster_match_RPChits_dR0p4[MuonSystem->nDtRechitClusters];
-         // MuonSystem->dtRechitCluster_match_RPCTime_sameStation_dR0p4[MuonSystem->nDtRechitClusters] /= 1.0* MuonSystem->dtRechitCluster_match_RPChits_sameStation_dR0p4[MuonSystem->nDtRechitClusters];
-         // for (int i = 0; i < nRpc; i++) {
-         //   if (abs(RazorAnalyzer::deltaPhi(rpcPhi[i], MuonSystem->dtRechitClusterPhi[MuonSystem->nDtRechitClusters])) < 0.5 )
-         //   {
-         //     if (rpcRing[i] == MuonSystem->dtRechitClusterWheel[MuonSystem->nDtRechitClusters])
-         //     {
-         //       MuonSystem->dtRechitCluster_match_RPCTimeSpread_dPhi0p5[MuonSystem->nDtRechitClusters] += pow(rpcBx[i] - MuonSystem->dtRechitCluster_match_RPCTime_dPhi0p5[MuonSystem->nDtRechitClusters],2);
-         //     }
-         //
-         //   }
-         //   if (RazorAnalyzer::deltaR(rpcEta[i], rpcPhi[i], MuonSystem->dtRechitClusterEta[MuonSystem->nDtRechitClusters],MuonSystem->dtRechitClusterPhi[MuonSystem->nDtRechitClusters]) < 0.4 )
-         //   {
-         //       MuonSystem->dtRechitCluster_match_RPCTimeSpread_dR0p4[MuonSystem->nDtRechitClusters]  += pow(rpcBx[i] - MuonSystem->dtRechitCluster_match_RPCTime_dR0p4[MuonSystem->nDtRechitClusters],2);
-         //       if (rpcStation[i] == MuonSystem->dtRechitClusterMaxStation[MuonSystem->nDtRechitClusters])
-         //       {
-         //         MuonSystem->dtRechitCluster_match_RPCTimeSpread_sameStation_dR0p4[MuonSystem->nDtRechitClusters]  += pow(rpcBx[i] - MuonSystem->dtRechitCluster_match_RPCTime_sameStation_dR0p4[MuonSystem->nDtRechitClusters],2);
-         //       }
-         //   }
-         //
-         // }
-         //
-         // MuonSystem->dtRechitCluster_match_RPCTimeSpread_sameStation_dR0p4[MuonSystem->nDtRechitClusters] = sqrt(MuonSystem->dtRechitCluster_match_RPCTimeSpread_sameStation_dR0p4[MuonSystem->nDtRechitClusters]/MuonSystem->dtRechitCluster_match_RPChits_sameStation_dR0p4[MuonSystem->nDtRechitClusters]);
-         // MuonSystem->dtRechitCluster_match_RPCTimeSpread_dR0p4[MuonSystem->nDtRechitClusters] = sqrt(MuonSystem->dtRechitCluster_match_RPCTimeSpread_dR0p4[MuonSystem->nDtRechitClusters]/MuonSystem->dtRechitCluster_match_RPChits_dR0p4[MuonSystem->nDtRechitClusters]);
-         // MuonSystem->dtRechitCluster_match_RPCTimeSpread_dPhi0p5[MuonSystem->nDtRechitClusters] = sqrt(MuonSystem->dtRechitCluster_match_RPCTimeSpread_dPhi0p5[MuonSystem->nDtRechitClusters]/MuonSystem->dtRechitCluster_match_RPChits_dPhi0p5[MuonSystem->nDtRechitClusters]);
          std::vector<int> dtRechitCluster_match_rpcBx;
 
          //match to RPC hits with dPhi<0.5 and same wheel in DT
