@@ -7,11 +7,11 @@ eosprefix="/eos/uscms"
 
 doSubmit=true
 version="V1p19_0"
-isData=false
+isData="no" #"yes" or "no"
 options=-1
 #outputfilename=""
 label="Razor2018_17SeptEarlyReReco"
-filesPerJob=1
+filesPerJob=2
 #-1 to do all
 maxJobs=-1 #-1
 
@@ -31,6 +31,7 @@ cp ${CMSSW_BASE}/../CMSSW_9_4_4.tar.gz .
 samples=(  \
  "ParkingBPH4_2018A"      \
 # "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300"      \
+# "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000.GenOnly"      \
 # "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300"      \
 )
 
@@ -85,11 +86,22 @@ makeasubmitdir () {
  # make checker
  checkfile="./checker.sh"
  printf "#!/bin/bash\n\n" > ${checkfile}
- # hadd command, name of final merged file
- printf "hadd ${submitdir}/$1.root"     >>       ${haddfile}    
+ # make cleaner
+ cleaner="./cleanup.sh"
+ printf "#!/bin/bash\n\n" > ${cleaner}
 
  jobnrlow=0
  jobnr=0
+ haddnr=0
+
+ if [ ${sendToEOS} == true ]
+ then
+   # hadd command, name of the first intermediate merged file
+   printf "hadd ${eosprefix}${TheEosDir}/$1-hadd${haddnr}.root"     >>       ${haddfile}
+ else
+   # hadd command, name of the first intermediate merged file
+   printf "hadd ${submitdir}/$1-hadd${haddnr}.root"     >>       ${haddfile}
+ fi    
 
  printf "\n" >> submitfile
  until [ ${jobnrlow} -ge $2 ]
@@ -105,24 +117,58 @@ makeasubmitdir () {
 
   if [ ${sendToEOS} == true ]
   then
+    printf "\n eos root://cmseos.fnal.gov rm ${TheEosDir}/$1_${index}.root"     >> ${cleaner}    
     printf "\n ${eosprefix}${TheEosDir}/$1_${index}.root"     >> ${haddfile}    
     # add file to checker, all histos are made at the same time, so only check one
     printf "\n if [ ! -f ${eosprefix}${TheEosDir}/$1_${index}.root ]; then printf \" ${eosprefix}${TheEosDir}/$1_${index}.root \\n\"; fi " >> ${checkfile}
   else 
+    printf "\n rm $(pwd)/$1_${index}.root"     >> ${cleaner}    
     printf "\n $(pwd)/$1_${index}.root"     >> ${haddfile}    
     # add file to checker, all histos are made at the same time, so only check one
     printf "\n if [ ! -f $(pwd)/$1_${index}.root ]; then printf \" $(pwd)/$1_${index}.root \\n\"; fi " >> ${checkfile}
   fi
 
-
+  if [ $((${jobnr}%190)) == 0 ] && [ ${jobnr} -ne 0 ]
+  then
+    haddnr=$(( ${haddnr} + 1 ))
+    printf "\\"  >> ${haddfile}    
+    if [ ${sendToEOS} == true ]
+    then
+      # hadd command, name of the nth intermediate merged file
+      printf "\n\n" >> ${haddfile}
+      printf "hadd ${eosprefix}${TheEosDir}/$1-hadd${haddnr}.root"     >>       ${haddfile}
+    else
+      # hadd command, name of the nth intermediate merged file
+      printf "\n\n" >> ${haddfile}
+      printf "hadd ${submitdir}/$1-hadd${haddnr}.root"     >>       ${haddfile}
+    fi    
+  fi
   # increment filenumber counters
   #printf "NFILES: %s %s %s\n" $nfilesinlist $filenrlow $jobfilenr
   jobnrlow=$(( ${jobnrlow} + 1 ))
   jobnr=$(( ${jobnr} + 1 ))
-
  done # until jobnrlow > nTotalJobs
 
- printf "\n\n" >> ${haddfile}    
+ printf "\n\n\n" >> ${haddfile}
+ printf "##--Now Merge the final file \n" >> ${haddfile}    
+ # hadd command, name of final merged file
+ printf "hadd -f ${submitdir}/$1.root"     >>       ${haddfile}
+ iter=0    
+ until [ $iter -gt $haddnr ]
+ do
+  printf "\\"  >> ${haddfile}    
+  if [ ${sendToEOS} == true ]
+  then
+    printf "\n eosrm ${TheEosDir}/$1-hadd${iter}.root"     >> ${cleaner}    
+    printf "\n ${eosprefix}${TheEosDir}/$1-hadd${iter}.root"     >> ${haddfile}    
+  else 
+    printf "\n rm $(pwd)/$1-hadd${iter}.root"     >> ${cleaner}    
+    printf "\n $(pwd)/$1-hadd${iter}.root"     >> ${haddfile}    
+  fi
+  iter=$(( ${iter} + 1 ))
+
+ done
+
 
  if [ ${doSubmit} = true ]
  then
@@ -138,13 +184,13 @@ for sample in ${samples[@]}
 do
   if [[ ${sample} == "Parking"* ]]
   then 
-    isData=true
+    isData="yes"
   else
-    isData=false
+    isData="no"
   fi
   #data or MC?
   listdir=./
-  if [ $isData == true ]
+  if [[ "$isData" == "yes" ]]
   then
     listdir=$datalistdir
   else
