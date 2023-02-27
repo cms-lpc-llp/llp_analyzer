@@ -47,7 +47,7 @@ void DBSCAN::clear_clusters(){
   clusterZ.clear();
   clusterTime.clear();
   clusterTimeTotal.clear();
-  clusterTimeTotal.clear();
+  clusterTimeWeighted.clear();
   clusterMajorAxis.clear();
   clusterMinorAxis.clear();
   clusterXSpread.clear();

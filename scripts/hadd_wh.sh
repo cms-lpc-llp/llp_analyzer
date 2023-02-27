@@ -1,9 +1,9 @@
 ver=V1p17
-ver2=/v2/v106
+ver2=/v2/v162
 year=MC_Fall18
+#SToTauTau \
+#SToBB
 for decay in \
-SToTauTau \
-SToBB \
 STodd
 do
 	for mass in \
@@ -26,15 +26,14 @@ do
 	do
 		sample=${decay}_${mass}
 	
-		dir1=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/${year}/${ver2}/normalized/
-		outDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/${year}/${ver2}/normalized/
+		dir1=/storage/af/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/${year}/${ver2}/normalized/
 		outputRoot=WHToSS_${sample}_137000pb_weighted.root
 		
 		rm -f $outputRoot
 		eval `scram runtime -sh`
 		#hadd $outputRoot /mnt/hadoop/${dir1}/Z*root /mnt/hadoop/${dir1}/W*root
 		
-		hadd $outputRoot /mnt/hadoop/${dir1}/Wplus*${sample}_*root /mnt/hadoop/${dir1}/Wminus*${sample}_*root
+		hadd $outputRoot ${dir1}/Wplus*${sample}_*root ${dir1}/Wminus*${sample}_*root
 		
 		if [ -f $outputRoot ]
 		then
@@ -44,9 +43,8 @@ do
 		eval `scram unsetenv -sh`
 		LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
 		
-		gfal-copy -f --checksum-mode=both $outputRoot gsiftp://transfer.ultralight.org/${outDir}/$outputRoot
-		
-		if [ -f /mnt/hadoop/${outDir}/$outputRoot ]
+		cp ${outputRoot} ${dir1}/${outputRoot}
+		if [ -f ${dir1}/$outputRoot ]
 		then
 			echo "copy succeed"
 			rm $outputRoot

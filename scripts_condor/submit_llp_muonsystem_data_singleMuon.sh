@@ -54,7 +54,8 @@ do
 		echo "Sample " ${sample}
 		#output=/storage/user/christiw/displacedJetMuonAnalyzer/V1p7/MC_Summer16/v3/bkg/wH/${sample}
 		version=/${ver}/${year}/v5/
-		output=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v83/${sample}
+                output=/storage/af/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v180/${sample}
+
 		echo ${output}
 		inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${ver}/${year}/${sample}.txt
 		nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
@@ -64,7 +65,7 @@ do
 	        then
 	                maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 	        fi
-		analyzer=llp_MuonSystem_TnP
+		analyzer=llp_MuonSystem_TnP_combine
 		if [ ${year} == "Data2018" ]
 	        then
 	                echo "Data18 condition"
@@ -96,7 +97,7 @@ do
 	        echo "Error = log/${analyzer}_${sample}_Job\$(ProcId)_Of_${maxjob}_\$(Cluster).\$(Process).err" >> ${jdl_file}
 
 	        #echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
-	        echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
+                echo "+JobQueue=\"Short\"" >>  ${jdl_file}
 
 	        echo "RequestMemory = 4000" >> ${jdl_file}
 	        echo "RequestCpus = 1" >> ${jdl_file}
@@ -105,7 +106,7 @@ do
 	        echo "+RunAsOwner = True" >> ${jdl_file}
 	        echo "+InteractiveUser = true" >> ${jdl_file}
 	        #echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
-	        echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7-m202006\"" >> ${jdl_file}
+	        echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7\"" >> ${jdl_file}
 		echo '+SingularityBindCVMFS = True' >> ${jdl_file}
 	        echo "run_as_owner = True" >> ${jdl_file}
 	        echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}

@@ -10,7 +10,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/runRazorJob_llp_vH.sh
-filesPerJob=10
+filesPerJob=20
 
 #ggH_HToSSTobbbb_ms55_pl1000_RunIIFall18
 #ggH_HToSSTobbbb_ms55_pl1000 \
@@ -39,15 +39,58 @@ WH_HToSSTobbbb_CSCDecayFilter_ms55_pl100000_ev150000
 #WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
 #)
 listFall18=(
+ggH_HToSS_SToEE_ms0p4_pl10
+ggH_HToSS_SToEE_ms0p4_pl50
+ggH_HToSS_SToEE_ms1p0_pl125
+ggH_HToSS_SToEE_ms1p0_pl25
+ggH_HToSS_SToEE_ms2p0_pl250
+ggH_HToSS_SToEE_ms2p0_pl50
+ggH_HToSS_SToEE_ms4p0_pl100
+ggH_HToSS_SToEE_ms4p0_pl500
+ggH_HToSS_SToGammaGamma_ms0p4_pl10
+ggH_HToSS_SToGammaGamma_ms0p4_pl50
+ggH_HToSS_SToGammaGamma_ms1p0_pl125
+ggH_HToSS_SToGammaGamma_ms1p0_pl25
+ggH_HToSS_SToGammaGamma_ms2p0_pl250
+ggH_HToSS_SToGammaGamma_ms2p0_pl50
+ggH_HToSS_SToGammaGamma_ms4p0_pl100
+ggH_HToSS_SToGammaGamma_ms4p0_pl500
+ggH_HToSS_SToGlueGlue_ms3p0_pl100
+ggH_HToSS_SToGlueGlue_ms3p0_pl500
+ggH_HToSS_SToPi0Pi0_ms0p4_pl10
+ggH_HToSS_SToPi0Pi0_ms0p4_pl50
+ggH_HToSS_SToPi0Pi0_ms1p0_pl125
+ggH_HToSS_SToPi0Pi0_ms1p0_pl25
+ggH_HToSS_SToPiPlusPiMinus_ms0p4_pl10
+ggH_HToSS_SToPiPlusPiMinus_ms0p4_pl50
+ggH_HToSS_SToPiPlusPiMinus_ms1p0_pl125
+ggH_HToSS_SToPiPlusPiMinus_ms1p0_pl25
+ggH_HToSS_SToPiPlusPiMinus_ms2p0_pl250
+ggH_HToSS_SToPiPlusPiMinus_ms2p0_pl50
+ggH_HToSS_SToPiPlusPiMinus_ms4p0_pl100
+ggH_HToSS_SToPiPlusPiMinus_ms4p0_pl500
+ggH_HToSS_STodd_ms3p0_pl100
+ggH_HToSS_STodd_ms3p0_pl500
+)
+listFall18=(
+ggH_HToSS_SToGammaGamma_ms0p4_pl50
+ggH_HToSS_SToGammaGamma_ms4p0_pl500
+ggH_HToSS_SToGlueGlue_ms3p0_pl500
+ggH_HToSS_SToPi0Pi0_ms1p0_pl125
+ggH_HToSS_SToPi0Pi0_ms1p0_pl25
+)
+
+listFall18=(
+ggH_HToSSTobbbb_ms1_pl1000
 ggH_HToSS_SToEE_ms0p1_pl100
 ggH_HToSS_SToEE_ms0p1_pl500
+ggH_HToSS_SToEE_ms0p4_pl500
+ggH_HToSS_SToKPlusKMinus_ms1p5_pl500
 ggH_HToSS_SToPi0Pi0_ms1_pl100
 ggH_HToSS_SToPi0Pi0_ms1_pl500
-ggH_HToSSTobbbb_ms1_pl1000
 ggH_HToSS_SToPiPlusPiMinus_ms1_pl500
-ggH_HToSS_SToKPlusKMinus_ms1p5_pl500
-ggH_HToSS_SToEE_ms0p4_pl500
 )
+
 #listFall18=(
 ##ttH_HToSS_SToBB_ms15_pl100
 ##ttH_HToSS_SToBB_ms15_pl1000
@@ -98,38 +141,42 @@ ggH_HToSS_SToEE_ms0p4_pl500
 ##ZHToSS_SToBB_ms55_pl10000
 ##ZHToSS_SToBB_ms55_pl100000
 #)
-#listFall18=(
-#ggZHToSS_SToBB_ZToQQ_ms15_pl100
-#ggZHToSS_SToBB_ZToQQ_ms15_pl1000
-#ggZHToSS_SToBB_ZToQQ_ms15_pl10000
-#ggZHToSS_SToBB_ZToQQ_ms15_pl100000
-#ggZHToSS_SToBB_ZToQQ_ms40_pl100
-#ggZHToSS_SToBB_ZToQQ_ms40_pl1000
-#ggZHToSS_SToBB_ZToQQ_ms40_pl10000
-#ggZHToSS_SToBB_ZToQQ_ms40_pl100000
-#ggZHToSS_SToBB_ZToQQ_ms55_pl100
-#ggZHToSS_SToBB_ZToQQ_ms55_pl1000
-#ggZHToSS_SToBB_ZToQQ_ms55_pl10000
-#ggZHToSS_SToBB_ZToQQ_ms55_pl100000
-#)
-# listFall17=(
-# ZToMuMu_NNPDF31_13TeV-powheg_M_120_200
-# ZToMuMu_NNPDF31_13TeV-powheg_M_200_400
-# ZToMuMu_NNPDF31_13TeV-powheg_M_3500_4500
-# ZToMuMu_NNPDF31_13TeV-powheg_M_50_120
-# ZToMuMu_NNPDF31_13TeV-powheg_M_1400_2300
-# ZToMuMu_NNPDF31_13TeV-powheg_M_2300_3500
-# ZToMuMu_NNPDF31_13TeV-powheg_M_4500_6000
-# ZToMuMu_NNPDF31_13TeV-powheg_M_6000_Inf
-# ZToMuMu_NNPDF31_13TeV-powheg_M_400_800
-# )
+listFall18=(
+ggZHToSS_SToBB_ZToQQ_ms15_pl100
+ggZHToSS_SToBB_ZToQQ_ms15_pl1000
+ggZHToSS_SToBB_ZToQQ_ms15_pl10000
+ggZHToSS_SToBB_ZToQQ_ms15_pl100000
+ggZHToSS_SToBB_ZToQQ_ms40_pl100
+ggZHToSS_SToBB_ZToQQ_ms40_pl1000
+ggZHToSS_SToBB_ZToQQ_ms40_pl10000
+ggZHToSS_SToBB_ZToQQ_ms40_pl100000
+ggZHToSS_SToBB_ZToQQ_ms55_pl100
+ggZHToSS_SToBB_ZToQQ_ms55_pl1000
+ggZHToSS_SToBB_ZToQQ_ms55_pl10000
+ggZHToSS_SToBB_ZToQQ_ms55_pl100000
+ggZHToSS_SToBB_ZToLL_ms40_pl1000
+ggZHToSS_SToBB_ZToNuNu_ms40_pl1000
+)
+
+listFall17=(
+ZToMuMu_NNPDF31_13TeV-powheg_M_120_200
+ZToMuMu_NNPDF31_13TeV-powheg_M_200_400
+ZToMuMu_NNPDF31_13TeV-powheg_M_3500_4500
+ZToMuMu_NNPDF31_13TeV-powheg_M_50_120
+ZToMuMu_NNPDF31_13TeV-powheg_M_1400_2300
+ZToMuMu_NNPDF31_13TeV-powheg_M_2300_3500
+ZToMuMu_NNPDF31_13TeV-powheg_M_4500_6000
+ZToMuMu_NNPDF31_13TeV-powheg_M_6000_Inf
+ZToMuMu_NNPDF31_13TeV-powheg_M_400_800
+)
 # #listFall18=(
 # #ggH_HToSSTobbbb_ms1_pl1000
 # #)
-listFall18=(
-QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8
-QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8
+listFall18_FullGenParticles=(
+WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
 )
+#QCD_HT1000to1500_TuneCP5_13TeV-madgraphMLM-pythia8
+#QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8
 #listFall18=(
 #TChiHH_mass127_pl1000
 #TChiHH_mass150_pl1000
@@ -141,12 +188,24 @@ QCD_HT700to1000_TuneCP5_13TeV-madgraphMLM-pythia8
 #
 #listBkg_Fall18=(
 #WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8
+#
+#listFall18=(
+#MinBias_TuneCP5_13TeV-pythia8
 #)
 listFall18=(
-ggH_HToSS_SToEE_ms0p4_pl10
+BToKPhi_MuonGenFilter_PhiToPi0Pi0_mPhi0p3_ctau1000
+BToKPhi_MuonGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300
+BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau1000
+BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300
+)
+listFall18=(
+DarkShowerHiggs_darkphoton_M15_pl1000_XIOMEGA1_XILAMBDA1
+DarkShowerHiggs_darkphoton_M15_pl100_XIOMEGA1_XILAMBDA1
+DarkShowerHiggs_darkphoton_M2_pl1000_XIOMEGA1_XILAMBDA1
+DarkShowerHiggs_darkphoton_M2_pl100_XIOMEGA1_XILAMBDA1
 )
 for year in \
-Fall18
+Fall17
 do
         echo ${year}
         sampleList=list${year}[@]
@@ -155,11 +214,11 @@ do
         do
 
 		echo "Sample " ${sample}
-		version=/V1p17/MC_${year}/v2/
-		output=/storage/cms/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v118/${sample}
+		version=/V1p17/MC_${year}/v1/
+                output=/storage/af/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v180/${sample}
+
 		echo ${output}
 	  	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
-		#inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple//V1p17/MC_Fall18/v1//sixie/${sample}.txt
 		nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
         	maxjob=`python -c "print int($nfiles.0/$filesPerJob)+1"`
         	mod=`python -c "print int($nfiles.0%$filesPerJob)"`
@@ -167,20 +226,18 @@ do
         	then
         	        maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
         	fi
-		analyzer=llp_MuonSystem_cluster
-		if [[ ${year} == "Fall18" || ${year}=="Bkg_Fall18" ]]
+		analyzer=llp_MuonSystem_TnP_combine
+		if [[ ${year} == "Fall18" || ${year}=="Bkg_Fall18" || ${year} == "Fall18_FullGenParticles" ]]
         	then
         	        echo ${year}
         	        analyzerTag=Razor2018_17SeptEarlyReReco
         	elif [ ${year} == "Fall17" ]
         	then
         	        echo ${year}
-        	        # analyzerTag=Razor2017_Source2018
                 	analyzerTag=Razor2017_17Nov2017Rereco
         	elif [ ${year} == 'Summer16' ]
         	then
         	        echo ${year}
-        	        # analyzerTag=Razor2016_Source2018
                 	analyzerTag=Razor2016_07Aug2017Rereco
         	else
         	        echo "ERROR: NEED TO SET CORRECT YEAR"
@@ -200,8 +257,7 @@ do
 		echo "Output = log/${analyzer}_${sample}_Job\$(ProcId)_Of_${maxjob}_\$(Cluster).\$(Process).out" >> ${jdl_file}
 		echo "Error = log/${analyzer}_${sample}_Job\$(ProcId)_Of_${maxjob}_\$(Cluster).\$(Process).err" >> ${jdl_file}
 
-		#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
-        	echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
+                echo "+JobQueue=\"Short\"" >>  ${jdl_file}
 
 		echo "RequestMemory = 2000" >> ${jdl_file}
 		echo "RequestCpus = 1" >> ${jdl_file}
@@ -209,8 +265,7 @@ do
 
 		echo "+RunAsOwner = True" >> ${jdl_file}
 		echo "+InteractiveUser = true" >> ${jdl_file}
-		#echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
-		echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7-m202006\"" >> ${jdl_file}
+		echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7\"" >> ${jdl_file}
 		echo '+SingularityBindCVMFS = True' >> ${jdl_file}
 		echo "run_as_owner = True" >> ${jdl_file}
 		echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}

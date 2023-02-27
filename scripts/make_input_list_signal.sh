@@ -1,5 +1,5 @@
 #!/bin/bash
-dir=/mnt/hadoop/store/group/phys_exotica/delayedjets/llpntuple/V1p0/MC_Summer16/v1/christiw/
+dir=/storage/store/store/group/phys_exotica/delayedjets/llpntuple/V1p0/MC_Summer16/v1/christiw/
 list_dir=/data/christiw/LLP/CMSSW_9_4_4/src/llp_analyzer/lists/llpntuple/V1p0/MC_Summer16/v1/christiw/
 ev=100000
 
