@@ -1,0 +1,6 @@
+root://cmsxrootd.fnal.gov//store/group/lpclonglived/guerrero/analyzer/Runllp_MuonSystem_vll/mergemetntuples/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/Runllp_MuonSystem_vll_mergemetntuples_1.root
+root://cmsxrootd.fnal.gov//store/group/lpclonglived/guerrero/analyzer/Runllp_MuonSystem_vll/mergemetntuples/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/Runllp_MuonSystem_vll_mergemetntuples_2.root
+root://cmsxrootd.fnal.gov//store/group/lpclonglived/guerrero/analyzer/Runllp_MuonSystem_vll/mergemetntuples/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/Runllp_MuonSystem_vll_mergemetntuples_3.root
+root://cmsxrootd.fnal.gov//store/group/lpclonglived/guerrero/analyzer/Runllp_MuonSystem_vll/mergemetntuples/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/Runllp_MuonSystem_vll_mergemetntuples_4.root
+root://cmsxrootd.fnal.gov//store/group/lpclonglived/guerrero/analyzer/Runllp_MuonSystem_vll/mergemetntuples/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/Runllp_MuonSystem_vll_mergemetntuples_5.root
+root://cmsxrootd.fnal.gov//store/group/lpclonglived/guerrero/analyzer/Runllp_MuonSystem_vll/mergemetntuples/WJetsToLNu_HT-2500ToInf_TuneCP5_13TeV-madgraphMLM-pythia8/Runllp_MuonSystem_vll_mergemetntuples_6.root
