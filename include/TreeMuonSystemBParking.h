@@ -287,12 +287,12 @@ public:
   float         cscRechitClusterX[N_MAX_CSC];   //[nCsc]
   float         cscRechitClusterY[N_MAX_CSC];   //[nCsc]
   float         cscRechitClusterZ[N_MAX_CSC];   //[nCsc]
-  // float         cscRechitClusterTime[N_MAX_CSC];   //[nCsc]
-  // float         cscRechitClusterTimeTotal[N_MAX_CSC];
+  float         cscRechitClusterTime[N_MAX_CSC];   //[nCsc]
+  float         cscRechitClusterTimeTotal[N_MAX_CSC];
   float         cscRechitClusterTimeWeighted[N_MAX_CSC];
 
-  // float         cscRechitClusterTimeSpread[N_MAX_CSC];
-  // float         cscRechitClusterTimeSpreadWeighted[N_MAX_CSC];
+  float         cscRechitClusterTimeSpread[N_MAX_CSC];
+  float         cscRechitClusterTimeSpreadWeighted[N_MAX_CSC];
   float         cscRechitClusterTimeSpreadWeightedAll[N_MAX_CSC];
 
   float         cscRechitClusterGenMuonDeltaR[N_MAX_CSC];

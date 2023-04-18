@@ -607,8 +607,8 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
         MuonSystem->cscRechitClusterX[MuonSystem->nCscRechitClusters] =tmp.x;
         MuonSystem->cscRechitClusterY[MuonSystem->nCscRechitClusters] =tmp.y;
         MuonSystem->cscRechitClusterZ[MuonSystem->nCscRechitClusters] =tmp.z;
-        // MuonSystem->cscRechitClusterTime[MuonSystem->nCscRechitClusters] = tmp.t;
-        // MuonSystem->cscRechitClusterTimeTotal[MuonSystem->nCscRechitClusters] = tmp.tTotal;
+        MuonSystem->cscRechitClusterTime[MuonSystem->nCscRechitClusters] = tmp.t;
+        MuonSystem->cscRechitClusterTimeTotal[MuonSystem->nCscRechitClusters] = tmp.tTotal;
         MuonSystem->cscRechitClusterTimeWeighted[MuonSystem->nCscRechitClusters] = tmp.tWeighted;
         MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters] =tmp.eta;
         MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters] = tmp.phi;
@@ -676,8 +676,8 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
 		}
 	    }
 	  }
-          // MuonSystem->cscRechitClusterTimeSpread[MuonSystem->nCscRechitClusters] = tmp.TSpread;
-          // MuonSystem->cscRechitClusterTimeSpreadWeighted[MuonSystem->nCscRechitClusters] = tmp.TSpreadWeighted;
+          MuonSystem->cscRechitClusterTimeSpread[MuonSystem->nCscRechitClusters] = tmp.TSpread;
+          MuonSystem->cscRechitClusterTimeSpreadWeighted[MuonSystem->nCscRechitClusters] = tmp.TSpreadWeighted;
           MuonSystem->cscRechitClusterTimeSpreadWeightedAll[MuonSystem->nCscRechitClusters] = tmp.TSpreadWeightedAll;
           MuonSystem->cscRechitClusterSize[MuonSystem->nCscRechitClusters] = tmp.nCscSegments;
 
