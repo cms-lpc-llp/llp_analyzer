@@ -6,7 +6,7 @@ eosdir="/store/user/ddiaz/B-Parking"
 eosprefix="/eos/uscms"
 
 doSubmit=true
-version="V1p19_0"
+version="V1p19_1"
 isData="no" #"yes" or "no"
 options=-1
 #outputfilename=""
@@ -29,7 +29,8 @@ cd -
 cp ${CMSSW_BASE}/../CMSSW_9_4_4.tar.gz .
 
 samples=(  \
- "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300"      \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau300.txt "      \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300"      \
 # "ParkingBPH4_2018A"      \
 # "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000.GenOnly"      \
 # "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300"      \

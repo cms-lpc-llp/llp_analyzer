@@ -127,7 +127,7 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
   string outfilename = outputfilename;
   if (outfilename == "") outfilename = "MuonSystem_Tree.root";
   TFile *outFile;
-  if (isData) outFile = new TFile(outfilename.c_str(), "RECREATE");
+  outFile = new TFile(outfilename.c_str(), "RECREATE");
 
   TreeMuonSystemBParking *MuonSystem = new TreeMuonSystemBParking;
   MuonSystem->CreateTree();
@@ -162,7 +162,7 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
   start = clock();
   for (Long64_t jentry=0; jentry<fChain->GetEntries();jentry++) {
     //begin event
-    //if (jentry>10000)break;
+    //if (jentry>20) break;
     if(jentry % 10000 == 0)
     {
       end = clock();
@@ -219,7 +219,9 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
     //Triggers
     for(int i = 0; i < NTriggersMAX; i++){
       MuonSystem->HLTDecision[i] = HLTDecision[i];
+      //std::cout<<HLTDecision[i];
     }
+    //std::cout<<std::endl;
     bool passBParkingTrig = false;
     for(int i = 1157; i <= 1196; i++){
       if (MuonSystem->HLTDecision[i]) passBParkingTrig = true;
