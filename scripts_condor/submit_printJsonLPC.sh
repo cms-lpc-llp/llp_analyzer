@@ -26,11 +26,14 @@ year=Data2018_UL
 #ParkingBPH4_2018A \
 #ParkingBPH5_2018A \
 for sample in \
-ParkingBPH3_2018B
+ParkingBPH3_2018B \
+ParkingBPH4_2018B \
+ParkingBPH5_2018B \
+ParkingBPH6_2018B
 do
 	echo "Sample " ${sample}
 	version=/${ver}/${year}/
-	output=store/user/ddiaz/B-Parking/json/${version}/${sample}
+	output=store/user/ddiaz/B-Parking/jsonV3/${version}/${sample}
         mkdir -p /eos/uscms/${output}
 	echo ${output}       
 	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/${sample}.txt
@@ -42,11 +45,10 @@ do
                 maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
         fi
 	rm -f submit/lumi_${sample}*
-	rm -f submit/list.txt
 	rm -f log/lumi_${sample}*
 
-	inputfilelist2=submit/list.txt
-	cp ${CMSSW_BASE}$inputfilelist submit/list.txt 
+	cp ${CMSSW_BASE}$inputfilelist submit/ 
+	inputfilelist2=submit/${sample}.txt
 	echo "job " ${maxjob}
         jdl_file=submit/lumi_${sample}_${maxjob}.jdl
         echo "Universe = vanilla" > ${jdl_file}
@@ -71,7 +73,7 @@ do
         #echo "run_as_owner = True" >> ${jdl_file}
         #echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}
 
-        echo "Transfer_Input_Files = submit/list.txt,${CMSSW_BASE}/src/llp_analyzer/scripts_condor/CMSSW_9_4_4.tar.gz,${CMSSW_BASE}/src/llp_analyzer/python/printJson.py" >> ${jdl_file}
+        echo "Transfer_Input_Files = submit/${sample}.txt,${CMSSW_BASE}/src/llp_analyzer/scripts_condor/CMSSW_9_4_4.tar.gz,${CMSSW_BASE}/src/llp_analyzer/python/printJson.py" >> ${jdl_file}
         echo "x509userproxy = $X509_USER_PROXY" >>${jdl_file}
         echo "should_transfer_files = YES" >> ${jdl_file}
         echo "when_to_transfer_output = ON_EXIT" >> ${jdl_file}
