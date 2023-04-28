@@ -26,10 +26,7 @@ year=Data2018_UL
 #ParkingBPH4_2018A \
 #ParkingBPH5_2018A \
 for sample in \
-ParkingBPH3_2018B \
-ParkingBPH4_2018B \
-ParkingBPH5_2018B \
-ParkingBPH6_2018B
+ParkingBPH2_2018A
 do
 	echo "Sample " ${sample}
 	version=/${ver}/${year}/
