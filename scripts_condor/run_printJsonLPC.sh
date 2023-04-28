@@ -18,7 +18,6 @@ CMSSW_BASE=${6}
 homeDir=${7}
 currentDir=`pwd`
 base=`pwd`
-#user=${homeDir#*/data/}
 user=${homeDir#*/storage/user/}
 runDir=${currentDir}/${user}_${analyzerTag}/
 
@@ -33,8 +32,6 @@ then
         mkdir -p CMSSW_9_4_4/src
         rm CMSSW_9_4_4.tar.gz
         cd CMSSW_9_4_4/src
-	echo "$6"
-	echo "${CMSSW_BASE}"
 	workDir=`pwd`
 	echo "entering directory: ${workDir}"
 	ulimit -c 0
@@ -47,11 +44,11 @@ then
 	if [ -f ${base}/printJson.py ]
 	then
 		cp ${base}/printJson.py ./
-		cp ${base}/list.txt ./
+		cp ${base}/${sample}.txt ./thisList.txt
 
 		#run the job
                 echo ${base}
-		cat list.txt | awk "NR > (${jobnumber}*${filePerJob}) && NR <= ((${jobnumber}+1)*${filePerJob})" > inputfilelistForThisJob_${jobnumber}.txt
+		cat thisList.txt | awk "NR > (${jobnumber}*${filePerJob}) && NR <= ((${jobnumber}+1)*${filePerJob})" > inputfilelistForThisJob_${jobnumber}.txt
 		ls
                 echo ""
 		echo "************************************"
