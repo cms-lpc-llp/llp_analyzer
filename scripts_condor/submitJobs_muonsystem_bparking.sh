@@ -6,7 +6,7 @@ eosdir="/store/user/ddiaz/B-Parking"
 eosprefix="/eos/uscms"
 
 doSubmit=true
-version="V1p19_0"
+version="V1p19_1"
 isData="no" #"yes" or "no"
 options=-1
 #outputfilename=""
