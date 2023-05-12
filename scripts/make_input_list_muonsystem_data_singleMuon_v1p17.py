@@ -76,7 +76,7 @@ for year in years:
     for j, sample in enumerate(sampleName[year]):
 	inputfile = list_dir+sample+'.txt'
         badfilelist = list_dir+sample+'_bad.txt'
- 	root_dir = '/mnt/hadoop/'+rootDir[year][j]
+ 	root_dir = '/storage/cms/'+rootDir[year][j]
         print(root_dir)
         print(inputfile)
         os.system("rm -f "+inputfile)

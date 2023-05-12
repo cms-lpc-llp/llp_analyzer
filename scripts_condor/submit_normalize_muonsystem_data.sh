@@ -43,6 +43,11 @@ Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018E-HighMET-PromptR
 )
 #listData2018=(
 #Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018
+#Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018Dv2-HighMET-PromptReco
+#)
+#
+#listData2018=(
+#Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018A-HighMET-17Sep2018
 #Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018B-HighMET-17Sep2018
 #Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018C-HighMET-17Sep2018
 #Run2_displacedJetMuonNtupler_${ver}_Data2018_17Sept2018_Run2018D-HighMET-PromptReco
@@ -53,7 +58,8 @@ Data2017 \
 Data2018
 do
         echo ${year}
-	inputDir=/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/${year}/v5/v111/
+	inputDir=/storage/af/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${ver}/${year}/v5/v179/
+
 	echo ${inputDir}
 	outputDir=${inputDir}normalized
         sampleList=list${year}[@]
@@ -76,15 +82,14 @@ do
 		echo "Error = log/${analyzer}_normalize_${mode}_${sample}_\$(Cluster).\$(Process).err" >> ${jdl_file}
 
 		#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
-		echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
 		echo "RequestMemory = 4000" >> ${jdl_file}
 		echo "RequestCpus = 1" >> ${jdl_file}
 		echo "RequestDisk = 4" >> ${jdl_file}
-
+                echo "+JobQueue=\"Short\"" >>  ${jdl_file}
 		echo "+RunAsOwner = True" >> ${jdl_file}
 		echo "+InteractiveUser = true" >> ${jdl_file}
 #		echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
-                echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7-m202006\"" >> ${jdl_file}
+                echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7\"" >> ${jdl_file}
 		echo '+SingularityBindCVMFS = True' >> ${jdl_file}
 		echo "run_as_owner = True" >> ${jdl_file}
 		echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}

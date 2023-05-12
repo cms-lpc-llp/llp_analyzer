@@ -500,12 +500,14 @@ void RazorHelper::loadTrigger_Razor2015() {
 ////////////////////////////////////////////////
 
 void RazorHelper::loadTag_Razor2015_76X() {
+    // cout<<"Loading..."<<endl;
     loadPileup_Razor2015_76X();
     loadLepton_Razor2015(); //we'll use the same here for now
     loadPhoton_Razor2015_76X();
     loadJECs_Razor2015_76X();   //
     loadBTag_Razor2015();   //we'll use the same here for now, but this needs to be updated
     loadTrigger_Razor2015();//use the same for now
+    load_BParking_SF();
 }
 
 void RazorHelper::loadPileup_Razor2015_76X() {
@@ -2092,6 +2094,16 @@ void RazorHelper::loadTrigger_Razor2017_17Nov2017Rereco() {
     metTriggerSFHist = (TH1F*)metTriggerSFFile->Get("trigger_efficiency_Fall17");
 
 }
+
+void RazorHelper::load_BParking_SF() {
+    // single lepton trigger scale factors
+    // std::cout << "RazorHelper: loading trigger efficiency histograms" << std::endl;
+    metBParkingTriggerSFFile = TFile::Open("BParking_SF.root");
+    // cout<<"File: "<<metBParkingTriggerSFFile<<endl;
+    metBParkingTriggerSFHist = (TH2F*)metBParkingTriggerSFFile->Get("BParking_trigger_efficiency");
+    // cout<<"Histogram: "<<metBParkingTriggerSFHist<<endl;
+}
+
 void RazorHelper::loadLepton_Razor2017_17Nov2017Rereco(){
 
     // LAST UPDATED: 18 August 2020
@@ -2932,6 +2944,18 @@ double RazorHelper::getPileupWeightDown(int NPU) {
     }
     else {
         std::cout << "RazorHelper error: 'down' pileup weight requested, but no histogram available!" << std::endl;
+        return 0;
+    }
+}
+
+double RazorHelper::getBParkingTriggerSF(float pt, float significance) {
+    // load_BParking_SF()
+    if (metBParkingTriggerSFHist) {
+	// cout<<"SIGNIFICANCE: "<<pt<<"     "<<fabs(significance)<<"     "<<metBParkingTriggerSFHist->GetBinContent(metBParkingTriggerSFHist->GetXaxis()->FindFixBin(pt), metBParkingTriggerSFHist->GetYaxis()->FindFixBin(fabs(significance)))<<endl;
+        return metBParkingTriggerSFHist->GetBinContent(metBParkingTriggerSFHist->GetXaxis()->FindFixBin(pt), metBParkingTriggerSFHist->GetYaxis()->FindFixBin(fabs(significance)));
+    }
+    else {
+        std::cout << "RazorHelper error: BParking MET trigger SF requested, but no histogram available!" << std::endl;
         return 0;
     }
 }

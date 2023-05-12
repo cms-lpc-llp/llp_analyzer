@@ -14,6 +14,8 @@ filesPerJob=20
 #Fall17 \
 #Fall18
 for year in \
+Summer16 \
+Fall17 \
 Fall18
 do
 	if [ ${year} == "Summer16" ]
@@ -22,18 +24,17 @@ do
         else
                 tune=TuneCP5
         fi
-	#VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8
+        #VBFH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
         #VBFH_HToSSTo4b_MH-125_${tune}_13TeV-powheg-pythia8 \
-        #ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
-				#ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
-        #ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
         for sample in \
-	ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8
+        ggH_HToSSTobbbb_MH-125_${tune}_13TeV-powheg-pythia8 \
+        ggH_HToSSTo4Tau_MH-125_${tune}_13TeV-powheg-pythia8 \
+        ggH_HToSSTodddd_MH-125_${tune}_13TeV-powheg-pythia8
 	do
 		echo "Sample " ${sample}
 		version=/V1p17/MC_${year}/v1/
-		output=/storage/cms/store/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v116/${sample}
-		#${sample%_HToSS*}_HToSSTobbbb_MH-125_MS-${mx}_ctau-${ctau_cm}_${tune}_13TeV-powheg-pythia8
+		output=/storage/af/group/phys_exotica/delayedjets/displacedJetMuonAnalyzer/csc/${version}/v169/${sample}
+
 		echo ${output}
 		inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/sixie/${sample}.txt
 		nfiles=`cat ${CMSSW_BASE}$inputfilelist | wc | awk '{print $1}' `
@@ -43,7 +44,7 @@ do
 		then
 		        maxjob=`python -c "print int($nfiles.0/$filesPerJob)"`
 		fi
-		analyzer=llp_MuonSystem_cluster
+		analyzer=llp_MuonSystem_combine
 		if [[ ${year} == "Fall18" || ${year} == "Fall18_FullGenParticles" ]]
 		then
 		        echo ${year}
@@ -75,16 +76,16 @@ do
 		echo "Error = log/${analyzer}_${year}_${sample}_Job\$(ProcId)_Of_${maxjob}_\$(Cluster).\$(Process).err" >> ${jdl_file}
 
 		#echo "Requirements=TARGET.OpSysAndVer==\"CentOS7\"" >> ${jdl_file}
-		echo "Requirements=(TARGET.OpSysAndVer==\"CentOS7\" && regexp(\"blade.*\", TARGET.Machine))" >> ${jdl_file}
 
 		echo "RequestMemory = 2000" >> ${jdl_file}
 		echo "RequestCpus = 1" >> ${jdl_file}
 		echo "RequestDisk = 4" >> ${jdl_file}
+                echo "+JobQueue=\"Short\"" >>  ${jdl_file}
 
 		echo "+RunAsOwner = True" >> ${jdl_file}
 		echo "+InteractiveUser = true" >> ${jdl_file}
 		#echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/bbockelm/cms:rhel7\"" >> ${jdl_file}
-		echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7-m202006\"" >> ${jdl_file}
+		echo "+SingularityImage = \"/cvmfs/singularity.opensciencegrid.org/cmssw/cms:rhel7\"" >> ${jdl_file}
 		echo '+SingularityBindCVMFS = True' >> ${jdl_file}
 		echo "run_as_owner = True" >> ${jdl_file}
 		echo "x509userproxy = ${HOME}/x509_proxy" >> ${jdl_file}

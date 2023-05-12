@@ -108,8 +108,10 @@ then
 	
 	# copy normalized file back to hadoop
 	eval `scram unsetenv -sh`
-        gfal-mkdir -p gsiftp://transfer-lb.ultralight.org//${outputDir}
-	gfal-copy --checksum-mode=both ${runDir}/${output} gsiftp://transfer-lb.ultralight.org//${outputDir}/${output}
+        #gfal-mkdir -p gsiftp://transfer-lb.ultralight.org//${outputDir}
+	#gfal-copy --checksum-mode=both ${runDir}/${output} gsiftp://transfer-lb.ultralight.org//${outputDir}/${output}
+	mkdir -p ${outputDir}
+	cp ${runDir}/${output} ${outputDir}/${output}
 	
 
 	if [ -f ${outputDir}/${output} ]

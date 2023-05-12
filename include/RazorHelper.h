@@ -35,6 +35,8 @@ class RazorHelper {
         double getPileupWeight(int NPU);
         double getPileupWeightUp(int NPU);
         double getPileupWeightDown(int NPU);
+        double getBParkingTriggerSF(float pt, float significance);
+        void load_BParking_SF();
 
         // get lepton scale factor (without up/down uncertainties)
         double getMuonScaleFactor(float pt, float eta, bool isTrigger, bool id, bool isTight);
@@ -51,6 +53,7 @@ class RazorHelper {
         double getLooseElectronScaleFactorError(float pt, float eta, bool isLoose);
         double getVetoElectronScaleFactor(float pt, float eta, bool isVeto);
         double getEleGSFTrackScaleFactor(float pt, float eta, bool isReconstructed);
+
 
 	//get photon eff scale factor
         double getPhotonScaleFactor(float pt, float eta, bool invert = false);
@@ -153,7 +156,6 @@ class RazorHelper {
         float getTopTagEfficiency(float genTopPt, int updown=0);
         float getTopTagFastsimSF(float genTopPt, int updown=0);
         AK8JetInfo CalcAK8JetInfo(RazorAnalyzer *ra, bool isData);
-
     private:
         // member functions
         void loadTag_Razor2015(); // Final set of files used in 2015
@@ -196,7 +198,6 @@ class RazorHelper {
             float &sfDown, float fastsimPtCut = 10.01, float extraSyst = 0.);
         float getElectronScaleCorrection( float eta ); //for electron energy corrections
         float getElectronResCorrection( float eta ); //for electron energy corrections
-
         // for Razor2015 74X tag
         void loadPileup_Razor2015();
         void loadLepton_Razor2015();
@@ -285,6 +286,7 @@ class RazorHelper {
 
         void loadTag_Razor2016_Source2018();
         void loadTag_Razor2017_Source2018();
+        
         // member data
         std::string tag;
         bool isData;
@@ -293,6 +295,9 @@ class RazorHelper {
 
         TFile *metTriggerSFFile;
         TH1F *metTriggerSFHist;
+        
+        TFile *metBParkingTriggerSFFile;
+        TH2F *metBParkingTriggerSFHist;
 
         TFile *higgsPtWeightFile;
         TH1F *higgsPtWeightHist;

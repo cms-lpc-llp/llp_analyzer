@@ -737,6 +737,19 @@ void llp_MuonSystem_TnP_combine::Analyze(bool isData, int options, string output
       if (dtRechitPhi[i] < -1*half_sector && dtRechitPhi[i] >= -3*half_sector )MuonSystem->nDTRechitsSector[dtRechitStation[i]-1][dtRechitWheel[i]+2][11]++;
 
 
+
+      if (dtRechitStation[i] == 1) MuonSystem->nDTRechitsStation1++;
+      if (dtRechitStation[i] == 2) MuonSystem->nDTRechitsStation2++;
+      if (dtRechitStation[i] == 3) MuonSystem->nDTRechitsStation3++;
+      if (dtRechitStation[i] == 4) MuonSystem->nDTRechitsStation4++;
+
+      if (dtRechitWheel[i] == -2) MuonSystem->nDTRechitsWheelMinus2++;
+      if (dtRechitWheel[i] == -1) MuonSystem->nDTRechitsWheelMinus1++;
+      if (dtRechitWheel[i] == 0) MuonSystem->nDTRechitsWheel0++;
+      if (dtRechitWheel[i] == 1) MuonSystem->nDTRechitsWheelPlus1++;
+      if (dtRechitWheel[i] == 2) MuonSystem->nDTRechitsWheelPlus2++;
+
+
       MuonSystem->nDTRechits++;
     }
     if ( MuonSystem->nDTRechitsChamberMinus12 > 50) MuonSystem->nDtRings++;
@@ -763,6 +776,17 @@ void llp_MuonSystem_TnP_combine::Analyze(bool isData, int options, string output
 
 
 
+
+      if (MuonSystem->nDTRechitsStation1 > 25) MuonSystem->nDtStations25++;
+      if (MuonSystem->nDTRechitsStation2 > 25) MuonSystem->nDtStations25++;
+      if (MuonSystem->nDTRechitsStation3 > 25) MuonSystem->nDtStations25++;
+      if (MuonSystem->nDTRechitsStation4 > 25) MuonSystem->nDtStations25++;
+
+      if (MuonSystem->nDTRechitsWheelMinus2 > 25) MuonSystem->nDtWheels25++;
+      if (MuonSystem->nDTRechitsWheelMinus1 > 25) MuonSystem->nDtWheels25++;
+      if (MuonSystem->nDTRechitsWheel0 > 25) MuonSystem->nDtWheels25++;
+      if (MuonSystem->nDTRechitsWheelPlus1 > 25) MuonSystem->nDtWheels25++;
+      if (MuonSystem->nDTRechitsWheelPlus2 > 25) MuonSystem->nDtWheels25++;
 
 
 

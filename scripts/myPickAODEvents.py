@@ -22,10 +22,10 @@ datasetName = sys.argv[2]
 lumiToFileMap = dict()
 if os.path.exists("tmpDASQueryResult.txt"):
     os.system("rm -f tmpDASQueryResult.txt")
-command = "dasgoclient -query=\"file,run,lumi dataset="+datasetName+"\" > tmpDASQueryResult.txt"
-print(command)
+#command = "dasgoclient -query=\"file,run,lumi dataset="+datasetName+"\" > tmpDASQueryResult.txt"
+#print(command)
 
-#command = "dasgoclient -query=\"file,run,lumi dataset="+datasetName+" instance=prod/phys03\" > tmpDASQueryResult.txt"
+command = "dasgoclient -query=\"file,run,lumi dataset="+datasetName+" instance=prod/phys03\" > tmpDASQueryResult.txt"
 print command
 os.system(command)
 tempfile = open("tmpDASQueryResult.txt","r")

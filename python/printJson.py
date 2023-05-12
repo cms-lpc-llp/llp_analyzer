@@ -52,6 +52,7 @@ def convertTree2Dict(runLumiDict,tree,lumiBranch,runBranch):
     # loop over tree to get run, lumi "flat" dictionary
     tree.Draw('>>elist','','entrylist')        
     elist = rt.gDirectory.Get('elist')    
+    if tree.GetEntries()==0:return runLumiDict
     entry = -1;
     while True:
         entry = elist.Next()
@@ -91,14 +92,26 @@ if __name__ == '__main__':
     parser.add_option('-r','--run-branch',dest="runBranch",type="string",default="run",
                   help="Name of run branch in tree")
     
+    parser.add_option('-i','--input-list',dest="inputList",type="string",default="test.list",
+                  help="Name of text file containing list of ROOT files")
     (options,args) = parser.parse_args()
 
 
     rootFiles = []
-    for f in args:
-        if f.lower().endswith('.root'):
-            rootFile = rt.TFile.Open(f)
-            rootFiles.append(rootFile)
+    #for f in args:
+    #    if f.lower().endswith('.root'):
+    #        rootFile = rt.TFile.Open(f)
+    #        rootFiles.append(rootFile)
+   
+
+    file1 = open(options.inputList, 'r')
+    Lines = file1.readlines()
+     
+    for line in Lines:
+	rootFile = rt.TFile.Open(line.strip())
+        rootFiles.append(rootFile)
+
+
 
     trees = []
     # crawl root file to look for trees
