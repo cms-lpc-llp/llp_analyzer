@@ -84,6 +84,11 @@ RazorHelper::RazorHelper(std::string tag_, bool isData_, bool isFastsim_):
     {
       loadTag_Razor2017_Source2018();
     }
+    
+    else if(tag == "BParking_Source2018")
+    {
+      loadTag_BParking_Source2018();
+    }
    // tag not found
     else {
         std::cout << "Error in RazorHelper::RazorHelper : specified tag " << tag << " is not supported!" << std::endl;
@@ -507,7 +512,6 @@ void RazorHelper::loadTag_Razor2015_76X() {
     loadJECs_Razor2015_76X();   //
     loadBTag_Razor2015();   //we'll use the same here for now, but this needs to be updated
     loadTrigger_Razor2015();//use the same for now
-    load_BParking_SF();
 }
 
 void RazorHelper::loadPileup_Razor2015_76X() {
@@ -2096,12 +2100,23 @@ void RazorHelper::loadTrigger_Razor2017_17Nov2017Rereco() {
 }
 
 void RazorHelper::load_BParking_SF() {
-    // single lepton trigger scale factors
-    // std::cout << "RazorHelper: loading trigger efficiency histograms" << std::endl;
     metBParkingTriggerSFFile = TFile::Open("BParking_SF.root");
-    // cout<<"File: "<<metBParkingTriggerSFFile<<endl;
     metBParkingTriggerSFHist = (TH2F*)metBParkingTriggerSFFile->Get("BParking_trigger_efficiency");
-    // cout<<"Histogram: "<<metBParkingTriggerSFHist<<endl;
+}
+
+void RazorHelper::loadPileup_Razor2018_BParking() {
+    pileupWeightFile = TFile::Open("PileupReweight_2018_BParking.root");
+    pileupWeightHist = (TH1F*)pileupWeightFile->Get("PileupReweight");
+    pileupWeightSysUpHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysUp");
+    pileupWeightSysDownHist = (TH1F*)pileupWeightFile->Get("PileupReweightSysDown");
+    std::cout << "PileupReweight_2018_BParking.root\n";
+
+}
+
+void RazorHelper::loadTag_BParking_Source2018() {
+    load_BParking_SF();
+    loadPileup_Razor2018_BParking();
+
 }
 
 void RazorHelper::loadLepton_Razor2017_17Nov2017Rereco(){
