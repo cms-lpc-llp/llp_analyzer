@@ -52,9 +52,9 @@ public:
   TTree *tree_;
   TFile *f_;
 
-  UInt_t  runNum, lumiSec, evtNum, MC_condition,npv;
+  UInt_t  runNum, lumiSec, evtNum, MC_condition, npv, npu;
 
-  float rho, met, metPhi, metEENoise, metPhiEENoise;
+  float rho, met, metPhi, metEENoise, metPhiEENoise, pileupWeight, pileupWeightUp, pileupWeightDown;
 
 
   bool Flag2_all;
