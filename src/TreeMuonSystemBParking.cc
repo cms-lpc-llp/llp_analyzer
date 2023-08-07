@@ -15,7 +15,7 @@ TreeMuonSystemBParking::~TreeMuonSystemBParking()
 };
 void TreeMuonSystemBParking::InitVariables()
 {
-  runNum=0; lumiSec=0; evtNum=0;  MC_condition = 0;npv=0;
+  runNum=0; lumiSec=0; evtNum=0;  MC_condition = 0;npv=0; npu=0; pileupWeight=0.0; pileupWeightUp=0.0; pileupWeightDown=0.0;
   rho=-1;
 
   Flag2_all = false;
@@ -404,6 +404,11 @@ void TreeMuonSystemBParking::InitTree()
 
   tree_->SetBranchAddress("npv",         &npv);
   tree_->SetBranchAddress("rho",         &rho);
+
+  tree_->SetBranchAddress("npu",         &npu);
+  tree_->SetBranchAddress("pileupWeight",     &pileupWeight);
+  tree_->SetBranchAddress("pileupWeightUp",   &pileupWeightUp);
+  tree_->SetBranchAddress("pileupWeightDown", &pileupWeightDown);
 
   tree_->SetBranchAddress("Flag2_all",      &Flag2_all);
 
@@ -876,8 +881,12 @@ void TreeMuonSystemBParking::CreateTree()
   tree_->Branch("lumiSec",     &lumiSec,    "lumiSec/i");     // event lumi section
   tree_->Branch("evtNum",      &evtNum,     "evtNum/i");      // event number
   tree_->Branch("rho",         &rho,        "rho/F");
+  tree_->Branch("npv",         &npv,        "npv/I");         // number of primary vertices
 
-  tree_->Branch("npv",         &npv,        "npv/i");         // number of primary vertices
+  tree_->Branch("npu",         &npu,        "npu/I");         // number of pileup
+  tree_->Branch("pileupWeight",         &pileupWeight,        "pileupWeight/F"); // pileup weight
+  tree_->Branch("pileupWeightUp",       &pileupWeightUp,      "pileupWeightUp/F"); // pileup weight up
+  tree_->Branch("pileupWeightDown",     &pileupWeightDown,    "pileupWeightDown/F"); // pileup weight down
 
   tree_->Branch("Flag2_all",      &Flag2_all,     "Flag2_all/O");
   tree_->Branch("metEENoise",      &metEENoise,     "metEENoise/F");      // phi(MET)

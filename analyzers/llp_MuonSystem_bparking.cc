@@ -118,7 +118,8 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
   const float Z_MASS   = 91.2;
 
   if (analysisTag == ""){
-    analysisTag = "Razor2018_17SeptEarlyReReco";
+    // analysisTag = "Razor2018_17SeptEarlyReReco";
+    analysisTag = "BParking_Source2018";
   }
 
   //-----------------------------------------------
@@ -205,6 +206,22 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
     MuonSystem->rho = fixedGridRhoFastjetAll;
     MuonSystem->met = metType1Pt;
     MuonSystem->metPhi = metType1Phi;
+
+    for (int i=0; i < nBunchXing; i++)
+    {
+        if (BunchXing[i] == 0)
+        {
+            MuonSystem->npu = nPUmean[i];
+        }
+    }
+
+    // cout<<"nBunchXing: "<<nBunchXing<<endl;
+    // cout<<"nPUmean[1]: "<<nPUmean[1]<<endl;
+    // MuonSystem->npu = 0;
+
+    MuonSystem->pileupWeight = helper->getPileupWeight(MuonSystem->npu);
+    MuonSystem->pileupWeightUp = helper->getPileupWeightUp(MuonSystem->npu) / MuonSystem->pileupWeight;
+    MuonSystem->pileupWeightDown = helper->getPileupWeightDown(MuonSystem->npu) / MuonSystem->pileupWeight;
 
     std::pair<double,double> corrected_met;
     if (analysisTag=="Razor2016_07Aug2017Rereco") corrected_met = helper->METXYCorr_Met_MetPhi(metType1Pt, metType1Phi, runNum, 2016, !isData, nPV);
@@ -1169,4 +1186,5 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
         outFile->Close();
       }
 }
+
 

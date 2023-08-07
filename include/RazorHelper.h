@@ -37,6 +37,8 @@ class RazorHelper {
         double getPileupWeightDown(int NPU);
         double getBParkingTriggerSF(float pt, float significance);
         void load_BParking_SF();
+        void loadTag_BParking_Source2018();
+        void loadPileup_Razor2018_BParking();
 
         // get lepton scale factor (without up/down uncertainties)
         double getMuonScaleFactor(float pt, float eta, bool isTrigger, bool id, bool isTight);
