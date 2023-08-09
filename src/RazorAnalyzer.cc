@@ -923,6 +923,29 @@ bool RazorAnalyzer::isPFTightJet(int i, bool applyTightLepVeto,string EraName){
     }
 
   }
+  //Copying Razor2018_17SeptEarlyReReco from above for now. We don't use the jets anyways
+  else if(EraName == "BParking_Source2018")
+  {
+    if (fabs(jetEta[i])<=2.6)
+    {
+      if (applyTightLepVeto)return (abs(jetEta[i])<=2.6 && CEMF<0.8 && CHM>0 && CHF>0 && NumConst>1 && NEMF<0.9 && MUF <0.8 && NHF < 0.9 );
+      else return (abs(jetEta[i])<=2.6 && CHM>0 && CHF>0 && NumConst>1 && NEMF<0.9  && NHF < 0.9 );
+    }
+    else if(abs(jetEta[i])>2.6 && abs(jetEta[i])<=2.7)
+    {
+      if (applyTightLepVeto) return ( abs(jetEta[i])>2.6 && abs(jetEta[i])<=2.7 && CEMF<0.8 && CHM>0 && NEMF<0.99 && MUF <0.8 && NHF < 0.9 );
+      else return ( abs(jetEta[i])>2.6 && abs(jetEta[i])<=2.7  && CHM>0 && NEMF<0.99 && NHF < 0.9 );
+    }
+    else if(abs(jetEta[i])>2.7 && abs(jetEta[i])<=3.0)
+    {
+      return ( NEMF>0.02 && NEMF<0.99 && NumNeutralParticles>2 && abs(jetEta[i])>2.7 && abs(jetEta[i])<=3.0 );
+    }
+    else
+    {
+      return (NEMF<0.90 && NHF>0.2 && NumNeutralParticles>10 && abs(jetEta[i])>3.0 );
+    }
+
+  }
   else
   {
     cout<<"WRONG ERA NAME"<<endl;
