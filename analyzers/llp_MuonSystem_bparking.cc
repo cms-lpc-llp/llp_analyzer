@@ -190,6 +190,7 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
       NEvents->Fill(1, genWeight);
     }
 
+    MuonSystem->genWeight = genWeight;
     MuonSystem->runNum = runNum;
     MuonSystem->lumiSec = lumiNum;
     MuonSystem->evtNum = eventNum;

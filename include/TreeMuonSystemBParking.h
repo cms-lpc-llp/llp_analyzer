@@ -59,6 +59,8 @@ public:
 
   bool Flag2_all;
 
+  float genWeight;
+
   //gLLP
   float gLLP_csc;
   float gLLP_dt;

@@ -6,7 +6,7 @@ eosdir="/store/user/ddiaz/B-Parking"
 eosprefix="/eos/uscms"
 
 doSubmit=true
-version="V1p19_5"
+version="V1p19_6"
 isData="no" #"yes" or "no"
 options=-1
 #outputfilename=""
@@ -29,12 +29,18 @@ cd -
 cp ${CMSSW_BASE}/../CMSSW_9_4_4.tar.gz .
 
 samples=(  \
- "ParkingBPH1_2018A"      \
-# "ParkingBPH2_2018A"      \
-# "ParkingBPH4_2018A"      \
-# "ParkingBPH4_2018A"      \
-# "ParkingBPH5_2018A"      \
-# "ParkingBPH6_2018A"      \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau300" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau1000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau300" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000" \
+# "ParkingBPH1_2018B"      \
+# "ParkingBPH2_2018B"      \
+# "ParkingBPH3_2018B"      \
+# "ParkingBPH4_2018B"      \
+# "ParkingBPH5_2018B"      \
+# "ParkingBPH6_2018B"      \
 # "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300"      \
 # "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000.GenOnly"      \
 # "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300"      \
