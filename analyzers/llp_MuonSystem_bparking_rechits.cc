@@ -539,6 +539,7 @@ void llp_MuonSystem_bparking_rechits::Analyze(bool isData, int options, string o
 
 
       vector<Point> points;
+      int point_clusterID_[N_POINTS];  
       vector<int> cscRechitsClusterId;
       points.clear();
       MuonSystem->nCscRechits  = 0;
@@ -551,9 +552,8 @@ void llp_MuonSystem_bparking_rechits::Analyze(bool isData, int options, string o
         //pick out the right bits for chamber
         int chamber = ((cscRechitsDetId[i] >> 3) & 077); //https://github.com/cms-sw/cmssw/blob/master/DataFormats/MuonDetId/interface/CSCDetId.h#L147
         int layer = (cscRechitsDetId[i] & 07);
-
-        MuonSystem->point_clusterID[i] = 100;
-        // std::cout << i << std::endl;
+        point_clusterID_[i] = i;
+        MuonSystem->point_clusterID[i] = i;
 
         Point p;
         p.phi = cscRechitsPhi[i];
@@ -625,12 +625,17 @@ void llp_MuonSystem_bparking_rechits::Analyze(bool isData, int options, string o
       ds.result();
       ds.clusterMoments();
       ds.sort_clusters();
-          
+      
+      vector<Point> points_ = ds.getPoints();
+      for ( auto &tmp : points_ ) 
+      {
+       std::cout<<tmp.clusterID<<std::endl;
+      }
       MuonSystem->nCscRechitClusters = 0;
       for ( auto &tmp : ds.CscCluster ) {
         MuonSystem->cscRechitClusterX[MuonSystem->nCscRechitClusters] =tmp.x;
           
-        std::cout << MuonSystem->nCscRechitClusters << " " << tmp.x << std::endl;
+        //std::cout << MuonSystem->nCscRechitClusters << " " << tmp.x << std::endl;
           
         MuonSystem->cscRechitClusterY[MuonSystem->nCscRechitClusters] =tmp.y;
         MuonSystem->cscRechitClusterZ[MuonSystem->nCscRechitClusters] =tmp.z;

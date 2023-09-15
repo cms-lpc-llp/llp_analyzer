@@ -95,8 +95,6 @@ public:
     vector<float>clusterDeltaRSpread;
 
 
-
-
     vector<cscCluster> CscCluster;
 
     int run();
@@ -116,6 +114,7 @@ public:
     int getTotalPointSize() {return m_pointSize;}
     int getMinimumClusterSize() {return m_minPoints;}
     int getEpsilonSize() {return m_epsilon;}
+    vector<Point> getPoints() {return m_points;}
 private:
     vector<Point> m_points;
     unsigned int m_pointSize;

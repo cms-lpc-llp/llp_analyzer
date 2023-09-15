@@ -988,7 +988,7 @@ void TreeMuonSystemBParking_rechits::CreateTree()
 
   tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[1201]/O"); //hardcoded
 
-  tree_->Branch("point_clusterID", &point_clusterID, "point_clusterID/I");
+  tree_->Branch("point_clusterID", &point_clusterID, "point_clusterID[N_Points]/I");
     
   tree_->Branch("nCscRechits",             &nCscRechits, "nCscRechits/I");
   tree_->Branch("nDtRechits",             &nDtRechits, "nDtRechits/I");
