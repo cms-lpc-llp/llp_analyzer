@@ -19,6 +19,10 @@ const double theWireError_ = 8.6;
 const double theStripError_ = 7.0;
 const double thePruneCut_ = 9.0;
 
+//vector<Point> DBSCAN::getPoints(){
+//  return m_points;
+//}
+
 int DBSCAN::run()
 {
     int clusterID = 1;
