@@ -547,14 +547,33 @@ void llp_MuonSystem_bparking_rechits::Analyze(bool isData, int options, string o
       nCscRechitsChamberPlus31 = 0, nCscRechitsChamberPlus32 = 0, nCscRechitsChamberPlus41 = 0, nCscRechitsChamberPlus42 = 0;
       int nCscRechitsChamberMinus11 = 0, nCscRechitsChamberMinus12 = 0, nCscRechitsChamberMinus13 = 0, nCscRechitsChamberMinus21 = 0, nCscRechitsChamberMinus22 = 0,
       nCscRechitsChamberMinus31 = 0, nCscRechitsChamberMinus32 = 0, nCscRechitsChamberMinus41 = 0, nCscRechitsChamberMinus42 = 0;
+      
+      
       for (int i = 0; i < ncscRechits; i++) {
         //pick out the right bits for chamber
         int chamber = ((cscRechitsDetId[i] >> 3) & 077); //https://github.com/cms-sw/cmssw/blob/master/DataFormats/MuonDetId/interface/CSCDetId.h#L147
         int layer = (cscRechitsDetId[i] & 07);
 
-        MuonSystem->point_clusterID[i] = 100;
-        // std::cout << i << std::endl;
 
+        MuonSystem->cscRechitsPhi[i] = cscRechitsPhi[i];
+        MuonSystem->cscRechitsEta[i] = cscRechitsEta[i];
+        MuonSystem->cscRechitsX[i] = cscRechitsX[i];
+        MuonSystem->cscRechitsY[i] = cscRechitsY[i];
+        MuonSystem->cscRechitsZ[i] = cscRechitsZ[i];
+        MuonSystem->cscRechitsE[i] = cscRechitsE[i];
+        MuonSystem->cscRechitsTpeak[i] = cscRechitsTpeak[i];
+        MuonSystem->cscRechitsTwire[i] = cscRechitsTwire[i];
+        MuonSystem->cscRechitsQuality[i] = cscRechitsQuality[i];
+        MuonSystem->cscRechitsChamber[i] = cscRechitsChamber[i];
+        MuonSystem->cscRechitsStation[i] = cscRechitsStation[i];
+        MuonSystem->cscRechitsChannels[i] = cscRechitsChannels[i];
+        MuonSystem->cscRechitsNStrips[i] = cscRechitsNStrips[i];
+        MuonSystem->cscRechitsHitWire[i] = cscRechitsHitWire[i];
+        MuonSystem->cscRechitsWGroupsBX[i] = cscRechitsWGroupsBX[i];
+        MuonSystem->cscRechitsNWireGroups[i] = cscRechitsNWireGroups[i];
+        MuonSystem->cscRechitsDetId[i] = cscRechitsDetId[i];
+
+          
         Point p;
         p.phi = cscRechitsPhi[i];
         p.eta = cscRechitsEta[i];
@@ -570,8 +589,7 @@ void llp_MuonSystem_bparking_rechits::Analyze(bool isData, int options, string o
         p.clusterID = UNCLASSIFIED;
         points.push_back(p);
         cscRechitsClusterId.push_back(-1);
-
-        
+          
           
         if (cscRechitsChamber[i] == 11) nCscRechitsChamberPlus11++;
         if (cscRechitsChamber[i] == 12) nCscRechitsChamberPlus12++;
@@ -629,9 +647,6 @@ void llp_MuonSystem_bparking_rechits::Analyze(bool isData, int options, string o
       MuonSystem->nCscRechitClusters = 0;
       for ( auto &tmp : ds.CscCluster ) {
         MuonSystem->cscRechitClusterX[MuonSystem->nCscRechitClusters] =tmp.x;
-          
-        std::cout << MuonSystem->nCscRechitClusters << " " << tmp.x << std::endl;
-          
         MuonSystem->cscRechitClusterY[MuonSystem->nCscRechitClusters] =tmp.y;
         MuonSystem->cscRechitClusterZ[MuonSystem->nCscRechitClusters] =tmp.z;
         MuonSystem->cscRechitClusterTime[MuonSystem->nCscRechitClusters] = tmp.t;
@@ -639,6 +654,18 @@ void llp_MuonSystem_bparking_rechits::Analyze(bool isData, int options, string o
         MuonSystem->cscRechitClusterTimeWeighted[MuonSystem->nCscRechitClusters] = tmp.tWeighted;
         MuonSystem->cscRechitClusterEta[MuonSystem->nCscRechitClusters] =tmp.eta;
         MuonSystem->cscRechitClusterPhi[MuonSystem->nCscRechitClusters] = tmp.phi;
+
+        int j = 0;
+        for (auto it = tmp.segment_id.begin(); it != tmp.segment_id.end(); ++it, ++j) {
+            MuonSystem->cscRechitClusterSegmentID[MuonSystem->nCscRechitClusters][j] = *it;
+            // cout << *it << " " << MuonSystem->cscRechitClusterSegmentID[MuonSystem->nCscRechitClusters][j] << endl;
+        }
+
+        // for(int j=0; j<MAX_MuonHLTFilters; j++) MuonSystem->lepMuon_passHLTFilter[MuonSystem->nLeptons][j] = tmp.muon_passHLTFilter[j];
+
+        // for(int j=0; j<N_MAX_CSCRECHITS; j++) MuonSystem->cscRechitClusterSegmentID[MuonSystem->nCscRechitClusters][j] = tmp.segment_id[j];
+
+
 	  for (int j = 0; j < nTracks; j++) {
 	    //printf("Tracks: %10f %10f %10f \n", track_Pt [j], track_Eta[j], track_Phi[j]);
             // ----------------------------------------------------------------------------------------------------------------
@@ -823,7 +850,20 @@ void llp_MuonSystem_bparking_rechits::Analyze(bool isData, int options, string o
       // DT cluster
 
       points.clear();
-      for (int i = 0; i < nDtRechits; i++) {
+      for (int i = 0; i < nDtRechits; i++) {      
+          
+        MuonSystem->dtRechitCorrectX[i] = dtRechitCorrectX[i];
+        MuonSystem->dtRechitCorrectY[i] = dtRechitCorrectY[i];
+        MuonSystem->dtRechitCorrectZ[i] = dtRechitCorrectZ[i];
+        MuonSystem->dtRechitCorrectEta[i] = dtRechitCorrectEta[i];
+        MuonSystem->dtRechitCorrectPhi[i] = dtRechitCorrectPhi[i];
+        MuonSystem->dtRechitTime[i] = dtRechitTime[i];
+        MuonSystem->dtRechitStation[i] = dtRechitStation[i];
+        MuonSystem->dtRechitWheel[i] = dtRechitWheel[i];
+        MuonSystem->dtRechitLayer[i] = dtRechitLayer[i];
+        MuonSystem->dtRechitSuperLayer[i] = dtRechitSuperLayer[i];
+
+          
         Point p;
         // p.phi = dtRechitPhi[i];
         // p.eta = dtRechitEta[i];
@@ -876,6 +916,12 @@ void llp_MuonSystem_bparking_rechits::Analyze(bool isData, int options, string o
         // {
         //  MuonSystem->dtRechitsClusterId[tmp.segment_id[j]] = MuonSystem->nDtRechitClusters;
         // }
+
+          int j = 0;
+          for (auto it = tmp.segment_id.begin(); it != tmp.segment_id.end(); ++it, ++j) {
+              MuonSystem->dtRechitClusterSegmentID[MuonSystem->nDtRechitClusters][j] = *it;
+          }
+
           MuonSystem->dtRechitClusterX[MuonSystem->nDtRechitClusters] =tmp.x;
           MuonSystem->dtRechitClusterY[MuonSystem->nDtRechitClusters] =tmp.y;
           MuonSystem->dtRechitClusterZ[MuonSystem->nDtRechitClusters] =tmp.z;

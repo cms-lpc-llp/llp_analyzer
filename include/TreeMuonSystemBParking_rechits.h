@@ -6,6 +6,7 @@
 #define N_MAX_TRACKS 2000
 #define N_MAX_JETS 100
 #define N_MAX_CSC 200
+#define N_MAX_DT 200
 #define N_MAX_CSCRECHITS 5000
 #define N_MAX_DTRECHITS 20000
 #define NTriggersMAX 1201 // Number of trigger in the .dat file
@@ -14,7 +15,6 @@
 #define MUON_PT_CUT 20
 #define N_MAX_GPARTICLES 5000
 #define MAX_MuonHLTFilters 100
-#define N_POINTS 300
 
 #include <iostream>
 #include <string>
@@ -116,10 +116,6 @@ public:
   float jetPhi[N_MAX_JETS];
   bool jetTightPassId[N_MAX_JETS];
   bool HLTDecision[NTriggersMAX];
-
-
-  //csc_points
-  int point_clusterID[N_POINTS];
   
 
   //csc
@@ -360,7 +356,40 @@ public:
   // bool          cscRechitClusterMuonVetoLooseId[N_MAX_CSC];
   // bool          cscRechitClusterMuonVetoGlobal[N_MAX_CSC];
   float           cscRechitClusterMetEENoise_dPhi[N_MAX_CSC];
-float           cscRechitCluster_match_gLLP_deltaR[N_MAX_CSC];
+  float           cscRechitCluster_match_gLLP_deltaR[N_MAX_CSC];
+
+  int cscRechitClusterSegmentID[N_MAX_CSC][N_MAX_CSCRECHITS];
+  int dtRechitClusterSegmentID[N_MAX_DT][N_MAX_DTRECHITS];
+
+
+  float cscRechitsPhi[N_MAX_CSCRECHITS];
+  float cscRechitsEta[N_MAX_CSCRECHITS];
+  float cscRechitsX[N_MAX_CSCRECHITS];
+  float cscRechitsY[N_MAX_CSCRECHITS];
+  float cscRechitsZ[N_MAX_CSCRECHITS];
+  float cscRechitsE[N_MAX_CSCRECHITS];
+  float cscRechitsTpeak[N_MAX_CSCRECHITS];
+  float cscRechitsTwire[N_MAX_CSCRECHITS];
+  int cscRechitsQuality[N_MAX_CSCRECHITS];
+  int cscRechitsChamber[N_MAX_CSCRECHITS];
+  int cscRechitsStation[N_MAX_CSCRECHITS];
+  int cscRechitsChannels[N_MAX_CSCRECHITS];
+  int cscRechitsNStrips[N_MAX_CSCRECHITS];
+  int cscRechitsHitWire[N_MAX_CSCRECHITS];
+  int cscRechitsWGroupsBX[N_MAX_CSCRECHITS];
+  int cscRechitsNWireGroups[N_MAX_CSCRECHITS];
+  int cscRechitsDetId[N_MAX_CSCRECHITS];
+
+  float dtRechitCorrectX[N_MAX_DTRECHITS];
+  float dtRechitCorrectY[N_MAX_DTRECHITS];
+  float dtRechitCorrectZ[N_MAX_DTRECHITS];
+  float dtRechitCorrectEta[N_MAX_DTRECHITS];
+  float dtRechitCorrectPhi[N_MAX_DTRECHITS];
+  float dtRechitTime[N_MAX_DTRECHITS];
+  int dtRechitStation[N_MAX_DTRECHITS];
+  int dtRechitWheel[N_MAX_DTRECHITS];
+  int dtRechitLayer[N_MAX_DTRECHITS];
+  int dtRechitSuperLayer[N_MAX_DTRECHITS];
 
   void InitVariables();
   void InitTree();

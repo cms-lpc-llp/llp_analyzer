@@ -165,10 +165,6 @@ void TreeMuonSystemBParking_rechits::InitVariables()
   // nCscRechitsChamberMinus41 = 0;
   // nCscRechitsChamberMinus42 = 0;  // nCscClusters[i] = 0;
 
-  for( int i = 0; i < N_POINTS; i++ )
-  {
-      point_clusterID[i] = -999;
-  }
     
   for( int i = 0; i < N_MAX_CSC; i++ )
   {
@@ -393,7 +389,51 @@ void TreeMuonSystemBParking_rechits::InitVariables()
       dtRechitClusterNSegmentStation2[i] = -999;
       dtRechitClusterNSegmentStation3[i] = -999;
       dtRechitClusterNSegmentStation4[i] = -999;
+
+
+      for( int j = 0; j < N_MAX_CSCRECHITS; j++ )
+      {
+          cscRechitClusterSegmentID[i][j] = -999;
       }
+
+      for( int j = 0; j < N_MAX_DTRECHITS; j++ )
+      {
+          dtRechitClusterSegmentID[i][j] = -999;
+      }
+  }
+
+  for(int i = 0; i < N_MAX_CSCRECHITS; i++){
+        cscRechitsPhi[i] = -999.;
+        cscRechitsEta[i] = -999.;
+        cscRechitsX[i] = -999.;
+        cscRechitsY[i] = -999.;
+        cscRechitsZ[i] = -999.;
+        cscRechitsE[i] = -999.;
+        cscRechitsTpeak[i] = -999.;
+        cscRechitsTwire[i] = -999.;
+        cscRechitsQuality[i] = -999;
+        cscRechitsChamber[i] = -999;
+        cscRechitsStation[i] = -999;
+        cscRechitsChannels[i] = -999;
+        cscRechitsNStrips[i] = -999;
+        cscRechitsHitWire[i] = -999;
+        cscRechitsWGroupsBX[i] = -999;
+        cscRechitsNWireGroups[i] = -999;
+        cscRechitsDetId[i] = -999;
+  }
+
+  for(int i = 0; i < N_MAX_DTRECHITS; i++){
+        dtRechitCorrectX[i] = -999.;
+        dtRechitCorrectY[i] = -999.;
+        dtRechitCorrectZ[i] = -999.;
+        dtRechitCorrectEta[i] = -999.;
+        dtRechitCorrectPhi[i] = -999.;
+        dtRechitTime[i] = -999.;
+        dtRechitStation[i] = -999;
+        dtRechitWheel[i] = -999;
+        dtRechitLayer[i] = -999;
+        dtRechitSuperLayer[i] = -999;
+  }
 
 };
 
@@ -510,12 +550,10 @@ void TreeMuonSystemBParking_rechits::InitTree()
   tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
   */
   // triggers
-  tree_->SetBranchAddress("HLTDecision",     HLTDecision);
-
-  tree_->SetBranchAddress("point_clusterID", &point_clusterID);
-    
+  tree_->SetBranchAddress("HLTDecision",     HLTDecision);    
   tree_->SetBranchAddress("nCscRechits",     &nCscRechits);
   tree_->SetBranchAddress("nDtRechits",      &nDtRechits);
+    
 
   tree_->SetBranchAddress("nCscRings",             &nCscRings);
 
@@ -868,6 +906,41 @@ void TreeMuonSystemBParking_rechits::InitTree()
 
   tree_->SetBranchAddress("cscRechitCluster_match_gLLP_deltaR",         cscRechitCluster_match_gLLP_deltaR);
 
+
+
+  tree_->SetBranchAddress("cscRechitClusterSegmentID", &cscRechitClusterSegmentID);
+  tree_->SetBranchAddress("dtRechitClusterSegmentID", &dtRechitClusterSegmentID);
+    
+
+  tree_->SetBranchAddress("cscRechitsPhi", &cscRechitsPhi);
+  tree_->SetBranchAddress("cscRechitsEta", &cscRechitsEta);
+  tree_->SetBranchAddress("cscRechitsX", &cscRechitsX);
+  tree_->SetBranchAddress("cscRechitsY", &cscRechitsY);
+  tree_->SetBranchAddress("cscRechitsZ", &cscRechitsZ);
+  tree_->SetBranchAddress("cscRechitsE", &cscRechitsE);
+  tree_->SetBranchAddress("cscRechitsTpeak", &cscRechitsTpeak);
+  tree_->SetBranchAddress("cscRechitsTwire", &cscRechitsTwire);
+  tree_->SetBranchAddress("cscRechitsQuality", &cscRechitsQuality);
+  tree_->SetBranchAddress("cscRechitsChamber", &cscRechitsChamber);
+  tree_->SetBranchAddress("cscRechitsStation", &cscRechitsStation);
+  tree_->SetBranchAddress("cscRechitsChannels", &cscRechitsChannels);
+  tree_->SetBranchAddress("cscRechitsNStrips", &cscRechitsNStrips);
+  tree_->SetBranchAddress("cscRechitsHitWire", &cscRechitsHitWire);
+  tree_->SetBranchAddress("cscRechitsWGroupsBX", &cscRechitsWGroupsBX);
+  tree_->SetBranchAddress("cscRechitsNWireGroups", &cscRechitsNWireGroups);
+  tree_->SetBranchAddress("cscRechitsDetId", &cscRechitsDetId);
+
+  tree_->SetBranchAddress("dtRechitCorrectX", &dtRechitCorrectX);
+  tree_->SetBranchAddress("dtRechitCorrectY", &dtRechitCorrectY);
+  tree_->SetBranchAddress("dtRechitCorrectZ", &dtRechitCorrectZ);
+  tree_->SetBranchAddress("dtRechitCorrectEta", &dtRechitCorrectEta);
+  tree_->SetBranchAddress("dtRechitCorrectPhi", &dtRechitCorrectPhi);
+  tree_->SetBranchAddress("dtRechitTime", &dtRechitTime);
+  tree_->SetBranchAddress("dtRechitStation", &dtRechitStation);
+  tree_->SetBranchAddress("dtRechitWheel", &dtRechitWheel);
+  tree_->SetBranchAddress("dtRechitLayer", &dtRechitLayer);
+  tree_->SetBranchAddress("dtRechitSuperLayer", &dtRechitSuperLayer);
+
 };
 
 void TreeMuonSystemBParking_rechits::LoadTree(const char* file)
@@ -987,12 +1060,10 @@ void TreeMuonSystemBParking_rechits::CreateTree()
   */
 
   tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[1201]/O"); //hardcoded
-
-  tree_->Branch("point_clusterID", &point_clusterID, "point_clusterID/I");
-    
+  
   tree_->Branch("nCscRechits",             &nCscRechits, "nCscRechits/I");
   tree_->Branch("nDtRechits",             &nDtRechits, "nDtRechits/I");
-
+    
   tree_->Branch("nCscRings",             &nCscRings, "nCscRings/I");
 
   // tree_->Branch("nCscRechitsChamberPlus11",            &nCscRechitsChamberPlus11,             "nCscRechitsChamberPlus11/I");
@@ -1322,4 +1393,38 @@ void TreeMuonSystemBParking_rechits::CreateTree()
   // tree_->Branch("dtRechitCluster_match_RPCRing_sameStation_dR0p4", "std::vector<vector<int>>(nCscRechitClusters)",&dtRechitCluster_match_RPCRing_sameStation_dR0p4);
   // tree_->Branch("dtRechitCluster_match_RPCLayer_sameStation_dR0p4", "std::vector<vector<int>>(nCscRechitClusters)",&dtRechitCluster_match_RPCLayer_sameStation_dR0p4);
   // tree_->Branch("dtRechitCluster_match_RPCSector_sameStation_dR0p4", "std::vector<vector<int>>(nCscRechitClusters)",&dtRechitCluster_match_RPCSector_sameStation_dR0p4);
+
+  tree_->Branch("cscRechitClusterSegmentID", cscRechitClusterSegmentID, Form("cscRechitClusterSegmentID[nCscRechitClusters][%d]/I", N_MAX_CSCRECHITS));
+  tree_->Branch("dtRechitClusterSegmentID", dtRechitClusterSegmentID, Form("dtRechitClusterSegmentID[nDtRechitClusters][%d]/I", N_MAX_DTRECHITS));
+
+    
+  tree_->Branch("cscRechitsPhi", cscRechitsPhi, "cscRechitsPhi[nCscRechits]/F");
+  tree_->Branch("cscRechitsEta", cscRechitsEta, "cscRechitsEta[nCscRechits]/F");
+  tree_->Branch("cscRechitsX", cscRechitsX, "cscRechitsX[nCscRechits]/F");
+  tree_->Branch("cscRechitsY", cscRechitsY, "cscRechitsY[nCscRechits]/F");
+  tree_->Branch("cscRechitsZ", cscRechitsZ, "cscRechitsZ[nCscRechits]/F");
+  tree_->Branch("cscRechitsE", cscRechitsE, "cscRechitsE[nCscRechits]/F");
+  tree_->Branch("cscRechitsTpeak", cscRechitsTpeak, "cscRechitsTpeak[nCscRechits]/F");
+  tree_->Branch("cscRechitsTwire", cscRechitsTwire, "cscRechitsTwire[nCscRechits]/F");
+  tree_->Branch("cscRechitsQuality", cscRechitsQuality, "cscRechitsQuality[nCscRechits]/I");
+  tree_->Branch("cscRechitsChamber", cscRechitsChamber, "cscRechitsChamber[nCscRechits]/I");
+  tree_->Branch("cscRechitsStation", cscRechitsStation, "cscRechitsStation[nCscRechits]/I");
+  tree_->Branch("cscRechitsChannels", cscRechitsChannels, "cscRechitsChannels[nCscRechits]/I");
+  tree_->Branch("cscRechitsNStrips", cscRechitsNStrips, "cscRechitsNStrips[nCscRechits]/I");
+  tree_->Branch("cscRechitsHitWire", cscRechitsHitWire, "cscRechitsHitWire[nCscRechits]/I");
+  tree_->Branch("cscRechitsWGroupsBX", cscRechitsWGroupsBX, "cscRechitsWGroupsBX[nCscRechits]/I");
+  tree_->Branch("cscRechitsNWireGroups", cscRechitsNWireGroups, "cscRechitsNWireGroups[nCscRechits]/I");
+  tree_->Branch("cscRechitsDetId", cscRechitsDetId, "cscRechitsDetId[nCscRechits]/I");
+
+  tree_->Branch("dtRechitCorrectX", dtRechitCorrectX, "dtRechitCorrectX[nDtRechits]/F");
+  tree_->Branch("dtRechitCorrectY", dtRechitCorrectY, "dtRechitCorrectY[nDtRechits]/F");
+  tree_->Branch("dtRechitCorrectZ", dtRechitCorrectZ, "dtRechitCorrectZ[nDtRechits]/F");
+  tree_->Branch("dtRechitCorrectEta", dtRechitCorrectEta, "dtRechitCorrectEta[nDtRechits]/F");
+  tree_->Branch("dtRechitCorrectPhi", dtRechitCorrectPhi, "dtRechitCorrectPhi[nDtRechits]/F");
+  tree_->Branch("dtRechitTime", dtRechitTime, "dtRechitTime[nDtRechits]/F");
+  tree_->Branch("dtRechitStation", dtRechitStation, "dtRechitStation[nDtRechits]/I");
+  tree_->Branch("dtRechitWheel", dtRechitWheel, "dtRechitWheel[nDtRechits]/I");
+  tree_->Branch("dtRechitLayer", dtRechitLayer, "dtRechitLayer[nDtRechits]/I");
+  tree_->Branch("dtRechitSuperLayer", dtRechitSuperLayer, "dtRechitSuperLayer[nDtRechits]/I");
+
 };
