@@ -10,7 +10,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/run_printJsonLPC.sh
-filesPerJob=4
+filesPerJob=3
 ver=V1p19
 year=Data2018_UL
 #ParkingBPH1_2018B \
@@ -26,7 +26,8 @@ year=Data2018_UL
 #ParkingBPH4_2018A \
 #ParkingBPH5_2018A \
 for sample in \
-ParkingBPH2_2018A
+ParkingBPH2_2018D \
+ParkingBPH4_2018D
 do
 	echo "Sample " ${sample}
 	version=/${ver}/${year}/
