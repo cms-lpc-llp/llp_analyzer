@@ -541,7 +541,7 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
       vector<Point> points;
       vector<int> cscRechitsClusterId;
       points.clear();
-      MuonSystem->nCscRechits  = 0;
+      MuonSystem->nCscRechits = ncscRechits;
 
       int nCscRechitsChamberPlus11 = 0, nCscRechitsChamberPlus12 = 0, nCscRechitsChamberPlus13 = 0, nCscRechitsChamberPlus21 = 0, nCscRechitsChamberPlus22 = 0,
       nCscRechitsChamberPlus31 = 0, nCscRechitsChamberPlus32 = 0, nCscRechitsChamberPlus41 = 0, nCscRechitsChamberPlus42 = 0;
