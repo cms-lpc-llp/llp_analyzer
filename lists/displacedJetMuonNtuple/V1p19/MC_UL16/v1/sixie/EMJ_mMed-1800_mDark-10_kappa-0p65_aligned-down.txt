@@ -1,0 +1,1 @@
+root://cmsxrootd.fnal.gov//store/user/lpclonglived/displacedJetMuonNtuple/V1p19/MC_UL16/v1/EMJ_mMed-1800_mDark-10_kappa-0p65_aligned-down/displacedJetMuon_ntupler.UL16.mMed-1800_mDark-10_kappa-0p65_aligned-down.root
