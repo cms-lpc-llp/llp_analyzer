@@ -889,7 +889,7 @@ void TreeMuonSystemBParking::CreateTree()
   tree_->Branch("pileupWeight",         &pileupWeight,        "pileupWeight/F"); // pileup weight
   tree_->Branch("pileupWeightUp",       &pileupWeightUp,      "pileupWeightUp/F"); // pileup weight up
   tree_->Branch("pileupWeightDown",     &pileupWeightDown,    "pileupWeightDown/F"); // pileup weight down
-  tree_->Branch("genWeight",     &genWeight,    "genWeight/F"); // pileup weight down
+  tree_->Branch("genWeight",     &genWeight,    "genWeight/F"); 
 
   tree_->Branch("Flag2_all",      &Flag2_all,     "Flag2_all/O");
   tree_->Branch("metEENoise",      &metEENoise,     "metEENoise/F");      // phi(MET)
