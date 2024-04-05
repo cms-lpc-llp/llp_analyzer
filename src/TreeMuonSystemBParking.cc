@@ -22,6 +22,7 @@ void TreeMuonSystemBParking::InitVariables()
 
  metEENoise = -999.;metPhiEENoise = -999.; // metSF = -777;
 
+   genWeight=-999.;
 
    gLLP_eta = 0.0;
    gLLP_phi = 0.0;
@@ -409,6 +410,7 @@ void TreeMuonSystemBParking::InitTree()
   tree_->SetBranchAddress("pileupWeight",     &pileupWeight);
   tree_->SetBranchAddress("pileupWeightUp",   &pileupWeightUp);
   tree_->SetBranchAddress("pileupWeightDown", &pileupWeightDown);
+  tree_->SetBranchAddress("genWeight", &genWeight);
 
   tree_->SetBranchAddress("Flag2_all",      &Flag2_all);
 
@@ -887,6 +889,7 @@ void TreeMuonSystemBParking::CreateTree()
   tree_->Branch("pileupWeight",         &pileupWeight,        "pileupWeight/F"); // pileup weight
   tree_->Branch("pileupWeightUp",       &pileupWeightUp,      "pileupWeightUp/F"); // pileup weight up
   tree_->Branch("pileupWeightDown",     &pileupWeightDown,    "pileupWeightDown/F"); // pileup weight down
+  tree_->Branch("genWeight",     &genWeight,    "genWeight/F"); 
 
   tree_->Branch("Flag2_all",      &Flag2_all,     "Flag2_all/O");
   tree_->Branch("metEENoise",      &metEENoise,     "metEENoise/F");      // phi(MET)

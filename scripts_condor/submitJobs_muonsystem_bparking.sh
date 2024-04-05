@@ -2,16 +2,16 @@
 
 #(NOT ADDED YET)If you want to send to an eos directory put the LFN here
 sendToEOS=true
-eosdir="/store/user/ddiaz/B-Parking"
+eosdir="/store/group/lpclonglived/B-ParkingLLPs/"
 eosprefix="/eos/uscms"
 
 doSubmit=true
-version="V1p19_5"
+version="V1p19_9"
 isData="no" #"yes" or "no"
 options=-1
 #outputfilename=""
 label="BParking_Source2018"
-filesPerJob=5
+filesPerJob=40   #40 good for signal, 5 good for Data
 #-1 to do all
 maxJobs=-1 #-1
 
@@ -29,17 +29,93 @@ cd -
 cp ${CMSSW_BASE}/../CMSSW_9_4_4.tar.gz .
 
 samples=(  \
- "ParkingBPH1_2018A"      \
-# "ParkingBPH2_2018A"      \
-# "ParkingBPH4_2018A"      \
-# "ParkingBPH4_2018A"      \
-# "ParkingBPH5_2018A"      \
-# "ParkingBPH6_2018A"      \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300"      \
-# "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000.GenOnly"      \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300"      \
+ "BToKPhi_MuonGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300" \
+ "BToKPhi_MuonGenFilter_PhiToPi0Pi0_mPhi0p3_ctau1000" \
+ "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau1000" \
+ "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
+ "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000.GenOnly" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau3000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau500" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau5000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau1000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau10000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau300" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi2p0_ctau10000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi2p0_ctau2000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi3p0_ctau10000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi3p0_ctau3000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau3000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p5_ctau500" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p5_ctau5000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau10000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau300" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau10000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau2000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau10000" \
+ "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau3000" \
 )
 
+# "BToKPhi_MuonGenFilter_PhiToPi0Pi0_mPhi0p3_ctau1000" \
+# "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau1000" \
+# "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
+# "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000.GenOnly" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau3000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau500" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau5000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau1000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau10000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau300" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi2p0_ctau10000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi2p0_ctau2000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi3p0_ctau10000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi3p0_ctau3000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau3000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p5_ctau500" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p5_ctau5000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau10000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau300" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau10000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau2000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau10000" \
+# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau3000" \
+
+# "ParkingBPH1_2018D"      \
+# "ParkingBPH2_2018D"      \
+# "ParkingBPH3_2018D"      \
+# "ParkingBPH4_2018D"      \
+# "ParkingBPH5_2018D"      \
+
+# "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000.GenOnly"      \
+
+# done
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau3000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau500" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau5000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau300" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau1000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau10000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi2p0_ctau2000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi2p0_ctau10000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi3p0_ctau3000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi3p0_ctau10000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau3000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p5_ctau500" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p5_ctau5000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau300" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau10000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau2000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau10000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau3000" \
+#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau10000" \
  
 mkdir -p $subdir
 makeasubmitdir () {
@@ -74,10 +150,8 @@ makeasubmitdir () {
  printf "Log    = logs/runanalyzer_muonsystem_bparking_\$(Cluster)_\$(Process).log\n" >> submitfile
 
  TheEosDir=${eosdir}/${version}/$1
- if [ ${sendToEOS} == true ] 
- then 
-   if [ -d ${eosprefix}${TheEosDir} ] 
-   then
+ if [ ${sendToEOS} == true ]; then 
+   if [ -d ${eosprefix}${TheEosDir} ]; then
      eos root://cmseos.fnal.gov rm -r ${TheEosDir} 
    fi
    eos root://cmseos.fnal.gov mkdir -p $TheEosDir
@@ -99,8 +173,7 @@ makeasubmitdir () {
  jobnr=0
  haddnr=0
 
- if [ ${sendToEOS} == true ]
- then
+ if [ ${sendToEOS} == true ]; then
    # hadd command, name of the first intermediate merged file
    printf "hadd ${eosprefix}${TheEosDir}/$1-hadd${haddnr}.root"     >>       ${haddfile}
  else
@@ -109,8 +182,7 @@ makeasubmitdir () {
  fi    
 
  printf "\n" >> submitfile
- until [ ${jobnrlow} -ge $2 ]
- do
+ until [ ${jobnrlow} -ge $2 ]; do
   index=$(printf "%0*d" ${padding} ${jobnr});
   listFile=$submitdir/${sample}"_"${index}.txt
   printf "Arguments = $1 $index $isData $label $options $TheEosDir $sendToEOS\n" >> submitfile
@@ -120,8 +192,7 @@ makeasubmitdir () {
   # add files to be produced to haddfiles
   printf "\\"  >> ${haddfile}    
 
-  if [ ${sendToEOS} == true ]
-  then
+  if [ ${sendToEOS} == true ]; then
     printf "\n eos root://cmseos.fnal.gov rm ${TheEosDir}/$1_${index}.root"     >> ${cleaner}    
     printf "\n ${eosprefix}${TheEosDir}/$1_${index}.root"     >> ${haddfile}    
     # add file to checker, all histos are made at the same time, so only check one
@@ -133,12 +204,10 @@ makeasubmitdir () {
     printf "\n if [ ! -f $(pwd)/$1_${index}.root ]; then printf \" $(pwd)/$1_${index}.root \\n\"; fi " >> ${checkfile}
   fi
 
-  if [ $((${jobnr}%190)) == 0 ] && [ ${jobnr} -ne 0 ]
-  then
+  if [ $((${jobnr}%190)) == 0 ] && [ ${jobnr} -ne 0 ]; then
     haddnr=$(( ${haddnr} + 1 ))
     printf "\\"  >> ${haddfile}    
-    if [ ${sendToEOS} == true ]
-    then
+    if [ ${sendToEOS} == true ]; then
       # hadd command, name of the nth intermediate merged file
       printf "\n\n" >> ${haddfile}
       printf "hadd ${eosprefix}${TheEosDir}/$1-hadd${haddnr}.root"     >>       ${haddfile}
@@ -149,7 +218,6 @@ makeasubmitdir () {
     fi    
   fi
   # increment filenumber counters
-  #printf "NFILES: %s %s %s\n" $nfilesinlist $filenrlow $jobfilenr
   jobnrlow=$(( ${jobnrlow} + 1 ))
   jobnr=$(( ${jobnr} + 1 ))
  done # until jobnrlow > nTotalJobs
@@ -159,11 +227,9 @@ makeasubmitdir () {
  # hadd command, name of final merged file
  printf "hadd -f ${eosprefix}${TheEosDir}/$1.root"     >>       ${haddfile}
  iter=0    
- until [ $iter -gt $haddnr ]
- do
+ until [ $iter -gt $haddnr ]; do
   printf "\\"  >> ${haddfile}    
-  if [ ${sendToEOS} == true ]
-  then
+  if [ ${sendToEOS} == true ]; then
     printf "\n eos root://cmseos.fnal.gov rm ${TheEosDir}/$1-hadd${iter}.root"     >> ${cleaner}    
     printf "\n ${eosprefix}${TheEosDir}/$1-hadd${iter}.root"     >> ${haddfile}    
   else 
@@ -171,12 +237,10 @@ makeasubmitdir () {
     printf "\n $(pwd)/$1-hadd${iter}.root"     >> ${haddfile}    
   fi
   iter=$(( ${iter} + 1 ))
-
  done
 
 
- if [ ${doSubmit} = true ]
- then
+ if [ ${doSubmit} = true ]; then
   condor_submit submitfile
  fi
  
@@ -185,43 +249,36 @@ makeasubmitdir () {
 
 
 # actually call the function
-for sample in ${samples[@]} 
-do
-  if [[ ${sample} == "Parking"* ]]
-  then 
+for sample in ${samples[@]}; do
+  if [[ ${sample} == "Parking"* ]]; then 
     isData="yes"
   else
     isData="no"
   fi
+
   #data or MC?
   listdir=./
-  if [[ "$isData" == "yes" ]]
-  then
+  if [[ "$isData" == "yes" ]];  then
     listdir=$datalistdir
   else
     listdir=$mclistdir
   fi
   echo is data? $isData
+
   nlines=`cat ${listdir}/${sample}.txt | wc -l`
   njobs1=$((nlines/filesPerJob))
   njobs2=$((nlines%filesPerJob))
-  if [ $njobs2 -gt 0 ]
-  then
-    #echo adding one
+  if [ $njobs2 -gt 0 ]; then
     njobs=$((njobs1+1))
   else  
-    #echo not adding one
     njobs=$((njobs1))
   fi
-  nTotalJobs=0
-  if [ $maxJobs -lt $((nTotalJobs+njobs)) ]
-  then 
-    nTotalJobs=$maxJobs
+
+  if [ $maxJobs -eq -1 ]; then 
+    nTotalJobs=$((njobs))
+  elif [ $maxjobs -lt $njobs ]; then
+    nTotalJobs=$maxjobs
   else
-    nTotalJobs=$((nTotalJobs+njobs))
-  fi
-  if [ $maxJobs -eq -1 ]
-  then
     nTotalJobs=$((nTotalJobs+njobs))
   fi
   echo Total number of jobs for $sample : $nTotalJobs
