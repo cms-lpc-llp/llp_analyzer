@@ -344,7 +344,7 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
      tmpMuon.muonType = muonType[i];
      tmpMuon.muonQuality = muonQuality[i];
      for(int j=0; j<MAX_MuonHLTFilters; j++) tmpMuon.muon_passHLTFilter[j] = muon_passHLTFilter[i][j];
-      if (muonPt[i] > 8 && tmpMuon.looseId) SingleMu_flag = true;
+      if (muonPt[i] > 8 /*&& tmpMuon.looseId*/) SingleMu_flag = true;
      Leptons.push_back(tmpMuon);
     }
     if (SingleMu_flag)
