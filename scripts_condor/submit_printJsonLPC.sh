@@ -10,7 +10,7 @@ RazorAnalyzerDir=`pwd`
 cd -
 
 job_script=${RazorAnalyzerDir}/scripts_condor/run_printJsonLPC.sh
-filesPerJob=3
+filesPerJob=5
 ver=V1p19
 year=Data2018_UL
 #ParkingBPH1_2018B \
@@ -26,12 +26,32 @@ year=Data2018_UL
 #ParkingBPH4_2018A \
 #ParkingBPH5_2018A \
 for sample in \
+ParkingBPH1_2018A \
+ParkingBPH2_2018A \
+ParkingBPH3_2018A \
+ParkingBPH4_2018A \
+ParkingBPH5_2018A \
+ParkingBPH6_2018A \
+ParkingBPH1_2018B \
+ParkingBPH2_2018B \
+ParkingBPH3_2018B \
+ParkingBPH4_2018B \
+ParkingBPH5_2018B \
+ParkingBPH6_2018B \
+ParkingBPH1_2018C \
+ParkingBPH2_2018C \
+ParkingBPH3_2018C \
+ParkingBPH4_2018C \
+ParkingBPH5_2018C \
+ParkingBPH1_2018D \
 ParkingBPH2_2018D \
-ParkingBPH4_2018D
+ParkingBPH3_2018D \
+ParkingBPH4_2018D \
+ParkingBPH5_2018D
 do
 	echo "Sample " ${sample}
 	version=/${ver}/${year}/
-	output=store/user/ddiaz/B-Parking/jsonV3/${version}/${sample}
+	output=store/user/ddiaz/B-Parking/jsonV4/${version}/${sample}
         mkdir -p /eos/uscms/${output}
 	echo ${output}       
 	inputfilelist=/src/llp_analyzer/lists/displacedJetMuonNtuple/${version}/${sample}.txt
