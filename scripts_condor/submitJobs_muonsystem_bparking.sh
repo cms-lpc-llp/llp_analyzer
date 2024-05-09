@@ -6,7 +6,7 @@ eosdir="/store/group/lpclonglived/B-ParkingLLPs/"
 eosprefix="/eos/uscms"
 
 doSubmit=true
-version="V1p19_9"
+version="V1p19_10"
 isData="no" #"yes" or "no"
 options=-1
 #outputfilename=""
@@ -29,11 +29,6 @@ cd -
 cp ${CMSSW_BASE}/../CMSSW_9_4_4.tar.gz .
 
 samples=(  \
- "BToKPhi_MuonGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300" \
- "BToKPhi_MuonGenFilter_PhiToPi0Pi0_mPhi0p3_ctau1000" \
- "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau1000" \
- "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
- "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000.GenOnly" \
  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300" \
  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau3000" \
  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau500" \
@@ -58,6 +53,39 @@ samples=(  \
  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau3000" \
 )
 
+
+# "ParkingBPH1_2018C"      \
+# "ParkingBPH2_2018C"      \
+# "ParkingBPH3_2018C"      \
+# "ParkingBPH4_2018C"      \
+# "ParkingBPH5_2018C"      \
+# "ParkingBPH1_2018B"      \
+# "ParkingBPH2_2018B"      \
+# "ParkingBPH3_2018B"      \
+# "ParkingBPH4_2018B"      \
+# "ParkingBPH5_2018B"      \
+# "ParkingBPH6_2018B"      \
+# "ParkingBPH1_2018D"      \
+# "ParkingBPH2_2018D"      \
+# "ParkingBPH3_2018D"      \
+# "ParkingBPH4_2018D"      \
+# "ParkingBPH5_2018D"      \
+# "ParkingBPH1_2018D"      \
+# "ParkingBPH2_2018D"      \
+# "ParkingBPH3_2018D"      \
+# "ParkingBPH4_2018D"      \
+# "ParkingBPH5_2018D"      \
+
+
+# done
+#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi0p5_ctau500" \
+#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi0p5_ctau5000" \
+#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi1p0_ctau10000" \
+#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi2p0_ctau10000" \
+#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi2p0_ctau2000" \
+#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi3p0_ctau10000" \
+#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi3p0_ctau3000" \
+#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi0p3_ctau3000" \
 # "BToKPhi_MuonGenFilter_PhiToPi0Pi0_mPhi0p3_ctau1000" \
 # "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau1000" \
 # "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
@@ -84,38 +112,6 @@ samples=(  \
 # "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau2000" \
 # "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau10000" \
 # "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau3000" \
-
-# "ParkingBPH1_2018D"      \
-# "ParkingBPH2_2018D"      \
-# "ParkingBPH3_2018D"      \
-# "ParkingBPH4_2018D"      \
-# "ParkingBPH5_2018D"      \
-
-# "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000.GenOnly"      \
-
-# done
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau3000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau500" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau5000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau300" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau1000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau10000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi2p0_ctau2000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi2p0_ctau10000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi3p0_ctau3000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi3p0_ctau10000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau3000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p5_ctau500" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p5_ctau5000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau300" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau10000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau2000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau10000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau3000" \
-#  "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau10000" \
  
 mkdir -p $subdir
 makeasubmitdir () {

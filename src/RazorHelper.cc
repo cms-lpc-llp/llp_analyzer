@@ -2100,8 +2100,8 @@ void RazorHelper::loadTrigger_Razor2017_17Nov2017Rereco() {
 }
 
 void RazorHelper::load_BParking_SF() {
-    metBParkingTriggerSFFile = TFile::Open("BParking_SF.root");
-    metBParkingTriggerSFHist = (TH2F*)metBParkingTriggerSFFile->Get("BParking_trigger_efficiency");
+    BParkingTriggerSFFile = TFile::Open("BParking_SF.root");
+    BParkingTriggerSFHist = (TH2F*)BParkingTriggerSFFile->Get("BParking_trigger_efficiency");
 }
 
 void RazorHelper::loadPileup_Razor2018_BParking() {
@@ -2965,12 +2965,21 @@ double RazorHelper::getPileupWeightDown(int NPU) {
 
 double RazorHelper::getBParkingTriggerSF(float pt, float significance) {
     // load_BParking_SF()
-    if (metBParkingTriggerSFHist) {
-	// cout<<"SIGNIFICANCE: "<<pt<<"     "<<fabs(significance)<<"     "<<metBParkingTriggerSFHist->GetBinContent(metBParkingTriggerSFHist->GetXaxis()->FindFixBin(pt), metBParkingTriggerSFHist->GetYaxis()->FindFixBin(fabs(significance)))<<endl;
-        return metBParkingTriggerSFHist->GetBinContent(metBParkingTriggerSFHist->GetXaxis()->FindFixBin(pt), metBParkingTriggerSFHist->GetYaxis()->FindFixBin(fabs(significance)));
+    if (BParkingTriggerSFHist) {
+        return BParkingTriggerSFHist->GetBinContent(BParkingTriggerSFHist->GetXaxis()->FindFixBin(pt), BParkingTriggerSFHist->GetYaxis()->FindFixBin(fabs(significance)));
     }
     else {
-        std::cout << "RazorHelper error: BParking MET trigger SF requested, but no histogram available!" << std::endl;
+        std::cout << "RazorHelper error: BParking trigger SF requested, but no histogram available!" << std::endl;
+        return 0;
+    }
+}
+double RazorHelper::getBParkingTriggerSFErr(float pt, float significance) {
+    // load_BParking_SF()
+    if (BParkingTriggerSFHist) {
+        return BParkingTriggerSFHist->GetBinError(BParkingTriggerSFHist->GetXaxis()->FindFixBin(pt), BParkingTriggerSFHist->GetYaxis()->FindFixBin(fabs(significance)));
+    }
+    else {
+        std::cout << "RazorHelper error: BParking trigger SF requested, but no histogram available!" << std::endl;
         return 0;
     }
 }

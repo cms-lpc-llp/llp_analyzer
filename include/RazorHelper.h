@@ -36,6 +36,7 @@ class RazorHelper {
         double getPileupWeightUp(int NPU);
         double getPileupWeightDown(int NPU);
         double getBParkingTriggerSF(float pt, float significance);
+        double getBParkingTriggerSFErr(float pt, float significance);
         void load_BParking_SF();
         void loadTag_BParking_Source2018();
         void loadPileup_Razor2018_BParking();
@@ -298,8 +299,8 @@ class RazorHelper {
         TFile *metTriggerSFFile;
         TH1F *metTriggerSFHist;
         
-        TFile *metBParkingTriggerSFFile;
-        TH2F *metBParkingTriggerSFHist;
+        TFile *BParkingTriggerSFFile;
+        TH2F *BParkingTriggerSFHist;
 
         TFile *higgsPtWeightFile;
         TH1F *higgsPtWeightHist;

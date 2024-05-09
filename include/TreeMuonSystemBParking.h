@@ -99,6 +99,8 @@ public:
   float lepDXY[N_MAX_LEPTONS];
   float lepDXYErr[N_MAX_LEPTONS];
   float lepSF[N_MAX_LEPTONS];
+  float lepSFup[N_MAX_LEPTONS];
+  float lepSFdn[N_MAX_LEPTONS];
   bool lepLooseId[N_MAX_LEPTONS];
   bool lepTightId[N_MAX_LEPTONS];
   bool lepPassLooseIso[N_MAX_LEPTONS];
