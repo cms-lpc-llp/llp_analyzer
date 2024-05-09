@@ -392,6 +392,8 @@ void llp_MuonSystem_bparking::Analyze(bool isData, int options, string outputfil
       MuonSystem->lepDXY[MuonSystem->nLeptons]     = tmp.dXY;
       MuonSystem->lepDXYErr[MuonSystem->nLeptons]     = tmp.dXYErr;
       MuonSystem->lepSF[MuonSystem->nLeptons]     = helper->getBParkingTriggerSF(tmp.lepton.Pt(), tmp.dXY/tmp.dXYErr);
+      MuonSystem->lepSFup[MuonSystem->nLeptons]   = helper->getBParkingTriggerSF(tmp.lepton.Pt(), tmp.dXY/tmp.dXYErr)+helper->getBParkingTriggerSFErr(tmp.lepton.Pt(), tmp.dXY/tmp.dXYErr);
+      MuonSystem->lepSFdn[MuonSystem->nLeptons]   = helper->getBParkingTriggerSF(tmp.lepton.Pt(), tmp.dXY/tmp.dXYErr)-helper->getBParkingTriggerSFErr(tmp.lepton.Pt(), tmp.dXY/tmp.dXYErr);
       MuonSystem->lepLooseId[MuonSystem->nLeptons] = tmp.looseId;
       MuonSystem->lepTightId[MuonSystem->nLeptons] = tmp.tightId;
       MuonSystem->lepPassLooseIso[MuonSystem->nLeptons] = tmp.passLooseIso;
