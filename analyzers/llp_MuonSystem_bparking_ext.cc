@@ -74,6 +74,7 @@ struct jets
   float jetEJESDown;
   float JecUnc;
   float jetCISV;
+  float jetCMVA;
   float electronEnergyFraction;
   float neutralEmEnergyFraction;
   float chargedHadronEnergyFraction;
@@ -146,6 +147,8 @@ void llp_MuonSystem_bparking_ext::Analyze(bool isData, int options, string outpu
   RazorHelper *helper = 0;
   helper = new RazorHelper(analysisTag, isData, false);
   helper->load_BParking_SF();
+  std::vector<FactorizedJetCorrector*> JetCorrector = helper->getJetCorrector();
+  std::vector<std::pair<int,int> > JetCorrectorIOV = helper->getJetCorrectionsIOV();
 
   //*************************************************************************
   //Look over Input File Events
@@ -366,6 +369,7 @@ void llp_MuonSystem_bparking_ext::Analyze(bool isData, int options, string outpu
     }
     sort(Leptons.begin(), Leptons.end(), my_largest_pt);
 
+    bool passLepSel = false;
     for ( auto &tmp : Leptons )
     {
       MuonSystem->lepE[MuonSystem->nLeptons]      = tmp.lepton.E();
@@ -385,7 +389,7 @@ void llp_MuonSystem_bparking_ext::Analyze(bool isData, int options, string outpu
       MuonSystem->lepPassTightIso[MuonSystem->nLeptons] = tmp.passTightIso;
       MuonSystem->lepPassVTightIso[MuonSystem->nLeptons] = tmp.passVTightIso;
       MuonSystem->lepPassVVTightIso[MuonSystem->nLeptons] = tmp.passVVTightIso;
-
+      if (tmp.passTightIso && tmp.tightId) passLepSel = true;
 	    if (abs(tmp.pdgId)==13)
 	    {
 		     MuonSystem->lepMuonType[MuonSystem->nLeptons] = tmp.muonType;//only assigned for muons
@@ -393,7 +397,9 @@ void llp_MuonSystem_bparking_ext::Analyze(bool isData, int options, string outpu
 	       for(int j=0; j<MAX_MuonHLTFilters; j++) MuonSystem->lepMuon_passHLTFilter[MuonSystem->nLeptons][j] = tmp.muon_passHLTFilter[j];
 	    }
             MuonSystem->nLeptons++;
-      }
+    }
+    // For W+Jets selection, require at least one tight isolated lepton
+    if (!passLepSel) continue;
 
         //-----------------------------------------------
         //Select Jets
@@ -411,25 +417,43 @@ void llp_MuonSystem_bparking_ext::Analyze(bool isData, int options, string outpu
     for(int i = 0; i < nJets; i++)
     {
       double deltaR = -1;
+      float thislepPt=-999.;
       for(auto& lep : Leptons){
         if (!lep.passTightIso) continue;
         if (!lep.tightId) continue;
         double thisDR = RazorAnalyzer::deltaR(jetEta[i],jetPhi[i],lep.lepton.Eta(),lep.lepton.Phi());
-        if(deltaR < 0 || thisDR < deltaR) deltaR = thisDR;
+        //if(deltaR < 0 || thisDR < deltaR) deltaR = thisDR;
+        if(lep.lepton.Pt() > thislepPt){deltaR = thisDR; thislepPt = lep.lepton.Pt();}
       }
       if(deltaR > 0 && deltaR < 0.4) continue; //jet matches a selected lepton
 
-      double jetCorrPt = jetPt[i];
-      double jetCorrE = jetE[i];
+      double JEC = JetEnergyCorrectionFactor(jetPt[i], jetEta[i], jetPhi[i], jetE[i],
+ 					 fixedGridRhoFastjetAll, jetJetArea[i],
+ 					 runNum,
+ 					 JetCorrectorIOV,JetCorrector); 
+      double jetCorrPt = jetPt[i]*JEC;
+      double jetCorrE = jetE[i]*JEC;
       TLorentzVector thisJet = makeTLorentzVector( jetCorrPt, jetEta[i], jetPhi[i], jetCorrE );
 
       if (fabs(thisJet.Eta()) >= 3.0)continue;
+      if( thisJet.Pt() < 20. ) continue;
+      if(abs(thisJet.Eta())>2.4)continue;
+      if(!isPFTightJet(i, true,analysisTag))continue;
 
       jets tmpJet;
       tmpJet.jet    = thisJet;
       tmpJet.passId = isPFTightJet(i, true,analysisTag);
       tmpJet.jetCISV = jetCISV[i];
-
+      tmpJet.jetCMVA = jetCMVA[i];
+      double unc = helper->getJecUnc( jetCorrPt, jetEta[i], runNum ); //use run=999 as default
+      tmpJet.JecUnc = unc;
+      tmpJet.jetPtJESUp = jetCorrPt*(1+unc);
+      tmpJet.jetPtJESDown = jetCorrPt/(1+unc);
+      tmpJet.jetEJESUp = jetCorrE*(1+unc);
+      tmpJet.jetEJESDown = jetCorrE/(1+unc);
+      //std::cout<<jetPt[i]<<", "<<JEC<<"+/-"<<unc<<", "<<jetCorrPt<<", "<<tmpJet.jetPtJESUp<<", "<<tmpJet.jetPtJESDown<<std::endl;
+      //TLorentzVector thisJetJESUp = makeTLorentzVector(tmpJet.jetPtJESUp, jetEta[i], jetPhi[i], tmpJet.jetEJESUp);
+      //TLorentzVector thisJetJESDown = makeTLorentzVector(tmpJet.jetPtJESDown, jetEta[i], jetPhi[i], tmpJet.jetEJESDown);
       Jets.push_back(tmpJet);
     }
 
@@ -437,14 +461,19 @@ void llp_MuonSystem_bparking_ext::Analyze(bool isData, int options, string outpu
 
     for ( auto &tmp : Jets )
     {
-      if(tmp.jet.Pt()<30)continue;
-      if(abs(tmp.jet.Eta())>2.5)continue;
+      //std::cout<<"    "<<tmp.jet.Pt()<<", "<<tmp.jetPtJESUp<<", "<<tmp.jetPtJESDown<<std::endl;
       MuonSystem->jetE[MuonSystem->nJets] = tmp.jet.E();
+      MuonSystem->jetEJESDown[MuonSystem->nJets] = tmp.jetEJESDown;
+      MuonSystem->jetEJESUp[MuonSystem->nJets] = tmp.jetEJESUp;
       MuonSystem->jetPt[MuonSystem->nJets] = tmp.jet.Pt();
+      MuonSystem->jetPtJESDown[MuonSystem->nJets] = tmp.jetPtJESDown;
+      MuonSystem->jetPtJESUp[MuonSystem->nJets] = tmp.jetPtJESUp;
       MuonSystem->jetEta[MuonSystem->nJets] = tmp.jet.Eta();
       MuonSystem->jetPhi[MuonSystem->nJets] = tmp.jet.Phi();
       MuonSystem->jetCISV[MuonSystem->nJets] = tmp.jetCISV;
+      MuonSystem->jetCMVA[MuonSystem->nJets] = tmp.jetCMVA;
       MuonSystem->jetTightPassId[MuonSystem->nJets] = tmp.passId;
+      MuonSystem->jetJecUnc[MuonSystem->nJets] = tmp.JecUnc;
       MuonSystem->nJets++;
     }
 

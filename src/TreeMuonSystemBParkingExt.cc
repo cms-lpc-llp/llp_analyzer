@@ -19,8 +19,9 @@ void TreeMuonSystemBParkingExt::InitVariables()
   rho=-1;
 
   Flag2_all = false;
-
- metEENoise = -999.;metPhiEENoise = -999.; // metSF = -777;
+  metPhi = -999.;
+  met= -999.;
+  metEENoise = -999.;metPhiEENoise = -999.; // metSF = -777;
 
    genWeight=-999.;
 
@@ -71,7 +72,6 @@ void TreeMuonSystemBParkingExt::InitVariables()
      lepPassLooseIso[i] = false;
      lepPassTightIso[i] = false;
      lepPassVTightIso[i] = false;
-     lepPassVTightIso[i] = false;
      lepMuonType[i] = 0;
      lepMuonQuality[i] = 0;
      for (int q=0;q<MAX_MuonHLTFilters;q++) lepMuon_passHLTFilter[i][q] = false;
@@ -89,11 +89,17 @@ void TreeMuonSystemBParkingExt::InitVariables()
    nJets = 0;
    for( int i = 0; i < N_MAX_JETS; i++ )
    {
-     jetE[i]      = -999.;
-     jetPt[i]     = -999.;
+     jetJecUnc[i]    = -999.;
+     jetE[i]         = -999.;
+     jetEJESDown[i]  = -999.;
+     jetEJESUp[i]    = -999.;
+     jetPt[i]        = -999.;
+     jetPtJESDown[i] = -999.;
+     jetPtJESUp[i]   = -999.;
      jetEta[i]    = -999.;
      jetPhi[i]    = -999.;
      jetCISV[i]    = -999.;
+     jetCMVA[i]    = -999.;
      jetTightPassId[i] = false;
    }
 
@@ -115,71 +121,6 @@ void TreeMuonSystemBParkingExt::InitVariables()
 
   for( int i = 0; i < N_MAX_CSC; i++ )
   {
-      cscRechitClusterMatchedTrackSumPt_0p2[i] = 0.0;
-      cscRechitClusterMatchedTrackLeadPt_0p2[i] = -777.0;
-      cscRechitClusterMatchedTrackSize_0p2[i] = 0;
-
-      cscRechitClusterMatchedTrackSumPt_0p3[i] = 0.0;
-      cscRechitClusterMatchedTrackLeadPt_0p3[i] = -777.0;
-      cscRechitClusterMatchedTrackSize_0p3[i] = 0;
-
-      cscRechitClusterMatchedTrackSumPt_0p4[i] = 0.0;
-      cscRechitClusterMatchedTrackLeadPt_0p4[i] = -777.0;
-      cscRechitClusterMatchedTrackSize_0p4[i] = 0;
-
-      cscRechitClusterMatchedTrackSumPt_0p5[i] = 0.0;
-      cscRechitClusterMatchedTrackLeadPt_0p5[i] = -777.0;
-      cscRechitClusterMatchedTrackSize_0p5[i] = 0;
-
-      dtRechitClusterMatchedTrackSumPt_0p2[i] = 0.0;
-      dtRechitClusterMatchedTrackLeadPt_0p2[i] = -777.0;
-      dtRechitClusterMatchedTrackSize_0p2[i] = 0;
-
-      dtRechitClusterMatchedTrackSumPt_0p3[i] = 0.0;
-      dtRechitClusterMatchedTrackLeadPt_0p3[i] = -777.0;
-      dtRechitClusterMatchedTrackSize_0p3[i] = 0;
-
-      dtRechitClusterMatchedTrackSumPt_0p4[i] = 0.0;
-      dtRechitClusterMatchedTrackLeadPt_0p4[i] = -777.0;
-      dtRechitClusterMatchedTrackSize_0p4[i] = 0;
-
-      dtRechitClusterMatchedTrackSumPt_0p5[i] = 0.0;
-      dtRechitClusterMatchedTrackLeadPt_0p5[i] = -777.0;
-      dtRechitClusterMatchedTrackSize_0p5[i] = 0;
-
-      cscRechitClusterMatchedTrackSumPt_trk_pos_0p2[i] = 0.0;
-      cscRechitClusterMatchedTrackLeadPt_trk_pos_0p2[i] = -777.0;
-      cscRechitClusterMatchedTrackSize_trk_pos_0p2[i] = 0;
-
-      cscRechitClusterMatchedTrackSumPt_trk_pos_0p3[i] = 0.0;
-      cscRechitClusterMatchedTrackLeadPt_trk_pos_0p3[i] = -777.0;
-      cscRechitClusterMatchedTrackSize_trk_pos_0p3[i] = 0;
-
-      cscRechitClusterMatchedTrackSumPt_trk_pos_0p4[i] = 0.0;
-      cscRechitClusterMatchedTrackLeadPt_trk_pos_0p4[i] = -777.0;
-      cscRechitClusterMatchedTrackSize_trk_pos_0p4[i] = 0;
-
-      cscRechitClusterMatchedTrackSumPt_trk_pos_0p5[i] = 0.0;
-      cscRechitClusterMatchedTrackLeadPt_trk_pos_0p5[i] = -777.0;
-      cscRechitClusterMatchedTrackSize_trk_pos_0p5[i] = 0;
-
-      dtRechitClusterMatchedTrackSumPt_trk_pos_0p2[i] = 0.0;
-      dtRechitClusterMatchedTrackLeadPt_trk_pos_0p2[i] = -777.0;
-      dtRechitClusterMatchedTrackSize_trk_pos_0p2[i] = 0;
-
-      dtRechitClusterMatchedTrackSumPt_trk_pos_0p3[i] = 0.0;
-      dtRechitClusterMatchedTrackLeadPt_trk_pos_0p3[i] = -777.0;
-      dtRechitClusterMatchedTrackSize_trk_pos_0p3[i] = 0;
-
-      dtRechitClusterMatchedTrackSumPt_trk_pos_0p4[i] = 0.0;
-      dtRechitClusterMatchedTrackLeadPt_trk_pos_0p4[i] = -777.0;
-      dtRechitClusterMatchedTrackSize_trk_pos_0p4[i] = 0;
-
-      dtRechitClusterMatchedTrackSumPt_trk_pos_0p5[i] = 0.0;
-      dtRechitClusterMatchedTrackLeadPt_trk_pos_0p5[i] = -777.0;
-      dtRechitClusterMatchedTrackSize_trk_pos_0p5[i] = 0;
-
-
       cscRechitCluster_match_dtSeg_0p4[i] = 0;
       cscRechitCluster_match_MB1Seg_0p4[i] = 0;
       cscRechitCluster_match_RB1_0p4[i] = 0;
@@ -347,6 +288,8 @@ void TreeMuonSystemBParkingExt::InitTree()
 
   tree_->SetBranchAddress("metEENoise",      &metEENoise);
   tree_->SetBranchAddress("metPhiEENoise",      &metPhiEENoise);
+  tree_->SetBranchAddress("met",      &met);
+  tree_->SetBranchAddress("metPhi",      &metPhi);
 
   tree_->SetBranchAddress("gLLP_eta",    &gLLP_eta);
   tree_->SetBranchAddress("gLLP_phi",    &gLLP_phi);
@@ -392,20 +335,24 @@ void TreeMuonSystemBParkingExt::InitTree()
   tree_->SetBranchAddress("lepPassLooseIso", lepPassLooseIso);
   tree_->SetBranchAddress("lepPassTightIso", lepPassTightIso);
   tree_->SetBranchAddress("lepPassVTightIso", lepPassVTightIso);
-  tree_->SetBranchAddress("lepPassVTightIso", lepPassVTightIso);
 
   //jets
   tree_->SetBranchAddress("nJets",     &nJets);
+  tree_->SetBranchAddress("jetEJESUp",   jetEJESUp);
+  tree_->SetBranchAddress("jetEJESDown", jetEJESDown);
   tree_->SetBranchAddress("jetE",      jetE);
+  tree_->SetBranchAddress("jetJecUnc",      jetJecUnc);
+  tree_->SetBranchAddress("jetPtJESUp",     jetPtJESUp);
+  tree_->SetBranchAddress("jetPtJESDown",     jetPtJESDown);
   tree_->SetBranchAddress("jetPt",     jetPt);
   tree_->SetBranchAddress("jetEta",    jetEta);
   tree_->SetBranchAddress("jetPhi",    jetPhi);
   tree_->SetBranchAddress("jetCISV",    jetCISV);
+  tree_->SetBranchAddress("jetCMVA",    jetCMVA);
   tree_->SetBranchAddress("jetTightPassId", jetTightPassId);
   // triggers
   tree_->SetBranchAddress("HLTDecision",   HLTDecision);
   tree_->SetBranchAddress("nCscRechits",   &nCscRechits);
-  tree_->SetBranchAddress("nDtRechits",    &nDtRechits);
 
   tree_->SetBranchAddress("nCscRings",             &nCscRings);
 
@@ -423,70 +370,6 @@ void TreeMuonSystemBParkingExt::InitTree()
   tree_->SetBranchAddress("dtRechitClusterNSegStation3",             &dtRechitClusterNSegStation3);
   tree_->SetBranchAddress("dtRechitClusterNSegStation4",             &dtRechitClusterNSegStation4);
 
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSumPt_0p2",  &cscRechitClusterMatchedTrackSumPt_0p2);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackLeadPt_0p2", &cscRechitClusterMatchedTrackLeadPt_0p2);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSize_0p2",   &cscRechitClusterMatchedTrackSize_0p2);
-
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSumPt_0p3",  &cscRechitClusterMatchedTrackSumPt_0p3);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackLeadPt_0p3", &cscRechitClusterMatchedTrackLeadPt_0p3);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSize_0p3",   &cscRechitClusterMatchedTrackSize_0p3);
-
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSumPt_0p4",  &cscRechitClusterMatchedTrackSumPt_0p4);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackLeadPt_0p4", &cscRechitClusterMatchedTrackLeadPt_0p4);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSize_0p4",   &cscRechitClusterMatchedTrackSize_0p4);
-
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSumPt_0p5",  &cscRechitClusterMatchedTrackSumPt_0p5);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackLeadPt_0p5", &cscRechitClusterMatchedTrackLeadPt_0p5);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSize_0p5",   &cscRechitClusterMatchedTrackSize_0p5);
-  
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSumPt_0p2",  &dtRechitClusterMatchedTrackSumPt_0p2);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackLeadPt_0p2", &dtRechitClusterMatchedTrackLeadPt_0p2);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSize_0p2",   &dtRechitClusterMatchedTrackSize_0p2);
-  
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSumPt_0p3",  &dtRechitClusterMatchedTrackSumPt_0p3);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackLeadPt_0p3", &dtRechitClusterMatchedTrackLeadPt_0p3);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSize_0p3",   &dtRechitClusterMatchedTrackSize_0p3);
-  
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSumPt_0p4",  &dtRechitClusterMatchedTrackSumPt_0p4);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackLeadPt_0p4", &dtRechitClusterMatchedTrackLeadPt_0p4);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSize_0p4",   &dtRechitClusterMatchedTrackSize_0p4);
-  
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSumPt_0p5",  &dtRechitClusterMatchedTrackSumPt_0p5);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackLeadPt_0p5", &dtRechitClusterMatchedTrackLeadPt_0p5);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSize_0p5",   &dtRechitClusterMatchedTrackSize_0p5);
-
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSumPt_trk_pos_0p2",  &cscRechitClusterMatchedTrackSumPt_trk_pos_0p2);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackLeadPt_trk_pos_0p2", &cscRechitClusterMatchedTrackLeadPt_trk_pos_0p2);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSize_trk_pos_0p2",   &cscRechitClusterMatchedTrackSize_trk_pos_0p2);
-
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSumPt_trk_pos_0p3",  &cscRechitClusterMatchedTrackSumPt_trk_pos_0p3);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackLeadPt_trk_pos_0p3", &cscRechitClusterMatchedTrackLeadPt_trk_pos_0p3);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSize_trk_pos_0p3",   &cscRechitClusterMatchedTrackSize_trk_pos_0p3);
-
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSumPt_trk_pos_0p4",  &cscRechitClusterMatchedTrackSumPt_trk_pos_0p4);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackLeadPt_trk_pos_0p4", &cscRechitClusterMatchedTrackLeadPt_trk_pos_0p4);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSize_trk_pos_0p4",   &cscRechitClusterMatchedTrackSize_trk_pos_0p4);
-
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSumPt_trk_pos_0p5",  &cscRechitClusterMatchedTrackSumPt_trk_pos_0p5);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackLeadPt_trk_pos_0p5", &cscRechitClusterMatchedTrackLeadPt_trk_pos_0p5);
-  tree_->SetBranchAddress("cscRechitClusterMatchedTrackSize_trk_pos_0p5",   &cscRechitClusterMatchedTrackSize_trk_pos_0p5);
-  
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSumPt_trk_pos_0p2",  &dtRechitClusterMatchedTrackSumPt_trk_pos_0p2);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackLeadPt_trk_pos_0p2", &dtRechitClusterMatchedTrackLeadPt_trk_pos_0p2);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSize_trk_pos_0p2",   &dtRechitClusterMatchedTrackSize_trk_pos_0p2);
-  
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSumPt_trk_pos_0p3",  &dtRechitClusterMatchedTrackSumPt_trk_pos_0p3);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackLeadPt_trk_pos_0p3", &dtRechitClusterMatchedTrackLeadPt_trk_pos_0p3);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSize_trk_pos_0p3",   &dtRechitClusterMatchedTrackSize_trk_pos_0p3);
-  
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSumPt_trk_pos_0p4",  &dtRechitClusterMatchedTrackSumPt_trk_pos_0p4);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackLeadPt_trk_pos_0p4", &dtRechitClusterMatchedTrackLeadPt_trk_pos_0p4);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSize_trk_pos_0p4",   &dtRechitClusterMatchedTrackSize_trk_pos_0p4);
-  
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSumPt_trk_pos_0p5",  &dtRechitClusterMatchedTrackSumPt_trk_pos_0p5);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackLeadPt_trk_pos_0p5", &dtRechitClusterMatchedTrackLeadPt_trk_pos_0p5);
-  tree_->SetBranchAddress("dtRechitClusterMatchedTrackSize_trk_pos_0p5",   &dtRechitClusterMatchedTrackSize_trk_pos_0p5);
-  
   tree_->SetBranchAddress("dtRechitClusterNOppositeSegStation1",             &dtRechitClusterNOppositeSegStation1);
   tree_->SetBranchAddress("dtRechitClusterNOppositeSegStation2",             &dtRechitClusterNOppositeSegStation2);
   tree_->SetBranchAddress("dtRechitClusterNOppositeSegStation3",             &dtRechitClusterNOppositeSegStation3);
@@ -524,8 +407,6 @@ void TreeMuonSystemBParkingExt::InitTree()
   tree_->SetBranchAddress("dtRechitClusterGenMuonVetoPt",             dtRechitClusterGenMuonVetoPt);
   tree_->SetBranchAddress("dtRechitClusterGenMuonVetoPt_dR0p8",             dtRechitClusterGenMuonVetoPt_dR0p8);
 
-  tree_->SetBranchAddress("dtRechitClusterMuonVetoLooseId",             dtRechitClusterMuonVetoLooseId);
-  tree_->SetBranchAddress("dtRechitClusterMuonVetoGlobal",             dtRechitClusterMuonVetoGlobal);
   tree_->SetBranchAddress("dtRechitClusterMetEENoise_dPhi",             dtRechitClusterMetEENoise_dPhi);
   tree_->SetBranchAddress("dtRechitCluster_match_gLLP_deltaR",             dtRechitCluster_match_gLLP_deltaR);
 
@@ -620,19 +501,10 @@ void TreeMuonSystemBParkingExt::InitTree()
 
 
   tree_->SetBranchAddress("cscRechitClusterJetVetoPt",             cscRechitClusterJetVetoPt);
-  // tree_->SetBranchAddress("cscRechitClusterJetVetoEta",             cscRechitClusterJetVetoEta);
-  // tree_->SetBranchAddress("cscRechitClusterJetVetoE",             cscRechitClusterJetVetoE);
-  // tree_->SetBranchAddress("cscRechitClusterJetVetoPhi",             cscRechitClusterJetVetoPhi);
 
   tree_->SetBranchAddress("cscRechitClusterMuonVetoPt",             cscRechitClusterMuonVetoPt);
   tree_->SetBranchAddress("cscRechitClusterGenMuonVetoPt_dR0p8",             cscRechitClusterGenMuonVetoPt_dR0p8);
   tree_->SetBranchAddress("cscRechitClusterGenMuonVetoPt",             cscRechitClusterGenMuonVetoPt);
-  // tree_->SetBranchAddress("cscRechitClusterMuonVetoE",             cscRechitClusterMuonVetoE);
-  // tree_->SetBranchAddress("cscRechitClusterMuonVetoPhi",             cscRechitClusterMuonVetoPhi);
-  // tree_->SetBranchAddress("cscRechitClusterMuonVetoEta",             cscRechitClusterMuonVetoEta);
-  //
-  // tree_->SetBranchAddress("cscRechitClusterMuonVetoLooseId",             cscRechitClusterMuonVetoLooseId);
-  // tree_->SetBranchAddress("cscRechitClusterMuonVetoGlobal",             cscRechitClusterMuonVetoGlobal);
   tree_->SetBranchAddress("cscRechitClusterMetEENoise_dPhi",            cscRechitClusterMetEENoise_dPhi);
   tree_->SetBranchAddress("cscRechitCluster_match_dtSeg_0p4",           cscRechitCluster_match_dtSeg_0p4);
   tree_->SetBranchAddress("cscRechitCluster_match_MB1Seg_0p4",          cscRechitCluster_match_MB1Seg_0p4);
@@ -674,6 +546,8 @@ void TreeMuonSystemBParkingExt::CreateTree()
   tree_->Branch("metEENoise",      &metEENoise,     "metEENoise/F");      // phi(MET)
   // tree_->Branch("metSF",      &metSF,     "metSF/F");      // SF
   tree_->Branch("metPhiEENoise",      &metPhiEENoise,     "metPhiEENoise/F");      // phi(MET)
+  tree_->Branch("met",      &met,     "met/F");      // phi(MET)
+  tree_->Branch("metPhi",      &metPhi,     "metPhi/F");      // phi(MET)
 
   tree_->Branch("gLLP_eta",          &gLLP_eta,          "gLLP_eta/F");
   tree_->Branch("gLLP_phi",          &gLLP_phi,          "gLLP_phi/F");
@@ -717,21 +591,28 @@ void TreeMuonSystemBParkingExt::CreateTree()
   tree_->Branch("lepSFdn",     lepSFdn,     "lepSFdn[nLeptons]/F");
   tree_->Branch("lepLooseId", lepLooseId, "lepLooseId[nLeptons]/O");
   tree_->Branch("lepTightId", lepTightId, "lepTightId[nLeptons]/O");
+  tree_->Branch("lepPassLooseIso", lepPassLooseIso, "lepPassLooseIso[nLeptons]/O");
+  tree_->Branch("lepPassTightIso", lepPassTightIso, "lepPassTightIso[nLeptons]/O");
+  tree_->Branch("lepPassVTightIso", lepPassVTightIso, "lepPassVTightIso[nLeptons]/O");
 
   //jets
   tree_->Branch("nJets",     &nJets,    "nJets/I");
+  tree_->Branch("jetEJESDown",  jetEJESDown,    "jetEJESDown[nJets]/F");
+  tree_->Branch("jetEJESUp",    jetEJESUp,      "jetEJESUp[nJets]/F");
   tree_->Branch("jetE",      jetE,      "jetE[nJets]/F");
+  tree_->Branch("jetJecUnc",      jetJecUnc,      "jetJecUnc[nJets]/F");
+  tree_->Branch("jetPtJESDown", jetPtJESDown,   "jetPtJESDown[nJets]/F");
+  tree_->Branch("jetPtJESUp",   jetPtJESUp,     "jetPtJESUp[nJets]/F");
   tree_->Branch("jetPt",     jetPt,     "jetPt[nJets]/F");
   tree_->Branch("jetEta",    jetEta,    "jetEta[nJets]/F");
   tree_->Branch("jetPhi",    jetPhi,    "jetPhi[nJets]/F");
   tree_->Branch("jetCISV",    jetCISV,    "jetCISV[nJets]/F");
+  tree_->Branch("jetCMVA",    jetCMVA,    "jetCMVA[nJets]/F");
   tree_->Branch("jetTightPassId", jetTightPassId, "jetTightPassId[nJets]/O");
 
   tree_->Branch("HLTDecision", HLTDecision, "HLTDecision[1201]/O"); //hardcoded
 
   tree_->Branch("nCscRechits",             &nCscRechits, "nCscRechits/I");
-  tree_->Branch("nDtRechits",             &nDtRechits, "nDtRechits/I");
-
   tree_->Branch("nCscRings",             &nCscRings, "nCscRings/I");
 
 
@@ -768,38 +649,6 @@ void TreeMuonSystemBParkingExt::CreateTree()
   tree_->Branch("cscRechitClusterAvgStation10",             cscRechitClusterAvgStation10,             "cscRechitClusterAvgStation10[nCscRechitClusters]/F");
   tree_->Branch("cscRechitClusterAvgStation10perc",             cscRechitClusterAvgStation10perc,             "cscRechitClusterAvgStation10perc[nCscRechitClusters]/F");
 
-  tree_->Branch("cscRechitClusterMatchedTrackSumPt_0p2",  cscRechitClusterMatchedTrackSumPt_0p2,  "cscRechitClusterMatchedTrackSumPt_0p2[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackLeadPt_0p2", cscRechitClusterMatchedTrackLeadPt_0p2, "cscRechitClusterMatchedTrackLeadPt_0p2[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackSize_0p2",   cscRechitClusterMatchedTrackSize_0p2,   "cscRechitClusterMatchedTrackSize_0p2[nCscRechitClusters]/I");
-  
-  tree_->Branch("cscRechitClusterMatchedTrackSumPt_0p3",  cscRechitClusterMatchedTrackSumPt_0p3,  "cscRechitClusterMatchedTrackSumPt_0p3[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackLeadPt_0p3", cscRechitClusterMatchedTrackLeadPt_0p3, "cscRechitClusterMatchedTrackLeadPt_0p3[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackSize_0p3",   cscRechitClusterMatchedTrackSize_0p3,   "cscRechitClusterMatchedTrackSize_0p3[nCscRechitClusters]/I");
-  
-  tree_->Branch("cscRechitClusterMatchedTrackSumPt_0p4",  cscRechitClusterMatchedTrackSumPt_0p4,  "cscRechitClusterMatchedTrackSumPt_0p4[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackLeadPt_0p4", cscRechitClusterMatchedTrackLeadPt_0p4, "cscRechitClusterMatchedTrackLeadPt_0p4[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackSize_0p4",   cscRechitClusterMatchedTrackSize_0p4,   "cscRechitClusterMatchedTrackSize_0p4[nCscRechitClusters]/I");
-
-  tree_->Branch("cscRechitClusterMatchedTrackSumPt_trk_pos_0p5",  cscRechitClusterMatchedTrackSumPt_trk_pos_0p5,  "cscRechitClusterMatchedTrackSumPt_trk_pos_0p5[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackLeadPt_trk_pos_0p5", cscRechitClusterMatchedTrackLeadPt_trk_pos_0p5, "cscRechitClusterMatchedTrackLeadPt_trk_pos_0p5[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackSize_trk_pos_0p5",   cscRechitClusterMatchedTrackSize_trk_pos_0p5,   "cscRechitClusterMatchedTrackSize_trk_pos_0p5[nCscRechitClusters]/I");
-
-  tree_->Branch("cscRechitClusterMatchedTrackSumPt_trk_pos_0p2",  cscRechitClusterMatchedTrackSumPt_trk_pos_0p2,  "cscRechitClusterMatchedTrackSumPt_trk_pos_0p2[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackLeadPt_trk_pos_0p2", cscRechitClusterMatchedTrackLeadPt_trk_pos_0p2, "cscRechitClusterMatchedTrackLeadPt_trk_pos_0p2[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackSize_trk_pos_0p2",   cscRechitClusterMatchedTrackSize_trk_pos_0p2,   "cscRechitClusterMatchedTrackSize_trk_pos_0p2[nCscRechitClusters]/I");
-  
-  tree_->Branch("cscRechitClusterMatchedTrackSumPt_trk_pos_0p3",  cscRechitClusterMatchedTrackSumPt_trk_pos_0p3,  "cscRechitClusterMatchedTrackSumPt_trk_pos_0p3[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackLeadPt_trk_pos_0p3", cscRechitClusterMatchedTrackLeadPt_trk_pos_0p3, "cscRechitClusterMatchedTrackLeadPt_trk_pos_0p3[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackSize_trk_pos_0p3",   cscRechitClusterMatchedTrackSize_trk_pos_0p3,   "cscRechitClusterMatchedTrackSize_trk_pos_0p3[nCscRechitClusters]/I");
-  
-  tree_->Branch("cscRechitClusterMatchedTrackSumPt_trk_pos_0p4",  cscRechitClusterMatchedTrackSumPt_trk_pos_0p4,  "cscRechitClusterMatchedTrackSumPt_trk_pos_0p4[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackLeadPt_trk_pos_0p4", cscRechitClusterMatchedTrackLeadPt_trk_pos_0p4, "cscRechitClusterMatchedTrackLeadPt_trk_pos_0p4[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackSize_trk_pos_0p4",   cscRechitClusterMatchedTrackSize_trk_pos_0p4,   "cscRechitClusterMatchedTrackSize_trk_pos_0p4[nCscRechitClusters]/I");
-
-  tree_->Branch("cscRechitClusterMatchedTrackSumPt_trk_pos_0p5",  cscRechitClusterMatchedTrackSumPt_trk_pos_0p5,  "cscRechitClusterMatchedTrackSumPt_trk_pos_0p5[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackLeadPt_trk_pos_0p5", cscRechitClusterMatchedTrackLeadPt_trk_pos_0p5, "cscRechitClusterMatchedTrackLeadPt_trk_pos_0p5[nCscRechitClusters]/F");
-  tree_->Branch("cscRechitClusterMatchedTrackSize_trk_pos_0p5",   cscRechitClusterMatchedTrackSize_trk_pos_0p5,   "cscRechitClusterMatchedTrackSize_trk_pos_0p5[nCscRechitClusters]/I");
-
   tree_->Branch("cscRechitClusterMaxStation",             cscRechitClusterMaxStation,             "cscRechitClusterMaxStation[nCscRechitClusters]/I");
   tree_->Branch("cscRechitClusterMaxStationRatio",             cscRechitClusterMaxStationRatio,             "cscRechitClusterMaxStationRatio[nCscRechitClusters]/F");
   tree_->Branch("cscRechitClusterNChamber",             cscRechitClusterNChamber,             "cscRechitClusterNChamber[nCscRechitClusters]/I");
@@ -831,56 +680,15 @@ void TreeMuonSystemBParkingExt::CreateTree()
   tree_->Branch("cscRechitCluster_match_gLLP_deltaR",           cscRechitCluster_match_gLLP_deltaR,         "cscRechitCluster_match_gLLP_deltaR[nCscRechitClusters]/F");
 
   tree_->Branch("cscRechitClusterJetVetoPt",             cscRechitClusterJetVetoPt,             "cscRechitClusterJetVetoPt[nCscRechitClusters]/F");
-  // tree_->Branch("cscRechitClusterJetVetoEta",             cscRechitClusterJetVetoEta,             "cscRechitClusterJetVetoEta[nCscRechitClusters]/F");
-  // tree_->Branch("cscRechitClusterJetVetoPhi",             cscRechitClusterJetVetoPhi,             "cscRechitClusterJetVetoPhi[nCscRechitClusters]/F");
-  //
-  // tree_->Branch("cscRechitClusterJetVetoE",             cscRechitClusterJetVetoE,             "cscRechitClusterJetVetoE[nCscRechitClusters]/F");
   tree_->Branch("cscRechitClusterMuonVetoPt",             cscRechitClusterMuonVetoPt,             "cscRechitClusterMuonVetoPt[nCscRechitClusters]/F");
   tree_->Branch("cscRechitClusterGenMuonVetoPt_dR0p8",             cscRechitClusterGenMuonVetoPt_dR0p8,             "cscRechitClusterGenMuonVetoPt_dR0p8[nCscRechitClusters]/F");
   tree_->Branch("cscRechitClusterGenMuonVetoPt",             cscRechitClusterGenMuonVetoPt,             "cscRechitClusterGenMuonVetoPt[nCscRechitClusters]/F");
-  // tree_->Branch("cscRechitClusterMuonVetoE",             cscRechitClusterMuonVetoE,             "cscRechitClusterMuonVetoE[nCscRechitClusters]/F");
-  // tree_->Branch("cscRechitClusterMuonVetoPhi",             cscRechitClusterMuonVetoPhi,             "cscRechitClusterMuonVetoPhi[nCscRechitClusters]/F");
-  // tree_->Branch("cscRechitClusterMuonVetoEta",             cscRechitClusterMuonVetoEta,             "cscRechitClusterMuonVetoEta[nCscRechitClusters]/F");
-  // tree_->Branch("cscRechitClusterMuonVetoLooseId",             cscRechitClusterMuonVetoLooseId,             "cscRechitClusterMuonVetoLooseId[nCscRechitClusters]/O");
-  // tree_->Branch("cscRechitClusterMuonVetoGlobal",             cscRechitClusterMuonVetoGlobal,             "cscRechitClusterMuonVetoGlobal[nCscRechitClusters]/O");
   tree_->Branch("cscRechitClusterMetEENoise_dPhi",             cscRechitClusterMetEENoise_dPhi,             "cscRechitClusterMetEENoise_dPhi[nCscRechitClusters]/F");
 
 
   tree_->Branch("nDtRechitClusters",             &nDtRechitClusters, "nDtRechitClusters/I");
   tree_->Branch("dtRechitClusterMaxDPhi",             dtRechitClusterMaxDPhi,             "dtRechitClusterMaxDPhi[nDtRechitClusters]/F");
   tree_->Branch("dtRechitClusterMaxDPhi_index",             dtRechitClusterMaxDPhi_index,             "dtRechitClusterMaxDPhi_index[nDtRechitClusters]/I");
-
-  tree_->Branch("dtRechitClusterMatchedTrackSumPt_0p2" , dtRechitClusterMatchedTrackSumPt_0p2 , "dtRechitClusterMatchedTrackSumPt_0p2[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackLeadPt_0p2", dtRechitClusterMatchedTrackLeadPt_0p2, "dtRechitClusterMatchedTrackLeadPt_0p2[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackSize_0p2"  , dtRechitClusterMatchedTrackSize_0p2  , "dtRechitClusterMatchedTrackSize_0p2[nDtRechitClusters]/I");
-  
-  tree_->Branch("dtRechitClusterMatchedTrackSumPt_0p3" , dtRechitClusterMatchedTrackSumPt_0p3 , "dtRechitClusterMatchedTrackSumPt_0p3[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackLeadPt_0p3", dtRechitClusterMatchedTrackLeadPt_0p3, "dtRechitClusterMatchedTrackLeadPt_0p3[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackSize_0p3"  , dtRechitClusterMatchedTrackSize_0p3  , "dtRechitClusterMatchedTrackSize_0p3[nDtRechitClusters]/I");
-  
-  tree_->Branch("dtRechitClusterMatchedTrackSumPt_0p4" , dtRechitClusterMatchedTrackSumPt_0p4 , "dtRechitClusterMatchedTrackSumPt_0p4[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackLeadPt_0p4", dtRechitClusterMatchedTrackLeadPt_0p4, "dtRechitClusterMatchedTrackLeadPt_0p4[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackSize_0p4"  , dtRechitClusterMatchedTrackSize_0p4  , "dtRechitClusterMatchedTrackSize_0p4[nDtRechitClusters]/I");
-
-  tree_->Branch("dtRechitClusterMatchedTrackSumPt_0p5" , dtRechitClusterMatchedTrackSumPt_0p5 , "dtRechitClusterMatchedTrackSumPt_0p5[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackLeadPt_0p5", dtRechitClusterMatchedTrackLeadPt_0p5, "dtRechitClusterMatchedTrackLeadPt_0p5[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackSize_0p5"  , dtRechitClusterMatchedTrackSize_0p5  , "dtRechitClusterMatchedTrackSize_0p5[nDtRechitClusters]/I");
-
-  tree_->Branch("dtRechitClusterMatchedTrackSumPt_trk_pos_0p2" , dtRechitClusterMatchedTrackSumPt_trk_pos_0p2 , "dtRechitClusterMatchedTrackSumPt_trk_pos_0p2[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackLeadPt_trk_pos_0p2", dtRechitClusterMatchedTrackLeadPt_trk_pos_0p2, "dtRechitClusterMatchedTrackLeadPt_trk_pos_0p2[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackSize_trk_pos_0p2"  , dtRechitClusterMatchedTrackSize_trk_pos_0p2  , "dtRechitClusterMatchedTrackSize_trk_pos_0p2[nDtRechitClusters]/I");
-  
-  tree_->Branch("dtRechitClusterMatchedTrackSumPt_trk_pos_0p3" , dtRechitClusterMatchedTrackSumPt_trk_pos_0p3 , "dtRechitClusterMatchedTrackSumPt_trk_pos_0p3[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackLeadPt_trk_pos_0p3", dtRechitClusterMatchedTrackLeadPt_trk_pos_0p3, "dtRechitClusterMatchedTrackLeadPt_trk_pos_0p3[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackSize_trk_pos_0p3"  , dtRechitClusterMatchedTrackSize_trk_pos_0p3  , "dtRechitClusterMatchedTrackSize_trk_pos_0p3[nDtRechitClusters]/I");
-  
-  tree_->Branch("dtRechitClusterMatchedTrackSumPt_trk_pos_0p4" , dtRechitClusterMatchedTrackSumPt_trk_pos_0p4 , "dtRechitClusterMatchedTrackSumPt_trk_pos_0p4[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackLeadPt_trk_pos_0p4", dtRechitClusterMatchedTrackLeadPt_trk_pos_0p4, "dtRechitClusterMatchedTrackLeadPt_trk_pos_0p4[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackSize_trk_pos_0p4"  , dtRechitClusterMatchedTrackSize_trk_pos_0p4  , "dtRechitClusterMatchedTrackSize_trk_pos_0p4[nDtRechitClusters]/I");
-
-  tree_->Branch("dtRechitClusterMatchedTrackSumPt_trk_pos_0p5" , dtRechitClusterMatchedTrackSumPt_trk_pos_0p5 , "dtRechitClusterMatchedTrackSumPt_trk_pos_0p5[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackLeadPt_trk_pos_0p5", dtRechitClusterMatchedTrackLeadPt_trk_pos_0p5, "dtRechitClusterMatchedTrackLeadPt_trk_pos_0p5[nDtRechitClusters]/F");
-  tree_->Branch("dtRechitClusterMatchedTrackSize_trk_pos_0p5"  , dtRechitClusterMatchedTrackSize_trk_pos_0p5  , "dtRechitClusterMatchedTrackSize_trk_pos_0p5[nDtRechitClusters]/I");
 
   tree_->Branch("dtRechitClusterNSegStation1",             dtRechitClusterNSegStation1,             "dtRechitClusterNSegStation1[nDtRechitClusters]/I");
   tree_->Branch("dtRechitClusterNSegStation2",             dtRechitClusterNSegStation2,             "dtRechitClusterNSegStation2[nDtRechitClusters]/I");

@@ -4,6 +4,7 @@ hostname
 echo make an ls
 ls
 source /cvmfs/cms.cern.ch/cmsset_default.sh
+export X509_CERT_DIR=/cvmfs/grid.cern.ch/etc/grid-security/certificates/
 export SCRAM_ARCH=sslc7_amd64_gcc630
 tar -xzf CMSSW_9_4_4.tar.gz
 mkdir -p CMSSW_9_4_4/src
@@ -14,8 +15,14 @@ cp ../../Runllp_MuonSystem_bparking_ext .
 cp ../../*.root .
 cp ../../lists.tgz .
 cp ../../JEC.tar.gz .
+cp ../../SFs.tar.gz .
+cp ../../PileupWeights.tar.gz .
 tar -xzf lists.tgz
 tar -xzf JEC.tar.gz
+tar -xzf SFs.tar.gz
+tar -xzf PileupWeights.tar.gz
+mv PileupWeights/*.root .
+cp ScaleFactors/2017/*.root .
 
 echo " "
 echo pwd and ls
