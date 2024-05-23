@@ -39,6 +39,7 @@ class RazorHelper {
         double getBParkingTriggerSFErr(float pt, float significance);
         void load_BParking_SF();
         void loadTag_BParking_Source2018();
+        void loadJECs_Razor2018_BParking();
         void loadPileup_Razor2018_BParking();
 
         // get lepton scale factor (without up/down uncertainties)

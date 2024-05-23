@@ -6,18 +6,27 @@ eosdir="/store/group/lpclonglived/B-ParkingLLPs/"
 eosprefix="/eos/uscms"
 
 doSubmit=true
-version="V1p19_test"
-isData="no" #"yes" or "no"
+version="V1p17_8" #"V1p19_10"
+isData="yes" #"yes" or "no"
 options=-1
 #outputfilename=""
-label="BParking_Source2018"
-filesPerJob=40   #40 good for signal, 5 good for Data
+#label="BParking_Source2018"
+#label="Razor2016_07Aug2017Rereco"
+label="Razor2017_17Nov2017Rereco"
+#label="Razor2018_17SeptEarlyReReco"
+filesPerJob=5   #40 good for signal, 5 good for Data
 #-1 to do all
-maxJobs=1 #-1
+maxJobs=-1
 
-mclistdir=${CMSSW_BASE}/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p19/MC_Fall18/v1/sixie
-datalistdir=${CMSSW_BASE}/src/llp_analyzer/lists//displacedJetMuonNtuple/V1p19/Data2018_UL
+# For Reg Run2 
+mclistdir=${CMSSW_BASE}/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p17/Run2Merged
+datalistdir=${CMSSW_BASE}/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p17/Run2Merged
 subdir=${CMSSW_BASE}/src/llp_analyzer/scripts_condor/gitignore/$version
+
+# For B-Parking Data
+#mclistdir=${CMSSW_BASE}/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p19/MC_Fall18/v1/sixie
+#datalistdir=${CMSSW_BASE}/src/llp_analyzer/lists//displacedJetMuonNtuple/V1p19/Data2018_UL
+#subdir=${CMSSW_BASE}/src/llp_analyzer/scripts_condor/gitignore/$version
 
 #for assigning indices to files after splitting
 padding=7
@@ -29,21 +38,38 @@ cd -
 cp ${CMSSW_BASE}/../CMSSW_9_4_4.tar.gz .
 
 samples=(  \
- "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300" \
+ "SingleElectron_2017B" \
+ "SingleElectron_2017C" \
+ "SingleElectron_2017C_v2" \
+ "SingleElectron_2017D" \
+ "SingleElectron_2017E" \
+ "SingleElectron_2017F" \
+ "SingleMuon_2017B" \
+ "SingleMuon_2017C" \
+ "SingleMuon_2017D" \
+ "SingleMuon_2017E" \
+ "SingleMuon_2017F" \
+ "SingleMuon_2017G" \
+ "SingleMuon_2017H" \
 )
 
-
-# "ParkingBPH1_2018C"      \
-# "ParkingBPH2_2018C"      \
-# "ParkingBPH3_2018C"      \
-# "ParkingBPH4_2018C"      \
-# "ParkingBPH5_2018C"      \
+# "ParkingBPH1_2018A"      \
+# "ParkingBPH2_2018A"      \
+# "ParkingBPH3_2018A"      \
+# "ParkingBPH4_2018A"      \
+# "ParkingBPH5_2018A"      \
+# "ParkingBPH6_2018A"      \
 # "ParkingBPH1_2018B"      \
 # "ParkingBPH2_2018B"      \
 # "ParkingBPH3_2018B"      \
 # "ParkingBPH4_2018B"      \
 # "ParkingBPH5_2018B"      \
 # "ParkingBPH6_2018B"      \
+# "ParkingBPH1_2018C"      \
+# "ParkingBPH2_2018C"      \
+# "ParkingBPH3_2018C"      \
+# "ParkingBPH4_2018C"      \
+# "ParkingBPH5_2018C"      \
 # "ParkingBPH1_2018D"      \
 # "ParkingBPH2_2018D"      \
 # "ParkingBPH3_2018D"      \
@@ -55,42 +81,44 @@ samples=(  \
 # "ParkingBPH4_2018D"      \
 # "ParkingBPH5_2018D"      \
 
-
-# done
-#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi0p5_ctau500" \
-#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi0p5_ctau5000" \
-#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi1p0_ctau10000" \
-#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi2p0_ctau10000" \
-#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi2p0_ctau2000" \
-#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi3p0_ctau10000" \
-#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi3p0_ctau3000" \
-#  "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_GenOnly_mPhi0p3_ctau3000" \
-# "BToKPhi_MuonGenFilter_PhiToPi0Pi0_mPhi0p3_ctau1000" \
-# "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau1000" \
-# "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
-# "BToKPhi_MuonGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000.GenOnly" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau300" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p3_ctau3000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau500" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi0p5_ctau5000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau1000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau10000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi1p0_ctau300" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi2p0_ctau10000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi2p0_ctau2000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi3p0_ctau10000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPi0Pi0_mPhi3p0_ctau3000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau300" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p3_ctau3000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p5_ctau500" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi0p5_ctau5000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau1000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau10000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi1p0_ctau300" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau10000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi2p0_ctau2000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau10000" \
-# "BToKPhi_MuonLLPDecayGenFilter_PhiToPiPlusPiMinus_mPhi3p0_ctau3000" \
+# "SingleElectron_2016B" \
+# "SingleElectron_2016B_v2" \
+# "SingleElectron_2016C" \
+# "SingleElectron_2016D" \
+# "SingleElectron_2016E" \
+# "SingleElectron_2016F" \
+# "SingleElectron_2016G" \
+# "SingleElectron_2016H" \
+# "SingleMuon_2016B" \
+# "SingleMuon_2016C" \
+# "SingleMuon_2016D" \
+# "SingleMuon_2016E" \
+# "SingleMuon_2016F" \
+# "SingleMuon_2016G" \
+# "SingleMuon_2016H" \
+# 
+# "SingleElectron_2017B" \
+# "SingleElectron_2017C" \
+# "SingleElectron_2017C_v2" \
+# "SingleElectron_2017D" \
+# "SingleElectron_2017E" \
+# "SingleElectron_2017F" \
+# "SingleMuon_2017B" \
+# "SingleMuon_2017C" \
+# "SingleMuon_2017D" \
+# "SingleMuon_2017E" \
+# "SingleMuon_2017F" \
+# "SingleMuon_2017G" \
+# "SingleMuon_2017H" \
+# 
+# "SingleMuon_2018A" \
+# "SingleMuon_2018B" \
+# "SingleMuon_2018C" \
+# "SingleMuon_2018D" \
+# "EGamma_2018A" \
+# "EGamma_2018B" \
+# "EGamma_2018C" \
+# "EGamma_2018D" \
  
 mkdir -p $subdir
 makeasubmitdir () {
@@ -112,10 +140,10 @@ makeasubmitdir () {
  
  # write base for submit file
  printf "universe = vanilla\n" > submitfile
- printf "Executable = ${CMSSW_BASE}/src/llp_analyzer/scripts_condor/runJobs_muonsystem_bparking.sh\n" >> submitfile
+ printf "Executable = ${CMSSW_BASE}/src/llp_analyzer/scripts_condor/runJobs_muonsystem_bparking_ext.sh\n" >> submitfile
  printf "Should_Transfer_Files = YES \n" >> submitfile
  printf "WhenToTransferOutput = ON_EXIT\n" >> submitfile
- printf "Transfer_Input_Files = ${submitdir}/lists.tgz,${CMSSW_BASE}/src/llp_analyzer/JEC.tar.gz,${CMSSW_BASE}/src/llp_analyzer/scripts_condor/CMSSW_9_4_4.tar.gz,${CMSSW_BASE}/src/llp_analyzer/bin/Runllp_MuonSystem_bparking,${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_2018_BParking.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/BParking_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/METTriggers_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/HiggsPtWeights/ggH_HiggsPtReweight_NNLOPS.root\n" >> submitfile
+ printf "Transfer_Input_Files = ${submitdir}/lists.tgz,${CMSSW_BASE}/src/llp_analyzer/data/SFs.tar.gz, ${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights.tar.gz ,${submitdir}/lists.tgz,${CMSSW_BASE}/src/llp_analyzer/data/JEC.tar.gz,${CMSSW_BASE}/src/llp_analyzer/scripts_condor/CMSSW_9_4_4.tar.gz,${CMSSW_BASE}/src/llp_analyzer/bin/Runllp_MuonSystem_bparking_ext,${CMSSW_BASE}/src/llp_analyzer/data/PileupWeights/PileupReweight_2018_BParking.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/BParking_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/ScaleFactors/METTriggers_SF.root,${CMSSW_BASE}/src/llp_analyzer/data/HiggsPtWeights/ggH_HiggsPtReweight_NNLOPS.root\n" >> submitfile
  printf "\n" >> submitfile
  printf "notify_user = $(whoami)@cern.ch\n" >> submitfile
  printf "x509userproxy = $X509_USER_PROXY\n" >> submitfile
@@ -225,19 +253,19 @@ makeasubmitdir () {
 
 # actually call the function
 for sample in ${samples[@]}; do
-  if [[ ${sample} == "Parking"* ]]; then 
-    isData="yes"
-  else
-    isData="no"
-  fi
-
+  #if [[ ${sample} == "Parking"* ]]; then 
+  #  isData="yes"
+  #else
+  #  isData="no"
+  #fi
+  isData="yes"
   #data or MC?
-  listdir=./
-  if [[ "$isData" == "yes" ]];  then
-    listdir=$datalistdir
-  else
-    listdir=$mclistdir
-  fi
+  listdir=$datalistdir
+  #if [[ "$isData" == "yes" ]];  then
+  #  listdir=$datalistdir
+  #else
+  #  listdir=$mclistdir
+  #fi
   echo is data? $isData
 
   nlines=`cat ${listdir}/${sample}.txt | wc -l`
