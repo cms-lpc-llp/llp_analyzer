@@ -18,9 +18,15 @@ filesPerJob=5   #40 good for signal, 5 good for Data
 #-1 to do all
 maxJobs=-1
 
+# For Reg Run2 
 mclistdir=${CMSSW_BASE}/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p17/Run2Merged
 datalistdir=${CMSSW_BASE}/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p17/Run2Merged
 subdir=${CMSSW_BASE}/src/llp_analyzer/scripts_condor/gitignore/$version
+
+# For B-Parking Data
+#mclistdir=${CMSSW_BASE}/src/llp_analyzer/lists/displacedJetMuonNtuple/V1p19/MC_Fall18/v1/sixie
+#datalistdir=${CMSSW_BASE}/src/llp_analyzer/lists//displacedJetMuonNtuple/V1p19/Data2018_UL
+#subdir=${CMSSW_BASE}/src/llp_analyzer/scripts_condor/gitignore/$version
 
 #for assigning indices to files after splitting
 padding=7
@@ -47,6 +53,33 @@ samples=(  \
  "SingleMuon_2017H" \
 )
 
+# "ParkingBPH1_2018A"      \
+# "ParkingBPH2_2018A"      \
+# "ParkingBPH3_2018A"      \
+# "ParkingBPH4_2018A"      \
+# "ParkingBPH5_2018A"      \
+# "ParkingBPH6_2018A"      \
+# "ParkingBPH1_2018B"      \
+# "ParkingBPH2_2018B"      \
+# "ParkingBPH3_2018B"      \
+# "ParkingBPH4_2018B"      \
+# "ParkingBPH5_2018B"      \
+# "ParkingBPH6_2018B"      \
+# "ParkingBPH1_2018C"      \
+# "ParkingBPH2_2018C"      \
+# "ParkingBPH3_2018C"      \
+# "ParkingBPH4_2018C"      \
+# "ParkingBPH5_2018C"      \
+# "ParkingBPH1_2018D"      \
+# "ParkingBPH2_2018D"      \
+# "ParkingBPH3_2018D"      \
+# "ParkingBPH4_2018D"      \
+# "ParkingBPH5_2018D"      \
+# "ParkingBPH1_2018D"      \
+# "ParkingBPH2_2018D"      \
+# "ParkingBPH3_2018D"      \
+# "ParkingBPH4_2018D"      \
+# "ParkingBPH5_2018D"      \
 
 # "SingleElectron_2016B" \
 # "SingleElectron_2016B_v2" \
